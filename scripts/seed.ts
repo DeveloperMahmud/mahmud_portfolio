@@ -1,0 +1,12 @@
+import 'dotenv/config';
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+const db = new PrismaClient();
+const email = process.env.ADMIN_EMAIL;
+const password = process.env.ADMIN_PASSWORD;
+if (!email || !password) throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD are required');
+if (password.length < 12) throw new Error('ADMIN_PASSWORD must be at least 12 characters');
+const hash = await bcrypt.hash(password, 12);
+await db.user.upsert({ where: { email: email.toLowerCase() }, update: { passwordHash: hash, role: 'ADMIN' }, create: { email: email.toLowerCase(), passwordHash: hash, role: 'ADMIN' } });
+console.log(`Admin ready: ${email}`);
+await db.$disconnect();

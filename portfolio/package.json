@@ -1,0 +1,11 @@
+{
+  "name": "mahmudul-portfolio",
+  "private": true,
+  "version": "5.0.0",
+  "scripts": {
+    "dev": "echo \"Static V5 frontend \u2014 connect the CMS API in the next backend deployment step.\""
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

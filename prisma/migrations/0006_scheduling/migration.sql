@@ -1,0 +1,2 @@
+ALTER TABLE "Project" ADD COLUMN "scheduledAt" TIMESTAMP(3);
+ALTER TABLE "Content" ADD COLUMN "scheduledAt" TIMESTAMP(3);

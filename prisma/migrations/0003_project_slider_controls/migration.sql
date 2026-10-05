@@ -1,0 +1,2 @@
+ALTER TABLE "Project" ADD COLUMN "sliderEnabled" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "Project" ADD COLUMN "sliderTransition" TEXT NOT NULL DEFAULT 'AUTO';

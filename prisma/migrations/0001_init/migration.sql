@@ -1,0 +1,11 @@
+CREATE TYPE "ProjectStatus" AS ENUM ('DRAFT','PUBLISHED','ARCHIVED');
+CREATE TYPE "Visibility" AS ENUM ('PUBLIC','UNLISTED','PRIVATE');
+CREATE TYPE "UserRole" AS ENUM ('ADMIN','EDITOR');
+CREATE TABLE "User" ("id" TEXT NOT NULL, "email" TEXT NOT NULL, "passwordHash" TEXT NOT NULL, "role" "UserRole" NOT NULL DEFAULT 'ADMIN', "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP(3) NOT NULL, CONSTRAINT "User_pkey" PRIMARY KEY ("id"));
+CREATE TABLE "Project" ("id" TEXT NOT NULL, "title" TEXT NOT NULL, "slug" TEXT NOT NULL, "category" TEXT NOT NULL, "service" TEXT, "type" TEXT, "client" TEXT, "year" INTEGER, "role" TEXT, "description" TEXT, "coverImage" TEXT, "gallery" JSONB NOT NULL DEFAULT '[]', "challenge" TEXT, "approach" TEXT, "process" TEXT, "deliverables" TEXT[] DEFAULT ARRAY[]::TEXT[], "tools" TEXT[] DEFAULT ARRAY[]::TEXT[], "featured" BOOLEAN NOT NULL DEFAULT false, "sortOrder" INTEGER NOT NULL DEFAULT 0, "status" "ProjectStatus" NOT NULL DEFAULT 'DRAFT', "visibility" "Visibility" NOT NULL DEFAULT 'PUBLIC', "accessTokenHash" TEXT, "clientOnly" BOOLEAN NOT NULL DEFAULT false, "clientExpiresAt" TIMESTAMP(3), "seoTitle" TEXT, "seoDescription" TEXT, "liveUrl" TEXT, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP(3) NOT NULL, CONSTRAINT "Project_pkey" PRIMARY KEY ("id"));
+CREATE TABLE "Brand" ("id" TEXT NOT NULL, "name" TEXT NOT NULL, "logoAsset" TEXT, "url" TEXT, "sortOrder" INTEGER NOT NULL DEFAULT 0, "active" BOOLEAN NOT NULL DEFAULT true, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP(3) NOT NULL, CONSTRAINT "Brand_pkey" PRIMARY KEY ("id"));
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "Project_slug_key" ON "Project"("slug");
+CREATE UNIQUE INDEX "Brand_name_key" ON "Brand"("name");
+CREATE INDEX "Project_status_visibility_idx" ON "Project"("status","visibility");
+CREATE INDEX "Project_featured_sortOrder_idx" ON "Project"("featured","sortOrder");

@@ -1,0 +1,183 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProjectStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Visibility {
+  PUBLIC
+  UNLISTED
+  PRIVATE
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(ADMIN)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Project {
+  id                String        @id @default(cuid())
+  title             String
+  slug              String        @unique
+  category          String
+  service           String?
+  type              String?
+  client            String?
+  year              Int?
+  role              String?
+  description       String?
+  coverImage        String?
+  gallery           Json          @default("[]")
+  challenge         String?
+  approach          String?
+  process           String?
+  deliverables      String[]      @default([])
+  tools             String[]      @default([])
+  featured          Boolean       @default(false)
+  sliderEnabled     Boolean       @default(true)
+  sliderTransition  String        @default("AUTO")
+  sortOrder         Int           @default(0)
+  status            ProjectStatus @default(DRAFT)
+  visibility        Visibility    @default(PUBLIC)
+  accessTokenHash   String?
+  clientOnly        Boolean       @default(false)
+  clientExpiresAt   DateTime?
+  scheduledAt       DateTime?
+  seoTitle          String?
+  seoDescription    String?
+  liveUrl           String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([status, visibility])
+  @@index([featured, sortOrder])
+}
+
+model Brand {
+  id         String   @id @default(cuid())
+  name       String   @unique
+  logoAsset  String?
+  url        String?
+  sortOrder  Int      @default(0)
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+
+model Content {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  type           String   @default("BLOG")
+  category       String?
+  excerpt        String?
+  body           String
+  coverImage     String?
+  gallery        Json     @default("[]")
+  tags           String[] @default([])
+  author         String?
+  seoTitle       String?
+  seoDescription String?
+  status         ProjectStatus @default(DRAFT)
+  featured       Boolean  @default(false)
+  sortOrder      Int      @default(0)
+  publishedAt    DateTime?
+  scheduledAt    DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([status, publishedAt])
+  @@index([featured, sortOrder])
+}
+
+
+model SiteSettings {
+  id                 String   @id @default(cuid())
+  siteName           String   @default("Mahmudul Hassan")
+  title              String   @default("Creative Designer")
+  heroLeadText       String   @default("I DESIGN")
+  heroTypewriterPhrases Json   @default("[\"BRANDS THAT SELL.\"]")
+  email              String?
+  inquiryRecipientEmail String?
+  inquirySubject     String?
+  phone              String?
+  location           String?
+  availability       Boolean  @default(true)
+  availabilityLabel  String?  @default("AVAILABLE FOR SELECT PROJECTS")
+  linkedin           String?
+  behance            String?
+  dribbble           String?
+  instagram          String?
+  github             String?
+  metaTitle          String?
+  metaDescription    String?
+  ogImage            String?
+  homepageOrder      String?
+  sliderConfig       Json     @default("{}")
+  skillsConfig       Json     @default("[]")
+  updatedAt          DateTime @updatedAt
+}
+
+model Testimonial {
+  id         String   @id @default(cuid())
+  client     String
+  company    String?
+  role       String?
+  quote      String
+  photo      String?
+  projectId  String?
+  featured   Boolean  @default(false)
+  published  Boolean  @default(true)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([published, featured, sortOrder])
+}
+
+model ActivityLog {
+  id         String   @id @default(cuid())
+  action     String
+  entity     String
+  entityId   String?
+  label      String?
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+
+model Inquiry {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  service     String?
+  budget      String?
+  timeline    String?
+  message     String
+  attachment  String?
+  status      String   @default("NEW")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, createdAt])
+}
