@@ -1,52 +1,70 @@
-// Hero copy + typewriter — controlled from CMS settings, with safe defaults.
+// Hero typewriter — CMS controlled, repeats only while the headline is visible.
 (function initHeroTypewriter(){
   const el=document.querySelector('[data-typewriter]');
-  const lead=document.querySelector('#heroLeadText');
   const caret=document.querySelector('.type-caret');
   if(!el) return;
-  let phrases=(el.getAttribute('data-texts')||el.getAttribute('data-text')||el.textContent.trim()).split(/\|\||\n+/).map(v=>v.trim()).filter(Boolean);
-  if(!phrases.length) phrases=['BRANDS THAT SELL.'];
-  let timer=null, active=false, cycle=0, phraseIndex=0;
   const reduce=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let config={enabled:true,phrases:[],typeSpeed:42,typeRandom:35,pause:2400,eraseSpeed:25,nextDelay:650,startDelay:220,loop:true};
+  let timer=null,active=false,cycle=0,observer=null;
+  const fallback=()=>{
+    const raw=el.getAttribute('data-texts') || el.getAttribute('data-text') || el.textContent.trim();
+    return raw.split(/\|\||\n/).map(x=>x.trim()).filter(Boolean);
+  };
   const clear=()=>{if(timer){clearTimeout(timer);timer=null;}};
+  const phrases=()=>Array.isArray(config.phrases)&&config.phrases.length?config.phrases.filter(Boolean):fallback();
+  const renderStatic=()=>{const list=phrases();el.textContent=list[0]||'';};
+  const restart=()=>{if(!active)return;cycle++;clear();el.textContent='';typeLoop();};
   const typeLoop=()=>{
-    if(!active) return;
+    if(!active||!config.enabled)return;
+    const list=phrases(); if(!list.length)return;
     const myCycle=++cycle;
-    const text=phrases[phraseIndex%phrases.length];
-    let i=0;
-    const type=()=>{
+    let phraseIndex=0;
+    const runPhrase=()=>{
       if(!active||myCycle!==cycle)return;
-      el.textContent=text.slice(0,i++);
-      if(i<=text.length) timer=setTimeout(type,42+Math.random()*35);
-      else timer=setTimeout(erase,2400);
-    };
-    const erase=()=>{
-      if(!active||myCycle!==cycle)return;
-      let i=text.length;
-      const back=()=>{
+      const text=list[phraseIndex%list.length]; let i=0;
+      const type=()=>{
         if(!active||myCycle!==cycle)return;
-        el.textContent=text.slice(0,Math.max(0,--i));
-        if(i>0) timer=setTimeout(back,25);
-        else {phraseIndex=(phraseIndex+1)%phrases.length;timer=setTimeout(typeLoop,650);}
+        el.textContent=text.slice(0,i++);
+        if(i<=text.length) timer=setTimeout(type,config.typeSpeed+Math.random()*config.typeRandom);
+        else if(config.loop || phraseIndex<list.length-1) timer=setTimeout(erase,config.pause);
       };
-      back();
+      const erase=()=>{
+        if(!active||myCycle!==cycle)return;
+        let n=text.length;
+        const back=()=>{
+          if(!active||myCycle!==cycle)return;
+          el.textContent=text.slice(0,Math.max(0,--n));
+          if(n>0) timer=setTimeout(back,config.eraseSpeed);
+          else { phraseIndex++; if(config.loop || phraseIndex<list.length) timer=setTimeout(runPhrase,config.nextDelay); else el.textContent=text; }
+        };
+        back();
+      };
+      timer=setTimeout(type,config.startDelay);
     };
-    clear();timer=setTimeout(type,220);
+    clear(); runPhrase();
   };
-  const restart=()=>{clear();cycle++;phraseIndex=0;if(reduce){el.textContent=phrases[0];return;}if(active)typeLoop();};
-  window.__setHeroCopy=(nextLead,nextPhrases)=>{
-    if(lead)lead.textContent=String(nextLead||'I DESIGN');
-    phrases=Array.isArray(nextPhrases)?nextPhrases.map(v=>String(v).trim()).filter(Boolean):phrases;
-    if(!phrases.length)phrases=['BRANDS THAT SELL.'];
-    el.setAttribute('data-texts',phrases.join('\\n'));restart();
+  window.setHeroTypewriterConfig=(incoming={})=>{
+    config={...config,...incoming,phrases:Array.isArray(incoming.phrases)?incoming.phrases.map(x=>String(x).trim()).filter(Boolean):config.phrases};
+    if(reduce||!config.enabled){active=false;cycle++;clear();renderStatic();return;}
+    if(observer){restart();}
   };
-  if(reduce){el.textContent=phrases[0];return;}
-  const observer=new IntersectionObserver(entries=>{
+  if(reduce){renderStatic();return;}
+  // Observe the stable hero container, not the changing text node.
+  // The phrase itself changes size while typing; observing it can falsely report
+  // it as out of view and clear the headline for a moment.
+  const visibilityTarget=el.closest('.hero-copy') || el.parentElement || el;
+  observer=new IntersectionObserver(entries=>{
     const visible=entries.some(e=>e.isIntersecting);
     if(visible&&!active){active=true;typeLoop();}
-    if(!visible&&active){active=false;cycle++;clear();el.textContent='';if(caret)caret.classList.remove('settled');}
-  },{threshold:.35});
-  observer.observe(el);
+    if(!visible&&active){
+      active=false;
+      cycle++;
+      clear();
+      // Keep the last rendered phrase visible while the hero is off-screen.
+      if(caret)caret.classList.remove('settled');
+    }
+  },{threshold:.1});
+  observer.observe(visibilityTarget);
 })();
 
 // Global ambient background motion — subtle, site-wide, scroll + pointer responsive.
@@ -89,7 +107,7 @@ function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;',
 function normalizeProject(p){
   const category=(p.category||'').toLowerCase();
   const cat=category.includes('amazon')?'amazon':category.includes('brand')?'branding':category.includes('web')?'web':category.includes('motion')?'motion':category.includes('engine')?'engineering':p.cat||'all';
-  return {...p,sliderEnabled:p.sliderEnabled!==false,sliderTransition:p.sliderTransition||'AUTO',cat,img:p.coverImage||p.img||'assets/amazon-01.svg',year:p.year||'',type:p.type||'PROJECT',desc:p.description??p.desc??'',deliverables:Array.isArray(p.deliverables)?p.deliverables.join(' · '):p.deliverables||'',tools:Array.isArray(p.tools)?p.tools.join(' · '):p.tools||''};
+  return {...p,sliderEnabled:p.sliderEnabled!==false,sliderTransition:p.sliderTransition||'AUTO',cat,img:p.coverImage||p.img||'assets/amazon-01.svg',year:p.year||'',type:p.type||'PROJECT',desc:p.description??p.desc??'',deliverables:Array.isArray(p.deliverables)?p.deliverables.join(' · '):p.deliverables||'',results:p.results||'',tools:Array.isArray(p.tools)?p.tools.join(' · '):p.tools||''};
 }
 function renderBrands(){
   const track=$('#brandTrack'); if(!track)return;
@@ -106,9 +124,9 @@ const STARTER_SKILLS=[
 {id:'autocad',name:'AutoCAD',category:'Technical / Engineering',icon:'https://cdn.simpleicons.org/autodesk',level:'Professional',description:'Electrical drawings · Plans · Technical documentation',sortOrder:6,visible:true,featured:true},
 {id:'html-css-js',name:'HTML · CSS · JavaScript',category:'Web / Digital',icon:'https://cdn.simpleicons.org/html5',level:'Working knowledge',description:'Front-end implementation · Interactive portfolio experiences',sortOrder:7,visible:true,featured:true}
 ];
-function renderSkills(skills){const root=document.querySelector('#skillsGrid');if(!root)return;const source=Array.isArray(skills)&&skills.length?skills:STARTER_SKILLS;const items=source.filter(x=>x&&x.visible!==false&&x.featured!==false).sort((a,b)=>(a.sortOrder||0)-(b.sortOrder||0));root.innerHTML=items.map(x=>`<article class=\"skill-card reveal\"><div class=\"skill-icon-wrap\">${x.icon?`<img src=\"${escapeHtml(x.icon)}\" alt=\"${escapeHtml(x.name)}\" loading=\"lazy\" onerror=\"this.closest('.skill-icon-wrap').classList.add('fallback');this.remove()\">`:''}<span class=\"skill-fallback\">${escapeHtml((x.name||'').split(/\s+/).map(v=>v[0]).join('').slice(0,3).toUpperCase())}</span></div><div class=\"skill-info\"><h3>${escapeHtml(x.name)}</h3><span>${escapeHtml(x.category||'TOOL')}${x.level?' · '+escapeHtml(x.level):''}</span><p>${escapeHtml(x.description||'')}</p></div></article>`).join('');if(window.__observeReveals)window.__observeReveals(root);}
+function renderSkills(skills){const root=document.querySelector('#skillsGrid');if(!root)return;const source=Array.isArray(skills)&&skills.length?skills:STARTER_SKILLS;const items=source.filter(x=>x&&x.visible!==false&&x.featured!==false).sort((a,b)=>(a.sortOrder||0)-(b.sortOrder||0));root.innerHTML=items.map(x=>`<article class=\"skill-card\"><div class=\"skill-icon-wrap\">${x.icon?`<img src=\"${escapeHtml(x.icon)}\" alt=\"${escapeHtml(x.name)}\" loading=\"lazy\" onerror=\"this.closest('.skill-icon-wrap').classList.add('fallback');this.remove()\">`:''}<span class=\"skill-fallback\">${escapeHtml((x.name||'').split(/\s+/).map(v=>v[0]).join('').slice(0,3).toUpperCase())}</span></div><div class=\"skill-info\"><h3>${escapeHtml(x.name)}</h3><span>${escapeHtml(x.category||'TOOL')}${x.level?' · '+escapeHtml(x.level):''}</span><p>${escapeHtml(x.description||'')}</p></div></article>`).join('');}
 
-async function loadSiteExtras(){try{const [s,t]=await Promise.all([fetch('/api/public/settings',{cache:'no-store'}),fetch('/api/public/testimonials',{cache:'no-store'})]);if(s.ok){const d=await s.json();const x=d.settings||{};sliderConfig={...DEFAULT_SLIDER_SETTINGS,...(x.sliderConfig||{})};if(window.__setHeroCopy)window.__setHeroCopy(x.heroLeadText||'I DESIGN',Array.isArray(x.heroTypewriterPhrases)?x.heroTypewriterPhrases:['BRANDS THAT SELL.']);renderSkills(x.skillsConfig||[]);if(x.email){const a=document.querySelector('.contact-link');if(a&&a.tagName==='A'){a.href='mailto:'+x.email;a.textContent=x.email+' ↗'}}if(x.availabilityLabel)document.querySelector('#availabilityLabel')?.replaceChildren(document.createTextNode(x.availability?x.availabilityLabel:'CURRENTLY BOOKED'));if(x.siteName)document.title=x.siteName+' — '+(x.title||'Creative Designer')}if(t.ok){const d=await t.json();const root=document.querySelector('#testimonialPublic');if(root)root.innerHTML=(d.testimonials||[]).map(x=>`<article class="testimonial-card reveal"><blockquote>“${escapeHtml(x.quote)}”</blockquote><small>${escapeHtml(x.client)}${x.company?' · '+escapeHtml(x.company):''}${x.role?' · '+escapeHtml(x.role):''}</small></article>`).join('')||'<p class="empty">Client notes will appear here.</p>'}}catch(e){console.warn('Site extras unavailable',e)}}
+async function loadSiteExtras(){try{const [s,t]=await Promise.all([fetch('/api/public/settings',{cache:'no-store'}),fetch('/api/public/testimonials',{cache:'no-store'})]);if(s.ok){const d=await s.json();const x=d.settings||{};sliderConfig={...DEFAULT_SLIDER_SETTINGS,...(x.sliderConfig||{})};if(window.__setHeroCopy){window.__setHeroCopy(x.heroLeadText||'I DESIGN',Array.isArray(x.heroTypewriterPhrases)?x.heroTypewriterPhrases:['BRANDS THAT SELL.']);}renderSkills(x.skillsConfig||[]);window.setHeroTypewriterConfig?.(x.typewriterConfig||{});const heroImage=document.querySelector('.hero-visual img');if(heroImage&&x.heroImage)heroImage.src=x.heroImage;if(x.email){const a=document.querySelector('.contact-link');if(a&&a.tagName==='A'){a.href='mailto:'+x.email;a.textContent=x.email+' ↗'}}if(x.availabilityLabel)document.querySelector('#availabilityLabel')?.replaceChildren(document.createTextNode(x.availability?x.availabilityLabel:'CURRENTLY BOOKED'));if(x.siteName){document.title=x.metaTitle||x.siteName+' — '+(x.title||'Creative Designer');const md=document.querySelector('meta[name=description]');if(md&&x.metaDescription)md.setAttribute('content',x.metaDescription);const og=document.querySelector('meta[property=og:image]');if(og&&x.ogImage)og.setAttribute('content',x.ogImage)}}if(t.ok){const d=await t.json();const root=document.querySelector('#testimonialPublic');if(root)root.innerHTML=(d.testimonials||[]).map(x=>`<article class="testimonial-card reveal">${x.photo?`<img src="${escapeHtml(x.photo)}" alt="${escapeHtml(x.client)}" loading="lazy">`:''}<blockquote>“${escapeHtml(x.quote)}”</blockquote><small>${escapeHtml(x.client)}${x.company?' · '+escapeHtml(x.company):''}${x.role?' · '+escapeHtml(x.role):''}</small></article>`).join('')||'<p class="empty">Client notes will appear here.</p>'}}catch(e){console.warn('Site extras unavailable',e)}}
 async function loadProductionContent(){
   try{
     const [pr,br]=await Promise.all([fetch('/api/public/projects',{credentials:'same-origin',cache:'no-store'}),fetch('/api/public/brands',{credentials:'same-origin',cache:'no-store'})]);
@@ -128,14 +146,30 @@ function render(active='all'){
   filters.innerHTML=Object.entries(labels).map(([k,v])=>`<button class="filter ${k===active?'active':''}" data-k="${k}">${v}</button>`).join('');
   $$('.filter').forEach(b=>b.onclick=()=>render(b.dataset.k));
   const list=projects.filter(p=>active==='all'||p.cat===active||p.service===active);
-  grid.innerHTML=list.length?list.map(p=>`<article class="project-card" data-id="${escapeHtml(p.id)}"><div class="project-media-wrap">${p.demo?'<span class="demo-image-badge">DEMO PROJECT</span>':''}<img class="project-image" src="${escapeHtml(p.img)}" alt="${escapeHtml(p.title)}" loading="lazy"></div><div class="project-info"><div><h3>${escapeHtml(p.title)}</h3><p>${escapeHtml(p.type)} · ${escapeHtml(p.year)}</p></div><span class="tag">${p.demo?'DEMO · ':''}${escapeHtml(p.cat.toUpperCase())} ↗</span></div></article>`).join(''):'<p class="empty">No published projects in this category yet.</p>';
-  $$('.project-card').forEach(c=>c.onclick=()=>openProject(c.dataset.id));
+  grid.innerHTML=list.length?list.map(p=>`<article class="project-card" data-id="${escapeHtml(p.id)}" tabindex="0" role="link" aria-label="View ${escapeHtml(p.title)}"><div class="project-media-wrap">${p.demo?'<span class="demo-image-badge">DEMO PROJECT</span>':''}<img class="project-image" src="${escapeHtml(p.img)}" alt="${escapeHtml(p.title)}" loading="lazy" decoding="async"></div><div class="project-info"><div><h3>${escapeHtml(p.title)}</h3><p>${escapeHtml(p.type)} · ${escapeHtml(p.year)}</p></div><span class="tag">${p.demo?'DEMO · ':''}${escapeHtml(p.cat.toUpperCase())} ↗</span></div></article>`).join(''):'<p class="empty">No published projects in this category yet.</p>';
+  $$('.project-card').forEach(c=>{const go=()=>{const p=projects.find(x=>x.id===c.dataset.id);if(!p)return;location.href=`/work/${encodeURIComponent(p.slug)}`};c.onclick=go;c.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}}});
+}
+function updateProjectMeta(p){
+  const desc=(p?.seoDescription||p?.desc||'Amazon A+, e-commerce creative, branding and digital design by Mahmudul Hassan.').slice(0,160);
+  document.title=p?.seoTitle||p?.title?`${p.seoTitle||p.title} — Mahmudul Hassan`:'Mahmudul Hassan — Creative Designer';
+  const md=document.querySelector('meta[name=description]'); if(md)md.setAttribute('content',desc);
+  const ogTitle=document.querySelector('meta[property=og:title]'); if(ogTitle)ogTitle.setAttribute('content',document.title);
+  const ogDesc=document.querySelector('meta[property=og:description]'); if(ogDesc)ogDesc.setAttribute('content',desc);
+  const ogImage=document.querySelector('meta[property=og:image]'); if(ogImage&&p?.img)ogImage.setAttribute('content',new URL(p.img,location.href).href);
+  let canonical=document.querySelector('link[rel=canonical]'); if(!canonical){canonical=document.createElement('link');canonical.rel='canonical';document.head.appendChild(canonical)}
+  canonical.href=p?new URL('/work/'+encodeURIComponent(p.slug),location.origin).href:new URL('/',location.origin).href;
+}
+function resetHomeMeta(){
+  document.title='Mahmudul Hassan — Creative Designer';
+  const md=document.querySelector('meta[name=description]'); if(md)md.setAttribute('content','Mahmudul Hassan — Creative Designer specializing in Amazon A+, e-commerce creative, branding, web, motion and technical design.');
+  const canonical=document.querySelector('link[rel=canonical]'); if(canonical)canonical.href=new URL('/',location.origin).href;
 }
 function openProject(id){
   const p=projects.find(x=>x.id===id); if(!p)return;
+  updateProjectMeta(p);
   const gallery=Array.isArray(p.gallery)?p.gallery:[];
   const galleryHtml=gallery.length?`<div class="gallery-slider" data-gallery='${escapeHtml(JSON.stringify(gallery.map(g=>({url:g.url||g,alt:g.alt||p.title})) ))}'><div class="gallery-track">${gallery.map((g,i)=>`<div class="gallery-slide ${i===0?'active':''}"><img src="${escapeHtml(g.url||g)}" alt="${escapeHtml(g.alt||p.title)}" loading="${i===0?'eager':'lazy'}"></div>`).join('')}</div><div class="gallery-controls"><span class="gallery-count">01 / ${String(gallery.length).padStart(2,'0')}</span><button type="button" class="gallery-prev" aria-label="Previous image">←</button><button type="button" class="gallery-next" aria-label="Next image">→</button></div></div>`:'';
-  modalContent.innerHTML=`<div class="modal-meta">${escapeHtml(p.cat.toUpperCase())} / ${escapeHtml(p.type)} / ${escapeHtml(p.year)}</div><h2>${escapeHtml(p.title)}</h2><img class="modal-hero" src="${escapeHtml(p.img)}" alt="${escapeHtml(p.title)}">${galleryHtml}<div class="modal-body"><div class="modal-block"><h3>OVERVIEW</h3><p>${escapeHtml(p.desc)}</p></div><div class="modal-block"><h3>CHALLENGE</h3><p>${escapeHtml(p.challenge)}</p></div><div class="modal-block"><h3>APPROACH</h3><p>${escapeHtml(p.approach)}</p></div><div class="modal-block"><h3>PROCESS</h3><p>${escapeHtml(p.process||'Discovery → direction → design → final delivery')}</p></div><div class="modal-block modal-deliverables"><h3>DELIVERABLES</h3><p>${escapeHtml(p.deliverables)}${p.tools?`<br><br><strong>TOOLS</strong> · ${escapeHtml(p.tools)}`:''}</p>${p.liveUrl?`<a class="modal-live" href="${escapeHtml(p.liveUrl)}" target="_blank" rel="noreferrer">OPEN LIVE PROJECT ↗</a>`:''}</div></div>`;
+  modalContent.innerHTML=`<div class="modal-meta">${escapeHtml(p.cat.toUpperCase())} / ${escapeHtml(p.type)} / ${escapeHtml(p.year)}${p.client?` / ${escapeHtml(p.client)}`:''}</div><h2>${escapeHtml(p.title)}</h2><img class="modal-hero" src="${escapeHtml(p.img)}" alt="${escapeHtml(p.title)}" decoding="async">${galleryHtml}<div class="modal-body"><div class="modal-block"><h3>OVERVIEW</h3><p>${escapeHtml(p.desc||'Project overview available on request.')}</p></div><div class="modal-block"><h3>CHALLENGE</h3><p>${escapeHtml(p.challenge||'Defined the communication problem, audience and visual priorities.')}</p></div><div class="modal-block"><h3>APPROACH</h3><p>${escapeHtml(p.approach||'Built a focused visual system around hierarchy, clarity and consistency.')}</p></div><div class="modal-block"><h3>PROCESS</h3><p>${escapeHtml(p.process||'Discovery → direction → design → final delivery')}</p></div><div class="modal-block"><h3>RESULT / OUTCOME</h3><p>${escapeHtml(p.results||'Project outcome available on request.')}</p></div><div class="modal-block modal-deliverables"><h3>DELIVERABLES</h3><p>${escapeHtml(p.deliverables||'Visual design · Creative direction · Final assets')}${p.tools?`<br><br><strong>TOOLS</strong> · ${escapeHtml(p.tools)}`:''}</p>${p.liveUrl?`<a class="modal-live" href="${escapeHtml(p.liveUrl)}" target="_blank" rel="noreferrer">OPEN LIVE PROJECT ↗</a>`:''}</div></div>`;
   const gs=modalContent.querySelector('.gallery-slider');
   if(gs){const slides=[...gs.querySelectorAll('.gallery-slide')];let gi=0,gbusy=false;const gc=gs.querySelector('.gallery-count');const update=()=>{if(gc)gc.textContent=`${String(gi+1).padStart(2,'0')} / ${String(slides.length).padStart(2,'0')}`};const go=(dir)=>{if(gbusy||slides.length<2)return;gbusy=true;const ni=(gi+dir+slides.length)%slides.length;const motion=galleryMotionNames[Math.floor(Math.random()*galleryMotionNames.length)];const target=slides[ni];target.className=`gallery-slide ${motion}`;requestAnimationFrame(()=>target.classList.add('active'));setTimeout(()=>{slides[gi].className='gallery-slide';target.className='gallery-slide active';gi=ni;update();gbusy=false},780)};gs.querySelector('.gallery-prev').onclick=()=>go(-1);gs.querySelector('.gallery-next').onclick=()=>go(1);let sx=0;gs.onpointerdown=e=>sx=e.clientX;gs.onpointerup=e=>{const dx=e.clientX-sx;if(Math.abs(dx)>45)go(dx<0?1:-1)};update()}
   modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
@@ -144,8 +178,10 @@ function openRouteProject(){
   const parts=location.pathname.split('/').filter(Boolean);
   if(parts[0]==='work'&&parts[1]){const p=projects.find(x=>x.slug===decodeURIComponent(parts[1]));if(p)openProject(p.id)}
 }
-function closeModal(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow=''}
+addEventListener('popstate',()=>{if(location.pathname.startsWith('/work/'))openRouteProject();else if(modal?.classList.contains('open'))closeModal()});
+function closeModal(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';if(!location.pathname.startsWith('/work/'))resetHomeMeta()}
 $('#close').onclick=closeModal;modal.onclick=e=>{if(e.target===modal)closeModal()};document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+$('#modalFullscreen')?.addEventListener('click',async()=>{const target=modalContent.querySelector('.modal-panel')||modalContent;try{if(document.fullscreenElement)await document.exitFullscreen();else await target.requestFullscreen?.()}catch{}});
 $$('[data-filter]').forEach(b=>b.onclick=()=>{render(b.dataset.filter);document.querySelector('#work').scrollIntoView({behavior:'smooth'})});
 $('#year').textContent=new Date().getFullYear();
 const cursor=$('.cursor');
@@ -153,8 +189,8 @@ if(cursor&&matchMedia('(pointer:fine)').matches){
   let x=innerWidth/2,y=innerHeight/2,tx=x,ty=y;
   addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY},{passive:true});
   (function loop(){x+=(tx-x)*.18;y+=(ty-y)*.18;cursor.style.left=x+'px';cursor.style.top=y+'px';requestAnimationFrame(loop)})();
-  document.addEventListener('mouseover',e=>{const el=e.target.closest('a,button,.project-card,.amazon-row,.filter,.magnetic');if(!el)return;cursor.classList.add('hover');cursor.querySelector('span').textContent=el.classList.contains('project-card')?'VIEW':'↗'});
-  document.addEventListener('mouseout',e=>{const from=e.target.closest('a,button,.project-card,.amazon-row,.filter,.magnetic');if(from&&!from.contains(e.relatedTarget))cursor.classList.remove('hover')});
+  document.addEventListener('mouseover',e=>{const el=e.target.closest('a,button,.project-card,.amazon-row,.filter,.magnetic,.image-viewer-image,.image-viewer-close,.image-viewer-nav');if(!el)return;cursor.classList.add('hover');cursor.querySelector('span').textContent=el.classList.contains('project-card')?'VIEW':'↗'});
+  document.addEventListener('mouseout',e=>{const from=e.target.closest('a,button,.project-card,.amazon-row,.filter,.magnetic,.image-viewer-image,.image-viewer-close,.image-viewer-nav');if(from&&!from.contains(e.relatedTarget))cursor.classList.remove('hover')});
 }
 const progress=$('.progress'),header=$('#header');
 function scrollUI(){const max=document.documentElement.scrollHeight-innerHeight;progress.style.width=(max?scrollY/max*100:0)+'%';header.classList.toggle('scrolled',scrollY>15)}
@@ -190,8 +226,26 @@ function renderFeatured(){
   if(count)count.classList.toggle('slider-control-hidden',!sliderConfig.counter);
   if(!featuredItems.length||!sliderConfig.enabled){root.innerHTML=sliderConfig.enabled?'<div class="featured-empty">Publish a featured project from the CMS to populate this slider.</div>':'';if(count)count.textContent='00 / 00';restartFeaturedTimer();return}
   if(sliderConfig.randomStart&&featuredIndex===0)featuredIndex=Math.floor(Math.random()*featuredItems.length);if(featuredIndex>=featuredItems.length)featuredIndex=0;
-  root.innerHTML=featuredItems.map((p,i)=>`<article class="featured-slide ${i===featuredIndex?'active':''}" data-index="${i}"><div class="featured-slide-media"><img src="${escapeHtml(p.img)}" alt="${escapeHtml(p.title)}" loading="${i===featuredIndex||!sliderConfig.lazy?'eager':'lazy'}"></div><div class="featured-slide-copy"><div><span class="num">${String(i+1).padStart(2,'0')} / ${p.demo?'DEMO · ':''}FEATURED</span><h3>${escapeHtml(p.title)}</h3><p>${escapeHtml(p.desc||'Selected project from the portfolio.')}</p></div><div><span class="meta">${escapeHtml(p.type)} · ${escapeHtml(p.year)} · ${escapeHtml((p.cat||'PROJECT').toUpperCase())}</span><br><a class="featured-slide-link" href="/work/${encodeURIComponent(p.slug)}" data-project-id="${escapeHtml(p.id)}">VIEW CASE STUDY ↗</a></div></div></article>`).join('');
-  root.querySelectorAll('[data-project-id]').forEach(a=>a.onclick=e=>{e.preventDefault();const id=a.dataset.projectId;if(!sliderConfig.clickOpen)return;history.pushState({},'',`/work/${encodeURIComponent(featuredItems.find(x=>x.id===id)?.slug||'')}`);openProject(id)});
+  root.innerHTML=featuredItems.map((p,i)=>`<article class="featured-slide ${i===featuredIndex?'active':''}" data-index="${i}"><div class="featured-slide-media"><img src="${escapeHtml(p.img)}" alt="${escapeHtml(p.title)}" loading="${i===featuredIndex||!sliderConfig.lazy?'eager':'lazy'}" decoding="async"></div><div class="featured-slide-copy"><div><span class="num">${String(i+1).padStart(2,'0')} / ${p.demo?'DEMO · ':''}FEATURED</span><h3>${escapeHtml(p.title)}</h3><p>${escapeHtml(p.desc||'Selected project from the portfolio.')}</p></div><div><span class="meta">${escapeHtml(p.type)} · ${escapeHtml(p.year)} · ${escapeHtml((p.cat||'PROJECT').toUpperCase())}</span><br><a class="featured-slide-link" href="/work/${encodeURIComponent(p.slug)}" data-project-id="${escapeHtml(p.id)}">VIEW CASE STUDY ↗</a></div></div></article>`).join('');
+  // Featured slider is navigation-only: clicking its image/body opens the project.
+  // The image viewer must never intercept a featured-slide click.
+  let featuredPointerDown=null,featuredPointerMoved=false,featuredSuppressClick=false;
+  root.addEventListener('pointerdown',e=>{featuredPointerDown={x:e.clientX,y:e.clientY};featuredPointerMoved=false;featuredSuppressClick=false},{passive:true});
+  root.addEventListener('pointermove',e=>{if(!featuredPointerDown)return;const dx=e.clientX-featuredPointerDown.x,dy=e.clientY-featuredPointerDown.y;if(Math.hypot(dx,dy)>10)featuredPointerMoved=true},{passive:true});
+  root.addEventListener('pointerup',()=>{if(!featuredPointerDown)return;featuredSuppressClick=featuredPointerMoved;featuredPointerDown=null;featuredPointerMoved=false},{passive:true});
+  root.addEventListener('click',e=>{
+    if(!sliderConfig.clickOpen||featuredSuppressClick){featuredSuppressClick=false;return;}
+    const control=e.target.closest('.slider-dot,.slider-btn');
+    if(control)return;
+    const link=e.target.closest('.featured-slide-link');
+    const slide=e.target.closest('.featured-slide.active');
+    if(!slide)return;
+    const item=featuredItems[Number(slide.dataset.index)];
+    if(!item?.slug)return;
+    e.preventDefault();
+    e.stopPropagation();
+    location.href=`/work/${encodeURIComponent(item.slug)}`;
+  });
   let dots=root.querySelector('.slider-dots'); if(sliderConfig.dots){dots=document.createElement('div');dots.className='slider-dots';dots.innerHTML=featuredItems.map((_,i)=>`<button type="button" class="slider-dot ${i===featuredIndex?'active':''}" data-index="${i}" aria-label="Go to slide ${i+1}"></button>`).join('');root.appendChild(dots);dots.querySelectorAll('button').forEach(b=>b.onclick=()=>goFeatured(Number(b.dataset.index)-featuredIndex))}
   if(sliderConfig.progress){const bar=document.createElement('div');bar.className='slider-progress';bar.innerHTML='<span></span>';root.appendChild(bar)}
   updateFeaturedCount();restartFeaturedTimer();
@@ -209,4 +263,4 @@ $('#featuredSlider')?.addEventListener('keydown',e=>{if(!sliderConfig.keyboard)r
 (function bindFeaturedInteractions(){const root=$('#featuredSlider');if(!root)return;let sx=0,sy=0,dragging=false;root.addEventListener('pointerenter',()=>{featuredHover=true;restartFeaturedTimer()});root.addEventListener('pointerleave',()=>{featuredHover=false;restartFeaturedTimer()});root.addEventListener('pointerdown',e=>{if(!sliderConfig.drag&&!sliderConfig.swipe)return;sx=e.clientX;sy=e.clientY;dragging=true});root.addEventListener('pointerup',e=>{if(!dragging)return;dragging=false;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)&&(sliderConfig.swipe||(isMobileSlider()&&sliderConfig.mobileSwipe)))goFeatured(dx<0?1:-1)});root.addEventListener('wheel',e=>{if(!sliderConfig.wheel)return;if(Math.abs(e.deltaY)<8)return;e.preventDefault();goFeatured(e.deltaY>0?1:-1)},{passive:false});const io=new IntersectionObserver(es=>{featuredVisible=es.some(e=>e.isIntersecting);restartFeaturedTimer()},{threshold:.1});io.observe(root)})();
 document.addEventListener('visibilitychange',restartFeaturedTimer);addEventListener('resize',()=>{renderFeatured()});
 async function loadShare(token){try{const r=await fetch('/api/public/share/'+encodeURIComponent(token),{cache:'no-store'});if(!r.ok)throw new Error();const d=await r.json();if(d.project){projects=[normalizeProject(d.project)];render();renderFeatured();openProject(d.project.id)}}catch{modalContent.innerHTML='<div class="modal-meta">CLIENT LINK</div><h2>Link unavailable.</h2><div class="modal-body"><div class="modal-block"><p>This private or unlisted project link is invalid or expired.</p></div></div>';modal.classList.add('open');modal.setAttribute('aria-hidden','false')}}
-const clientToken=new URLSearchParams(location.search).get('client');const sharePath=location.pathname.startsWith('/share/');const shareToken=sharePath?location.pathname.split('/').filter(Boolean).pop():null;if(clientToken||shareToken){loadShare(clientToken||shareToken)}else{loadSiteExtras().finally(()=>loadProductionContent());document.querySelector('#inquiryForm')?.addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;const msg=document.querySelector('#inquiryMsg');const data=Object.fromEntries(new FormData(form).entries());try{const r=await fetch('/api/public/inquiries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not send inquiry');msg.textContent='Thanks — your inquiry has been received.';form.reset()}catch(err){msg.textContent=err.message}})}
+const clientToken=new URLSearchParams(location.search).get('client');const sharePath=location.pathname.startsWith('/share/');const shareToken=sharePath?location.pathname.split('/').filter(Boolean).pop():null;if(clientToken||shareToken){loadShare(clientToken||shareToken)}else{loadSiteExtras().finally(()=>loadProductionContent());document.querySelector('#inquiryForm')?.addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;const msg=document.querySelector('#inquiryMsg');const data=Object.fromEntries(new FormData(form).entries());try{const r=await fetch('/api/public/inquiries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not send inquiry');msg.textContent=d.emailSent?'Thanks — your inquiry has been received. I’ll get back to you soon.':'Thanks — your inquiry has been saved. Email delivery is currently pending.';msg.classList.add('success');form.reset()}catch(err){msg.textContent=err.message}})}

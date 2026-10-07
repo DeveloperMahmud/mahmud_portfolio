@@ -16,9 +16,21 @@ router.post('/login', async (req, res) => {
 });
 router.post('/logout', (_req, res) => { clearSession(res); res.status(204).end(); });
 router.get('/me', requireAuth, async (_req, res) => {
-  const user = await db.user.findUnique({ where: { id: res.locals.user.sub }, select: { id: true, email: true, role: true } });
+  const user = await db.user.findUnique({ where: { id: res.locals.user.sub }, select: { id: true, email: true, role: true, createdAt: true, updatedAt: true } });
   if (!user) return res.status(401).json({ error: 'Session user no longer exists' });
   res.json({ user });
+});
+
+router.post('/password', requireAuth, async (req, res) => {
+  const parsed = z.object({ currentPassword: z.string().min(8), newPassword: z.string().min(8) }).safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+  if (parsed.data.currentPassword === parsed.data.newPassword) return res.status(400).json({ error: 'New password must be different from the current password.' });
+  const user = await db.user.findUnique({ where: { id: res.locals.user.sub } });
+  if (!user || !(await verifyPassword(parsed.data.currentPassword, user.passwordHash))) return res.status(401).json({ error: 'Current password is incorrect.' });
+  const passwordHash = await hashPassword(parsed.data.newPassword);
+  const updated = await db.user.update({ where: { id: user.id }, data: { passwordHash } });
+  setSession(res, updated.id, updated.role);
+  res.json({ user: { id: updated.id, email: updated.email, role: updated.role } });
 });
 export default router;
 

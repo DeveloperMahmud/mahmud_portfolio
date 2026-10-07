@@ -45,6 +45,18 @@ router.get('/brands', async (_req, res) => {
   const brands = await db.brand.findMany({ where: { active: true }, orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }] });
   res.json({ brands });
 });
+
+router.post('/share/:token/review', async (req, res) => {
+  const tokenHash = hashShareToken(req.params.token);
+  const project = await db.project.findFirst({ where: { accessTokenHash: tokenHash, status: 'PUBLISHED', visibility: { in: ['UNLISTED', 'PRIVATE'] } } });
+  if (!project || (project.clientExpiresAt && project.clientExpiresAt < new Date())) return res.status(404).json({ error: 'Share link is invalid or expired' });
+  const parsed = z.object({ clientName: z.string().min(1).max(120), clientEmail: z.string().email().optional().nullable(), decision: z.enum(['APPROVED','CHANGES_REQUESTED']), comment: z.string().max(3000).optional().nullable() }).safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
+  const review = await db.projectReview.create({ data: { projectId: project.id, ...parsed.data } });
+  await db.activityLog.create({ data: { action: parsed.data.decision === 'APPROVED' ? 'CLIENT_APPROVED' : 'CLIENT_REQUESTED_CHANGES', entity: 'PROJECT_REVIEW', entityId: review.id, label: `${project.title} · ${parsed.data.clientName}` } });
+  res.status(201).json({ ok: true, review });
+});
+
 router.get('/share/:token', async (req, res) => {
   const tokenHash = hashShareToken(req.params.token);
   const project = await db.project.findFirst({ where: { accessTokenHash: tokenHash, status: 'PUBLISHED', visibility: { in: ['UNLISTED', 'PRIVATE'] } } });

@@ -1,0 +1,1 @@
+V6 QA patch: inquiry grid fixed; cursor changed to transform-based direct pointer tracking on home/detail; hero/typewriter controls exposed under SETTINGS / SITE > HERO / TYPEWRITER; typewriterConfig load/save wired to SiteSettings; blog cursor script included. No schema change.
