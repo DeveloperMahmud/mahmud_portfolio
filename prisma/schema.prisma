@@ -65,22 +65,134 @@ model Project {
   seoTitle          String?
   seoDescription    String?
   liveUrl           String?
+  industry          String?
+  projectSubtitle   String?
+  credits           Json          @default("[]")
+  projectBlocks     Json          @default("[]")
+  showOnHomepage    Boolean       @default(true)
+  homepageOrder     Int           @default(0)
+  homepageLayout    String        @default("STANDARD")
+  homepageTitle     String?
+  homepageSubtitle  String?
+  homepageImage     String?
+  sliderImage       String?
+  sliderMobileImage String?
+  sliderTitle       String?
+  sliderHeadline    String?
+  sliderDescription String?
+  sliderCtaLabel    String?
+  sliderCtaUrl      String?
+  sliderTextAlign   String        @default("LEFT")
+  sliderOverlay     Int           @default(35)
+  sliderFocalPoint  String        @default("50% 50%")
+  sliderThumbnail   String?
+  sliderImageAlt    String?
+  sliderReflection  String        @default("INHERIT")
+  sliderReflectionIntensity String?
+  ogImage           String?
+  ogTitle           String?
+  ogDescription     String?
+  canonicalUrl      String?
+  noIndex           Boolean       @default(false)
+  noFollow          Boolean       @default(false)
+  includeSitemap    Boolean       @default(true)
+  focusTopic        String?
+  publicModifiedAt  DateTime?
+  relatedProjectIds String[]      @default([])
+  relatedContentIds String[]      @default([])
+  nextProjectId     String?
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
+  deletedAt         DateTime?
+  deletedBy         String?
+  resultMetrics     ProjectMetric[]
+  analyticsEvents   AnalyticsEvent[]
 
   @@index([status, visibility])
   @@index([featured, sortOrder])
+}
+
+model ProjectMetric {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  label       String
+  value       String?
+  prefix      String?
+  suffix      String?
+  beforeValue String?
+  afterValue  String?
+  publicNote  String?
+  sourceNote  String?
+  verified    Boolean  @default(false)
+  visible     Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([projectId, sortOrder])
+  @@index([projectId, verified, visible])
+}
+
+model AnalyticsEvent {
+  id             String   @id @default(cuid())
+  eventType      String
+  occurredAt     DateTime @default(now())
+  path           String
+  normalizedPath String
+  pageTitle      String?
+  projectId      String?
+  project        Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  visitorHash    String?
+  sessionHash    String?
+  referrerHost   String?
+  source         String?
+  deviceType     String?
+  countryCode    String?
+  engagementMs   Int      @default(0)
+  metadata       Json     @default("{}")
+
+  @@index([occurredAt])
+  @@index([eventType, occurredAt])
+  @@index([projectId, occurredAt])
+  @@index([normalizedPath, occurredAt])
+  @@index([visitorHash, occurredAt])
+  @@index([sessionHash, occurredAt])
+}
+
+model AnalyticsDaily {
+  id             String   @id @default(cuid())
+  date           DateTime
+  dimensionType  String   @default("OVERALL")
+  dimensionValue String   @default("ALL")
+  uniqueVisitors BigInt   @default(0)
+  sessions       BigInt   @default(0)
+  pageViews      BigInt   @default(0)
+  projectViews   BigInt   @default(0)
+  ctaClicks      BigInt   @default(0)
+  inquiries      BigInt   @default(0)
+  engagementMs   BigInt   @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([date, dimensionType, dimensionValue])
+  @@index([date, dimensionType])
 }
 
 model Brand {
   id         String   @id @default(cuid())
   name       String   @unique
   logoAsset  String?
+  logoDark   String?
   url        String?
+  industry   String?
+  description String?
+  featured   Boolean  @default(false)
   sortOrder  Int      @default(0)
   active     Boolean  @default(true)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  deletedAt  DateTime?
 }
 
 
@@ -98,6 +210,18 @@ model Content {
   author         String?
   seoTitle       String?
   seoDescription String?
+  ogTitle        String?
+  ogDescription  String?
+  ogImage        String?
+  canonicalUrl   String?
+  noIndex        Boolean  @default(false)
+  noFollow       Boolean  @default(false)
+  includeSitemap Boolean  @default(true)
+  focusTopic     String?
+  references     Json     @default("[]")
+  relatedProjectIds String[] @default([])
+  relatedContentIds String[] @default([])
+  publicModifiedAt DateTime?
   status         ProjectStatus @default(DRAFT)
   featured       Boolean  @default(false)
   sortOrder      Int      @default(0)
@@ -105,6 +229,8 @@ model Content {
   scheduledAt    DateTime?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  deletedAt      DateTime?
+  deletedBy      String?
 
   @@index([status, publishedAt])
   @@index([featured, sortOrder])
@@ -137,7 +263,104 @@ model SiteSettings {
   homepageOrder      String?
   sliderConfig       Json     @default("{}")
   skillsConfig       Json     @default("[]")
+  heroConfig         Json     @default("{}")
+  capabilitiesConfig Json     @default("[]")
+  amazonConfig       Json     @default("{}")
+  statementConfig    Json     @default("{}")
+  aboutConfig        Json     @default("{}")
+  socialLinks        Json     @default("[]")
+  navigationConfig   Json     @default("[]")
+  footerConfig       Json     @default("{}")
+  seoConfig          Json     @default("{}")
+  inquiryConfig      Json     @default("{}")
   updatedAt          DateTime @updatedAt
+}
+
+model SeoSettings {
+  id                    String   @id @default(cuid())
+  siteName              String   @default("Mahmudul Hassan")
+  defaultTitle          String?
+  titleTemplate         String   @default("%s — Mahmudul Hassan")
+  defaultDescription    String?
+  defaultOgTitle        String?
+  defaultOgDescription  String?
+  defaultOgImage        String?
+  twitterCard           String   @default("summary_large_image")
+  canonicalOrigin       String?
+  defaultIndex          Boolean  @default(true)
+  defaultFollow         Boolean  @default(true)
+  siteLanguage          String   @default("en")
+  siteLocale            String   @default("en_US")
+  googleVerification    String?
+  bingVerification      String?
+  crawlerConfig         Json     @default("{}")
+  socialProfiles        String[] @default([])
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model EntityProfile {
+  id                String   @id @default(cuid())
+  publicName        String   @default("Mahmudul Hassan")
+  alternateName     String?
+  professionalTitle String?
+  shortBio          String?
+  longBio           String?
+  portrait          String?
+  profilePath       String   @default("/#about")
+  location          String?
+  expertise         String[] @default([])
+  services          String[] @default([])
+  socialProfiles    String[] @default([])
+  contactPath       String   @default("/#contact")
+  stableIdentifier  String   @default("person")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model RedirectRule {
+  id          String   @id @default(cuid())
+  sourcePath  String   @unique
+  destination String
+  statusCode  Int      @default(301)
+  enabled     Boolean  @default(true)
+  reason      String?
+  hitCount    Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([enabled, sourcePath])
+}
+
+model SeoAuditIssue {
+  id        String   @id @default(cuid())
+  pageType  String
+  pageId    String?
+  url       String
+  code      String
+  severity  String
+  message   String
+  details   Json     @default("{}")
+  resolved  Boolean  @default(false)
+  checkedAt DateTime @default(now())
+
+  @@index([severity, resolved])
+  @@index([pageType, pageId])
+}
+
+model IndexNowSubmission {
+  id          String   @id @default(cuid())
+  url         String
+  status      String   @default("QUEUED")
+  responseCode Int?
+  error       String?
+  attempts    Int      @default(0)
+  submittedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([url, createdAt])
+  @@index([status, createdAt])
 }
 
 model Testimonial {
@@ -153,6 +376,7 @@ model Testimonial {
   sortOrder  Int      @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  deletedAt  DateTime?
 
   @@index([published, featured, sortOrder])
 }
@@ -163,9 +387,12 @@ model ActivityLog {
   entity     String
   entityId   String?
   label      String?
+  actorId    String?
+  result     String?
   createdAt  DateTime @default(now())
 
   @@index([createdAt])
+  @@index([action, entity, createdAt])
 }
 
 
@@ -174,15 +401,52 @@ model Inquiry {
   name        String
   email       String
   service     String?
+  company     String?
+  projectType String?
   budget      String?
   timeline    String?
   message     String
   attachment  String?
   status      String   @default("NEW")
+  internalNotes String?
+  priority      String   @default("NORMAL")
+  tags          String[] @default([])
+  assigneeId    String?
+  followUpAt    DateTime?
+  estimatedValue Int?
+  currency      String   @default("USD")
+  proposalStatus String?
+  proposalDate  DateTime?
+  outcomeReason String?
+  anonymizedAt  DateTime?
+  readAt      DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@index([status, createdAt])
+}
+
+model InquiryActivity {
+  id        String   @id @default(cuid())
+  inquiryId String
+  action    String
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@index([inquiryId, createdAt])
+}
+
+model HomepageSection {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  label     String
+  enabled   Boolean  @default(true)
+  sortOrder Int      @default(0)
+  config    Json     @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([enabled, sortOrder])
 }
 
 
@@ -196,4 +460,124 @@ model ProjectReview {
   createdAt   DateTime @default(now())
 
   @@index([projectId, createdAt])
+}
+
+model Media {
+  id String @id @default(cuid())
+  key String @unique
+  url String
+  provider String @default("local")
+  originalName String
+  filename String
+  mimeType String
+  size Int @default(0)
+  checksum String? @unique
+  visibility String @default("PUBLIC")
+  status String @default("COMPLETE")
+  derivatives Json @default("[]")
+  width Int?
+  height Int?
+  alt String?
+  title String?
+  description String?
+  caption String?
+  creator String?
+  credit String?
+  decorative Boolean @default(false)
+  tags String[] @default([])
+  folder String?
+  keep Boolean @default(false)
+  deletedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([mimeType])
+  @@index([createdAt])
+}
+
+model ContentRevision {
+  id           String   @id @default(cuid())
+  resourceType String
+  resourceId   String
+  revision     Int
+  snapshot     Json
+  summary      String?
+  sourceAction String?
+  actorId      String?
+  createdAt    DateTime @default(now())
+
+  @@unique([resourceType, resourceId, revision])
+  @@index([resourceType, resourceId, createdAt])
+}
+
+model BackupRecord {
+  id             String   @id @default(cuid())
+  formatVersion  String
+  status         String
+  checksum       String?
+  includedData   Json
+  recordCounts   Json?
+  payload        Json?
+  requestedById  String?
+  includesPrivateData Boolean @default(false)
+  createdAt      DateTime @default(now())
+  completedAt    DateTime?
+  expiresAt      DateTime?
+
+  @@index([status, createdAt])
+}
+
+model SystemCheck {
+  id        String   @id @default(cuid())
+  service   String
+  status    String
+  message   String?
+  metadata  Json     @default("{}")
+  checkedAt DateTime @default(now())
+
+  @@index([service, checkedAt])
+}
+
+model EmailDelivery {
+  id            String   @id @default(cuid())
+  inquiryId     String?
+  type          String
+  provider      String?
+  providerId    String?
+  status        String   @default("NOT_REQUESTED")
+  attemptCount  Int      @default(0)
+  lastErrorCode String?
+  nextRetryAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([inquiryId, createdAt])
+  @@index([status, nextRetryAt])
+}
+
+model ErrorIncident {
+  id          String   @id @default(cuid())
+  fingerprint String?
+  source      String
+  environment String
+  release     String?
+  message     String
+  context     Json     @default("{}")
+  resolved    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([resolved, createdAt])
+  @@index([source, createdAt])
+}
+
+model PreviewToken {
+  id           String   @id @default(cuid())
+  tokenHash    String   @unique
+  resourceType String
+  resourceId   String
+  createdById  String?
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  createdAt    DateTime @default(now())
+
+  @@index([resourceType, resourceId, expiresAt])
 }

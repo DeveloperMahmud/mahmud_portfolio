@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+const app=await readFile(new URL('../portfolio/app.js',import.meta.url),'utf8');
+const css=await readFile(new URL('../portfolio/styles.css',import.meta.url),'utf8');
+const admin=await readFile(new URL('../portfolio/admin.js',import.meta.url),'utf8');
+const migration=await readFile(new URL('../prisma/migrations/0020_editorial_featured_slider/migration.sql',import.meta.url),'utf8');
+test('all existing primary transitions remain available',()=>{for(const mode of ['MASK','DIAGONAL','SPLIT','CURTAIN','ZOOM','SLIDE'])assert.match(app,new RegExp(`${mode}:'t-`))});
+test('reflection is one-shot, clipped, and reduced-motion safe',()=>{assert.match(css,/overflow:hidden/);assert.match(css,/featuredReflection[^}]*\{/);assert.match(css,/1 both/);assert.match(css,/prefers-reduced-motion:reduce[^]*is-reflecting:after/)});
+test('editorial slider retains accessibility and interaction contracts',()=>{for(const token of ['aria-roledescription','aria-live="polite"','aria-pressed','ArrowLeft','ArrowRight',"'swipe'"])assert.ok(app.includes(token),token)});
+test('CMS exposes global and per-slide editorial controls',()=>{for(const token of ['sliderReflectionEnabled','sliderMobileReflection','sliderThumbnail','sliderImageAlt','sliderReflectionIntensity'])assert.ok(admin.includes(token),token)});
+test('migration is additive only',()=>{assert.match(migration,/ALTER TABLE/);assert.doesNotMatch(migration,/\b(DROP|DELETE|TRUNCATE)\b/i)});

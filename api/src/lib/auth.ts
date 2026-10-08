@@ -3,7 +3,12 @@ import bcrypt from 'bcryptjs';
 import type { Request, Response, NextFunction } from 'express';
 
 const COOKIE = 'mh_admin_session';
-const secret = () => process.env.JWT_SECRET || 'dev-only-secret-change-me';
+const secret = () => {
+  const value = process.env.JWT_SECRET?.trim();
+  if (value) return value;
+  if (process.env.NODE_ENV === 'production') throw new Error('JWT_SECRET is required in production');
+  return 'dev-only-secret-change-me';
+};
 
 export async function hashPassword(password: string) { return bcrypt.hash(password, 12); }
 export async function verifyPassword(password: string, hash: string) { return bcrypt.compare(password, hash); }
@@ -13,7 +18,7 @@ export function setSession(res: Response, userId: string, role: string) {
   res.cookie(COOKIE, token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000, path: '/' });
 }
 
-export function clearSession(res: Response) { res.clearCookie(COOKIE, { path: '/' }); }
+export function clearSession(res: Response) { res.clearCookie(COOKIE, { path: '/', httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax' }); }
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
   const token = req.cookies?.[COOKIE];

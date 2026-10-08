@@ -77,7 +77,7 @@
     <div><span class="kicker">01 / SELECTED WORK</span><h2>Selected work.<br><em>Built with intent.</em></h2></div>
     <p>A focused mix of Amazon, e-commerce, branding, digital, motion and technical work. Each project can become a full case study.</p>
   </div>
-  <div id="filters" class="filters reveal"></div>
+  <div id="filters" class="filters reveal"></div><p class="reveal" style="margin:22px 0 0"><a class="button" href="/work.html">VIEW FULL ARCHIVE →</a></p>
   <div id="grid" class="project-grid"></div>
 </section>
 
@@ -136,12 +136,12 @@
 
 <section class="testimonials-section section" id="testimonials"><div class="section-head reveal"><div><span class="kicker">05 / CLIENT NOTES</span><h2>Work that leaves<br><em>a clear impression.</em></h2></div></div><div id="testimonialPublic" class="testimonial-public"></div></section>
 <section class="contact-section" id="contact">
-  <div class="contact-inner reveal"><span class="kicker">06 / START A PROJECT</span><h2>Have something<br><em>worth building?</em></h2><p>Tell me what you’re working on and what you need the design to achieve.</p><form id="inquiryForm" class="inquiry-form"><div><label>NAME<input name="name" required></label><label>EMAIL<input name="email" type="email" required></label></div><div><label>SERVICE<select name="service"><option>Amazon / E-commerce</option><option>Branding / Graphic</option><option>Web / Digital</option><option>Video / Motion</option><option>Engineering</option><option>Other</option></select></label><label>BUDGET<select name="budget"><option value="">Select a range</option><option>Under $100</option><option>$100–300</option><option>$300–500</option><option>$500–1000</option><option>$1000+</option><option>Not sure yet</option></select></label></div><label>TIMELINE<input name="timeline" placeholder="Optional"></label><label>PROJECT DETAILS<textarea name="message" minlength="10" required placeholder="Tell me what you are building..."></textarea></label><button class="contact-link" type="submit">START A PROJECT ↗</button><span id="inquiryMsg" class="notice" role="status" aria-live="polite"></span></form><p class="private-note">Private client case studies can be shared by secure link without appearing in the public portfolio.</p></div>
+  <div class="contact-inner reveal"><span class="kicker">06 / START A PROJECT</span><h2>Have something<br><em>worth building?</em></h2><p>Tell me what you’re working on and what you need the design to achieve.</p><form id="inquiryForm" class="inquiry-form"><input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="honeypot"><div><label>NAME<input name="name" required></label><label>EMAIL<input name="email" type="email" required></label></div><div><label>BRAND / COMPANY<input name="company" autocomplete="organization"></label><label>PROJECT TYPE<input name="projectType" placeholder="A+ Content, brand system, website…"></label></div><div><label>SERVICE<select name="service"><option>Amazon / E-commerce</option><option>Branding / Graphic</option><option>Web / Digital</option><option>Video / Motion</option><option>Engineering</option><option>Other</option></select></label><label>BUDGET<select name="budget"><option value="">Select a range</option><option>$500–1,000</option><option>$1,000–2,500</option><option>$2,500–5,000</option><option>$5,000+</option><option>Not sure yet</option></select></label></div><label>TIMELINE<input name="timeline" placeholder="Optional"></label><label>PROJECT DETAILS<textarea name="message" minlength="10" required placeholder="Tell me what you are building..."></textarea></label><button class="contact-link" type="submit">START A PROJECT ↗</button><span id="inquiryMsg" class="notice" role="status" aria-live="polite"></span></form><p class="private-note">Private client case studies can be shared by secure link without appearing in the public portfolio.</p></div>
   <footer><span id="availabilityLabel">AVAILABLE FOR SELECT PROJECTS</span><span>© <span id="year"></span> MAHMUDUL HASSAN</span></footer>
 </section>
 </main>
 
 <div class="modal" id="modal" aria-hidden="true"><div class="modal-panel"><div class="modal-actions"><button class="modal-fullscreen" id="modalFullscreen" type="button">FULLSCREEN ↗</button><button class="modal-close" id="close" aria-label="Close">×</button></div><div id="modal-content"></div></div></div>
-<script src="/neural-bg.js"></script><script src="app.js"></script><script src="/image-viewer.js"></script>
-</body>
+<script src="/neural-bg.js"></script><script src="/analytics.js"></script><script src="app.js"></script><script src="/image-viewer.js"></script>
+<script src="/responsive.js" defer></script></body>
 </html>

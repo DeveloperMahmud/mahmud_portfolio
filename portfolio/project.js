@@ -1,12 +1,131 @@
-(()=>{const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const slug=new URLSearchParams(location.search).get('slug')||location.pathname.split('/').filter(Boolean).pop();const DEMO_PROJECTS={
-'demo-premium-a-plus':{slug:'demo-premium-a-plus',title:'Premium A+ — Outdoor Hydration',cat:'amazon',type:'PREMIUM A+',year:'DEMO',img:'/assets/demo-a-plus.svg',desc:'A premium A+ concept showing product storytelling, benefit hierarchy and visual modules.',challenge:'Turn technical product benefits into a fast-scanning visual story.',approach:'Built a bold modular system with hero storytelling, feature callouts and comparison logic.',process:'Content audit → story map → art direction → module system',results:'A cohesive premium A+ direction designed for fast comprehension and stronger product storytelling.',deliverables:'Premium A+ · Feature Modules · Comparison Chart',tools:'Photoshop · Illustrator · Figma',gallery:['/assets/demo-a-plus.svg','/assets/demo-listing.svg','/assets/demo-brand.svg']},
-'demo-amazon-listing':{slug:'demo-amazon-listing',title:'Amazon Listing — Smart Kitchen Tool',cat:'amazon',type:'LISTING IMAGES',year:'DEMO',img:'/assets/demo-listing.svg',desc:'A complete listing-image sequence built around clarity, product benefits and use cases.',challenge:'Communicate purchase reasons within a compact image sequence.',approach:'Combined clean product framing, feature graphics and lifestyle storytelling.',process:'Product audit → image sequence → infographic system → final QA',results:'A structured listing sequence that makes product benefits easier to scan and compare.',deliverables:'Main Image · Secondary Images · Infographics · Lifestyle',tools:'Photoshop · Illustrator',gallery:['/assets/demo-listing.svg','/assets/demo-a-plus.svg','/assets/demo-pack.svg']},
-'demo-brand-identity':{slug:'demo-brand-identity',title:'Brand Identity — Northline',cat:'branding',type:'BRAND IDENTITY',year:'DEMO',img:'/assets/demo-brand.svg',desc:'A compact identity system exploring logo, typography, layout and packaging direction.',challenge:'Create a confident identity that can scale across digital and physical touchpoints.',approach:'Established a restrained visual language with strong typography and repeatable layout rules.',process:'Discovery → identity direction → system → applications',results:'A repeatable identity system ready to extend across key brand touchpoints.',deliverables:'Logo · Typography · Brand System · Packaging',tools:'Illustrator · Photoshop · Figma',gallery:['/assets/demo-brand.svg','/assets/demo-pack.svg','/assets/demo-web.svg']},
-'demo-amazon-storefront':{slug:'demo-amazon-storefront',title:'Amazon Storefront — Home & Living',cat:'amazon',type:'STOREFRONT',year:'DEMO',img:'/assets/demo-store.svg',desc:'A storefront concept organizing a broad catalog into clear shopping journeys.',challenge:'Turn multiple product families into one coherent branded experience.',approach:'Created collection hierarchy, navigation cues and consistent visual modules.',process:'Catalog mapping → UX structure → visual system → page design',results:'A clearer branded shopping journey with consistent collection-level visual hierarchy.',deliverables:'Storefront · Category Pages · Product Collections',tools:'Figma · Photoshop',gallery:['/assets/demo-store.svg','/assets/demo-web.svg','/assets/demo-a-plus.svg']},
-'demo-product-motion':{slug:'demo-product-motion',title:'Product Motion — Launch Film',cat:'motion',type:'VIDEO / MOTION',year:'DEMO',img:'/assets/demo-motion.svg',desc:'A short-form product motion concept combining typography, product moments and rhythmic transitions.',challenge:'Create a concise visual hook for social and product launch communication.',approach:'Used kinetic type, controlled pacing and product-focused compositions.',process:'Storyboard → edit → motion system → final cut',results:'A concise motion direction built around rhythm, product focus and strong visual hooks.',deliverables:'Product Video · Social Cutdowns · Motion Graphics',tools:'Premiere Pro · After Effects',gallery:['/assets/demo-motion.svg','/assets/demo-listing.svg','/assets/demo-brand.svg']},
-'demo-landing-page':{slug:'demo-landing-page',title:'Landing Page — Product Launch',cat:'web',type:'LANDING PAGE',year:'DEMO',img:'/assets/demo-web.svg',desc:'A conversion-focused landing page concept with editorial product storytelling.',challenge:'Balance brand expression with a clear conversion path.',approach:'Built a modular page rhythm with strong hierarchy and purposeful interaction.',process:'Wireframe → visual direction → UI → front-end concept',results:'A focused landing-page direction balancing brand expression with a clear user journey.',deliverables:'Landing Page · UI System · Front-end Concept',tools:'Figma · HTML · CSS · JavaScript',gallery:['/assets/demo-web.svg','/assets/demo-store.svg','/assets/demo-motion.svg']},
-'demo-electrical-sld':{slug:'demo-electrical-sld',title:'Electrical SLD — Commercial Building',cat:'engineering',type:'ELECTRICAL SLD',year:'DEMO',img:'/assets/demo-sld.svg',desc:'A technical drawing concept demonstrating structured electrical documentation and clear diagram hierarchy.',challenge:'Present a complex electrical system in a readable technical format.',approach:'Applied disciplined notation, hierarchy and documentation structure.',process:'Load study → diagram structure → drafting → documentation QA',results:'A readable technical documentation direction with disciplined diagram hierarchy.',deliverables:'Single Line Diagram · Electrical Documentation',tools:'AutoCAD · Electrical Design Tools',gallery:['/assets/demo-sld.svg']},
-'demo-packaging-system':{slug:'demo-packaging-system',title:'Packaging System — Everyday Goods',cat:'branding',type:'PACKAGING',year:'DEMO',img:'/assets/demo-pack.svg',desc:'A packaging direction extending a brand system into a physical product family.',challenge:'Keep multiple SKUs visually consistent while preserving hierarchy.',approach:'Developed a repeatable packaging grid, typography and information system.',process:'Brand system → packaging grid → SKU rollout → print QA',results:'A scalable packaging direction that keeps multiple SKUs visually consistent.',deliverables:'Packaging · Label System · Print Layouts',tools:'Illustrator · Photoshop',gallery:['/assets/demo-pack.svg','/assets/demo-brand.svg','/assets/demo-listing.svg']}
-};
-document.body.classList.add('detail-page-cursor');
-const root=$('#projectDetail');function setMeta(p){const title=p.seoTitle||p.title+' — Mahmudul Hassan',desc=(p.seoDescription||p.desc||'Project case study by Mahmudul Hassan.').slice(0,160);document.title=title;document.querySelector('meta[name="description"]')?.setAttribute('content',desc);document.querySelector('meta[property="og:title"]')?.setAttribute('content',title);document.querySelector('meta[property="og:description"]')?.setAttribute('content',desc);if(p.img)document.querySelector('meta[property="og:image"]')?.setAttribute('content',new URL(p.img,location.href).href);const can=document.querySelector('link[rel="canonical"]');if(can)can.href=location.href}function gallery(p){const g=Array.isArray(p.gallery)?p.gallery:[];return g.length?`<section class="project-detail-gallery">${g.map(x=>`<figure><img src="${esc(x.url||x)}" alt="${esc(x.alt||p.title)}" loading="lazy"><figcaption>${esc(x.alt||p.title)}</figcaption></figure>`).join('')}</section>`:''}async function load(){try{let p=DEMO_PROJECTS[slug]||null; if(!p){const r=await fetch('/api/public/projects/'+encodeURIComponent(slug),{cache:'no-store'}); if(r.ok){const d=await r.json();p=d.project;}} if(!p) throw new Error('Project not found'); setMeta(p);root.innerHTML=`<article class="project-detail"><a class="article-back" href="/#work">← BACK TO WORK</a><div class="project-detail-kicker">${esc((p.cat||'PROJECT').toUpperCase())} / ${esc(p.type||'CASE STUDY')} / ${esc(p.year||'')}</div><h1>${esc(p.title)}</h1>${p.client?`<p class="project-detail-client">${esc(p.client)}${p.role?' · '+esc(p.role):''}</p>`:''}<img class="project-detail-hero" src="${esc(p.img)}" alt="${esc(p.title)}">${gallery(p)}<div class="project-detail-grid"><section><span class="kicker">OVERVIEW</span><p>${esc(p.desc||'Project overview available on request.')}</p></section><section><span class="kicker">CHALLENGE</span><p>${esc(p.challenge||'Defined the communication problem, audience and visual priorities.')}</p></section><section><span class="kicker">APPROACH</span><p>${esc(p.approach||'Built a focused visual system around hierarchy, clarity and consistency.')}</p></section><section><span class="kicker">PROCESS</span><p>${esc(p.process||'Discovery → direction → design → final delivery')}</p></section><section><span class="kicker">RESULT / OUTCOME</span><p>${esc(p.results||'Project outcome available on request.')}</p></section><section><span class="kicker">DELIVERABLES</span><p>${esc(p.deliverables||'Visual design · Creative direction · Final assets')}</p>${p.tools?`<p class="project-detail-tools"><strong>TOOLS</strong> · ${esc(p.tools)}</p>`:''}${p.liveUrl?`<a class="button button-fill" href="${esc(p.liveUrl)}" target="_blank" rel="noreferrer">OPEN LIVE PROJECT ↗</a>`:''}</section></div></article>`}catch(e){root.innerHTML='<div class="project-detail-error"><span class="kicker">PROJECT</span><h1>Project unavailable.</h1><p class="notice">This project may be unpublished, private, or the link may be incorrect.</p><a class="button button-fill" href="/#work">BACK TO WORK</a></div>'}}load()})()
+(() => {
+  const $ = selector => document.querySelector(selector);
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+  const slug = new URLSearchParams(location.search).get('slug') || location.pathname.split('/').filter(Boolean).pop();
+  const root = $('#projectDetail');
+  document.body.classList.add('detail-page-cursor');
+
+  const demoAssets = {
+    'demo-premium-a-plus': ['Premium A+ — Outdoor Hydration', '/assets/demo-a-plus.svg', 'PREMIUM A+'],
+    'demo-amazon-listing': ['Amazon Listing — Smart Kitchen Tool', '/assets/demo-listing.svg', 'LISTING IMAGES'],
+    'demo-brand-identity': ['Brand Identity — Northline', '/assets/demo-brand.svg', 'BRAND IDENTITY'],
+    'demo-amazon-storefront': ['Amazon Storefront — Home & Living', '/assets/demo-store.svg', 'STOREFRONT'],
+    'demo-product-motion': ['Product Motion — Launch Film', '/assets/demo-motion.svg', 'VIDEO / MOTION'],
+    'demo-landing-page': ['Landing Page — Product Launch', '/assets/demo-web.svg', 'LANDING PAGE'],
+    'demo-electrical-sld': ['Electrical SLD — Commercial Building', '/assets/demo-sld.svg', 'ELECTRICAL SLD'],
+    'demo-packaging-system': ['Packaging System — Everyday Goods', '/assets/demo-pack.svg', 'PACKAGING']
+  };
+
+  function demoProject(key) {
+    const asset = demoAssets[key];
+    return asset ? { slug: key, title: asset[0], coverImage: asset[1], type: asset[2], year: 'DEMO', category: 'Concept Work', description: 'A demonstration project available only when demo content is explicitly enabled.', gallery: [{ url: asset[1], alt: asset[0] }] } : null;
+  }
+
+  function setMeta(project) {
+    const title = project.seoTitle || `${project.title} — Mahmudul Hassan`;
+    const description = (project.seoDescription || project.description || 'Project case study by Mahmudul Hassan.').slice(0, 160);
+    const image = project.ogImage || project.coverImage;
+    document.title = title;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', title);
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
+    if (image) document.querySelector('meta[property="og:image"]')?.setAttribute('content', new URL(image, location.href).href);
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) canonical.href = project.canonicalUrl || `${location.origin}/work/${encodeURIComponent(project.slug)}`;
+    if (project.noIndex) {
+      const robots = document.createElement('meta');
+      robots.name = 'robots';
+      robots.content = 'noindex,nofollow';
+      document.head.append(robots);
+    }
+  }
+
+  function image(url, alt, className = '') {
+    return url ? `<img class="${className}" src="${esc(url)}" alt="${esc(alt || '')}" loading="lazy" decoding="async">` : '';
+  }
+
+  function safeEmbed(url) {
+    try {
+      const parsed = new URL(url);
+      const allowed = ['www.youtube.com', 'youtube.com', 'www.youtube-nocookie.com', 'player.vimeo.com'];
+      return allowed.includes(parsed.hostname) ? parsed.href : '';
+    } catch { return ''; }
+  }
+
+  function renderBlock(block) {
+    const data = block.data || {};
+    const title = data.heading || data.title || '';
+    switch (block.type) {
+      case 'TEXT': return `<section class="case-block case-text">${title ? `<h2>${esc(title)}</h2>` : ''}<p>${esc(data.text || data.body || '')}</p></section>`;
+      case 'LARGE_IMAGE': return `<figure class="case-block case-image">${image(data.url, data.alt || title)}${data.caption ? `<figcaption>${esc(data.caption)}</figcaption>` : ''}</figure>`;
+      case 'FULL_BLEED_IMAGE': return `<figure class="case-block case-image full-bleed">${image(data.url, data.alt || title)}${data.caption ? `<figcaption>${esc(data.caption)}</figcaption>` : ''}</figure>`;
+      case 'IMAGE_PAIR': return `<section class="case-block case-pair">${image(data.left?.url || data.leftUrl, data.left?.alt || data.leftAlt)}${image(data.right?.url || data.rightUrl, data.right?.alt || data.rightAlt)}</section>`;
+      case 'IMAGE_GRID':
+      case 'GALLERY': return `<section class="case-block case-gallery">${(data.items || data.images || []).map(item => image(item.url || item, item.alt || project?.title)).join('')}</section>`;
+      case 'VIDEO': {
+        const embed = safeEmbed(data.embedUrl || data.url || '');
+        if (embed) return `<section class="case-block case-video"><iframe src="${esc(embed)}" title="${esc(title || 'Project video')}" loading="lazy" allowfullscreen></iframe></section>`;
+        return data.url ? `<section class="case-block case-video"><video controls preload="metadata" poster="${esc(data.poster || '')}"><source src="${esc(data.url)}"></video></section>` : '';
+      }
+      case 'BEFORE_AFTER': return `<section class="case-block case-before-after"><figure>${image(data.beforeUrl || data.before?.url, data.beforeLabel || 'Before')}<figcaption>${esc(data.beforeLabel || 'Before')}</figcaption></figure><figure>${image(data.afterUrl || data.after?.url, data.afterLabel || 'After')}<figcaption>${esc(data.afterLabel || 'After')}</figcaption></figure></section>`;
+      case 'DESIGN_DECISIONS': return `<section class="case-block case-decisions">${title ? `<h2>${esc(title)}</h2>` : ''}${(data.items || []).map((item, index) => `<article><span>${String(index + 1).padStart(2, '0')}</span><div><h3>${esc(item.title)}</h3><p>${esc(item.description)}</p></div></article>`).join('')}</section>`;
+      case 'DESIGN_SYSTEM': return `<section class="case-block case-system">${title ? `<h2>${esc(title)}</h2>` : ''}<div>${(data.items || []).map(item => `<article><small>${esc(item.label || item.title)}</small><strong>${esc(item.value || item.description)}</strong></article>`).join('')}</div></section>`;
+      case 'QUOTE': return `<blockquote class="case-block case-quote">“${esc(data.quote || data.text || '')}”${data.attribution ? `<cite>${esc(data.attribution)}</cite>` : ''}</blockquote>`;
+      case 'RESULTS':
+      case 'METRICS': {const selected=Array.isArray(data.metricIds)&&data.metricIds.length?data.metricIds.map(id=>(project?.resultMetrics||[]).find(item=>item.id===id)).filter(Boolean):(data.items||project?.resultMetrics||[]);return `<section class="case-block case-results">${title ? `<h2>${esc(title)}</h2>` : ''}<div>${selected.slice(0,6).map(item => `<article><strong>${esc(`${item.prefix||''}${item.value||item.afterValue||item.title||''}${item.suffix||''}`)}</strong><span>${esc(item.label || item.description)}</span>${item.beforeValue&&item.afterValue?`<small>${esc(item.beforeValue)} → ${esc(item.afterValue)}</small>`:''}${item.publicNote?`<p>${esc(item.publicNote)}</p>`:''}</article>`).join('')}</div></section>`;}
+      case 'DELIVERABLES':
+      case 'CREDITS': return `<section class="case-block case-list">${title ? `<h2>${esc(title)}</h2>` : ''}<ul>${(data.items || []).map(item => `<li>${esc(item.label ? `${item.label}: ${item.value}` : item)}</li>`).join('')}</ul></section>`;
+      case 'SPACER': return '<div class="case-block case-spacer" aria-hidden="true"></div>';
+      case 'DIVIDER': return '<hr class="case-block case-divider">';
+      case 'EMBED': {
+        const embed = safeEmbed(data.url || '');
+        return embed ? `<section class="case-block case-video"><iframe src="${esc(embed)}" title="${esc(title || 'Embedded media')}" loading="lazy" allowfullscreen></iframe></section>` : '';
+      }
+      default: return '';
+    }
+  }
+
+  let project = null;
+  function renderGallery(items, fallbackAlt) {
+    return items?.length ? `<section class="project-detail-gallery">${items.map(item => `<figure>${image(item.url || item, item.alt || fallbackAlt)}${item.alt ? `<figcaption>${esc(item.alt)}</figcaption>` : ''}</figure>`).join('')}</section>` : '';
+  }
+
+  function renderLegacy(project) {
+    const values = [
+      ['OVERVIEW', project.description || 'Project overview available on request.'],
+      ['CHALLENGE', project.challenge], ['APPROACH', project.approach], ['PROCESS', project.process],
+      ['RESULT / OUTCOME', project.results], ['DELIVERABLES', Array.isArray(project.deliverables) ? project.deliverables.join(' · ') : project.deliverables]
+    ].filter(([, value]) => value);
+    return `<div class="project-detail-grid">${values.map(([label, value]) => `<section><span class="kicker">${label}</span><p>${esc(value)}</p></section>`).join('')}<section><span class="kicker">TOOLS</span><p>${esc(Array.isArray(project.tools) ? project.tools.join(' · ') : project.tools || 'Available on request')}</p>${project.liveUrl ? `<a class="button button-fill" href="${esc(project.liveUrl)}" target="_blank" rel="noreferrer">OPEN LIVE PROJECT ↗</a>` : ''}</section></div>`;
+  }
+
+  function render(project, nextProject) {
+    setMeta(project);
+    const blocks = Array.isArray(project.projectBlocks) ? project.projectBlocks.filter(block => block.enabled !== false).sort((a, b) => a.sortOrder - b.sortOrder) : [];
+    root.innerHTML = `<article class="project-detail"><a class="article-back" href="/#work">← BACK TO WORK</a><div class="project-detail-kicker">${esc(project.category || 'PROJECT')} / ${esc(project.type || 'CASE STUDY')} / ${esc(project.year || '')}</div><h1>${esc(project.title)}</h1>${project.projectSubtitle ? `<p class="project-detail-subtitle">${esc(project.projectSubtitle)}</p>` : ''}${project.client ? `<p class="project-detail-client">${esc(project.client)}${project.role ? ` · ${esc(project.role)}` : ''}</p>` : ''}${image(project.coverImage, project.title, 'project-detail-hero')}${blocks.length ? `<div class="case-blocks">${blocks.map(renderBlock).join('')}</div>` : `${renderGallery(project.gallery, project.title)}${renderLegacy(project)}`}${nextProject ? `<a class="next-project" href="/work/${encodeURIComponent(nextProject.slug)}"><span>NEXT PROJECT</span><strong>${esc(nextProject.title)} →</strong>${image(nextProject.coverImage, '')}</a>` : ''}</article>`;
+  }
+
+  async function load() {
+    try {
+      const response = await fetch(`/api/public/projects/${encodeURIComponent(slug)}`, { cache: 'no-store' });
+      let nextProject = null;
+      if (response.ok) {
+        const data = await response.json();
+        project = data.project;
+        nextProject = data.nextProject;
+      } else {
+        const listing = await fetch('/api/public/projects', { cache: 'no-store' });
+        const data = listing.ok ? await listing.json() : {};
+        if (data.demoEnabled) project = demoProject(slug);
+      }
+      if (!project) throw new Error('Project not found');
+      render(project, nextProject);
+      window.portfolioAnalytics?.setProject(project.id);
+      window.portfolioAnalytics?.track('project_view',{projectId:project.id,sourceContext:'project'});
+    } catch {
+      root.innerHTML = '<div class="project-detail-error"><span class="kicker">PROJECT</span><h1>Project unavailable.</h1><p class="notice">This project may be unpublished, private, or the link may be incorrect.</p><a class="button button-fill" href="/#work">BACK TO WORK</a></div>';
+    }
+  }
+
+  load();
+})();
