@@ -5,9 +5,7 @@
   "outputDirectory": "public",
   "functions": {
     "api/index.ts": {
-      "includeFiles": [
-        "portfolio/**"
-      ],
+      "includeFiles": "portfolio/**",
       "maxDuration": 60
     }
   },
