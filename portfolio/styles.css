@@ -349,3 +349,72 @@
     margin-top: 4px;
   }
 }
+
+
+/* Admin dark form controls */
+#inquiryList .inquiry-notes,
+#maintenanceOverview input,
+#maintenanceOverview select,
+#maintenanceOverview textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: #0d0f0e;
+  color: #f2f4ef;
+  border: 1px solid #2b302c;
+  border-radius: 5px;
+  padding: 12px 14px;
+  font: inherit;
+}
+
+#inquiryList .inquiry-notes {
+  min-height: 120px;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+#inquiryList .inquiry-notes:focus,
+#maintenanceOverview input:focus,
+#maintenanceOverview select:focus,
+#maintenanceOverview textarea:focus {
+  outline: 1px solid var(--lime);
+  border-color: var(--lime);
+  outline-offset: 2px;
+}
+
+/* Restore controls */
+#maintenanceOverview label {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: .12em;
+}
+
+#maintenanceOverview input[type="file"] {
+  padding: 8px;
+}
+
+#maintenanceOverview input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  padding: 10px 14px;
+  border: 1px solid #343a35;
+  border-radius: 4px;
+  background: #171a18;
+  color: #f2f4ef;
+  font: 700 10px "DM Sans", sans-serif;
+  letter-spacing: .08em;
+  cursor: pointer;
+}
+
+#maintenanceOverview input[type="file"]::file-selector-button:hover {
+  color: #090a09;
+  background: var(--lime);
+  border-color: var(--lime);
+}
+
+#maintenanceOverview select {
+  min-height: 44px;
+  color-scheme: dark;
+}
+
