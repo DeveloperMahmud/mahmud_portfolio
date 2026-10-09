@@ -452,6 +452,80 @@
   overflow:auto;
   padding:3px;
 }
+.skill-icon-colors{
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) minmax(190px,auto);
+  align-items:end;
+  gap:10px 14px;
+  padding:12px;
+  border:1px solid #252a26;
+  border-radius:6px;
+  background:#0d100e;
+}
+.skill-color-label{
+  align-self:center;
+  color:var(--muted);
+  font:800 8px/1 "DM Sans",sans-serif;
+  letter-spacing:.13em;
+}
+.skill-color-presets{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.skill-color-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  min-height:38px;
+  padding:8px 10px;
+  border:1px solid #303630;
+  border-radius:5px;
+  background:#141714;
+  color:#b8bdb7;
+  font:800 8px/1 "DM Sans",sans-serif;
+  letter-spacing:.08em;
+  cursor:pointer;
+}
+.skill-color-btn:hover,.skill-color-btn.active{
+  border-color:var(--lime);
+  color:#f3f6f1;
+  background:#1a2017;
+}
+.skill-color-btn i{
+  width:13px;
+  height:13px;
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:50%;
+  background:var(--swatch,linear-gradient(135deg,#ff4d4d,#ffd84d,#42e58b,#4d8dff,#b85cff));
+}
+.skill-custom-color{
+  display:grid;
+  gap:7px;
+  color:var(--muted);
+  font:800 8px/1 "DM Sans",sans-serif;
+  letter-spacing:.12em;
+}
+.skill-custom-color>div{
+  display:grid;
+  grid-template-columns:46px minmax(90px,1fr);
+  gap:7px;
+}
+.admin-page .skill-custom-color input[type="color"]{
+  width:46px;
+  height:42px;
+  padding:4px;
+  border-radius:5px;
+  cursor:pointer;
+}
+.admin-page .skill-custom-color input[type="color"]::-webkit-color-swatch-wrapper{padding:0}
+.admin-page .skill-custom-color input[type="color"]::-webkit-color-swatch{border:0;border-radius:3px}
+.admin-page .skill-custom-color input[type="color"]::-moz-color-swatch{border:0;border-radius:3px}
+.skill-icon-colors>.field-hint{
+  grid-column:1/-1;
+  margin:0;
+}
 .skill-icon-choice{
   display:flex;
   align-items:center;
@@ -491,6 +565,8 @@
 }
 @media(max-width:767px){
   .skill-icon-results{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .skill-icon-colors{grid-template-columns:1fr;align-items:stretch}
+  .skill-color-label{margin-bottom:2px}
 }
 @media(max-width:420px){
   .skill-icon-picker{grid-template-columns:1fr;}

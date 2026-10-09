@@ -317,17 +317,28 @@ const SIMPLE_ICON_CATALOG=[
 ];
 
 function setupSkillIconPicker(){
-  const search=$('#skillIconSearch'),field=$('#skillIcon'),results=$('#skillIconResults'),preview=$('#skillIconPreview');
-  if(!search||!field||!results||!preview)return;
-  const iconUrl=slug=>`https://cdn.simpleicons.org/${slug}`;
+  const search=$('#skillIconSearch'),field=$('#skillIcon'),results=$('#skillIconResults'),preview=$('#skillIconPreview'),colorInput=$('#skillIconColor'),hexInput=$('#skillIconHex'),colorHint=$('#skillColorHint');
+  if(!search||!field||!results||!preview||!colorInput||!hexInput)return;
+  let selectedColor='brand';
+  const iconUrl=(slug,color=selectedColor)=>`https://cdn.simpleicons.org/${slug}${color&&color!=='brand'?'/'+color:''}`;
+  const parseSimpleIcon=url=>{const match=url.trim().match(/^https:\/\/cdn\.simpleicons\.org\/([^/?#]+)(?:\/([^/?#]+))?/i);return match?{slug:match[1],color:match[2]||'brand'}:null};
+  const normalizeHex=value=>{const clean=String(value||'').trim().replace(/^#/,'').toLowerCase();return /^[0-9a-f]{6}$/.test(clean)?clean:null};
+  const syncColorUi=()=>{
+    const parsed=parseSimpleIcon(field.value);selectedColor=parsed?.color||'brand';
+    $$('.skill-color-btn').forEach(button=>button.classList.toggle('active',button.dataset.iconColor===selectedColor));
+    if(selectedColor!=='brand'&&normalizeHex(selectedColor)){colorInput.value='#'+selectedColor;hexInput.value='#'+selectedColor}
+    if(colorHint)colorHint.textContent=parsed?'Color is applied directly to the selected Simple Icons SVG URL.':'Select a Simple Icon first. Custom image URLs keep their original colors.';
+  };
   const showPreview=()=>{
     const url=field.value.trim();
     preview.replaceChildren();
-    if(!url){const empty=document.createElement('span');empty.textContent='NO ICON SELECTED';preview.append(empty);return}
+    if(!url){const empty=document.createElement('span');empty.textContent='NO ICON SELECTED';preview.append(empty);syncColorUi();return}
     const image=document.createElement('img');image.src=url;image.alt='Selected skill icon preview';image.referrerPolicy='no-referrer';
     image.onerror=()=>{image.remove();const failed=document.createElement('span');failed.textContent='ICON URL COULD NOT LOAD';preview.append(failed)};
     const text=document.createElement('small');text.textContent=url.includes('cdn.simpleicons.org')?'SIMPLE ICONS CDN':'CUSTOM ICON URL';preview.append(image,text);
+    syncColorUi();
   };
+  const applyColor=color=>{const parsed=parseSimpleIcon(field.value);if(!parsed){showPreview();return}selectedColor=color||'brand';field.value=iconUrl(parsed.slug,selectedColor);showPreview();showResults();field.dispatchEvent(new Event('change',{bubbles:true}))};
   const showResults=()=>{
     const term=search.value.trim().toLowerCase();
     const items=SIMPLE_ICON_CATALOG.filter(([name,slug])=>!term||name.toLowerCase().includes(term)||slug.includes(term)).slice(0,24);
@@ -337,10 +348,13 @@ function setupSkillIconPicker(){
       const button=document.createElement('button');button.type='button';button.className='skill-icon-choice';button.setAttribute('role','option');button.setAttribute('aria-label',`Use ${name} icon`);button.title=name;
       const image=document.createElement('img');image.src=iconUrl(slug);image.alt='';image.loading='lazy';image.referrerPolicy='no-referrer';
       const label=document.createElement('span');label.textContent=name;button.append(image,label);
-      button.addEventListener('click',()=>{field.value=iconUrl(slug);search.value=name;showPreview();showResults();field.dispatchEvent(new Event('input',{bubbles:true}));});results.append(button);
+      button.addEventListener('click',()=>{field.value=iconUrl(slug);search.value=name;showPreview();showResults();field.dispatchEvent(new Event('change',{bubbles:true}));});results.append(button);
     });
   };
-  search.addEventListener('input',showResults);field.addEventListener('input',showPreview);document.addEventListener('click',event=>{if(event.target.closest('.js-skill-edit'))setTimeout(showPreview,0)});$('#clearSkill')?.addEventListener('click',()=>setTimeout(()=>{search.value='';showPreview();showResults()},0));
+  $$('.skill-color-btn').forEach(button=>button.addEventListener('click',()=>applyColor(button.dataset.iconColor)));
+  colorInput.addEventListener('input',()=>{const color=normalizeHex(colorInput.value);if(color){hexInput.value='#'+color;applyColor(color)}});
+  hexInput.addEventListener('input',()=>{const color=normalizeHex(hexInput.value);if(color){colorInput.value='#'+color;applyColor(color)}});
+  search.addEventListener('input',showResults);field.addEventListener('input',showPreview);document.addEventListener('click',event=>{if(event.target.closest('.js-skill-edit'))setTimeout(showPreview,0)});$('#clearSkill')?.addEventListener('click',()=>setTimeout(()=>{search.value='';selectedColor='brand';showPreview();showResults()},0));
   showPreview();showResults();
 }
 
