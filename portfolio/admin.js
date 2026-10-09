@@ -312,4 +312,37 @@ $('#projectSearch')?.addEventListener('input',renderProjects);$('#contentSearch'
 
 
 
+const SIMPLE_ICON_CATALOG=[
+  ['Adobe After Effects','adobeaftereffects'],['Adobe Illustrator','adobeillustrator'],['Adobe InDesign','adobeindesign'],['Adobe Lightroom','adobelightroom'],['Adobe Photoshop','adobephotoshop'],['Adobe Premiere Pro','adobepremierepro'],['Amazon','amazon'],['Android','android'],['Angular','angular'],['Apple','apple'],['Asana','asana'],['AutoCAD','autodesk'],['Behance','behance'],['Blender','blender'],['Bootstrap','bootstrap'],['Canva','canva'],['ChatGPT','openai'],['Chrome','googlechrome'],['Cinema 4D','maxon'],['Claude','anthropic'],['ClickUp','clickup'],['Cloudflare','cloudflare'],['CSS','css'],['Docker','docker'],['Dribbble','dribbble'],['Dropbox','dropbox'],['Excel','microsoftexcel'],['Figma','figma'],['Firebase','firebase'],['Framer','framer'],['Git','git'],['GitHub','github'],['Google Ads','googleads'],['Google Analytics','googleanalytics'],['Google Drive','googledrive'],['HTML5','html5'],['Illustration','adobeillustrator'],['InVision','invision'],['JavaScript','javascript'],['Jira','jira'],['LinkedIn','linkedin'],['Mailchimp','mailchimp'],['Meta','meta'],['Microsoft Office','microsoftoffice'],['Miro','miro'],['Notion','notion'],['npm','npm'],['Photoshop','adobephotoshop'],['Pinterest','pinterest'],['PowerPoint','microsoftpowerpoint'],['React','react'],['Shopify','shopify'],['Slack','slack'],['Spline','spline'],['Spotify','spotify'],['Trello','trello'],['TypeScript','typescript'],['Ubuntu','ubuntu'],['Vercel','vercel'],['Visual Studio Code','visualstudiocode'],['Webflow','webflow'],['WhatsApp','whatsapp'],['Windows','windows'],['Word','microsoftword'],['WordPress','wordpress'],['X','x'],['YouTube','youtube'],['Zapier','zapier']
+];
+
+function setupSkillIconPicker(){
+  const search=$('#skillIconSearch'),field=$('#skillIcon'),results=$('#skillIconResults'),preview=$('#skillIconPreview');
+  if(!search||!field||!results||!preview)return;
+  const iconUrl=slug=>`https://cdn.simpleicons.org/${slug}`;
+  const showPreview=()=>{
+    const url=field.value.trim();
+    preview.replaceChildren();
+    if(!url){const empty=document.createElement('span');empty.textContent='NO ICON SELECTED';preview.append(empty);return}
+    const image=document.createElement('img');image.src=url;image.alt='Selected skill icon preview';image.referrerPolicy='no-referrer';
+    image.onerror=()=>{image.remove();const failed=document.createElement('span');failed.textContent='ICON URL COULD NOT LOAD';preview.append(failed)};
+    const text=document.createElement('small');text.textContent=url.includes('cdn.simpleicons.org')?'SIMPLE ICONS CDN':'CUSTOM ICON URL';preview.append(image,text);
+  };
+  const showResults=()=>{
+    const term=search.value.trim().toLowerCase();
+    const items=SIMPLE_ICON_CATALOG.filter(([name,slug])=>!term||name.toLowerCase().includes(term)||slug.includes(term)).slice(0,24);
+    results.replaceChildren();
+    if(!items.length){const empty=document.createElement('p');empty.className='notice';empty.textContent='No matching icon. Paste a custom CDN URL above.';results.append(empty);return}
+    items.forEach(([name,slug])=>{
+      const button=document.createElement('button');button.type='button';button.className='skill-icon-choice';button.setAttribute('role','option');button.setAttribute('aria-label',`Use ${name} icon`);button.title=name;
+      const image=document.createElement('img');image.src=iconUrl(slug);image.alt='';image.loading='lazy';image.referrerPolicy='no-referrer';
+      const label=document.createElement('span');label.textContent=name;button.append(image,label);
+      button.addEventListener('click',()=>{field.value=iconUrl(slug);search.value=name;showPreview();showResults();field.dispatchEvent(new Event('input',{bubbles:true}));});results.append(button);
+    });
+  };
+  search.addEventListener('input',showResults);field.addEventListener('input',showPreview);document.addEventListener('click',event=>{if(event.target.closest('.js-skill-edit'))setTimeout(showPreview,0)});$('#clearSkill')?.addEventListener('click',()=>setTimeout(()=>{search.value='';showPreview();showResults()},0));
+  showPreview();showResults();
+}
+
+setupSkillIconPicker();
 $('#year').value=new Date().getFullYear();$('#sortOrder').value=0;$('#sliderEnabled').checked=true;$('#sliderTransition').value='AUTO';$('#contentStatus')&&($('#contentStatus').value='DRAFT');renderGallery();updateProjectSeoPreview();updateContentSeoPreview();updateSiteSeoPreview();boot();openAdminTab('dashboard');

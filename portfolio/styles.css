@@ -405,6 +405,97 @@
     margin-top:4px;
   }
 }
+
+/* Skills icon picker */
+.skill-icon-picker{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 104px;
+  gap:12px;
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:#0a0c0b;
+}
+.skill-icon-picker>label{
+  display:grid;
+  gap:7px;
+}
+.skill-icon-preview{
+  display:grid;
+  place-items:center;
+  align-content:center;
+  gap:6px;
+  min-height:72px;
+  padding:8px;
+  border:1px solid #2b302c;
+  border-radius:6px;
+  background:#101310;
+  text-align:center;
+}
+.skill-icon-preview img{
+  width:30px;
+  height:30px;
+  object-fit:contain;
+}
+.skill-icon-preview span,.skill-icon-preview small{
+  color:var(--muted);
+  font:700 8px/1.25 "DM Sans",sans-serif;
+  letter-spacing:.09em;
+  overflow-wrap:anywhere;
+}
+.skill-icon-results{
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:7px;
+  max-height:230px;
+  overflow:auto;
+  padding:3px;
+}
+.skill-icon-choice{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+  min-height:42px;
+  padding:8px;
+  border:1px solid #2b302c;
+  border-radius:5px;
+  background:#111411;
+  color:#e8ece6;
+  cursor:pointer;
+  text-align:left;
+}
+.skill-icon-choice:hover,.skill-icon-choice:focus-visible{
+  border-color:var(--lime);
+  background:#171d15;
+  outline:none;
+}
+.skill-icon-choice img{
+  width:20px;
+  height:20px;
+  flex:0 0 20px;
+  object-fit:contain;
+}
+.skill-icon-choice span{
+  overflow:hidden;
+  color:#cfd5cc;
+  font:700 9px/1.2 "DM Sans",sans-serif;
+  letter-spacing:.03em;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.skill-icon-picker .field-hint{
+  grid-column:1/-1;
+  margin:0;
+}
+@media(max-width:767px){
+  .skill-icon-results{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media(max-width:420px){
+  .skill-icon-picker{grid-template-columns:1fr;}
+  .skill-icon-preview{grid-row:1;}
+}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.neural-canvas{display:none}.brand-track{animation:none!important}.featured-slider{scroll-behavior:auto}}
 
 /* Editorial featured slider upgrade — additive over the existing transition engine. */
