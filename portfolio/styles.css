@@ -455,23 +455,22 @@
 .skill-icon-colors{
   grid-column:1/-1;
   display:grid;
-  grid-template-columns:auto minmax(0,1fr) minmax(190px,auto);
-  align-items:end;
-  gap:10px 14px;
+  grid-template-columns:minmax(0,1fr);
+  align-items:stretch;
+  gap:10px;
   padding:12px;
   border:1px solid #252a26;
   border-radius:6px;
   background:#0d100e;
 }
 .skill-color-label{
-  align-self:center;
   color:var(--muted);
   font:800 8px/1 "DM Sans",sans-serif;
   letter-spacing:.13em;
 }
 .skill-color-presets{
-  display:flex;
-  flex-wrap:wrap;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:6px;
 }
 .skill-color-btn{
@@ -487,6 +486,8 @@
   font:800 8px/1 "DM Sans",sans-serif;
   letter-spacing:.08em;
   cursor:pointer;
+  justify-content:center;
+  width:100%;
 }
 .skill-color-btn:hover,.skill-color-btn.active{
   border-color:var(--lime);
@@ -509,8 +510,9 @@
 }
 .skill-custom-color>div{
   display:grid;
-  grid-template-columns:46px minmax(90px,1fr);
+  grid-template-columns:52px minmax(0,1fr);
   gap:7px;
+  width:100%;
 }
 .admin-page .skill-custom-color input[type="color"]{
   width:46px;
@@ -565,8 +567,7 @@
 }
 @media(max-width:767px){
   .skill-icon-results{grid-template-columns:repeat(2,minmax(0,1fr));}
-  .skill-icon-colors{grid-template-columns:1fr;align-items:stretch}
-  .skill-color-label{margin-bottom:2px}
+  .skill-color-presets{grid-template-columns:1fr;}
 }
 @media(max-width:420px){
   .skill-icon-picker{grid-template-columns:1fr;}
