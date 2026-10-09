@@ -68,7 +68,7 @@ router.post('/media/upload', async (req, res) => {
   if (!contentType.startsWith('image/')) return res.status(400).json({ error: 'Only image uploads are allowed' });
   const filenameHeader = decodeURIComponent(String(req.headers['x-filename'] || 'upload-image')).slice(0, 180);
   const filename = filenameHeader.toLowerCase().replace(/[^a-z0-9._-]/g, '-') || 'upload-image';
-  const max = Number(process.env.MAX_UPLOAD_BYTES || 25000000);
+  const configuredMax=Number(process.env.MAX_UPLOAD_BYTES||25000000);const max=process.env.VERCEL?Math.min(configuredMax,4_000_000):configuredMax;
   let body: Buffer;
   try {
     body = await readRequestBody(req, max);

@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
-import { safeSnapshot } from '../api/dist/lib/revisions.js';
-import { redact } from '../api/dist/lib/monitoring.js';
+import { safeSnapshot } from '../dist/src/lib/revisions.js';
+import { redact } from '../dist/src/lib/monitoring.js';
 
 test('backup/revision snapshots remove secret-bearing fields',()=>{
   const snapshot=safeSnapshot({title:'Safe',password:'hidden',jwtToken:'hidden',nested:{apiKey:'hidden',body:'kept'},createdAt:new Date('2026-01-02T03:04:05Z')});
@@ -20,6 +20,6 @@ test('operations migration is additive',async()=>{
 });
 
 test('secure preview carries crawler and cache protections',async()=>{
-  const app=await fs.readFile(new URL('../api/src/app.ts',import.meta.url),'utf8');const html=await fs.readFile(new URL('../portfolio/preview.html',import.meta.url),'utf8');
+  const app=await fs.readFile(new URL('../src/app.ts',import.meta.url),'utf8');const html=await fs.readFile(new URL('../portfolio/preview.html',import.meta.url),'utf8');
   assert.match(app,/noindex,nofollow,noarchive/);assert.match(app,/private, no-store/);assert.match(html,/name="robots" content="noindex,nofollow,noarchive"/);
 });

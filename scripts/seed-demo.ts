@@ -1,4 +1,4 @@
-import { db } from '../api/src/lib/db.js';
+import { db } from '../src/lib/db.js';
 
 const projects=[
 ['Premium A+ — Outdoor Hydration','premium-a-plus-outdoor-hydration','Amazon / E-commerce','A+ Content','PREMIUM A+','NorthPeak Outdoor','assets/demo-a-plus.svg',['assets/demo-a-plus.svg','assets/demo-listing.svg','assets/demo-brand.svg'],true,true,'AUTO',1],

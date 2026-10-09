@@ -15,21 +15,21 @@ m12=root/'prisma/migrations/0012_client_reviews/migration.sql'; m12.parent.mkdir
 if not m12.exists(): m12.write_text('''CREATE TABLE "ProjectReview" (\n  "id" TEXT NOT NULL,\n  "projectId" TEXT NOT NULL,\n  "clientName" TEXT NOT NULL,\n  "clientEmail" TEXT,\n  "decision" TEXT NOT NULL DEFAULT 'CHANGES_REQUESTED',\n  "comment" TEXT,\n  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  CONSTRAINT "ProjectReview_pkey" PRIMARY KEY ("id")\n);\nCREATE INDEX "ProjectReview_projectId_createdAt_idx" ON "ProjectReview"("projectId", "createdAt");\n''')
 
 # 2) Public review route
-p=root/'api/src/routes/public.ts'; s=p.read_text()
+p=root/'src/routes/public.ts'; s=p.read_text()
 insert='''\nrouter.post('/share/:token/review', async (req, res) => {\n  const tokenHash = hashShareToken(req.params.token);\n  const project = await db.project.findFirst({ where: { accessTokenHash: tokenHash, status: 'PUBLISHED', visibility: { in: ['UNLISTED', 'PRIVATE'] } } });\n  if (!project || (project.clientExpiresAt && project.clientExpiresAt < new Date())) return res.status(404).json({ error: 'Share link is invalid or expired' });\n  const parsed = z.object({ clientName: z.string().min(1).max(120), clientEmail: z.string().email().optional().nullable(), decision: z.enum(['APPROVED','CHANGES_REQUESTED']), comment: z.string().max(3000).optional().nullable() }).safeParse(req.body);\n  if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });\n  const review = await db.projectReview.create({ data: { projectId: project.id, ...parsed.data } });\n  await db.activityLog.create({ data: { action: parsed.data.decision === 'APPROVED' ? 'CLIENT_APPROVED' : 'CLIENT_REQUESTED_CHANGES', entity: 'PROJECT_REVIEW', entityId: review.id, label: `${project.title} · ${parsed.data.clientName}` } });\n  res.status(201).json({ ok: true, review });\n});\n'''
 if "share/:token/review" not in s:
     s=s.replace("router.get('/share/:token', async (req, res) => {", insert+"\nrouter.get('/share/:token', async (req, res) => {")
 p.write_text(s)
 
 # 3) Admin review endpoint
-p=root/'api/src/routes/maintenance.ts'; s=p.read_text()
+p=root/'src/routes/maintenance.ts'; s=p.read_text()
 needle="router.get('/inquiries',async(_req,res)=>res.json({inquiries:await db.inquiry.findMany({orderBy:{createdAt:'desc'},take:100})}));"
 if "'/reviews'" not in s:
     s=s.replace(needle, needle+"\nrouter.get('/reviews',async(_req,res)=>res.json({reviews:await db.projectReview.findMany({orderBy:{createdAt:'desc'},take:200})}));")
 p.write_text(s)
 
 # 4) App route for share page
-p=root/'api/src/app.ts'; s=p.read_text()
+p=root/'src/app.ts'; s=p.read_text()
 if "app.get('/share/:token'" not in s:
     s=s.replace("app.use(express.static(frontend));", "app.get('/share/:token', (_req, res) => res.sendFile(path.join(frontend, 'share.html')));\napp.use(express.static(frontend));")
 p.write_text(s)

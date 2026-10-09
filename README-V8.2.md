@@ -27,7 +27,7 @@ No `npm install` is required for this V8.2 change when dependencies are already 
 ## Files changed
 - `prisma/schema.prisma` — adds `SiteSettings.sliderConfig`
 - `prisma/migrations/0008_slider_control/migration.sql` — database migration
-- `api/src/routes/maintenance.ts` — saves slider settings
+- `src/routes/maintenance.ts` — saves slider settings
 - `portfolio/admin.html` — Maintenance → Slider Control UI
 - `portfolio/admin.js` — slider settings load/save/reset
 - `portfolio/app.js` — public slider consumes CMS settings

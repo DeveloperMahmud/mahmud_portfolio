@@ -12,7 +12,7 @@ This patch is based on the supplied `locked` build.
 
 ## Verification
 - Portfolio JavaScript syntax: PASS
-- TypeScript `tsc -p api/tsconfig.json --noEmit`: PASS
+- TypeScript `tsc -p tsconfig.json --noEmit`: PASS
 - No new database migration added.
 
 ## Run

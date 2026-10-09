@@ -2,7 +2,7 @@ node_modules
 .env
 .env.*
 !.env.example
-api/dist
+dist
 .vercel
 .DS_Store
 
