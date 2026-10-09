@@ -2,11 +2,9 @@ import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { put as putBlob, del as deleteBlob } from '@vercel/blob';
 
-const here = path.dirname(fileURLToPath(import.meta.url));
-const frontendRoot = path.resolve(here, '../../../portfolio');
+const frontendRoot = path.resolve(process.cwd(), 'portfolio');
 
 function s3Client() {
   return new S3Client({

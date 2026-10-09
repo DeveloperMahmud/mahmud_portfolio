@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { createHash, randomBytes } from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { Prisma } from '@prisma/client';
 import { z } from 'zod';
 import { db } from '../lib/db.js';
@@ -13,8 +12,7 @@ import { hashShareToken } from '../lib/tokens.js';
 import { deleteStoredObject } from '../lib/storage.js';
 
 const router=Router();router.use(requireAuth);
-const here=path.dirname(fileURLToPath(import.meta.url));
-const frontend=path.resolve(here,'../../../portfolio');
+const frontend=path.resolve(process.cwd(),'portfolio');
 const FORMAT='mahmudul-portfolio-backup-v2';
 const VERSION='2.0';
 const actor=(res:any)=>res.locals.user?.sub as string|undefined;

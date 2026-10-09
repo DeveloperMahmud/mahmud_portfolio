@@ -6,7 +6,6 @@ import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import path from 'node:path';
 import fs from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
 import auth from './routes/auth.js';
 import publicRoutes from './routes/public.js';
 import admin from './routes/admin.js';
@@ -22,7 +21,7 @@ import { captureIncident } from './lib/monitoring.js';
 import { validateEnvironment } from './lib/env.js';
 
 validateEnvironment();
-const app=express(),__dirname=path.dirname(fileURLToPath(import.meta.url)),frontend=path.resolve(__dirname,'../../portfolio');
+const app=express(),frontend=path.resolve(process.cwd(),'portfolio');
 app.set('trust proxy',1);app.use(helmet({crossOriginResourcePolicy:false,contentSecurityPolicy:false}));app.use(cors({origin(origin,callback){if(!origin||allowedOrigins().has(origin))return callback(null,true);callback(new Error('Origin is not allowed'))},credentials:true}));app.use(express.json({limit:'2mb'}));app.use(cookieParser());app.use(morgan('tiny'));
 app.use('/api/auth',rateLimit({windowMs:15*60*1000,limit:20,standardHeaders:'draft-8',legacyHeaders:false}));app.use('/api/public/inquiries',rateLimit({windowMs:15*60*1000,limit:8,standardHeaders:'draft-8',legacyHeaders:false}));app.use('/api/public/errors',rateLimit({windowMs:15*60*1000,limit:20,standardHeaders:'draft-8',legacyHeaders:false}));app.use('/api/analytics/events',rateLimit({windowMs:15*60*1000,limit:180,standardHeaders:'draft-8',legacyHeaders:false}));app.use('/api/admin/operations',rateLimit({windowMs:15*60*1000,limit:90,standardHeaders:'draft-8',legacyHeaders:false}));
 app.use(['/api/admin','/api/auth'],(req,res,next)=>{if(['GET','HEAD','OPTIONS'].includes(req.method))return next();const origin=req.get('origin');if(origin&&!allowedOrigins().has(origin))return res.status(403).json({error:'Cross-site request blocked'});next()});

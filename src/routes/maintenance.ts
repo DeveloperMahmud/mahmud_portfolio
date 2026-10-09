@@ -5,11 +5,9 @@ import { db } from '../lib/db.js';
 import { requireAuth } from '../lib/auth.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { createRevision } from '../lib/revisions.js';
 
 const router=Router(); router.use(requireAuth);
-const here=path.dirname(fileURLToPath(import.meta.url));
 
 async function snapshot(){
   const [projects,content,brands,settings,testimonials,activity,inquiries,reviews,projectMetrics,seoSettings,entityProfiles,redirectRules]=await Promise.all([
@@ -21,7 +19,7 @@ async function snapshot(){
 router.get('/status',async(_req,res)=>{
   const [projects,content,brands,testimonials,inquiries]=await Promise.all([db.project.count(),db.content.count(),db.brand.count(),db.testimonial.count(),db.inquiry.count()]);
   let dbOk=true; try{await db.$queryRaw`SELECT 1`;}catch{dbOk=false;}
-  const uploadRoot=path.resolve(here,'../../../portfolio/uploads'); let mediaCount=0; try{const files=await fs.readdir(uploadRoot,{recursive:true});mediaCount=files.filter(x=>typeof x==='string'&&!x.endsWith('/')).length}catch{}
+  const uploadRoot=path.resolve(process.cwd(),'portfolio/uploads'); let mediaCount=0; try{const files=await fs.readdir(uploadRoot,{recursive:true});mediaCount=files.filter(x=>typeof x==='string'&&!x.endsWith('/')).length}catch{}
   res.json({ok:true,database:dbOk,storage:process.env.BLOB_READ_WRITE_TOKEN||process.env.S3_BUCKET||process.env.GITHUB_TOKEN?'configured':'local',counts:{projects,content,brands,testimonials,inquiries,media:mediaCount},time:new Date().toISOString()});
 });
 
