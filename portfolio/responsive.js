@@ -6,3 +6,4 @@
 })();
 window.addEventListener('error',event=>{if(location.pathname.endsWith('/admin.html'))return;fetch('/api/public/errors',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:event.message||'Public JavaScript error',source:'PUBLIC_JS',path:location.pathname}),keepalive:true}).catch(()=>{})});
 window.addEventListener('unhandledrejection',event=>{if(location.pathname.endsWith('/admin.html'))return;fetch('/api/public/errors',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:String(event.reason?.message||event.reason||'Unhandled rejection'),source:'PUBLIC_JS',path:location.pathname}),keepalive:true}).catch(()=>{})});
+if(!document.body.classList.contains('admin-page')&&!document.querySelector('script[data-motion-runtime]')){const motion=document.createElement('script');motion.src='/motion-icons.js';motion.defer=true;motion.dataset.motionRuntime='true';document.head.appendChild(motion)}
