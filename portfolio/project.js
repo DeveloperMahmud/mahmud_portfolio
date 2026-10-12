@@ -1,9 +1,11 @@
 (() => {
   const $ = selector => document.querySelector(selector);
   const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+  const demoRequested = new URLSearchParams(location.search).get('demo') === '1';let demoPreview=false;
   const slug = new URLSearchParams(location.search).get('slug') || location.pathname.split('/').filter(Boolean).pop();
   const root = $('#projectDetail');
   document.body.classList.add('detail-page-cursor');
+  async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fetch('/api/auth/me',{credentials:'include',cache:'no-store'})).ok}catch{}}if(demoPreview){const bar=document.createElement('div');bar.className='demo-preview-banner';bar.innerHTML='<strong>ADMIN DEMO PREVIEW</strong><span>Sample content is private to this preview URL.</span><nav><a href="/?demo=1">HOME</a><a href="/work.html?demo=1">WORK</a><a href="/">EXIT</a></nav>';document.body.prepend(bar);document.body.classList.add('demo-preview-active')}try{const r=await fetch('/api/public/settings',{cache:'no-store'}),d=r.ok?await r.json():{},s=d.settings||{},footer=s.footerConfig||{},about=s.aboutConfig||{};document.body.classList.toggle('nav-always-visible',footer.stickyNavigation!==false);if(about.cvUrl)document.querySelector('.desktop-nav')?.insertAdjacentHTML('beforeend',`<a data-public-cv class="nav-cv" href="/api/public/cv">${esc(about.cvLabel||'DOWNLOAD CV')} ↓</a>`)}catch{}}
 
   const demoAssets = {
     'demo-premium-a-plus': ['Premium A+ — Outdoor Hydration', '/assets/demo-a-plus.svg', 'PREMIUM A+'],
@@ -102,7 +104,7 @@
   function render(project, nextProject) {
     setMeta(project);
     const blocks = Array.isArray(project.projectBlocks) ? project.projectBlocks.filter(block => block.enabled !== false).sort((a, b) => a.sortOrder - b.sortOrder) : [];
-    root.innerHTML = `<article class="project-detail"><a class="article-back" href="/#work">← BACK TO WORK</a><div class="project-detail-kicker">${esc(project.category || 'PROJECT')} / ${esc(project.type || 'CASE STUDY')} / ${esc(project.year || '')}</div><h1>${esc(project.title)}</h1>${project.projectSubtitle ? `<p class="project-detail-subtitle">${esc(project.projectSubtitle)}</p>` : ''}${project.client ? `<p class="project-detail-client">${esc(project.client)}${project.role ? ` · ${esc(project.role)}` : ''}</p>` : ''}${image(project.coverImage, project.title, 'project-detail-hero')}${blocks.length ? `<div class="case-blocks">${blocks.map(renderBlock).join('')}</div>` : `${renderGallery(project.gallery, project.title)}${renderLegacy(project)}`}${nextProject ? `<a class="next-project" href="/work/${encodeURIComponent(nextProject.slug)}"><span>NEXT PROJECT</span><strong>${esc(nextProject.title)} →</strong>${image(nextProject.coverImage, '')}</a>` : ''}</article>`;
+    root.innerHTML = `<article class="project-detail"><a class="article-back" href="/${demoPreview?'?demo=1#work':'#work'}">← BACK TO WORK</a><div class="project-detail-kicker">${esc(project.category || 'PROJECT')} / ${esc(project.type || 'CASE STUDY')} / ${esc(project.year || '')}</div><h1>${esc(project.title)}</h1>${project.projectSubtitle ? `<p class="project-detail-subtitle">${esc(project.projectSubtitle)}</p>` : ''}${project.client ? `<p class="project-detail-client">${esc(project.client)}${project.role ? ` · ${esc(project.role)}` : ''}</p>` : ''}${image(project.coverImage, project.title, 'project-detail-hero')}${blocks.length ? `<div class="case-blocks">${blocks.map(renderBlock).join('')}</div>` : `${renderGallery(project.gallery, project.title)}${renderLegacy(project)}`}${nextProject ? `<a class="next-project" href="/work/${encodeURIComponent(nextProject.slug)}${demoPreview?'?demo=1':''}"><span>NEXT PROJECT</span><strong>${esc(nextProject.title)} →</strong>${image(nextProject.coverImage, '')}</a>` : ''}</article>`;
   }
 
   async function load() {
@@ -116,7 +118,7 @@
       } else {
         const listing = await fetch('/api/public/projects', { cache: 'no-store' });
         const data = listing.ok ? await listing.json() : {};
-        if (data.demoEnabled) project = demoProject(slug);
+        if (data.demoEnabled || demoPreview) project = demoProject(slug);
       }
       if (!project) throw new Error('Project not found');
       render(project, nextProject);
@@ -127,5 +129,5 @@
     }
   }
 
-  load();
+  applyPageExperience().then(load);
 })();

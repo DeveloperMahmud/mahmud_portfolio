@@ -4,6 +4,7 @@ import { hashShareToken } from '../lib/tokens.js';
 import { z } from 'zod';
 import { sendInquiryNotification } from '../lib/email.js';
 import { captureIncident } from '../lib/monitoring.js';
+import path from 'node:path';
 
 const router = Router();
 router.post('/inquiries', async (req,res)=>{
@@ -40,6 +41,7 @@ router.get('/projects/:slug', async (req, res) => {
   res.json({ project,nextProject });
 });
 router.get('/settings', async (_req,res)=>{ let settings=await db.siteSettings.findFirst(); if(!settings) settings=await db.siteSettings.create({data:{}}); const {inquiryRecipientEmail:_,inquirySubject:__,...publicSettings}=settings; res.json({settings:{...publicSettings,skillsConfig:Array.isArray(publicSettings.skillsConfig)?publicSettings.skillsConfig:[]}}); });
+router.get('/cv',async(_req,res)=>{const settings=await db.siteSettings.findFirst();const about=(settings?.aboutConfig&&typeof settings.aboutConfig==='object'&&!Array.isArray(settings.aboutConfig)?settings.aboutConfig:{}) as Record<string,unknown>;const url=String(about.cvUrl||'').trim(),filename=String(about.cvFilename||'Mahmudul-Hassan-CV.pdf').replace(/[^a-zA-Z0-9._-]/g,'-');if(!url)return res.status(404).json({error:'CV is not available.'});try{res.setHeader('Content-Disposition',`attachment; filename="${filename.endsWith('.pdf')?filename:`${filename}.pdf`}"`);res.setHeader('Content-Type','application/pdf');if(url.startsWith('/')){const frontend=path.resolve(process.cwd(),'portfolio'),target=path.resolve(frontend,url.replace(/^\/+/,''));if(!target.startsWith(frontend))return res.status(400).json({error:'Invalid CV path.'});return res.sendFile(target)}const parsed=new URL(url);if(!['http:','https:'].includes(parsed.protocol))return res.status(400).json({error:'Invalid CV URL.'});const upstream=await fetch(parsed,{signal:AbortSignal.timeout(10000)});if(!upstream.ok)return res.status(502).json({error:'CV storage could not be reached.'});const declared=Number(upstream.headers.get('content-length')||0);if(declared>8_000_000)return res.status(413).json({error:'CV file is too large.'});const body=Buffer.from(await upstream.arrayBuffer());if(body.length>8_000_000||body.subarray(0,5).toString('ascii')!=='%PDF-')return res.status(502).json({error:'Stored CV is not a valid PDF.'});return res.send(body)}catch{return res.status(502).json({error:'CV download is temporarily unavailable.'})}});
 router.get('/testimonials', async (_req,res)=>{ const testimonials=await db.testimonial.findMany({where:{published:true,deletedAt:null},orderBy:[{featured:'desc'},{sortOrder:'asc'}]}); res.json({testimonials}); });
 router.get('/brands', async (_req, res) => {
   const brands = await db.brand.findMany({ where: { active: true,deletedAt:null }, orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }] });
