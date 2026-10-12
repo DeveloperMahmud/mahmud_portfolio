@@ -1,4 +1,5 @@
 (()=>{
+  if(!document.body.classList.contains('home-custom-cursor'))return;
   const cursor=document.querySelector('.cursor');
   if(!cursor)return;
   const span=cursor.querySelector('span');
