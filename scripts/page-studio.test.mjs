@@ -54,3 +54,26 @@ test('custom pages keep analytics, SEO, backup and media maintenance coverage',(
   assert.match(operations,/customPages/);
   assert.match(operations,/publishedSnapshot:row\.publishedSnapshot/);
 });
+
+test('publish waits for the newest draft save to succeed',()=>{
+  const editor=read('portfolio/page-studio.js');
+  assert.match(editor,/const saved=await savePage\(false\)/);
+  assert.match(editor,/if\(!saved\|\|dirty\)/);
+  assert.match(editor,/Publish stopped because the latest draft could not be saved/);
+});
+
+test('revision restore preserves live status and unpublish remains explicit',()=>{
+  const route=read('src/routes/page-studio.ts');
+  const editor=read('portfolio/page-studio.js');
+  const restoreRoute=route.slice(route.indexOf("router.post('/pages/:id/revisions/:revisionId/restore'"),route.indexOf('const namedBlocksSchema'));
+  assert.doesNotMatch(restoreRoute,/status:'DRAFT'/);
+  assert.match(route,/router\.post\('\/pages\/:id\/unpublish'/);
+  assert.match(editor,/id='studioUnpublish'|#studioUnpublish/);
+});
+
+test('responsive toolbar keeps save, preview and device controls available',()=>{
+  const css=read('portfolio/page-studio.css');
+  assert.doesNotMatch(css,/\.studio-actions #studioSave\{display:none\}/);
+  assert.match(css,/\.studio-actions #studioSave,\.studio-actions #studioPreview\{display:block\}/);
+  assert.match(css,/\.studio-devices\{display:flex;order:4/);
+});
