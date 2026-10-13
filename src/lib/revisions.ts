@@ -14,10 +14,10 @@ export function safeSnapshot(value:unknown):Prisma.InputJsonValue {
   return clean(value) as Prisma.InputJsonValue;
 }
 
-export async function createRevision(resourceType:string,resourceId:string,snapshot:unknown,options:{actorId?:string;summary?:string;sourceAction?:string}={}){
+export async function createRevision(resourceType:string,resourceId:string,snapshot:unknown,options:{actorId?:string;summary?:string;sourceAction?:string;retentionCount?:number}={}){
   const latest=await db.contentRevision.findFirst({where:{resourceType,resourceId},orderBy:{revision:'desc'},select:{revision:true}});
   const row=await db.contentRevision.create({data:{resourceType,resourceId,revision:(latest?.revision||0)+1,snapshot:safeSnapshot(snapshot),actorId:options.actorId,summary:options.summary,sourceAction:options.sourceAction||'SAVE'}});
-  const keep=Math.max(5,Math.min(250,Number(process.env.REVISION_RETENTION_COUNT)||50));
+  const keep=Math.max(5,Math.min(250,options.retentionCount||Number(process.env.REVISION_RETENTION_COUNT)||50));
   const old=await db.contentRevision.findMany({where:{resourceType,resourceId},orderBy:{revision:'desc'},skip:keep,select:{id:true}});
   if(old.length)await db.contentRevision.deleteMany({where:{id:{in:old.map(x=>x.id)}}});
   return row;

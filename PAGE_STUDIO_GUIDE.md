@@ -1,0 +1,56 @@
+# Page Studio — Safe rollout guide
+
+Page Studio is an additive visual page builder. It does not replace the current homepage, project, journal, brand, lead, media, SEO, analytics, backup, or admin systems. Existing routes keep working unless an administrator explicitly publishes a custom page and enables public delivery.
+
+## What is included
+
+- Visual drag-and-drop page canvas with desktop, tablet, and mobile previews.
+- Draft autosave, explicit publish, private preview, revisions, duplicate, trash, and recovery.
+- Layout, content, media, conversion, dynamic-data, motion, and trusted-embed widgets.
+- Starter templates, reusable copy blocks, synchronized global blocks, taxonomies, and page-level navigation presets.
+- Existing Media Library picker plus direct HTTPS/CDN URL support.
+- Dynamic project, journal, brand, social-link, CV, and contact widgets that reuse current CMS data.
+- SEO metadata, canonical URL, robots controls, sitemap integration, and first-party analytics.
+- Full backup/restore, media-reference scanning/replacement, and revision-retention integration.
+
+## Free-tier behavior
+
+Saving, previewing, duplicating, publishing, and rendering a page perform no Vercel Blob write. Page definitions, templates, navigation, and taxonomies are small PostgreSQL JSON records. Blob usage grows only when a file is explicitly uploaded through the existing Media Library. Choosing an existing asset or using an external CDN URL performs zero storage writes.
+
+The builder deliberately has no paid third-party runtime dependency. Trusted external embeds can still consume the external provider's quota or bandwidth, so add only sources you control or understand.
+
+## First production rollout
+
+1. Download a full CMS backup from **Admin → Operations → Backup**.
+2. Confirm the deployment has `DATABASE_URL` and `JWT_SECRET`. Do not change their current values.
+3. Apply the additive migration against the production database:
+
+   ```powershell
+   npx prisma migrate deploy
+   ```
+
+4. Add `PAGE_STUDIO_ENABLED=true` to the Vercel project environments where the protected builder should exist. Use Production and Preview if both are needed.
+5. Redeploy the same commit. Sign in to the existing CMS and open **Page Studio** from the sidebar.
+6. Keep **PUBLIC CUSTOM PAGES** off while building and testing. Private Preview works while public delivery is off.
+7. Create a test page at `/pages/test-page`, verify all three device previews, save, and publish it.
+8. Turn on **Manage → Free-tier & activation → PUBLIC CUSTOM PAGES** only after the test is approved.
+
+Two switches protect production: the Vercel environment variable enables the module, while the CMS public switch enables published custom-page delivery. Turning either switch off leaves all stored builder data intact.
+
+## Rollback
+
+For an immediate no-data-loss rollback, turn off **PUBLIC CUSTOM PAGES** or set `PAGE_STUDIO_ENABLED=false` and redeploy. Existing portfolio routes remain active. Do not reverse or delete migration tables during an incident; use a forward fix after service is stable.
+
+## Local verification
+
+```powershell
+npm ci
+npx prisma generate
+npm run typecheck
+npm run build
+npm run test:page-studio
+npm run test:operations
+npm run test:slider
+```
+
+Set local `DATABASE_URL`, `JWT_SECRET`, and `PAGE_STUDIO_ENABLED=true`, then run `npm run dev`. Sign in at `/admin.html` and open `/page-studio.html`.

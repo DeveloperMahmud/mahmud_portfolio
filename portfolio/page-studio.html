@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Page Studio — Creative CMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/page-studio.css">
+</head>
+<body>
+  <header class="studio-topbar">
+    <a class="studio-brand" href="/admin.html"><span>MH</span><strong>PAGE STUDIO<small>VISUAL CMS BUILDER</small></strong></a>
+    <div class="studio-page-title"><strong id="studioCurrentTitle">No page selected</strong><span id="studioSaveState">LOADING…</span></div>
+    <div class="studio-devices" role="group" aria-label="Preview device"><button data-device="desktop" class="active" title="Desktop">DESKTOP</button><button data-device="tablet" title="Tablet">TABLET</button><button data-device="mobile" title="Mobile">MOBILE</button></div>
+    <div class="studio-actions"><button id="studioUndo" title="Undo" disabled>↶</button><button id="studioRedo" title="Redo" disabled>↷</button><button id="studioSave">SAVE DRAFT</button><button id="studioPreview">PREVIEW ↗</button><button id="studioPublish" class="primary">PUBLISH</button></div>
+  </header>
+  <div id="studioDisabled" class="studio-disabled hidden"></div>
+  <main class="studio-shell">
+    <aside class="studio-left">
+      <nav class="studio-tabs" aria-label="Page Studio tools">
+        <button class="active" data-studio-tab="widgets">WIDGETS</button><button data-studio-tab="pages">PAGES</button><button data-studio-tab="library">LIBRARY</button><button data-studio-tab="manage">MANAGE</button>
+      </nav>
+      <section data-studio-panel="widgets">
+        <label class="studio-search">SEARCH WIDGETS<input id="widgetSearch" placeholder="Hero, image, CTA…"></label>
+        <div id="widgetLibrary" class="widget-library"></div>
+      </section>
+      <section data-studio-panel="pages" class="hidden"><div class="panel-head"><div><span>CONTENT</span><h2>Pages</h2></div><button id="newPage" class="icon-button">＋</button></div><div id="pageList" class="studio-list"></div></section>
+      <section data-studio-panel="library" class="hidden"><div class="panel-head"><div><span>REUSE</span><h2>Library</h2></div></div><h3 class="panel-label">TEMPLATES</h3><div id="templateList" class="studio-list"></div><h3 class="panel-label">GLOBAL / SAVED BLOCKS</h3><div id="reusableList" class="studio-list"></div></section>
+      <section data-studio-panel="manage" class="hidden"><div class="panel-head"><div><span>SYSTEM</span><h2>Manage</h2></div></div><div class="manage-links"><button data-manager="navigation">NAVIGATION BUILDER</button><button data-manager="taxonomy">TAXONOMIES</button><button data-manager="embeds">TRUSTED EMBEDS</button><button data-manager="settings">FREE-TIER & ACTIVATION</button><button data-manager="revisions">REVISION HISTORY</button></div><div id="managerPanel"></div></section>
+    </aside>
+    <section class="studio-canvas-area">
+      <div id="canvasEmpty" class="canvas-empty"><span>PAGE STUDIO</span><h1>Create or select a page.</h1><p>The existing website remains untouched until a custom page is explicitly published and public activation is enabled.</p><button id="emptyNewPage" class="primary">CREATE FIRST PAGE</button></div>
+      <div id="canvasViewport" class="canvas-viewport hidden" data-device="desktop"><iframe id="studioCanvas" src="/page-studio-frame.html" title="Live page canvas"></iframe></div>
+    </section>
+    <aside class="studio-inspector">
+      <div class="inspector-head"><div><span id="inspectorKicker">PAGE</span><h2 id="inspectorTitle">Settings</h2></div><button id="deselectBlock" class="icon-button" title="Page settings">⌂</button></div>
+      <form id="inspectorForm" class="inspector-form"></form>
+    </aside>
+  </main>
+  <div id="studioToast" class="studio-toast" role="status"></div>
+  <dialog id="newPageDialog" class="studio-dialog"><form method="dialog" id="newPageForm"><header><div><span>NEW CUSTOM PAGE</span><h2>Start with structure.</h2></div><button value="cancel" aria-label="Close">×</button></header><label>PAGE TITLE<input id="newPageTitle" required maxlength="160"></label><label>SLUG<input id="newPageSlug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*"></label><label>STARTING TEMPLATE<select id="newPageTemplate"></select></label><footer><button value="cancel">CANCEL</button><button id="createPage" value="default" class="primary">CREATE PAGE</button></footer></form></dialog>
+  <dialog id="mediaPickerDialog" class="studio-dialog media-picker"><div class="media-picker-shell"><header><div><span>EXISTING ASSETS</span><h2>Choose media.</h2></div><button id="closeMediaPicker" type="button" aria-label="Close">×</button></header><label>SEARCH MEDIA<input id="mediaPickerSearch" placeholder="Filename, title or alt text"></label><div id="mediaPickerGrid" class="media-picker-grid"></div><footer><small>Selecting an existing asset performs zero Blob writes.</small><button id="cancelMediaPicker" type="button">CANCEL</button></footer></div></dialog>
+  <script src="/page-studio.js" defer></script>
+</body>
+</html>
