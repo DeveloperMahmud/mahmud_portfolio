@@ -273,7 +273,132 @@ model SiteSettings {
   footerConfig       Json     @default("{}")
   seoConfig          Json     @default("{}")
   inquiryConfig      Json     @default("{}")
+  pageStudioConfig   Json     @default("{}")
   updatedAt          DateTime @updatedAt
+}
+
+model CustomPage {
+  id                String           @id @default(cuid())
+  title             String
+  slug              String           @unique
+  path              String           @unique
+  status            ProjectStatus    @default(DRAFT)
+  visibility        Visibility       @default(PUBLIC)
+  templateKey       String?
+  blocks            Json             @default("[]")
+  navbarPresetId    String?
+  navbarPreset      NavigationPreset? @relation(fields: [navbarPresetId], references: [id], onDelete: SetNull)
+  seoTitle          String?
+  seoDescription    String?
+  ogImage           String?
+  canonicalUrl      String?
+  noIndex           Boolean          @default(false)
+  noFollow          Boolean          @default(false)
+  includeSitemap    Boolean          @default(true)
+  publishedPath     String?          @unique
+  publishedSnapshot Json?
+  publishedAt       DateTime?
+  scheduledAt       DateTime?
+  publicModifiedAt  DateTime?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  deletedAt         DateTime?
+  taxonomy          PageTaxonomyAssignment[]
+
+  @@index([status, visibility])
+  @@index([navbarPresetId])
+  @@index([deletedAt, updatedAt])
+}
+
+model PageTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  category    String   @default("GENERAL")
+  thumbnail   String?
+  blocks      Json     @default("[]")
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([active, category])
+}
+
+model ReusableBlock {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  category    String   @default("CONTENT")
+  mode        String   @default("GLOBAL")
+  block       Json
+  version     Int      @default(1)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([active, category])
+}
+
+model NavigationPreset {
+  id          String       @id @default(cuid())
+  name        String
+  slug        String       @unique
+  description String?
+  isGlobal    Boolean      @default(false)
+  enabled     Boolean      @default(true)
+  items       Json         @default("[]")
+  styles      Json         @default("{}")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  pages       CustomPage[]
+
+  @@index([enabled, isGlobal])
+}
+
+model TaxonomyTerm {
+  id          String                     @id @default(cuid())
+  name        String
+  slug        String
+  type        String                     @default("PAGE_TAG")
+  description String?
+  parentId    String?
+  parent      TaxonomyTerm?              @relation("TaxonomyTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children    TaxonomyTerm[]              @relation("TaxonomyTree")
+  sortOrder   Int                        @default(0)
+  active      Boolean                    @default(true)
+  createdAt   DateTime                   @default(now())
+  updatedAt   DateTime                   @updatedAt
+  pages       PageTaxonomyAssignment[]
+
+  @@unique([type, slug])
+  @@index([type, active, sortOrder])
+  @@index([parentId])
+}
+
+model PageTaxonomyAssignment {
+  pageId     String
+  termId     String
+  page       CustomPage   @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  term       TaxonomyTerm @relation(fields: [termId], references: [id], onDelete: Cascade)
+  assignedAt DateTime     @default(now())
+
+  @@id([pageId, termId])
+  @@index([termId])
+}
+
+model TrustedEmbedSource {
+  id              String   @id @default(cuid())
+  name            String
+  origin          String   @unique
+  enabled         Boolean  @default(true)
+  allowIframe     Boolean  @default(true)
+  allowRemoteJson Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([enabled])
 }
 
 model SeoSettings {
