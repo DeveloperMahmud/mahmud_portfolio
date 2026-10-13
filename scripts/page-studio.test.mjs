@@ -15,7 +15,7 @@ test('Page Studio migration is additive and preserves existing data',()=>{
 test('public delivery has two independent activation gates',()=>{
   const core=read('src/lib/page-studio.ts');
   const route=read('src/routes/page-studio-public.ts');
-  assert.match(core,/PAGE_STUDIO_ENABLED==='true'/);
+  assert.match(core,/PAGE_STUDIO_EMERGENCY_DISABLED!=='true'/);
   assert.match(core,/publicEnabled:false/);
   assert.match(route,/pageStudioSystemEnabled\(\).*config\.publicEnabled/);
 });
@@ -76,4 +76,24 @@ test('responsive toolbar keeps save, preview and device controls available',()=>
   assert.doesNotMatch(css,/\.studio-actions #studioSave\{display:none\}/);
   assert.match(css,/\.studio-actions #studioSave,\.studio-actions #studioPreview\{display:block\}/);
   assert.match(css,/\.studio-devices\{display:flex;order:4/);
+});
+
+test('common YouTube share URLs are normalized before trusted-origin validation',()=>{
+  const route=read('src/routes/page-studio.ts');
+  const renderer=read('portfolio/page-studio-renderer.js');
+  assert.match(route,/url\.hostname==='youtu\.be'/);
+  assert.match(route,/youtube\.com\/embed/);
+  assert.match(renderer,/const embedUrl=/);
+  assert.match(renderer,/allowfullscreen/);
+});
+
+test('feature controls and production navigation preserve safe fallbacks',()=>{
+  const flags=read('src/lib/feature-flags.ts');
+  const runtime=read('portfolio/production-navigation.js');
+  const admin=read('portfolio/admin-system-controls.js');
+  const migration=read('prisma/migrations/0022_feature_control_center/migration.sql');
+  assert.match(flags,/productionNavigation:z\.boolean\(\)\.default\(false\)/);
+  assert.match(runtime,/if\(!flags\.productionNavigation\|\|!items\.length\)return/);
+  assert.match(admin,/hardcoded menu remains the automatic fallback/);
+  assert.doesNotMatch(migration,/\b(?:DROP|TRUNCATE|DELETE FROM)\b/i);
 });

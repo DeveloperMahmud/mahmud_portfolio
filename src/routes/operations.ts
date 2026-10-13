@@ -8,6 +8,7 @@ import { db } from '../lib/db.js';
 import { requireAuth } from '../lib/auth.js';
 import { createRevision, safeSnapshot } from '../lib/revisions.js';
 import { sendInquiryNotification } from '../lib/email.js';
+import { featureEnabled } from '../lib/feature-flags.js';
 import { hashShareToken } from '../lib/tokens.js';
 import { deleteStoredObject } from '../lib/storage.js';
 
@@ -59,7 +60,7 @@ router.get('/health',async(_req,res)=>{
 router.get('/backups',async(_req,res)=>res.json({backups:await db.backupRecord.findMany({orderBy:{createdAt:'desc'},take:25,select:{id:true,formatVersion:true,status:true,checksum:true,includedData:true,recordCounts:true,requestedById:true,includesPrivateData:true,createdAt:true,completedAt:true,expiresAt:true,payload:true}}).then(rows=>rows.map(({payload,...row})=>({...row,downloadable:Boolean(payload)})))}));
 router.get('/backups/:id/download',async(req,res)=>{const row=await db.backupRecord.findUnique({where:{id:req.params.id}});if(!row?.payload)return res.status(404).json({error:'Stored recovery payload is unavailable.'});if(row.expiresAt&&row.expiresAt<new Date())return res.status(410).json({error:'Stored recovery payload has expired.'});res.setHeader('Content-Type','application/json');res.setHeader('Content-Disposition',`attachment; filename="pre-restore-${row.createdAt.toISOString().replace(/[:.]/g,'-')}.json"`);res.send(JSON.stringify(row.payload,null,2));});
 router.post('/backups/export',async(req,res)=>{
-  if(process.env.BACKUP_EXPORT_ENABLED==='false')return res.status(503).json({error:'Backup export is disabled.'});
+  if(!await featureEnabled('backupExport'))return res.status(503).json({error:'Backup export is disabled in Control Center.'});
   const p=z.object({includePrivateData:z.boolean().default(false),confirmation:z.string().optional()}).safeParse(req.body||{});if(!p.success)return res.status(400).json({error:'Invalid export request.'});
   if(p.data.includePrivateData&&p.data.confirmation!=='INCLUDE PRIVATE INQUIRIES')return res.status(400).json({error:'Private inquiry export requires the exact confirmation phrase.'});
   const backup=await portableSnapshot(p.data.includePrivateData);const retention=Math.max(1,Math.min(365,Number(process.env.BACKUP_RETENTION_DAYS)||30));

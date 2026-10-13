@@ -46,7 +46,7 @@ export type PageStudioConfig=z.infer<typeof pageStudioConfigSchema>;
 
 export const DEFAULT_PAGE_STUDIO_CONFIG:PageStudioConfig={cmsEnabled:true,publicEnabled:false,customPathsEnabled:false,maxRevisions:25,maxBlocks:120,freeTierMode:true,maxUploadBytes:4000000,remoteCacheMinutes:30};
 
-export function pageStudioSystemEnabled(){return process.env.NODE_ENV!=='production'||process.env.PAGE_STUDIO_ENABLED==='true'}
+export function pageStudioSystemEnabled(){return process.env.PAGE_STUDIO_EMERGENCY_DISABLED!=='true'}
 export function parsePageStudioConfig(value:unknown):PageStudioConfig{return pageStudioConfigSchema.parse({...DEFAULT_PAGE_STUDIO_CONFIG,...(value&&typeof value==='object'&&!Array.isArray(value)?value:{})})}
 
 const reservedRoots=new Set(['api','admin','admin.html','work','work.html','journal','blog.html','share','preview','health','robots.txt','sitemap.xml','llms.txt','page-studio.html']);

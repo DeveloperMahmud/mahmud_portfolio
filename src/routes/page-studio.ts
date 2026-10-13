@@ -8,13 +8,14 @@ import { DEFAULT_PAGE_STUDIO_CONFIG, DEFAULT_PAGE_TEMPLATES, cloneBlocks, normal
 
 const router=Router();
 router.use(requireAuth);
-router.use((_req,res,next)=>pageStudioSystemEnabled()?next():res.status(503).json({error:'Page Studio is disabled at the system level. Set PAGE_STUDIO_ENABLED=true to enable the protected CMS module.'}));
+router.use((_req,res,next)=>pageStudioSystemEnabled()?next():res.status(503).json({error:'Page Studio is disabled by the emergency environment lock.'}));
 const actor=(res:any)=>res.locals.user?.sub as string|undefined;
 const jsonValue=(value:unknown)=>value as Prisma.InputJsonValue;
 
 async function settings(){let row=await db.siteSettings.findFirst();if(!row)row=await db.siteSettings.create({data:{}});return row}
 async function config(){return parsePageStudioConfig((await settings()).pageStudioConfig)}
 async function seedTemplates(){await db.pageTemplate.createMany({data:DEFAULT_PAGE_TEMPLATES.map(template=>({...template,blocks:jsonValue(template.blocks)})),skipDuplicates:true})}
+router.use(async(_req,res,next)=>(await config()).cmsEnabled?next():res.status(503).json({error:'Page Studio CMS is disabled in Control Center.'}));
 
 const nullableUrl=z.union([z.string().url(),z.literal(''),z.null()]).optional().transform(value=>value||null);
 const basePageSchema=z.object({
@@ -22,11 +23,14 @@ const basePageSchema=z.object({
 });
 
 function allBlocks(blocks:StudioBlock[]){const result:StudioBlock[]=[];const walk=(items:StudioBlock[])=>items.forEach(item=>{result.push(item);walk(item.children||[])});walk(blocks);return result}
+function normalizeEmbedUrl(value:unknown){try{const url=new URL(String(value||'').trim());if(url.hostname==='youtu.be'){const id=url.pathname.split('/').filter(Boolean)[0];return id?`https://www.youtube.com/embed/${encodeURIComponent(id)}`:url.href}if(['youtube.com','www.youtube.com','m.youtube.com'].includes(url.hostname)){const id=url.searchParams.get('v')||(url.pathname.match(/^\/(?:shorts|live)\/([^/]+)/)?.[1]);if(id)return `https://www.youtube.com/embed/${encodeURIComponent(id)}`}return url.href}catch{return String(value||'')}}
 async function validateEmbeds(blocks:StudioBlock[]){
-  const embeds=allBlocks(blocks).filter(block=>block.type==='EMBED'&&String(block.data.url||'').trim());
+  const mediaBlocks=allBlocks(blocks).filter(block=>['EMBED','VIDEO'].includes(block.type)&&String(block.data.url||'').trim());
+  mediaBlocks.forEach(block=>block.data.url=normalizeEmbedUrl(block.data.url));
+  const embeds=mediaBlocks.filter(block=>block.type==='EMBED');
   if(!embeds.length)return;
   const sources=await db.trustedEmbedSource.findMany({where:{enabled:true,allowIframe:true},select:{origin:true}}),allowed=new Set(sources.map(x=>x.origin));
-  const official=['https://www.youtube.com','https://youtube.com','https://player.vimeo.com','https://www.figma.com'];
+  const official=['https://www.youtube.com','https://youtube.com','https://www.youtube-nocookie.com','https://player.vimeo.com','https://www.figma.com'];
   official.forEach(origin=>allowed.add(origin));
   for(const block of embeds){let url:URL;try{url=new URL(String(block.data.url))}catch{throw new Error('Embed widgets require a valid HTTPS URL.')}if(url.protocol!=='https:'||!allowed.has(url.origin))throw new Error(`Embed origin ${url.origin} is not in Trusted Embed Sources.`)}
 }
@@ -49,7 +53,7 @@ router.get('/bootstrap',async(_req,res)=>{
   const [pages,templates,reusableBlocks,taxonomy,navigationPresets,embedSources,mediaCount,mediaBytes,media,projects,content,brands]=await Promise.all([
     db.customPage.findMany({where:{deletedAt:null},orderBy:{updatedAt:'desc'},include:{taxonomy:{include:{term:true}}}}),db.pageTemplate.findMany({where:{active:true},orderBy:[{category:'asc'},{name:'asc'}]}),db.reusableBlock.findMany({where:{active:true},orderBy:[{category:'asc'},{name:'asc'}]}),db.taxonomyTerm.findMany({where:{active:true},orderBy:[{type:'asc'},{sortOrder:'asc'},{name:'asc'}]}),db.navigationPreset.findMany({where:{enabled:true},orderBy:[{isGlobal:'desc'},{name:'asc'}]}),db.trustedEmbedSource.findMany({orderBy:{name:'asc'}}),db.media.count({where:{deletedAt:null}}),db.media.aggregate({where:{deletedAt:null},_sum:{size:true}}),db.media.findMany({where:{deletedAt:null,status:'COMPLETE',mimeType:{startsWith:'image/'}},orderBy:{createdAt:'desc'},take:200,select:{id:true,url:true,filename:true,originalName:true,mimeType:true,size:true,width:true,height:true,alt:true,title:true}}),db.project.findMany({where:{deletedAt:null,status:'PUBLISHED',visibility:'PUBLIC',clientOnly:false},orderBy:[{featured:'desc'},{sortOrder:'asc'}],take:50,select:{id:true,title:true,slug:true,category:true,service:true,client:true,coverImage:true,homepageImage:true,projectSubtitle:true}}),db.content.findMany({where:{deletedAt:null,status:'PUBLISHED'},orderBy:[{featured:'desc'},{publishedAt:'desc'}],take:30,select:{id:true,title:true,slug:true,category:true,excerpt:true,coverImage:true,publishedAt:true}}),db.brand.findMany({where:{deletedAt:null,active:true},orderBy:{sortOrder:'asc'},take:50,select:{id:true,name:true,logoAsset:true,logoDark:true,url:true,industry:true}})
   ]);
-  const dynamic={projects,content,brands,settings:{siteName:siteSettings.siteName,title:siteSettings.title,navigationConfig:siteSettings.navigationConfig,footerConfig:siteSettings.footerConfig,aboutConfig:siteSettings.aboutConfig,socialLinks:siteSettings.socialLinks}};
+  const dynamic={projects,content,brands,settings:{siteName:siteSettings.siteName,title:siteSettings.title,navigationConfig:siteSettings.navigationConfig,footerConfig:siteSettings.footerConfig,aboutConfig:siteSettings.aboutConfig,socialLinks:siteSettings.socialLinks,featureFlags:siteSettings.featureFlags}};
   const resolvedPages=pages.map(page=>({...page,blocks:resolveGlobalBlocks(studioBlocksSchema.parse(page.blocks),reusableBlocks)}));
   res.json({systemEnabled:true,config:studioConfig,pages:resolvedPages,templates,reusableBlocks,taxonomy,navigationPresets,embedSources,media,dynamic,usage:{mediaAssets:mediaCount,mediaBytes:mediaBytes._sum.size||0,configuredMediaQuota:Number(process.env.MEDIA_STORAGE_QUOTA_BYTES||1073741824)},limits:{blobWritesOnPageSave:0,mediaCopiedOnDuplicate:false}});
 });

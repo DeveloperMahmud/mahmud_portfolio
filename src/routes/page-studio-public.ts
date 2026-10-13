@@ -17,7 +17,7 @@ async function dynamicData(){
     db.content.findMany({where:{deletedAt:null,status:'PUBLISHED',OR:[{scheduledAt:null},{scheduledAt:{lte:now}}]},orderBy:[{featured:'desc'},{publishedAt:'desc'}],select:{id:true,title:true,slug:true,category:true,excerpt:true,coverImage:true,publishedAt:true}}),
     db.brand.findMany({where:{deletedAt:null,active:true},orderBy:{sortOrder:'asc'},select:{id:true,name:true,logoAsset:true,logoDark:true,url:true,industry:true}}),db.siteSettings.findFirst()
   ]);
-  return {projects,content,brands,settings:settings?{siteName:settings.siteName,title:settings.title,heroImage:settings.heroImage,navigationConfig:settings.navigationConfig,footerConfig:settings.footerConfig,aboutConfig:settings.aboutConfig,socialLinks:settings.socialLinks}: {}};
+  return {projects,content,brands,settings:settings?{siteName:settings.siteName,title:settings.title,heroImage:settings.heroImage,navigationConfig:settings.navigationConfig,footerConfig:settings.footerConfig,aboutConfig:settings.aboutConfig,socialLinks:settings.socialLinks,featureFlags:settings.featureFlags}: {}};
 }
 
 async function trustedOrigins(){return (await db.trustedEmbedSource.findMany({where:{enabled:true,allowIframe:true},select:{origin:true}})).map(x=>x.origin)}

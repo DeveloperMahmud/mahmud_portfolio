@@ -5,9 +5,11 @@ import { z } from 'zod';
 import { sendInquiryNotification } from '../lib/email.js';
 import { captureIncident } from '../lib/monitoring.js';
 import path from 'node:path';
+import { featureEnabled } from '../lib/feature-flags.js';
 
 const router = Router();
 router.post('/inquiries', async (req,res)=>{
+  if(!await featureEnabled('contactForm'))return res.status(404).json({error:'Contact form is currently unavailable.'});
   const p=z.object({name:z.string().min(2).max(120),email:z.string().email().max(200),company:z.string().max(160).optional().nullable(),projectType:z.string().max(120).optional().nullable(),service:z.string().max(120).optional().nullable(),budget:z.string().max(120).optional().nullable(),timeline:z.string().max(120).optional().nullable(),message:z.string().min(10).max(5000),attachment:z.string().max(500).optional().nullable(),website:z.string().max(0).optional(),turnstileToken:z.string().max(4000).optional()}).safeParse(req.body);
   if(!p.success)return res.status(400).json({error:'Please provide valid inquiry details.'});
   if(p.data.website)return res.status(201).json({ok:true});
@@ -15,7 +17,7 @@ router.post('/inquiries', async (req,res)=>{
   if(process.env.TURNSTILE_SECRET_KEY){const verify=await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},body:new URLSearchParams({secret:process.env.TURNSTILE_SECRET_KEY,response:p.data.turnstileToken||'',remoteip:req.ip||''})});const result=await verify.json() as {success?:boolean};if(!result.success)return res.status(400).json({error:'Verification failed. Please refresh and try again.'});}
   const {website:_,turnstileToken:__,...inquiryData}=p.data;
   const inquiry=await db.inquiry.create({data:inquiryData});
-  const delivery=await sendInquiryNotification(inquiry);
+  const delivery=await featureEnabled('emailNotifications')?await sendInquiryNotification(inquiry):{sent:false,status:'DISABLED',error:'Email notifications are disabled in Control Center.'};
   const emailSent=delivery.sent;
   const emailError=delivery.sent?'':delivery.error||'Notification failed; inquiry remains stored.';
   await db.activityLog.create({data:{action:'NEW_INQUIRY',entity:'INQUIRY',entityId:inquiry.id,label:inquiry.name}});
@@ -30,7 +32,7 @@ router.get('/preview/:token',async(req,res)=>{const row=await db.previewToken.fi
 router.get('/projects', async (_req, res) => {
   const projects = await db.project.findMany({ where: { deletedAt:null,status: 'PUBLISHED', visibility: 'PUBLIC', clientOnly: false, OR:[{scheduledAt:null},{scheduledAt:{lte:new Date()}}] }, orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }] });
   res.set('Cache-Control','public, max-age=60, s-maxage=300, stale-while-revalidate=600');
-  res.json({ projects, demoEnabled: process.env.ENABLE_DEMO_CONTENT === 'true' });
+  res.json({ projects, demoEnabled:await featureEnabled('demoContent') });
 });
 router.get('/projects/:slug', async (req, res) => {
   const project = await db.project.findFirst({ where: { deletedAt:null,slug: req.params.slug, status: 'PUBLISHED', visibility: 'PUBLIC', clientOnly: false },include:{resultMetrics:{where:{verified:true,visible:true},orderBy:{sortOrder:'asc'},take:6,select:{id:true,label:true,value:true,prefix:true,suffix:true,beforeValue:true,afterValue:true,publicNote:true,sortOrder:true}}} });
@@ -41,8 +43,8 @@ router.get('/projects/:slug', async (req, res) => {
   res.json({ project,nextProject });
 });
 router.get('/settings', async (_req,res)=>{ let settings=await db.siteSettings.findFirst(); if(!settings) settings=await db.siteSettings.create({data:{}}); const {inquiryRecipientEmail:_,inquirySubject:__,...publicSettings}=settings; res.json({settings:{...publicSettings,skillsConfig:Array.isArray(publicSettings.skillsConfig)?publicSettings.skillsConfig:[]}}); });
-router.get('/cv',async(_req,res)=>{const settings=await db.siteSettings.findFirst();const about=(settings?.aboutConfig&&typeof settings.aboutConfig==='object'&&!Array.isArray(settings.aboutConfig)?settings.aboutConfig:{}) as Record<string,unknown>;const url=String(about.cvUrl||'').trim(),filename=String(about.cvFilename||'Mahmudul-Hassan-CV.pdf').replace(/[^a-zA-Z0-9._-]/g,'-');if(!url)return res.status(404).json({error:'CV is not available.'});try{res.setHeader('Content-Disposition',`attachment; filename="${filename.endsWith('.pdf')?filename:`${filename}.pdf`}"`);res.setHeader('Content-Type','application/pdf');if(url.startsWith('/')){const frontend=path.resolve(process.cwd(),'portfolio'),target=path.resolve(frontend,url.replace(/^\/+/,''));if(!target.startsWith(frontend))return res.status(400).json({error:'Invalid CV path.'});return res.sendFile(target)}const parsed=new URL(url);if(!['http:','https:'].includes(parsed.protocol))return res.status(400).json({error:'Invalid CV URL.'});const upstream=await fetch(parsed,{signal:AbortSignal.timeout(10000)});if(!upstream.ok)return res.status(502).json({error:'CV storage could not be reached.'});const declared=Number(upstream.headers.get('content-length')||0);if(declared>8_000_000)return res.status(413).json({error:'CV file is too large.'});const body=Buffer.from(await upstream.arrayBuffer());if(body.length>8_000_000||body.subarray(0,5).toString('ascii')!=='%PDF-')return res.status(502).json({error:'Stored CV is not a valid PDF.'});return res.send(body)}catch{return res.status(502).json({error:'CV download is temporarily unavailable.'})}});
-router.get('/testimonials', async (_req,res)=>{ const testimonials=await db.testimonial.findMany({where:{published:true,deletedAt:null},orderBy:[{featured:'desc'},{sortOrder:'asc'}]}); res.json({testimonials}); });
+router.get('/cv',async(_req,res)=>{if(!await featureEnabled('cvDownload'))return res.status(404).json({error:'CV download is disabled.'});const settings=await db.siteSettings.findFirst();const about=(settings?.aboutConfig&&typeof settings.aboutConfig==='object'&&!Array.isArray(settings.aboutConfig)?settings.aboutConfig:{}) as Record<string,unknown>;const url=String(about.cvUrl||'').trim(),filename=String(about.cvFilename||'Mahmudul-Hassan-CV.pdf').replace(/[^a-zA-Z0-9._-]/g,'-');if(!url)return res.status(404).json({error:'CV is not available.'});try{res.setHeader('Content-Disposition',`attachment; filename="${filename.endsWith('.pdf')?filename:`${filename}.pdf`}"`);res.setHeader('Content-Type','application/pdf');if(url.startsWith('/')){const frontend=path.resolve(process.cwd(),'portfolio'),target=path.resolve(frontend,url.replace(/^\/+/,''));if(!target.startsWith(frontend))return res.status(400).json({error:'Invalid CV path.'});return res.sendFile(target)}const parsed=new URL(url);if(!['http:','https:'].includes(parsed.protocol))return res.status(400).json({error:'Invalid CV URL.'});const upstream=await fetch(parsed,{signal:AbortSignal.timeout(10000)});if(!upstream.ok)return res.status(502).json({error:'CV storage could not be reached.'});const declared=Number(upstream.headers.get('content-length')||0);if(declared>8_000_000)return res.status(413).json({error:'CV file is too large.'});const body=Buffer.from(await upstream.arrayBuffer());if(body.length>8_000_000||body.subarray(0,5).toString('ascii')!=='%PDF-')return res.status(502).json({error:'Stored CV is not a valid PDF.'});return res.send(body)}catch{return res.status(502).json({error:'CV download is temporarily unavailable.'})}});
+router.get('/testimonials', async (_req,res)=>{ if(!await featureEnabled('testimonials'))return res.json({testimonials:[]});const testimonials=await db.testimonial.findMany({where:{published:true,deletedAt:null},orderBy:[{featured:'desc'},{sortOrder:'asc'}]}); res.json({testimonials}); });
 router.get('/brands', async (_req, res) => {
   const brands = await db.brand.findMany({ where: { active: true,deletedAt:null }, orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }] });
   res.json({ brands });

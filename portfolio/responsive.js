@@ -1,4 +1,5 @@
 (() => {
+  if(!location.pathname.endsWith('/admin.html')&&!location.pathname.includes('page-studio')){const runtime=document.createElement('script');runtime.src='/production-navigation.js';runtime.defer=true;document.head.appendChild(runtime)}
   const main=document.querySelector('main')||document.querySelector('#cms');if(main&&!main.id)main.id='main-content';if(main){const skip=document.createElement('a');skip.className='skip-link';skip.href='#'+main.id;skip.textContent='Skip to main content';document.body.prepend(skip)}
   const button=document.querySelector('.menu-toggle'),menu=document.querySelector('.mobile-menu');let previous=null;const focusables=()=>menu?[...menu.querySelectorAll('a[href],button:not([disabled]),input:not([disabled])')]:[];
   function sync(){if(!menu||!button)return;const open=menu.classList.contains('open');if(open){previous=document.activeElement;document.body.classList.add('menu-open');main?.setAttribute('inert','');focusables()[0]?.focus()}else{document.body.classList.remove('menu-open');main?.removeAttribute('inert');if(previous&&previous!==document.body)previous.focus?.();previous=null}}

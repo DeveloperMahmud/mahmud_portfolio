@@ -274,6 +274,7 @@ model SiteSettings {
   seoConfig          Json     @default("{}")
   inquiryConfig      Json     @default("{}")
   pageStudioConfig   Json     @default("{}")
+  featureFlags       Json     @default("{}")
   updatedAt          DateTime @updatedAt
 }
 

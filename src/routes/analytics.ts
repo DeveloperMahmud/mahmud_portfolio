@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { Prisma } from '@prisma/client';
 import { db } from '../lib/db.js';
 import { requireAuth } from '../lib/auth.js';
+import { featureEnabled } from '../lib/feature-flags.js';
 
 const publicAnalytics = Router();
 const adminAnalytics = Router();
@@ -23,7 +24,7 @@ const eventSchema = z.object({
   sourceContext: z.enum(['hero','slider','project','archive','journal','contact','navigation','footer']).optional()
 }).strict();
 
-function enabled() { return process.env.ANALYTICS_ENABLED === 'true' && (process.env.ANALYTICS_SALT?.trim().length || 0) >= 16; }
+async function enabled() { return (process.env.ANALYTICS_SALT?.trim().length || 0) >= 16 && await featureEnabled('analytics'); }
 function localHost(req: Request) { return ['localhost','127.0.0.1','::1'].includes(req.hostname.toLowerCase()); }
 function normalizePath(value: string) { try { const url=new URL(value,'https://portfolio.local'); return (`/${url.pathname}`).replace(/\/{2,}/g,'/').replace(/\/$/,'') || '/'; } catch { return '/'; } }
 function excludedPath(path: string) { return path.startsWith('/admin') || path.startsWith('/api') || path.startsWith('/health') || path.startsWith('/share/'); }
@@ -33,9 +34,9 @@ function bot(ua: string) { return /bot|crawler|spider|headless|preview|lighthous
 function referrer(req: Request) { try { const value=req.get('referer'); return value ? new URL(value).hostname.toLowerCase().replace(/^www\./,'').slice(0,180) : null; } catch { return null; } }
 function source(host: string | null) { if(!host)return 'DIRECT'; if(/google|bing|duckduckgo|yahoo/.test(host))return 'SEARCH'; if(/linkedin|behance|dribbble|instagram|facebook|x\.com|twitter/.test(host))return 'SOCIAL'; return 'REFERRAL'; }
 
-publicAnalytics.get('/config', (req,res)=>res.json({enabled:enabled() && (!localHost(req) || process.env.ANALYTICS_TRACK_LOCAL === 'true'),respectDnt:true}));
+publicAnalytics.get('/config', async(req,res)=>res.json({enabled:await enabled() && (!localHost(req) || process.env.ANALYTICS_TRACK_LOCAL === 'true'),respectDnt:true}));
 publicAnalytics.post('/events', async (req,res) => {
-  if(!enabled()) return res.status(202).json({ok:true,tracked:false,reason:'disabled'});
+  if(!await enabled()) return res.status(202).json({ok:true,tracked:false,reason:'disabled'});
   if(localHost(req) && process.env.ANALYTICS_TRACK_LOCAL !== 'true') return res.status(202).json({ok:true,tracked:false,reason:'local'});
   if(req.get('dnt') === '1' || req.get('sec-gpc') === '1') return res.status(202).json({ok:true,tracked:false,reason:'privacy'});
   if(req.cookies?.mh_admin_session) return res.status(202).json({ok:true,tracked:false,reason:'admin'});
@@ -81,9 +82,9 @@ async function report(query:unknown){
   return{enabled:true,partial,range:{from:r.from.toISOString(),to:r.to.toISOString(),timezone:'UTC'},overview:currentSummary,comparisons,timeseries,projects,pages:groups(x=>x.normalizedPath,x=>x.eventType==='page_view'),referrers:groups(x=>x.referrerHost),sources:groups(x=>x.source),devices:groups(x=>x.deviceType),countries:groups(x=>x.countryCode),funnel:{contactViews:current.filter(x=>x.eventType==='contact_view').length,formStarts:current.filter(x=>x.eventType==='form_start').length,submissions:inquiries,qualified:statusCount.QUALIFIED||0,won:statusCount.WON||0}};
 }
 
-adminAnalytics.get('/report',async(req,res)=>{if(!enabled())return res.json({enabled:false,reason:'Set ANALYTICS_ENABLED=true and a 16+ character ANALYTICS_SALT.'});try{res.json(await report(req.query))}catch(e){res.status(400).json({error:e instanceof Error?e.message:'Invalid analytics request'})}});
-for(const section of ['overview','timeseries','projects','pages','referrers','devices','countries','funnel'] as const){adminAnalytics.get(`/${section}`,async(req,res)=>{if(!enabled())return res.json({enabled:false});try{const data=await report(req.query);res.json({enabled:true,range:data.range,partial:data.partial,[section]:data[section]})}catch(e){res.status(400).json({error:e instanceof Error?e.message:'Invalid analytics request'})}})}
-adminAnalytics.post('/aggregate',async(req,res)=>{if(!enabled())return res.status(409).json({error:'Analytics is disabled'});try{const data=await report(req.body||{});const dateRows=data.timeseries.map(x=>({date:new Date(`${x.date}T00:00:00.000Z`),dimensionType:'OVERALL',dimensionValue:'ALL',uniqueVisitors:BigInt(x.visitors),sessions:BigInt(x.sessions),pageViews:BigInt(x.pageViews),projectViews:BigInt(x.projectViews),inquiries:BigInt(x.inquiries)}));for(const row of dateRows)await db.analyticsDaily.upsert({where:{date_dimensionType_dimensionValue:{date:row.date,dimensionType:row.dimensionType,dimensionValue:row.dimensionValue}},create:row,update:row});res.json({ok:true,days:dateRows.length,partial:data.partial})}catch(e){res.status(400).json({error:e instanceof Error?e.message:'Aggregation failed'})}});
+adminAnalytics.get('/report',async(req,res)=>{if(!await enabled())return res.json({enabled:false,reason:'Enable Analytics in Control Center and configure a 16+ character ANALYTICS_SALT.'});try{res.json(await report(req.query))}catch(e){res.status(400).json({error:e instanceof Error?e.message:'Invalid analytics request'})}});
+for(const section of ['overview','timeseries','projects','pages','referrers','devices','countries','funnel'] as const){adminAnalytics.get(`/${section}`,async(req,res)=>{if(!await enabled())return res.json({enabled:false});try{const data=await report(req.query);res.json({enabled:true,range:data.range,partial:data.partial,[section]:data[section]})}catch(e){res.status(400).json({error:e instanceof Error?e.message:'Invalid analytics request'})}})}
+adminAnalytics.post('/aggregate',async(req,res)=>{if(!await enabled())return res.status(409).json({error:'Analytics is disabled'});try{const data=await report(req.body||{});const dateRows=data.timeseries.map(x=>({date:new Date(`${x.date}T00:00:00.000Z`),dimensionType:'OVERALL',dimensionValue:'ALL',uniqueVisitors:BigInt(x.visitors),sessions:BigInt(x.sessions),pageViews:BigInt(x.pageViews),projectViews:BigInt(x.projectViews),inquiries:BigInt(x.inquiries)}));for(const row of dateRows)await db.analyticsDaily.upsert({where:{date_dimensionType_dimensionValue:{date:row.date,dimensionType:row.dimensionType,dimensionValue:row.dimensionValue}},create:row,update:row});res.json({ok:true,days:dateRows.length,partial:data.partial})}catch(e){res.status(400).json({error:e instanceof Error?e.message:'Aggregation failed'})}});
 adminAnalytics.delete('/cleanup',async(req,res)=>{const confirm=z.object({confirm:z.literal('DELETE_EXPIRED_ANALYTICS')}).safeParse(req.body);if(!confirm.success)return res.status(400).json({error:'Confirmation phrase is required'});const days=Math.min(3650,Math.max(1,Number(process.env.ANALYTICS_RETENTION_DAYS||365)));const cutoff=new Date(Date.now()-days*86400000);const [events,daily]=await db.$transaction([db.analyticsEvent.deleteMany({where:{occurredAt:{lt:cutoff}}}),db.analyticsDaily.deleteMany({where:{date:{lt:cutoff}}})]);await db.activityLog.create({data:{action:'ANALYTICS_CLEANUP',entity:'ANALYTICS',label:`Deleted ${events.count} events and ${daily.count} aggregates older than ${days} days`}});res.json({ok:true,cutoff,deletedEvents:events.count,deletedDaily:daily.count})});
 
 export { publicAnalytics, adminAnalytics };
