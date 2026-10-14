@@ -1,0 +1,11 @@
+/* Shared dark controls for Production Navigation and Page Studio managers. */
+#production-navigationTab input:not([type=checkbox]),#production-navigationTab select,#control-centerTab input:not([type=checkbox]),#control-centerTab select,.manager-card input:not([type=checkbox]):not([type=color]):not([type=range]),.manager-card select,.manager-card textarea{display:block;width:100%;min-width:0;min-height:42px;padding:10px 11px;border:1px solid var(--line);border-radius:0;outline:0;background-color:#090b09;color:var(--text);font:500 11px "DM Sans",sans-serif;letter-spacing:0;box-shadow:none;appearance:none}
+#production-navigationTab input:not([type=checkbox]):focus,#production-navigationTab select:focus,.manager-card input:not([type=checkbox]):focus,.manager-card select:focus,.manager-card textarea:focus{border-color:var(--lime);box-shadow:0 0 0 1px rgba(198,255,76,.18)}
+#production-navigationTab select,.manager-card select{padding-right:34px;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 15px) 17px,calc(100% - 10px) 17px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.manager-card>label,.manager-card [data-nav-index]>label{display:grid;gap:7px;color:var(--muted);font-size:8px;font-weight:600;letter-spacing:.11em}
+.manager-card input::placeholder,.manager-card textarea::placeholder{color:#596057}
+.manager-card .inspector-check{display:grid!important;grid-template-columns:20px 1fr;align-items:center;gap:10px;min-height:48px;color:var(--text);font-size:10px}
+.manager-card input[type=checkbox],.nav-item-options input[type=checkbox],#navSticky{width:18px;height:18px;margin:0;border-radius:0;accent-color:var(--lime)}
+.manager-card [data-nav-index]{gap:11px;padding:14px;background:#0c0f0d}
+.nav-item-options label{min-height:34px;padding:7px 9px;border:1px solid var(--line);background:#090b09;color:var(--text)}
+@media(max-width:680px){.manager-card input:not([type=checkbox]),.manager-card select,.manager-card textarea{font-size:16px}}
