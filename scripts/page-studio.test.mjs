@@ -97,3 +97,19 @@ test('feature controls and production navigation preserve safe fallbacks',()=>{
   assert.match(admin,/hardcoded menu remains the automatic fallback/);
   assert.doesNotMatch(migration,/\b(?:DROP|TRUNCATE|DELETE FROM)\b/i);
 });
+
+test('editorial widgets and testimonials are available without new media writes',()=>{
+  const schema=read('src/lib/page-studio.ts');
+  const editor=read('portfolio/page-studio.js');
+  const renderer=read('portfolio/page-studio-renderer.js');
+  const adminRoute=read('src/routes/page-studio.ts');
+  const publicRoute=read('src/routes/page-studio-public.ts');
+  assert.match(schema,/EDITORIAL_SHOWCASE/);
+  assert.match(schema,/COLLECTION_GRID/);
+  assert.match(schema,/TESTIMONIAL_CAROUSEL/);
+  assert.match(editor,/Editorial showcase/);
+  assert.match(renderer,/data-ps-testimonials/);
+  assert.match(adminRoute,/db\.testimonial\.findMany/);
+  assert.match(publicRoute,/testimonials/);
+  assert.doesNotMatch(renderer,/\/api\/admin\/maintenance\/media/);
+});

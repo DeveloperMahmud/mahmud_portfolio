@@ -12,12 +12,12 @@ async function state(){const settings=await db.siteSettings.findFirst();return {
 export async function publicStudioEnabled(){const {config}=await state();return pageStudioSystemEnabled()&&config.publicEnabled}
 
 async function dynamicData(){
-  const now=new Date();const [projects,content,brands,settings]=await Promise.all([
+  const now=new Date();const [projects,content,brands,testimonials,settings]=await Promise.all([
     db.project.findMany({where:{deletedAt:null,status:'PUBLISHED',visibility:'PUBLIC',clientOnly:false,OR:[{scheduledAt:null},{scheduledAt:{lte:now}}]},orderBy:[{featured:'desc'},{sortOrder:'asc'}],select:{id:true,title:true,slug:true,category:true,service:true,client:true,coverImage:true,homepageImage:true,projectSubtitle:true}}),
     db.content.findMany({where:{deletedAt:null,status:'PUBLISHED',OR:[{scheduledAt:null},{scheduledAt:{lte:now}}]},orderBy:[{featured:'desc'},{publishedAt:'desc'}],select:{id:true,title:true,slug:true,category:true,excerpt:true,coverImage:true,publishedAt:true}}),
-    db.brand.findMany({where:{deletedAt:null,active:true},orderBy:{sortOrder:'asc'},select:{id:true,name:true,logoAsset:true,logoDark:true,url:true,industry:true}}),db.siteSettings.findFirst()
+    db.brand.findMany({where:{deletedAt:null,active:true},orderBy:{sortOrder:'asc'},select:{id:true,name:true,logoAsset:true,logoDark:true,url:true,industry:true}}),db.testimonial.findMany({where:{deletedAt:null,published:true},orderBy:[{featured:'desc'},{sortOrder:'asc'}],take:30,select:{id:true,client:true,company:true,role:true,quote:true,photo:true,featured:true}}),db.siteSettings.findFirst()
   ]);
-  return {projects,content,brands,settings:settings?{siteName:settings.siteName,title:settings.title,heroImage:settings.heroImage,navigationConfig:settings.navigationConfig,footerConfig:settings.footerConfig,aboutConfig:settings.aboutConfig,socialLinks:settings.socialLinks,featureFlags:settings.featureFlags}: {}};
+  return {projects,content,brands,testimonials,settings:settings?{siteName:settings.siteName,title:settings.title,heroImage:settings.heroImage,navigationConfig:settings.navigationConfig,footerConfig:settings.footerConfig,aboutConfig:settings.aboutConfig,socialLinks:settings.socialLinks,featureFlags:settings.featureFlags}: {}};
 }
 
 async function trustedOrigins(){return (await db.trustedEmbedSource.findMany({where:{enabled:true,allowIframe:true},select:{origin:true}})).map(x=>x.origin)}
