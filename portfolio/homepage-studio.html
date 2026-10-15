@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Homepage Studio — Creative CMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/homepage-studio.css">
+</head>
+<body>
+  <header class="hs-topbar">
+    <a class="hs-brand" href="/admin.html"><span>MH</span><strong>HOMEPAGE STUDIO<small>EXISTING SITE VISUAL EDITOR</small></strong></a>
+    <div class="hs-state"><strong id="saveState">LOADING…</strong><small id="liveState">Production fallback remains active.</small></div>
+    <div class="hs-devices" role="group" aria-label="Preview device"><button class="active" data-device="desktop">DESKTOP</button><button data-device="tablet">TABLET</button><button data-device="mobile">MOBILE</button></div>
+    <div class="hs-actions"><button id="saveDraft">SAVE DRAFT</button><button id="disableLayout" class="danger" hidden>DISABLE</button><button id="publishLayout" class="primary">PUBLISH</button></div>
+  </header>
+  <main class="hs-shell">
+    <aside class="hs-sidebar">
+      <div class="hs-panel-head"><span>ADD MODULE</span><h2>Building blocks.</h2><p>Existing sections stay connected to their current CMS data.</p></div>
+      <div id="blockLibrary" class="hs-library"></div>
+      <div class="hs-safety"><strong>SAFE CUSTOM CODE</strong><p>HTML and CSS render inside an isolated frame. JavaScript is intentionally disabled.</p><a href="/page-studio.html">MANAGE TRUSTED EMBEDS ↗</a></div>
+    </aside>
+    <section class="hs-workspace">
+      <div class="hs-workspace-head"><div><span>STRUCTURE</span><h1>Homepage flow.</h1></div><p>Drag to reorder. Use NEST to place social, code or embeds inside a section.</p></div>
+      <div id="structureTree" class="hs-tree"></div>
+    </section>
+    <section class="hs-preview-panel">
+      <div class="hs-preview-head"><div><span>LIVE PREVIEW</span><strong id="previewLabel">DESKTOP</strong></div><button id="refreshPreview">REFRESH</button></div>
+      <div id="previewViewport" class="hs-preview-viewport" data-device="desktop"><iframe id="homepagePreview" src="/?homepage-studio-preview=1" title="Homepage Studio live preview"></iframe></div>
+    </section>
+    <aside class="hs-inspector">
+      <div class="hs-panel-head"><span id="inspectorKicker">BLOCK</span><h2 id="inspectorTitle">Select a block.</h2><p id="inspectorHelp">Choose a section or module to edit its controls.</p></div>
+      <form id="inspectorForm" class="hs-form"></form>
+      <section class="hs-roadmap"><strong>FUTURE-PROOF FOUNDATION</strong><ul><li>Existing sections remain the source of truth.</li><li>Draft and published layouts are separate.</li><li>New reusable modules can be added without redesigning the homepage.</li><li>Media is referenced, never duplicated.</li></ul></section>
+    </aside>
+  </main>
+  <div id="toast" class="hs-toast" role="status"></div>
+  <script src="/homepage-studio.js" defer></script>
+</body>
+</html>

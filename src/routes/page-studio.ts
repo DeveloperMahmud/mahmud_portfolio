@@ -5,6 +5,7 @@ import { db } from '../lib/db.js';
 import { requireAuth } from '../lib/auth.js';
 import { createRevision } from '../lib/revisions.js';
 import { DEFAULT_PAGE_STUDIO_CONFIG, DEFAULT_PAGE_TEMPLATES, cloneBlocks, normalizePagePath, pageStudioConfigSchema, pageStudioSystemEnabled, parsePageStudioConfig, resolveGlobalBlocks, slugify, studioBlockSchema, studioBlocksSchema, type StudioBlock } from '../lib/page-studio.js';
+import { HOMEPAGE_STUDIO_KEY, collectHomepageBlocks, defaultHomepageStudioState, homepageStudioLayoutSchema, parseHomepageStudioState } from '../lib/homepage-studio.js';
 
 const router=Router();
 router.use(requireAuth);
@@ -25,9 +26,9 @@ const basePageSchema=z.object({
 function allBlocks(blocks:StudioBlock[]){const result:StudioBlock[]=[];const walk=(items:StudioBlock[])=>items.forEach(item=>{result.push(item);walk(item.children||[])});walk(blocks);return result}
 function normalizeEmbedUrl(value:unknown){try{const url=new URL(String(value||'').trim());if(url.hostname==='youtu.be'){const id=url.pathname.split('/').filter(Boolean)[0];return id?`https://www.youtube.com/embed/${encodeURIComponent(id)}`:url.href}if(['youtube.com','www.youtube.com','m.youtube.com'].includes(url.hostname)){const id=url.searchParams.get('v')||(url.pathname.match(/^\/(?:shorts|live)\/([^/]+)/)?.[1]);if(id)return `https://www.youtube.com/embed/${encodeURIComponent(id)}`}return url.href}catch{return String(value||'')}}
 async function validateEmbeds(blocks:StudioBlock[]){
-  const mediaBlocks=allBlocks(blocks).filter(block=>['EMBED','VIDEO'].includes(block.type)&&String(block.data.url||'').trim());
+  const mediaBlocks=allBlocks(blocks).filter(block=>['EMBED','WEBSITE_EMBED','VIDEO'].includes(block.type)&&String(block.data.url||'').trim());
   mediaBlocks.forEach(block=>block.data.url=normalizeEmbedUrl(block.data.url));
-  const embeds=mediaBlocks.filter(block=>block.type==='EMBED');
+  const embeds=mediaBlocks.filter(block=>['EMBED','WEBSITE_EMBED'].includes(block.type));
   if(!embeds.length)return;
   const sources=await db.trustedEmbedSource.findMany({where:{enabled:true,allowIframe:true},select:{origin:true}}),allowed=new Set(sources.map(x=>x.origin));
   const official=['https://www.youtube.com','https://youtube.com','https://www.youtube-nocookie.com','https://player.vimeo.com','https://www.figma.com'];
@@ -104,6 +105,76 @@ function normalizeEmbedOrigin(value:string){const url=new URL(value);if(url.prot
 router.post('/embed-sources',async(req,res)=>{const p=embedSchema.safeParse(req.body);if(!p.success)return res.status(400).json({error:p.error.flatten()});try{const source=await db.trustedEmbedSource.create({data:{...p.data,origin:normalizeEmbedOrigin(p.data.origin)}});res.status(201).json({source});}catch(error){res.status(400).json({error:error instanceof Error?error.message:'Could not add embed source.'})}});
 router.patch('/embed-sources/:id',async(req,res)=>{const p=embedSchema.partial().safeParse(req.body);if(!p.success)return res.status(400).json({error:p.error.flatten()});try{const data={...p.data,...(p.data.origin?{origin:normalizeEmbedOrigin(p.data.origin)}:{})};const source=await db.trustedEmbedSource.update({where:{id:req.params.id},data});res.json({source});}catch(error){res.status(400).json({error:error instanceof Error?error.message:'Could not update embed source.'})}});
 router.delete('/embed-sources/:id',async(req,res)=>{await db.trustedEmbedSource.update({where:{id:req.params.id},data:{enabled:false}});res.status(204).end();});
+
+async function homepageStudioRow(){
+  return db.homepageSection.upsert({
+    where:{key:HOMEPAGE_STUDIO_KEY},
+    create:{key:HOMEPAGE_STUDIO_KEY,label:'Homepage Studio State',enabled:false,sortOrder:100,config:jsonValue(defaultHomepageStudioState())},
+    update:{}
+  });
+}
+
+async function validateHomepageEmbeds(layout:z.infer<typeof homepageStudioLayoutSchema>){
+  const embeds=collectHomepageBlocks(layout).filter(block=>block.type==='WEBSITE_EMBED'&&String(block.data.url||'').trim());
+  if(!embeds.length)return;
+  const sources=await db.trustedEmbedSource.findMany({where:{enabled:true,allowIframe:true},select:{origin:true}});
+  const allowed=new Set(sources.map(source=>source.origin));
+  ['https://www.youtube.com','https://youtube.com','https://www.youtube-nocookie.com','https://player.vimeo.com','https://www.figma.com'].forEach(origin=>allowed.add(origin));
+  for(const block of embeds){
+    let url:URL;
+    try{url=new URL(String(block.data.url||''))}catch{throw new Error('Website embed blocks require a valid HTTPS URL.')}
+    if(url.protocol!=='https:'||!allowed.has(url.origin))throw new Error(`Embed origin ${url.origin} is not in Trusted Embed Sources.`);
+  }
+}
+
+router.get('/homepage-studio',async(_req,res)=>{
+  const [row,embedSources,site]=await Promise.all([homepageStudioRow(),db.trustedEmbedSource.findMany({where:{enabled:true,allowIframe:true},orderBy:{name:'asc'}}),settings()]);
+  res.json({state:parseHomepageStudioState(row.config),embedSources,settings:{siteName:site.siteName,socialLinks:site.socialLinks,aboutConfig:site.aboutConfig}});
+});
+
+router.patch('/homepage-studio',async(req,res)=>{
+  const parsed=homepageStudioLayoutSchema.safeParse(req.body?.layout);if(!parsed.success)return res.status(400).json({error:parsed.error.flatten()});
+  try{
+    await validateHomepageEmbeds(parsed.data);
+    const row=await homepageStudioRow(),current=parseHomepageStudioState(row.config),now=new Date().toISOString();
+    const next={...current,draft:parsed.data,updatedAt:now};
+    await db.homepageSection.update({where:{id:row.id},data:{config:jsonValue(next)}});
+    res.json({state:next});
+  }catch(error){res.status(400).json({error:error instanceof Error?error.message:'Could not save Homepage Studio draft.'})}
+});
+
+router.post('/homepage-studio/publish',async(req,res)=>{
+  try{
+    const row=await homepageStudioRow(),current=parseHomepageStudioState(row.config),layout=homepageStudioLayoutSchema.parse(req.body?.layout||current.draft);
+    await validateHomepageEmbeds(layout);
+    const studioConfig=await config();
+    await createRevision('HOMEPAGE_STUDIO',row.id,current,{actorId:actor(res),summary:'Published Homepage Studio layout',sourceAction:'PUBLISH',retentionCount:studioConfig.maxRevisions});
+    const now=new Date().toISOString(),next={live:true,draft:layout,published:layout,updatedAt:now,publishedAt:now};
+    await db.homepageSection.update({where:{id:row.id},data:{config:jsonValue(next)}});
+    await db.activityLog.create({data:{action:'PUBLISH',entity:'HOMEPAGE_STUDIO',entityId:row.id,actorId:actor(res),label:'Homepage Studio layout published'}});
+    res.json({state:next});
+  }catch(error){res.status(400).json({error:error instanceof Error?error.message:'Could not publish Homepage Studio.'})}
+});
+
+router.post('/homepage-studio/disable',async(_req,res)=>{
+  const row=await homepageStudioRow(),current=parseHomepageStudioState(row.config),next={...current,live:false,updatedAt:new Date().toISOString()};
+  await db.homepageSection.update({where:{id:row.id},data:{config:jsonValue(next)}});
+  await db.activityLog.create({data:{action:'UNPUBLISH',entity:'HOMEPAGE_STUDIO',entityId:row.id,actorId:actor(res),label:'Homepage Studio layout disabled'}});
+  res.json({state:next});
+});
+
+router.get('/homepage-studio/revisions',async(_req,res)=>{
+  const row=await homepageStudioRow();
+  res.json({revisions:await db.contentRevision.findMany({where:{resourceType:'HOMEPAGE_STUDIO',resourceId:row.id},orderBy:{revision:'desc'},take:50})});
+});
+
+router.post('/homepage-studio/revisions/:revisionId/restore',async(req,res)=>{
+  const [row,revision]=await Promise.all([homepageStudioRow(),db.contentRevision.findUnique({where:{id:req.params.revisionId}})]);
+  if(!revision||revision.resourceType!=='HOMEPAGE_STUDIO'||revision.resourceId!==row.id)return res.status(404).json({error:'Homepage Studio revision not found.'});
+  const current=parseHomepageStudioState(row.config),snapshot=parseHomepageStudioState(revision.snapshot),next={...current,draft:snapshot.published||snapshot.draft,updatedAt:new Date().toISOString()};
+  await db.homepageSection.update({where:{id:row.id},data:{config:jsonValue(next)}});
+  res.json({state:next,notice:'Revision restored to draft. Publish when the preview is ready.'});
+});
 
 router.patch('/config',async(req,res)=>{const current=await config(),parsed=pageStudioConfigSchema.safeParse({...current,...req.body});if(!parsed.success)return res.status(400).json({error:parsed.error.flatten()});const row=await settings();await createRevision('SITE_SETTINGS',row.id,row,{actorId:actor(res),summary:'Page Studio configuration saved',sourceAction:'SAVE'});const updated=await db.siteSettings.update({where:{id:row.id},data:{pageStudioConfig:jsonValue(parsed.data)}});res.json({config:parsePageStudioConfig(updated.pageStudioConfig)});});
 

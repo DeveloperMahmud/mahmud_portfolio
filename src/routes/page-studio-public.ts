@@ -5,6 +5,7 @@ import path from 'node:path';
 import { db } from '../lib/db.js';
 import { absolute, metadataHtml, replaceHead, seoContext } from '../lib/seo.js';
 import { pageStudioSystemEnabled, parsePageStudioConfig, resolveGlobalBlocks, studioBlocksSchema } from '../lib/page-studio.js';
+import { HOMEPAGE_STUDIO_KEY, parseHomepageStudioState } from '../lib/homepage-studio.js';
 
 const router=Router(),frontend=path.resolve(process.cwd(),'portfolio');
 
@@ -39,6 +40,13 @@ export async function sendStudioPage(req:Request,res:Response,next:NextFunction)
   }catch(error){next(error)}
 }
 
+router.get('/homepage-layout',async(_req,res)=>{
+  if(!pageStudioSystemEnabled())return res.json({live:false,layout:null});
+  const [row,settings,origins]=await Promise.all([db.homepageSection.findUnique({where:{key:HOMEPAGE_STUDIO_KEY}}),db.siteSettings.findFirst(),trustedOrigins()]);
+  const state=parseHomepageStudioState(row?.config);
+  res.set('Cache-Control','public, max-age=30, s-maxage=120, stale-while-revalidate=300');
+  res.json({live:state.live&&Boolean(state.published),layout:state.live?state.published:null,publishedAt:state.publishedAt,trustedOrigins:origins,settings:{socialLinks:settings?.socialLinks||[],featureFlags:settings?.featureFlags||{}}});
+});
 router.get('/status',async(_req,res)=>{const {config}=await state();res.json({systemEnabled:pageStudioSystemEnabled(),publicEnabled:pageStudioSystemEnabled()&&config.publicEnabled,customPathsEnabled:config.customPathsEnabled})});
 router.get('/data',async(_req,res)=>{if(!(await publicStudioEnabled()))return res.status(404).json({error:'Page Studio public pages are disabled.'});const [data,origins,navigationPreset]=await Promise.all([dynamicData(),trustedOrigins(),db.navigationPreset.findFirst({where:{enabled:true,isGlobal:true}})]);res.json({dynamic:data,trustedOrigins:origins,navigationPreset})});
 router.get('/pages/:slug',async(req,res)=>{if(!(await publicStudioEnabled()))return res.status(404).json({error:'Page Studio public pages are disabled.'});const page=await db.customPage.findFirst({where:{slug:req.params.slug,deletedAt:null,status:'PUBLISHED'},include:{taxonomy:{include:{term:true}}}});if(!page||!page.publishedSnapshot)return res.status(404).json({error:'Page not found.'});const masters=await db.reusableBlock.findMany({where:{active:true}}),published=page.publishedSnapshot as any,scheduledAt=published.scheduledAt?new Date(published.scheduledAt):null;if(!['PUBLIC','UNLISTED'].includes(published.visibility)||scheduledAt&&scheduledAt>new Date())return res.status(404).json({error:'Page not found.'});res.json({page:{...published,blocks:resolveGlobalBlocks(studioBlocksSchema.parse(published.blocks),masters)}})});

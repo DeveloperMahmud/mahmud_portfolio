@@ -137,3 +137,42 @@ test('authenticated demo preview fills every new public module without database 
   assert.doesNotMatch(upgrade,/method:'POST'/);
   assert.doesNotMatch(upgrade,/method:'PATCH'/);
 });
+
+test('Homepage Studio keeps draft and production snapshots separate with a stable fallback',()=>{
+  const schema=read('src/lib/homepage-studio.ts');
+  const adminRoute=read('src/routes/page-studio.ts');
+  const publicRoute=read('src/routes/page-studio-public.ts');
+  const runtime=read('portfolio/homepage-studio-runtime.js');
+  assert.match(schema,/draft:homepageStudioLayoutSchema/);
+  assert.match(schema,/published:homepageStudioLayoutSchema\.nullable/);
+  assert.match(adminRoute,/router\.post\('\/homepage-studio\/publish'/);
+  assert.match(adminRoute,/router\.post\('\/homepage-studio\/disable'/);
+  assert.match(publicRoute,/state\.live\?state\.published:null/);
+  assert.match(runtime,/if\(payload\.live&&payload\.layout\)applyLayout/);
+});
+
+test('Homepage Studio supports reorderable nested social, code and trusted website modules',()=>{
+  const editor=read('portfolio/homepage-studio.js');
+  const runtime=read('portfolio/homepage-studio-runtime.js');
+  const route=read('src/routes/page-studio.ts');
+  assert.match(editor,/function nest\(/);
+  assert.match(editor,/draggable="true"/);
+  assert.match(editor,/SOCIAL_LINKS/);
+  assert.match(runtime,/homepage-studio-slot-\$\{key\}/);
+  assert.match(runtime,/frame\.sandbox=''/);
+  assert.match(route,/validateHomepageEmbeds/);
+  assert.match(route,/Trusted Embed Sources/);
+});
+
+test('Page Studio custom code is isolated and website embeds use the shared allow-list',()=>{
+  const schema=read('src/lib/page-studio.ts');
+  const editor=read('portfolio/page-studio.js');
+  const renderer=read('portfolio/page-studio-renderer.js');
+  const route=read('src/routes/page-studio.ts');
+  assert.match(schema,/WEBSITE_EMBED/);
+  assert.match(schema,/CUSTOM_CODE/);
+  assert.match(editor,/scripts are disabled/i);
+  assert.match(renderer,/Content-Security-Policy/);
+  assert.match(renderer,/sandbox srcdoc/);
+  assert.match(route,/\['EMBED','WEBSITE_EMBED','VIDEO'\]/);
+});
