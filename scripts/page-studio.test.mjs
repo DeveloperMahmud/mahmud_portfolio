@@ -125,3 +125,15 @@ test('public social links normalize common profile handles and slider stays uncl
   assert.doesNotMatch(css,/\.featured-stage-overlay\{/);
   assert.doesNotMatch(css,/\.featured-orb\{/);
 });
+
+test('authenticated demo preview fills every new public module without database writes',()=>{
+  const app=read('portfolio/app.js');
+  const upgrade=read('portfolio/editorial-upgrade.js');
+  assert.match(app,/const demoSocialLinks=/);
+  assert.match(app,/DEMO_PREVIEW\?demoSocialLinks/);
+  assert.match(upgrade,/const DEMO_TESTIMONIALS=/);
+  assert.match(upgrade,/fetch\('\/api\/auth\/me'/);
+  assert.match(upgrade,/demo\?DEMO_TESTIMONIALS/);
+  assert.doesNotMatch(upgrade,/method:'POST'/);
+  assert.doesNotMatch(upgrade,/method:'PATCH'/);
+});
