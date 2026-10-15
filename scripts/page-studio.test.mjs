@@ -113,3 +113,15 @@ test('editorial widgets and testimonials are available without new media writes'
   assert.match(publicRoute,/testimonials/);
   assert.doesNotMatch(renderer,/\/api\/admin\/maintenance\/media/);
 });
+
+test('public social links normalize common profile handles and slider stays uncluttered',()=>{
+  const app=read('portfolio/app.js');
+  const upgrade=read('portfolio/editorial-upgrade.js');
+  const css=read('portfolio/editorial-upgrade.css');
+  assert.match(app,/function normalizeSocialUrl/);
+  assert.match(app,/https:\/\/www\.linkedin\.com\/in\//);
+  assert.match(app,/https:\/\/www\.instagram\.com\//);
+  assert.doesNotMatch(upgrade,/createElement\('div'\).*featured-stage-overlay/);
+  assert.doesNotMatch(css,/\.featured-stage-overlay\{/);
+  assert.doesNotMatch(css,/\.featured-orb\{/);
+});
