@@ -692,3 +692,24 @@ body.feature-contact-off #contact,body.feature-socials-off .public-socials,body.
   .admin-sidebar .side-btn{width:auto!important;min-width:max-content;padding:0 14px!important;border:1px solid var(--line);background:#0d0f0e;scroll-snap-align:start;font-size:9px!important;letter-spacing:.1em}
   .admin-sidebar .side-btn.active{border-color:var(--lime);background:var(--lime);color:#090a09}
 }
+
+/* Global appearance controls: crisp scalable grain and theme-aware surfaces. */
+.grain{opacity:var(--grain-opacity,.045);background-size:var(--grain-size,180px) var(--grain-size,180px)}
+html[data-grain="OFF"] .grain{display:none}
+html[data-grain="FINE"] .grain{filter:contrast(115%)}
+html[data-grain="FILM"] .grain{mix-blend-mode:soft-light;filter:contrast(145%)}
+html[data-grain="PAPER"] .grain{mix-blend-mode:overlay;filter:sepia(.18) contrast(120%)}
+.header.scrolled{background:color-mix(in srgb,var(--bg) 91%,transparent)}
+.mobile-menu,.panel,.admin-sidebar,.dash-card{background-color:var(--panel)}
+
+/* Long-form CMS editors use the available canvas instead of a narrow split. */
+#projectsTab,#contentTab,#brandsTab{grid-template-columns:minmax(0,1fr)}
+#projectsTab>section:first-child,#contentTab>section:first-child,#brandsTab>section:first-child{max-width:none}
+#projectForm,#contentForm,#brandForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+#projectForm>input[type="hidden"],#contentForm>input[type="hidden"],#brandForm>input[type="hidden"],
+#projectForm>fieldset,#projectForm>.admin-actions,#projectForm>#projectMsg,#projectForm>#uploadMsg,#projectForm>#galleryPreview,
+#contentForm>.editor-toolbar,#contentForm>.admin-actions,#contentForm>#contentMsg,#contentForm>#contentUploadMsg,#contentForm>#contentImageMsg,#contentForm>.seo-preview-card,
+#contentForm>label:has(textarea),#projectForm>label:has(textarea){grid-column:1/-1}
+#projectForm textarea,#contentForm textarea{min-height:140px}
+#contentForm .editor-area{min-height:430px}
+@media(max-width:760px){#projectForm,#contentForm,#brandForm{grid-template-columns:minmax(0,1fr)}#projectForm>*,#contentForm>*,#brandForm>*{grid-column:1!important}#contentForm .editor-area{min-height:330px}}

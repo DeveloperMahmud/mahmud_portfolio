@@ -36,10 +36,18 @@ async function validateEmbeds(blocks:StudioBlock[]){
   for(const block of embeds){let url:URL;try{url=new URL(String(block.data.url))}catch{throw new Error('Embed widgets require a valid HTTPS URL.')}if(url.protocol!=='https:'||!allowed.has(url.origin))throw new Error(`Embed origin ${url.origin} is not in Trusted Embed Sources.`)}
 }
 
+function validateAdvancedBlocks(blocks:StudioBlock[]){
+  for(const block of allBlocks(blocks)){
+    if(block.type==='LOTTIE'&&block.data.animationData&&JSON.stringify(block.data.animationData).length>500_000)throw new Error('Pasted Lottie JSON must be under 500 KB. Use an external JSON URL for larger animations.');
+    if(block.type==='CUSTOM_CODE')for(const key of ['html','css','js'] as const)if(String(block.data[key]||'').length>30_000)throw new Error(`Custom Code ${key.toUpperCase()} is limited to 30 KB.`);
+  }
+}
+
 async function normalizeInput(input:z.infer<typeof basePageSchema>,pageId?:string){
   const currentConfig=await config();
   const blocks=cloneBlocks(input.blocks);
   if(allBlocks(blocks).length>currentConfig.maxBlocks)throw new Error(`This page exceeds the configured ${currentConfig.maxBlocks}-widget limit.`);
+  validateAdvancedBlocks(blocks);
   await validateEmbeds(blocks);
   const normalizedPath=normalizePagePath(input.path||'',input.slug,currentConfig.customPathsEnabled);
   const publishedConflict=await db.customPage.findFirst({where:{publishedPath:normalizedPath,...(pageId?{id:{not:pageId}}:{})},select:{id:true}});
