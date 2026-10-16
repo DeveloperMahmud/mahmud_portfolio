@@ -637,6 +637,7 @@ body{cursor:auto}body:not(.home-custom-cursor) .cursor{display:none!important;op
 @media(max-width:767px){.ops-head{display:block}.ops-head>.admin-btn{margin-top:12px}.ops-grid{grid-template-columns:1fr 1fr}.ops-row{align-items:flex-start;flex-direction:column}.ops-row>.admin-btn,.ops-row>.status-pill{align-self:stretch;text-align:center}.ops-actions{align-items:stretch}.ops-actions input,.ops-actions select{width:100%}.ops-pane{padding:16px}.ops-code{font-size:10px}.autosave-recovery{align-items:stretch;flex-direction:column}}
 @media(max-width:374px){.ops-grid{grid-template-columns:1fr}.ops-nav{margin-inline:-10px;padding-inline:10px}}
 body.feature-contact-off #contact,body.feature-socials-off .public-socials,body.feature-socials-off .footer-socials,body.feature-cv-off [data-public-cv],body.feature-testimonials-off #testimonialPublic,body.feature-motion-off .motion-icon{display:none!important}.desktop-nav .nav-managed-cta,.mobile-menu nav .nav-managed-cta{color:var(--lime);border:1px solid currentColor;padding:9px 12px}
+.public-image-fallback{object-fit:cover!important;object-position:center!important;background:#090b09!important;filter:none!important;color:transparent!important}
 
 /* Public UI polish: contain long hero copy and make system states feel intentional. */
 @media(min-width:801px){.hero-copy{min-width:0}.hero-title{max-width:100%}.hero-title .hero-typewriter{display:block;max-width:100%;font-size:clamp(42px,5.1vw,74px);line-height:.88;white-space:normal;overflow-wrap:normal}}

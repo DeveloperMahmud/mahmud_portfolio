@@ -21,6 +21,7 @@
     "test:operations": "node --test scripts/operations.test.mjs",
     "test:slider": "node --test scripts/editorial-slider.test.mjs",
     "test:page-studio": "node --test scripts/page-studio.test.mjs",
+    "test:frontend": "node --test scripts/frontend-regressions.test.mjs",
     "release:check": "prisma validate && npm run typecheck && npm run build",
     "db:seed-demo": "tsx scripts/seed-demo.ts"
   },
