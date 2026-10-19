@@ -190,6 +190,12 @@ test('custom code keeps isolation and displays JavaScript errors inside its own 
   assert.match(renderer,/connect-src 'none'/);
   assert.match(renderer,/Custom JavaScript error/);
   assert.match(renderer,/window\.addEventListener\('unhandledrejection'/);
+  assert.match(renderer,/Add HTML, CSS or JavaScript in the widget settings/);
+});
+
+test('shared slider enhancement safely skips pages without a featured item',()=>{
+  const app=read('portfolio/app.js');
+  assert.match(app,/function reflectionAllowed\(item\)\{return Boolean\(item&&sliderConfig\?\.reflectionEnabled/);
 });
 
 test('Homepage Studio supports reorderable nested social, code and trusted website modules',()=>{
@@ -233,6 +239,7 @@ test('advanced builder controls cover six columns, nested drops, Lottie files an
   assert.match(editor,/borderRadius/);
   assert.match(renderer,/ps-column-cell/);
   assert.match(renderer,/stopPropagation\(\)/);
+  assert.match(renderer,/DROP WIDGET HERE/);
   assert.match(renderer,/animationData/);
   assert.match(css,/--ps-columns/);
 });
