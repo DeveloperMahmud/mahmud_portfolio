@@ -160,6 +160,25 @@ test('Page Studio starter library includes portfolio, lead and support patterns 
   assert.doesNotMatch(schema,/BLOB_READ_WRITE_TOKEN|put\(/);
 });
 
+test('widget inspector flushes edits before reselection and pages have a portable WordPress handoff',()=>{
+  const editor=read('portfolio/page-studio.js');
+  const html=read('portfolio/page-studio.html');
+  assert.match(editor,/function flushInspectorDraft\(\)/);
+  assert.match(editor,/flushInspectorDraft\(\);selectedId=event\.data\.id/);
+  assert.match(editor,/input\.tagName==='SELECT'\?'change':'input'/);
+  assert.match(editor,/function exportWordPress\(\)/);
+  assert.match(editor,/portfolio-page-studio-wordpress-handoff\/v1/);
+  assert.match(html,/id="studioWordpress"/);
+});
+
+test('custom code keeps isolation and displays JavaScript errors inside its own frame',()=>{
+  const renderer=read('portfolio/page-studio-renderer.js');
+  assert.match(renderer,/sandbox="allow-scripts"/);
+  assert.match(renderer,/connect-src 'none'/);
+  assert.match(renderer,/Custom JavaScript error/);
+  assert.match(renderer,/window\.addEventListener\('unhandledrejection'/);
+});
+
 test('Homepage Studio supports reorderable nested social, code and trusted website modules',()=>{
   const editor=read('portfolio/homepage-studio.js');
   const runtime=read('portfolio/homepage-studio-runtime.js');
