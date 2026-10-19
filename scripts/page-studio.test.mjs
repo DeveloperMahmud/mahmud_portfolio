@@ -176,6 +176,14 @@ test('selecting an existing page always reveals its live canvas',()=>{
   assert.match(editor,/function selectPage\(id\).*?\$\('#canvasEmpty'\)\.classList\.add\('hidden'\).*?\$\('#canvasViewport'\)\.classList\.remove\('hidden'\)/);
 });
 
+test('autosave keeps the active widget object stable while inspector fields remain open',()=>{
+  const editor=read('portfolio/page-studio.js');
+  assert.match(editor,/const savePageWithStableBlocks=savePage/);
+  assert.match(editor,/preservedBlocks=current\?\.blocks/);
+  assert.match(editor,/current\.blocks=preservedBlocks/);
+  assert.match(editor,/cached\.blocks=clone\(preservedBlocks\)/);
+});
+
 test('custom code keeps isolation and displays JavaScript errors inside its own frame',()=>{
   const renderer=read('portfolio/page-studio-renderer.js');
   assert.match(renderer,/sandbox="allow-scripts"/);
