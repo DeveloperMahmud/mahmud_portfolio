@@ -231,3 +231,20 @@ test('public theme and anchor runtimes are loaded without replacing existing pag
   assert.match(anchor,/getBoundingClientRect/);
   assert.match(anchor,/MutationObserver/);
 });
+
+test('Homepage Studio hydrates managed content without duplicating canonical CMS records',()=>{
+  const schema=read('src/lib/homepage-studio.ts');
+  const adminRoute=read('src/routes/page-studio.ts');
+  const publicRoute=read('src/routes/page-studio-public.ts');
+  const editor=read('portfolio/homepage-studio.js');
+  const runtime=read('portfolio/homepage-studio-runtime.js');
+  assert.match(schema,/resolveHomepageStudioSections/);
+  assert.match(schema,/source:'SKILLS MANAGER'/);
+  assert.match(adminRoute,/resolvedSections/);
+  assert.match(publicRoute,/resolveHomepageStudioSections/);
+  assert.match(editor,/MANAGED VALUE/);
+  assert.match(editor,/RESET TO MANAGED VALUE/);
+  assert.match(editor,/delete block\.data\[button\.dataset\.resetField\]/);
+  assert.match(runtime,/payload\.resolvedSections/);
+  assert.match(runtime,/sectionData=\{\.\.\.managed,\.\.\.\(block\.data\|\|\{\}\)\}/);
+});
