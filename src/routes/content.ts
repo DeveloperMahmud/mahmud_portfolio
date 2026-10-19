@@ -6,6 +6,7 @@ import ExcelJS from 'exceljs';
 import { Prisma } from '@prisma/client';
 import { notifyIndexNow } from '../lib/indexnow.js';
 import { createRevision } from '../lib/revisions.js';
+import { contentPublishIssues, publishBlocked } from '../lib/publish-safety.js';
 
 const router = Router();
 const routeParam = (value: string | string[] | undefined) => Array.isArray(value) ? value[0] : value;
@@ -19,6 +20,7 @@ const contentSchema = z.object({
 router.get('/admin/content', requireAuth, async (_req, res) => { res.set('Cache-Control','no-store, no-cache, must-revalidate'); const rows=await db.content.findMany({where:{deletedAt:null}, orderBy: [{ sortOrder:'asc' }, { updatedAt:'desc' }] }); res.json({ content: rows.map(x=>({ ...x, id:String(x.id) })) }); });
 router.post('/admin/content', requireAuth, async (req,res)=>{
   const p=contentSchema.safeParse(req.body); if(!p.success)return res.status(400).json({error:p.error.flatten()});
+  if(p.data.status==='PUBLISHED'){const issues=await contentPublishIssues(p.data);const blocked=publishBlocked(issues);if(blocked.length)return res.status(422).json({error:'Publish safety check failed. Resolve the required items first.',issues});}
   const data={...p.data,references:p.data.references as Prisma.InputJsonValue,publishedAt:p.data.status==='PUBLISHED'?(p.data.publishedAt?new Date(p.data.publishedAt):new Date()):null,scheduledAt:p.data.scheduledAt?new Date(p.data.scheduledAt):null,publicModifiedAt:p.data.status==='PUBLISHED'?(p.data.publicModifiedAt?new Date(p.data.publicModifiedAt):new Date()):null};
   const content=await db.content.create({data});if(content.status==='PUBLISHED'&&!content.noIndex)notifyIndexNow(`/journal/${content.slug}`);res.status(201).json({content});
 });
@@ -29,6 +31,7 @@ router.patch('/admin/content/:id', requireAuth, async(req,res)=>{
   if(!id || id==='undefined' || id==='null') return res.status(400).json({error:'A valid content ID is required for update.'});
   const p=contentSchema.partial().safeParse(req.body); if(!p.success)return res.status(400).json({error:p.error.flatten()});
   const existing=await db.content.findUnique({where:{id}});if(!existing)return res.status(404).json({error:'Content record not found.'});
+  const candidate={...existing,...p.data};if((p.data.status==='PUBLISHED'||existing.status==='PUBLISHED')&&p.data.status!=='DRAFT'&&p.data.status!=='ARCHIVED'){const issues=await contentPublishIssues(candidate);const blocked=publishBlocked(issues);if(blocked.length)return res.status(422).json({error:'Publish safety check failed. Resolve the required items first.',issues});}
   await createRevision('CONTENT',existing.id,existing,{actorId:res.locals.user?.sub,summary:p.data.status&&p.data.status!==existing.status?`${existing.status} → ${p.data.status}`:'Article saved',sourceAction:p.data.status==='PUBLISHED'?'PUBLISH':'SAVE'});
   const data={...p.data,references:p.data.references as Prisma.InputJsonValue|undefined,publishedAt:p.data.status===undefined? (p.data.publishedAt===undefined?undefined:(p.data.publishedAt?new Date(p.data.publishedAt):null)) : (p.data.status==='PUBLISHED'?(p.data.publishedAt?new Date(p.data.publishedAt):new Date()):null),scheduledAt:p.data.scheduledAt===undefined?undefined:(p.data.scheduledAt?new Date(p.data.scheduledAt):null),publicModifiedAt:p.data.publicModifiedAt===undefined?(existing.status==='PUBLISHED'||p.data.status==='PUBLISHED'?new Date():undefined):(p.data.publicModifiedAt?new Date(p.data.publicModifiedAt):null)};
   try { const content=await db.content.update({where:{id},data});if(p.data.slug&&p.data.slug!==existing.slug&&existing.status==='PUBLISHED')await db.redirectRule.upsert({where:{sourcePath:`/journal/${existing.slug}`},create:{sourcePath:`/journal/${existing.slug}`,destination:`/journal/${content.slug}`,statusCode:301,reason:'Automatic redirect after published article slug change'},update:{destination:`/journal/${content.slug}`,enabled:true}});if(content.status==='PUBLISHED'&&!content.noIndex)notifyIndexNow(`/journal/${content.slug}`);res.json({content}); } catch(e:any) { if(e?.code==='P2025') return res.status(404).json({error:'Content record not found. Refresh the CMS and try again.'}); if(e?.code==='P2002') return res.status(409).json({error:'That slug is already in use. Choose a different slug.'}); throw e; }
@@ -41,6 +44,7 @@ router.get('/public/content/:slug', async(req,res)=>{const content=await db.cont
 router.post('/admin/content/bulk', requireAuth, async (req,res) => {
   const parsed=z.object({ids:z.array(z.string().min(1)).min(1),action:z.enum(['PUBLISH','DRAFT','ARCHIVE','DELETE'])}).safeParse(req.body);
   if(!parsed.success)return res.status(400).json({error:'Provide ids and PUBLISH, DRAFT, ARCHIVE, or DELETE.'});
+  if(parsed.data.action==='PUBLISH'){const rows=await db.content.findMany({where:{id:{in:parsed.data.ids},deletedAt:null}});const checks=await Promise.all(rows.map(async content=>({id:content.id,title:content.title,issues:publishBlocked(await contentPublishIssues(content as any))})));const blocked=checks.filter(x=>x.issues.length);if(blocked.length)return res.status(422).json({error:'Publish safety check failed. Review the listed articles.',blocked});}
   if(parsed.data.action==='DELETE') await db.content.updateMany({where:{id:{in:parsed.data.ids}},data:{deletedAt:new Date(),deletedBy:res.locals.user?.sub}});
   else {
     const statusByAction = { DRAFT: 'DRAFT', PUBLISH: 'PUBLISHED', ARCHIVE: 'ARCHIVED' } as const;

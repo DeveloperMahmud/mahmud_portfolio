@@ -151,6 +151,15 @@ test('Homepage Studio keeps draft and production snapshots separate with a stabl
   assert.match(runtime,/if\(payload\.live&&payload\.layout\)applyLayout/);
 });
 
+test('Page Studio starter library includes portfolio, lead and support patterns without new services',()=>{
+  const schema=read('src/lib/page-studio.ts');
+  for(const template of ['Case study','Project inquiry','Proof & testimonials','About & availability','FAQ & support'])assert.match(schema,new RegExp(`name:'${template.replace(/[&]/g,'\\&')}'`));
+  assert.match(schema,/defaultBlock\('CONTACT','template-inquiry-contact'\)/);
+  assert.match(schema,/defaultBlock\('TESTIMONIAL_CAROUSEL','template-proof-testimonials'\)/);
+  assert.match(schema,/defaultBlock\('CV_DOWNLOAD','template-about-cv'\)/);
+  assert.doesNotMatch(schema,/BLOB_READ_WRITE_TOKEN|put\(/);
+});
+
 test('Homepage Studio supports reorderable nested social, code and trusted website modules',()=>{
   const editor=read('portfolio/homepage-studio.js');
   const runtime=read('portfolio/homepage-studio-runtime.js');
@@ -194,6 +203,17 @@ test('advanced builder controls cover six columns, nested drops, Lottie files an
   assert.match(renderer,/stopPropagation\(\)/);
   assert.match(renderer,/animationData/);
   assert.match(css,/--ps-columns/);
+});
+
+test('new column layouts keep independent drop slots without changing legacy layouts automatically',()=>{
+  const editor=read('portfolio/page-studio.js');
+  const renderer=read('portfolio/page-studio-renderer.js');
+  const css=read('portfolio/page-studio-public.css');
+  assert.match(editor,/function columnSlot/);
+  assert.match(editor,/function ensureFixedSlots/);
+  assert.match(editor,/LEGACY FLOW LAYOUT/);
+  assert.match(renderer,/fixedColumnChildren/);
+  assert.match(css,/ps-column-slot/);
 });
 
 test('YouTube embeds send client identity required by the IFrame API',()=>{
