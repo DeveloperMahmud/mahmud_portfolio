@@ -171,6 +171,11 @@ test('widget inspector flushes edits before reselection and pages have a portabl
   assert.match(html,/id="studioWordpress"/);
 });
 
+test('selecting an existing page always reveals its live canvas',()=>{
+  const editor=read('portfolio/page-studio.js');
+  assert.match(editor,/function selectPage\(id\).*?\$\('#canvasEmpty'\)\.classList\.add\('hidden'\).*?\$\('#canvasViewport'\)\.classList\.remove\('hidden'\)/);
+});
+
 test('custom code keeps isolation and displays JavaScript errors inside its own frame',()=>{
   const renderer=read('portfolio/page-studio-renderer.js');
   assert.match(renderer,/sandbox="allow-scripts"/);
