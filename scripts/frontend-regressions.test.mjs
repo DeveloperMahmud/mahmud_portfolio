@@ -34,3 +34,15 @@ test('broken media fallback does not erase CMS references',async()=>{
   assert.doesNotMatch(source,/fetch\(|DELETE|bulk-delete/i);
   assert.match(source,/Preview temporarily unavailable/);
 });
+
+test('public social profiles have a local fallback when the icon CDN is unavailable',async()=>{
+  const [runtime,index,styles]=await Promise.all([
+    read('portfolio/social-icon-fix.js'),
+    read('portfolio/index.html'),
+    read('portfolio/styles.css')
+  ]);
+  assert.match(runtime,/MutationObserver/);
+  assert.match(runtime,/social-inline-icon/);
+  assert.match(index,/\/social-icon-fix\.js/);
+  assert.match(styles,/\.public-socials \.social-inline-icon/);
+});

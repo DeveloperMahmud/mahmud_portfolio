@@ -23,3 +23,14 @@ test('secure preview carries crawler and cache protections',async()=>{
   const app=await fs.readFile(new URL('../src/app.ts',import.meta.url),'utf8');const html=await fs.readFile(new URL('../portfolio/preview.html',import.meta.url),'utf8');
   assert.match(app,/noindex,nofollow,noarchive/);assert.match(app,/private, no-store/);assert.match(html,/name="robots" content="noindex,nofollow,noarchive"/);
 });
+
+test('publish checklist is read-only and exposes project plus content safety checks',async()=>{
+  const route=await fs.readFile(new URL('../src/routes/operations.ts',import.meta.url),'utf8');
+  const admin=await fs.readFile(new URL('../portfolio/admin-publish-checklist.js',import.meta.url),'utf8');
+  assert.match(route,/router\.get\('\/publish-checklist'/);
+  assert.match(route,/projectPublishIssues/);
+  assert.match(route,/contentPublishIssues/);
+  assert.match(route,/read-only/);
+  assert.match(admin,/RUN CHECK/);
+  assert.match(admin,/never edits or unpublishes/);
+});
