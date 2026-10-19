@@ -5,7 +5,7 @@ import { db } from '../lib/db.js';
 import { requireAuth } from '../lib/auth.js';
 import { createRevision } from '../lib/revisions.js';
 import { DEFAULT_PAGE_STUDIO_CONFIG, DEFAULT_PAGE_TEMPLATES, cloneBlocks, normalizePagePath, pageStudioConfigSchema, pageStudioSystemEnabled, parsePageStudioConfig, resolveGlobalBlocks, slugify, studioBlockSchema, studioBlocksSchema, type StudioBlock } from '../lib/page-studio.js';
-import { HOMEPAGE_STUDIO_KEY, collectHomepageBlocks, defaultHomepageStudioState, homepageStudioLayoutSchema, parseHomepageStudioState } from '../lib/homepage-studio.js';
+import { HOMEPAGE_STUDIO_KEY, collectHomepageBlocks, defaultHomepageStudioState, homepageStudioLayoutSchema, parseHomepageStudioState, resolveHomepageStudioSections } from '../lib/homepage-studio.js';
 
 const router=Router();
 router.use(requireAuth);
@@ -136,8 +136,21 @@ async function validateHomepageEmbeds(layout:z.infer<typeof homepageStudioLayout
 }
 
 router.get('/homepage-studio',async(_req,res)=>{
-  const [row,embedSources,site]=await Promise.all([homepageStudioRow(),db.trustedEmbedSource.findMany({where:{enabled:true,allowIframe:true},orderBy:{name:'asc'}}),settings()]);
-  res.json({state:parseHomepageStudioState(row.config),embedSources,settings:{siteName:site.siteName,socialLinks:site.socialLinks,aboutConfig:site.aboutConfig}});
+  const [row,embedSources,site,projectCount,brandCount,testimonialCount]=await Promise.all([
+    homepageStudioRow(),
+    db.trustedEmbedSource.findMany({where:{enabled:true,allowIframe:true},orderBy:{name:'asc'}}),
+    settings(),
+    db.project.count({where:{deletedAt:null}}),
+    db.brand.count({where:{deletedAt:null,active:true}}),
+    db.testimonial.count({where:{deletedAt:null}})
+  ]);
+  const resolvedSections=resolveHomepageStudioSections(site as unknown as Record<string,any>);
+  resolvedSections.brands.managedCount=brandCount;
+  resolvedSections.featured_slider.managedCount=projectCount;
+  resolvedSections.selected_work.managedCount=projectCount;
+  resolvedSections.editorial_modules.managedCount=projectCount;
+  resolvedSections.clients.managedCount=testimonialCount;
+  res.json({state:parseHomepageStudioState(row.config),embedSources,resolvedSections,settings:{siteName:site.siteName,socialLinks:site.socialLinks,aboutConfig:site.aboutConfig}});
 });
 
 router.patch('/homepage-studio',async(req,res)=>{
