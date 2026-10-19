@@ -32,7 +32,7 @@ export const homepageStudioLayoutSchema=z.object({
     if(block.type==='HOME_SECTION')sections.push(String(block.data.sectionKey||''));
     if(block.type==='HOME_SECTION'&&depth!==1)ctx.addIssue({code:'custom',message:'Existing homepage sections must remain at the top level.'});
     if(block.type==='CUSTOM_CODE'){
-      if(String(block.data.html||'').length>30000||String(block.data.css||'').length>30000)ctx.addIssue({code:'custom',message:'Custom HTML and CSS are limited to 30 KB each.'});
+      if(String(block.data.html||'').length>30000||String(block.data.css||'').length>30000||String(block.data.js||'').length>30000)ctx.addIssue({code:'custom',message:'Custom HTML, CSS and JavaScript are limited to 30 KB each.'});
     }
     walk(block.children||[],depth+1);
   });

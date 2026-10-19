@@ -22,6 +22,9 @@ enum Visibility {
 enum UserRole {
   ADMIN
   EDITOR
+  WRITER
+  MODERATOR
+  VIEWER
 }
 
 model User {
@@ -29,6 +32,7 @@ model User {
   email        String   @unique
   passwordHash String
   role         UserRole @default(ADMIN)
+  active       Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -275,6 +279,8 @@ model SiteSettings {
   inquiryConfig      Json     @default("{}")
   pageStudioConfig   Json     @default("{}")
   featureFlags       Json     @default("{}")
+  themeConfig        Json     @default("{}")
+  securityConfig     Json     @default("{}")
   updatedAt          DateTime @updatedAt
 }
 

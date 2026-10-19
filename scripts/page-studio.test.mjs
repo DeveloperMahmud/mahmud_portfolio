@@ -159,7 +159,10 @@ test('Homepage Studio supports reorderable nested social, code and trusted websi
   assert.match(editor,/draggable="true"/);
   assert.match(editor,/SOCIAL_LINKS/);
   assert.match(runtime,/homepage-studio-slot-\$\{key\}/);
-  assert.match(runtime,/frame\.sandbox=''/);
+  assert.match(runtime,/hasSocialBlock/);
+  assert.match(runtime,/about\.appendChild\(lastSocialTemplate\.cloneNode\(true\)\)/);
+  assert.match(runtime,/frame\.sandbox='allow-scripts'/);
+  assert.match(runtime,/connect-src 'none'/);
   assert.match(route,/validateHomepageEmbeds/);
   assert.match(route,/Trusted Embed Sources/);
 });
@@ -171,8 +174,60 @@ test('Page Studio custom code is isolated and website embeds use the shared allo
   const route=read('src/routes/page-studio.ts');
   assert.match(schema,/WEBSITE_EMBED/);
   assert.match(schema,/CUSTOM_CODE/);
-  assert.match(editor,/scripts are disabled/i);
+  assert.match(editor,/HTML \/ CSS \/ JS/);
+  assert.match(renderer,/script-src 'unsafe-inline'/);
   assert.match(renderer,/Content-Security-Policy/);
-  assert.match(renderer,/sandbox srcdoc/);
+  assert.match(renderer,/sandbox="allow-scripts"/);
   assert.match(route,/\['EMBED','WEBSITE_EMBED','VIDEO'\]/);
+});
+
+test('advanced builder controls cover six columns, nested drops, Lottie files and reusable visual styling',()=>{
+  const editor=read('portfolio/page-studio.js');
+  const renderer=read('portfolio/page-studio-renderer.js');
+  const css=read('portfolio/page-studio-public.css');
+  assert.match(editor,/\['1','2','3','4','5','6'\]/);
+  assert.match(editor,/hasDescendant/);
+  assert.match(editor,/data-lottie-file/);
+  assert.match(editor,/marginTop/);
+  assert.match(editor,/borderRadius/);
+  assert.match(renderer,/ps-column-cell/);
+  assert.match(renderer,/stopPropagation\(\)/);
+  assert.match(renderer,/animationData/);
+  assert.match(css,/--ps-columns/);
+});
+
+test('YouTube embeds send client identity required by the IFrame API',()=>{
+  const renderer=read('portfolio/page-studio-renderer.js');
+  const homepage=read('portfolio/homepage-studio-runtime.js');
+  for(const source of [renderer,homepage]){
+    assert.match(source,/widget_referrer/);
+    assert.match(source,/origin/);
+    assert.match(source,/strict-origin-when-cross-origin/);
+  }
+});
+
+test('theme, private admin entry and role management remain additive and secret-safe',()=>{
+  const migration=read('prisma/migrations/0023_builder_theme_users/migration.sql');
+  const auth=read('src/routes/auth.ts');
+  const publicRoute=read('src/routes/public.ts');
+  const app=read('src/app.ts');
+  const admin=read('portfolio/admin-account-upgrade.js');
+  assert.doesNotMatch(migration,/\b(?:DROP|TRUNCATE|DELETE FROM)\b/i);
+  assert.match(auth,/WRITER','MODERATOR','VIEWER/);
+  assert.match(auth,/admin-config/);
+  assert.match(publicRoute,/securityConfig:___/);
+  assert.match(app,/hideCanonicalAdmin/);
+  assert.match(admin,/Theme & grain/);
+  assert.match(admin,/Users & roles/);
+});
+
+test('public theme and anchor runtimes are loaded without replacing existing page scripts',()=>{
+  const responsive=read('portfolio/responsive.js');
+  const theme=read('portfolio/theme-runtime.js');
+  const anchor=read('portfolio/anchor-runtime.js');
+  assert.match(responsive,/theme-runtime\.js/);
+  assert.match(responsive,/anchor-runtime\.js/);
+  assert.match(theme,/--grain-size/);
+  assert.match(anchor,/getBoundingClientRect/);
+  assert.match(anchor,/MutationObserver/);
 });

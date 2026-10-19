@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-export const PAGE_STUDIO_SCHEMA_VERSION=1;
-export const PAGE_STUDIO_WIDGETS=['SECTION','COLUMNS','HERO','HEADING','RICH_TEXT','IMAGE','GALLERY','VIDEO','CTA','STATS','QUOTE','EDITORIAL_SHOWCASE','COLLECTION_GRID','TESTIMONIAL_CAROUSEL','PROJECT_GRID','JOURNAL_FEED','BRAND_GRID','SOCIAL_LINKS','CV_DOWNLOAD','CONTACT','FAQ','SPACER','DIVIDER','LOTTIE','EMBED','WEBSITE_EMBED','CUSTOM_CODE'] as const;
+export const PAGE_STUDIO_SCHEMA_VERSION=2;
+export const PAGE_STUDIO_WIDGETS=['SECTION','COLUMNS','HERO','HEADING','TEXT','RICH_TEXT','BUTTON','IMAGE','GALLERY','VIDEO','CTA','STATS','QUOTE','EDITORIAL_SHOWCASE','COLLECTION_GRID','IMAGE_TEXT_SPLIT','FEATURE_CARDS','TESTIMONIAL_CAROUSEL','PROJECT_GRID','JOURNAL_FEED','BRAND_GRID','SOCIAL_LINKS','CV_DOWNLOAD','CONTACT','FAQ','SPACER','DIVIDER','LOTTIE','EMBED','WEBSITE_EMBED','CUSTOM_CODE'] as const;
 export type PageStudioWidgetType=typeof PAGE_STUDIO_WIDGETS[number];
 
 const jsonRecord=z.record(z.string(),z.unknown()).default({});
@@ -62,19 +62,29 @@ export function normalizePagePath(value:string,slug:string,customPathsEnabled:bo
 }
 
 export function defaultBlock(type:PageStudioWidgetType,id:string):StudioBlock{
-  const content:Record<PageStudioWidgetType,Record<string,unknown>>={
+  const content={
     SECTION:{label:'Section',width:'WIDE'},COLUMNS:{columns:2,gap:'MEDIUM'},HERO:{eyebrow:'NEW PAGE',heading:'Build something clear.',text:'Introduce this page with a focused message.',ctaLabel:'START A CONVERSATION',ctaUrl:'/#contact',image:'',imageAlt:''},HEADING:{eyebrow:'',text:'Section heading',level:2},RICH_TEXT:{text:'Add clear, useful copy here.'},IMAGE:{url:'',alt:'',caption:'',sourceType:'MEDIA_LIBRARY'},GALLERY:{items:[]},VIDEO:{url:'',title:'Video'},CTA:{eyebrow:'READY WHEN YOU ARE',heading:'Have a project in mind?',text:'Send a short note and I will get back to you.',label:'START A CONVERSATION',url:'/#contact'},STATS:{items:[{label:'PROJECTS',value:'12+'},{label:'YEARS',value:'5+'}]},QUOTE:{quote:'Design should make the next action feel obvious.',author:''},EDITORIAL_SHOWCASE:{eyebrow:'CURATED COLLECTION',heading:'A more elevated way to explore.',text:'Pair a focused introduction with visual cards.',primaryLabel:'EXPLORE WORK',primaryUrl:'/work.html',items:[{title:'Commerce systems',meta:'AMAZON / E-COMMERCE',image:'',url:'/work.html'},{title:'Brand direction',meta:'IDENTITY / CAMPAIGN',image:'',url:'/work.html'},{title:'Digital experiences',meta:'WEB / PRODUCT',image:'',url:'/work.html'}]},COLLECTION_GRID:{eyebrow:'EXPLORE BY NEED',heading:'Pick a direction. Build the right outcome.',text:'Use these cards as a clear path into services or collections.',items:[{title:'Amazon growth',text:'A+ Content, storefronts and listing systems.',url:'/work.html'},{title:'Brand systems',text:'Identity, campaigns and launch assets.',url:'/work.html'},{title:'Digital launches',text:'Landing pages and product experiences.',url:'/work.html'},{title:'Motion stories',text:'Product films and social content.',url:'/work.html'}]},TESTIMONIAL_CAROUSEL:{heading:'Client notes',auto:true,interval:5},PROJECT_GRID:{heading:'Selected work',category:'',limit:6},JOURNAL_FEED:{heading:'Latest journal',limit:3},BRAND_GRID:{heading:'Selected brands'},SOCIAL_LINKS:{heading:'Find me online'},CV_DOWNLOAD:{label:'DOWNLOAD CV'},CONTACT:{heading:'Have a question or project in mind?',text:'Share the essentials. A short message is enough.'},FAQ:{items:[{question:'What can we build together?',answer:'Add your answer here.'}]},SPACER:{size:64},DIVIDER:{},LOTTIE:{url:'',fallback:'→',label:'Animated icon',trigger:'AUTOPLAY',loop:'true',speed:1,size:96},EMBED:{url:'',title:'Embedded content',height:560},
     WEBSITE_EMBED:{url:'',title:'External website',height:640,fallbackLabel:'OPEN WEBSITE'},
     CUSTOM_CODE:{html:'<div class="custom-card"><h2>Custom block</h2><p>Add isolated HTML and CSS.</p></div>',css:'.custom-card { padding: 32px; background: #101310; color: #f6f7f2; border: 1px solid #30352f; }',height:320},
-  };
-  return {id,type,enabled:true,data:content[type],style:{theme:'DEFAULT',align:'LEFT',padding:'MEDIUM'},responsive:{hideDesktop:false,hideTablet:false,hideMobile:false},motion:{enabled:false},children:[]};
+  } as unknown as Record<PageStudioWidgetType,Record<string,unknown>>;
+  content.TEXT={text:'Add clear, useful copy here.',size:'MEDIUM',maxWidth:760};
+  content.BUTTON={label:'LEARN MORE',url:'#',variant:'PRIMARY',size:'MEDIUM',newTab:false};
+  content.IMAGE_TEXT_SPLIT={eyebrow:'FEATURED STORY',heading:'Pair a strong visual with a clear message.',text:'Use this section for a service, case study or campaign story.',image:'',imageAlt:'',label:'EXPLORE',url:'/work.html',imageSide:'RIGHT'};
+  content.FEATURE_CARDS={eyebrow:'WHAT I DO',heading:'Creative systems built for real outcomes.',columns:3,items:[{title:'Strategy',text:'A clear direction before production begins.',url:'#'},{title:'Design',text:'A flexible visual system across every touchpoint.',url:'#'},{title:'Delivery',text:'Production-ready assets and a clean handoff.',url:'#'}]};
+  content.DIVIDER={style:'SOLID',width:100};
+  content.LOTTIE={...content.LOTTIE,animationData:null};
+  content.CUSTOM_CODE={...content.CUSTOM_CODE,html:'<div class="custom-card"><h2>Custom block</h2><p>Add isolated HTML, CSS and JavaScript.</p></div>',js:''};
+  return {id,type,enabled:true,data:content[type],style:{theme:'DEFAULT',align:'LEFT',padding:'MEDIUM',marginTop:0,marginBottom:0,paddingX:0,paddingY:0,borderWidth:0,borderRadius:0,borderColor:'',backgroundColor:'',textColor:'',customClass:'',customCss:''},responsive:{hideDesktop:false,hideTablet:false,hideMobile:false},motion:{enabled:false},children:[]};
 }
 
 export const DEFAULT_PAGE_TEMPLATES=[
   {name:'Blank page',slug:'blank',category:'GENERAL',description:'An empty canvas.',blocks:[]},
   {name:'Service page',slug:'service-page',category:'SERVICES',description:'Hero, service story, selected work and inquiry CTA.',blocks:[defaultBlock('HERO','template-service-hero'),defaultBlock('RICH_TEXT','template-service-copy'),defaultBlock('PROJECT_GRID','template-service-work'),defaultBlock('CTA','template-service-cta')]},
   {name:'Landing page',slug:'landing-page',category:'LANDING',description:'Focused campaign page with minimal distractions.',blocks:[defaultBlock('HERO','template-landing-hero'),defaultBlock('STATS','template-landing-stats'),defaultBlock('IMAGE','template-landing-image'),defaultBlock('CTA','template-landing-cta')]},
-  {name:'Resource page',slug:'resource-page',category:'RESOURCES',description:'Long-form resource with a clear download or inquiry action.',blocks:[defaultBlock('HERO','template-resource-hero'),defaultBlock('RICH_TEXT','template-resource-copy'),defaultBlock('FAQ','template-resource-faq'),defaultBlock('CTA','template-resource-cta')]}
+  {name:'Resource page',slug:'resource-page',category:'RESOURCES',description:'Long-form resource with a clear download or inquiry action.',blocks:[defaultBlock('HERO','template-resource-hero'),defaultBlock('RICH_TEXT','template-resource-copy'),defaultBlock('FAQ','template-resource-faq'),defaultBlock('CTA','template-resource-cta')]},
+  {name:'Editorial portfolio',slug:'editorial-portfolio',category:'PORTFOLIO',description:'Editorial story, selected projects, proof and a focused CTA.',blocks:[defaultBlock('HERO','template-editorial-hero'),defaultBlock('EDITORIAL_SHOWCASE','template-editorial-showcase'),defaultBlock('PROJECT_GRID','template-editorial-projects'),defaultBlock('TESTIMONIAL_CAROUSEL','template-editorial-testimonials'),defaultBlock('CTA','template-editorial-cta')]},
+  {name:'Collection landing',slug:'collection-landing',category:'LANDING',description:'A visual collection page with cards, split story and social proof.',blocks:[defaultBlock('HERO','template-collection-hero'),defaultBlock('COLLECTION_GRID','template-collection-grid'),defaultBlock('IMAGE_TEXT_SPLIT','template-collection-split'),defaultBlock('FEATURE_CARDS','template-collection-features'),defaultBlock('CTA','template-collection-cta')]},
+  {name:'Creator profile',slug:'creator-profile',category:'PROFILE',description:'About-led profile with services, social links and contact.',blocks:[defaultBlock('HERO','template-profile-hero'),defaultBlock('IMAGE_TEXT_SPLIT','template-profile-split'),defaultBlock('FEATURE_CARDS','template-profile-features'),defaultBlock('SOCIAL_LINKS','template-profile-socials'),defaultBlock('CONTACT','template-profile-contact')]}
 ];
 
 export function slugify(value:string){return value.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,80)}

@@ -1,3 +1,4 @@
+(()=>{[['/theme-runtime.js?v=20261016-1','themeRuntime'],['/anchor-runtime.js?v=20261016-1','anchorRuntime']].forEach(([src,key])=>{if(document.querySelector(`script[data-${key.replace(/[A-Z]/g,m=>'-'+m.toLowerCase())}]`))return;const script=document.createElement('script');script.src=src;script.defer=true;script.dataset[key]='true';document.head.appendChild(script)})})();
 (() => {
   const isBuilder = location.pathname.endsWith('/admin.html') || location.pathname.includes('page-studio');
   if (!isBuilder) {
