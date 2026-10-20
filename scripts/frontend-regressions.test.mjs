@@ -46,3 +46,14 @@ test('public social profiles have a local fallback when the icon CDN is unavaila
   assert.match(index,/\/social-icon-fix\.js/);
   assert.match(styles,/\.public-socials \.social-inline-icon/);
 });
+
+test('public motion respects data-saving visitors and pauses the background off-screen',async()=>{
+  const [background,motion]=await Promise.all([
+    read('portfolio/neural-bg.js'),
+    read('portfolio/motion-icons.js')
+  ]);
+  assert.match(background,/navigator\.connection\?\.saveData/);
+  assert.match(background,/visibilitychange/);
+  assert.match(motion,/const saveData=/);
+  assert.match(motion,/reduced\(\)\|\|saveData\(\)/);
+});
