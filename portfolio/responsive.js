@@ -7,6 +7,13 @@
     runtime.defer = true;
     document.head.appendChild(runtime);
   }
+  if (!document.querySelector('script[data-brand-assets-runtime]')) {
+    const brandAssets = document.createElement('script');
+    brandAssets.src = '/brand-assets.js?v=20261022-1';
+    brandAssets.defer = true;
+    brandAssets.dataset.brandAssetsRuntime = 'true';
+    document.head.appendChild(brandAssets);
+  }
 
   const main = document.querySelector('main') || document.querySelector('#cms');
   if (main && !main.id) main.id = 'main-content';

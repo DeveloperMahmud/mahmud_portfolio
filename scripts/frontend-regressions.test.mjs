@@ -89,3 +89,24 @@ test('site module presets stay draft-only and hero settings use an isolated mini
   assert.match(loader,/admin-module-library\.js/);
   assert.match(admin,/runHeroTypewriterPreview/);
 });
+
+test('Brand Assets are CMS-managed, reuse the existing media flow and apply safely on public pages',async()=>{
+  const [admin,runtime,responsive,maintenance,operations,auth]=await Promise.all([
+    read('portfolio/admin-brand-assets.js'),
+    read('portfolio/brand-assets.js'),
+    read('portfolio/responsive.js'),
+    read('src/routes/maintenance.ts'),
+    read('src/routes/operations.ts'),
+    read('src/routes/auth.ts')
+  ]);
+  assert.match(admin,/BRAND ASSETS/);
+  assert.match(admin,/\/api\/admin\/media\/upload/);
+  assert.match(admin,/brand-assets/);
+  assert.match(runtime,/apple-touch-icon/);
+  assert.match(runtime,/has-brand-logo/);
+  assert.match(runtime,/safeUrl/);
+  assert.match(responsive,/brand-assets\.js/);
+  assert.match(maintenance,/brandAssetsSchema/);
+  assert.match(operations,/themeConfig:row\.themeConfig/);
+  assert.match(auth,/existingTheme/);
+});

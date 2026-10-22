@@ -1,0 +1,10 @@
+.brand-assets-card{border-color:rgba(198,255,76,.28);background:linear-gradient(145deg,#0d120d,#0b0d0c)}
+.brand-assets-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.brand-asset-field{border:1px solid var(--line);background:#080a09;padding:12px;min-width:0}
+.brand-asset-preview{height:108px;border:1px dashed #353b34;background:#101310;display:grid;place-items:center;overflow:hidden;color:#777d75;font:700 9px "Space Grotesk";letter-spacing:.12em}
+.brand-asset-preview img{display:block;width:100%;height:100%;object-fit:contain;padding:12px}
+.brand-asset-controls{display:grid;gap:9px;margin-top:11px}.brand-asset-controls input{width:100%}
+.brand-assets-meta{margin-top:12px}.brand-assets-tip{border:1px solid var(--line);padding:12px;display:grid;gap:5px;color:var(--muted);font-size:10px;line-height:1.5}.brand-assets-tip strong{font:700 9px "Space Grotesk";letter-spacing:.1em;text-transform:uppercase;color:var(--text)}
+.brand-assets-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:15px}.brand-assets-actions .notice{margin:0;min-height:1em}
+@media(max-width:920px){.brand-assets-grid{grid-template-columns:1fr}.brand-asset-field{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px}.brand-asset-controls{margin-top:0}.brand-asset-preview{height:100%}}
+@media(max-width:560px){.brand-asset-field{grid-template-columns:1fr}.brand-asset-preview{height:112px}.brand-assets-actions{align-items:stretch}.brand-assets-actions .button{width:100%}}
