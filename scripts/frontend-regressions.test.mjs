@@ -110,3 +110,11 @@ test('Brand Assets are CMS-managed, reuse the existing media flow and apply safe
   assert.match(operations,/themeConfig:row\.themeConfig/);
   assert.match(auth,/existingTheme/);
 });
+
+test('public performance avoids duplicate font imports and serves legacy project links through clean routes',async()=>{
+  const [styles,app]=await Promise.all([read('portfolio/styles.css'),read('src/app.ts')]);
+  assert.doesNotMatch(styles,/@import\s+url\(['"]https:\/\/fonts\.googleapis\.com/);
+  assert.match(app,/app\.get\('\/project\.html'/);
+  assert.match(app,/stale-while-revalidate=604800/);
+  assert.match(app,/stale-while-revalidate=86400/);
+});
