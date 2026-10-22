@@ -219,7 +219,7 @@ test('Homepage Studio includes draft-only conversion modules with editable demo 
   const editor=read('portfolio/homepage-studio.js');
   const runtime=read('portfolio/homepage-studio-runtime.js');
   const html=read('portfolio/homepage-studio.html');
-  for(const type of ['ANNOUNCEMENT','PROOF_STRIP','TESTIMONIAL_CAROUSEL','FAQ']){
+  for(const type of ['ANNOUNCEMENT','PROOF_STRIP','PROCESS_STEPS','TESTIMONIAL_CAROUSEL','FAQ']){
     assert.match(schema,new RegExp(`'${type}'`));
     assert.match(editor,new RegExp(type));
     assert.match(runtime,new RegExp(`block\\.type==='${type}'`));
