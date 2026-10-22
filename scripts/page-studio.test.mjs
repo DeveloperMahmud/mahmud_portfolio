@@ -214,6 +214,21 @@ test('Homepage Studio supports reorderable nested social, code and trusted websi
   assert.match(route,/Trusted Embed Sources/);
 });
 
+test('Homepage Studio includes draft-only conversion modules with editable demo content',()=>{
+  const schema=read('src/lib/homepage-studio.ts');
+  const editor=read('portfolio/homepage-studio.js');
+  const runtime=read('portfolio/homepage-studio-runtime.js');
+  const html=read('portfolio/homepage-studio.html');
+  for(const type of ['ANNOUNCEMENT','PROOF_STRIP','TESTIMONIAL_CAROUSEL','FAQ']){
+    assert.match(schema,new RegExp(`'${type}'`));
+    assert.match(editor,new RegExp(type));
+    assert.match(runtime,new RegExp(`block\\.type==='${type}'`));
+  }
+  assert.match(editor,/function loadDemoKit\(/);
+  assert.match(editor,/Production will not change until you publish/);
+  assert.match(html,/id="loadDemoKit"/);
+});
+
 test('Page Studio custom code is isolated and website embeds use the shared allow-list',()=>{
   const schema=read('src/lib/page-studio.ts');
   const editor=read('portfolio/page-studio.js');
