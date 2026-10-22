@@ -73,3 +73,19 @@ test('hero typewriter keeps its caret in the live text flow and offers durable p
   }
   assert.match(admin,/typewriterConfig/);
 });
+
+test('site module presets stay draft-only and hero settings use an isolated mini preview',async()=>{
+  const [library,styles,loader,admin]=await Promise.all([
+    read('portfolio/admin-module-library.js'),
+    read('portfolio/admin-module-library.css'),
+    read('portfolio/admin-page-studio.js'),
+    read('portfolio/admin.js')
+  ]);
+  assert.match(library,/MODULE PRESET LIBRARY/);
+  assert.match(library,/SAVE CURRENT AS MY PRESET/);
+  assert.match(library,/SAVE SITE MODULES/);
+  assert.match(library,/localStorage/);
+  assert.match(styles,/\.hero-preview-caret/);
+  assert.match(loader,/admin-module-library\.js/);
+  assert.match(admin,/runHeroTypewriterPreview/);
+});
