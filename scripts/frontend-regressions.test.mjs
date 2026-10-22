@@ -57,3 +57,19 @@ test('public motion respects data-saving visitors and pauses the background off-
   assert.match(motion,/const saveData=/);
   assert.match(motion,/reduced\(\)\|\|saveData\(\)/);
 });
+
+test('hero typewriter keeps its caret in the live text flow and offers durable presets',async()=>{
+  const [runtime,admin,styles]=await Promise.all([
+    read('portfolio/app.js'),
+    read('portfolio/admin.js'),
+    read('portfolio/styles.css')
+  ]);
+  assert.match(runtime,/el\.replaceChildren\(output\)/);
+  assert.match(runtime,/if\(caret\)el\.append\(caret\)/);
+  for(const preset of ['EDITORIAL','QUICK_CUT','CINEMATIC','TERMINAL','QUIET']){
+    assert.match(runtime,new RegExp(preset));
+    assert.match(admin,new RegExp(preset));
+    assert.match(styles,new RegExp(`data-typewriter-preset=\\"${preset}\\"`));
+  }
+  assert.match(admin,/typewriterConfig/);
+});

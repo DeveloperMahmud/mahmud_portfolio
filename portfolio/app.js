@@ -4,8 +4,23 @@ document.body.classList.add('home-custom-cursor');
   const el=document.querySelector('[data-typewriter]');
   const caret=document.querySelector('.type-caret');
   if(!el) return;
+  // Keep the caret inside the animated inline flow. A sibling caret drops to
+  // the next line when the headline wraps, which makes it look disconnected.
+  const output=document.createElement('span');
+  output.className='typewriter-output';
+  output.textContent=el.textContent.trim();
+  el.replaceChildren(output);
+  if(caret)el.append(caret);
   const reduce=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let config={enabled:true,phrases:[],typeSpeed:42,typeRandom:35,pause:2400,eraseSpeed:25,nextDelay:650,startDelay:220,loop:true};
+  const PRESETS={
+    EDITORIAL:{typeSpeed:42,typeRandom:35,pause:2400,eraseSpeed:25,nextDelay:650,startDelay:220,loop:true},
+    QUICK_CUT:{typeSpeed:22,typeRandom:12,pause:1650,eraseSpeed:14,nextDelay:280,startDelay:120,loop:true},
+    CINEMATIC:{typeSpeed:68,typeRandom:38,pause:3600,eraseSpeed:34,nextDelay:900,startDelay:420,loop:true},
+    TERMINAL:{typeSpeed:30,typeRandom:5,pause:2050,eraseSpeed:18,nextDelay:420,startDelay:160,loop:true},
+    QUIET:{typeSpeed:50,typeRandom:18,pause:4200,eraseSpeed:30,nextDelay:1100,startDelay:300,loop:true}
+  };
+  const presetFor=(incoming={})=>Object.entries(PRESETS).find(([,value])=>Object.entries(value).every(([key,setting])=>incoming[key]===setting))?.[0]||'EDITORIAL';
+  let config={enabled:true,phrases:[],preset:'EDITORIAL',...PRESETS.EDITORIAL};
   let timer=null,active=false,cycle=0,observer=null;
   const fallback=()=>{
     const raw=el.getAttribute('data-texts') || el.getAttribute('data-text') || el.textContent.trim();
@@ -13,8 +28,9 @@ document.body.classList.add('home-custom-cursor');
   };
   const clear=()=>{if(timer){clearTimeout(timer);timer=null;}};
   const phrases=()=>Array.isArray(config.phrases)&&config.phrases.length?config.phrases.filter(Boolean):fallback();
-  const renderStatic=()=>{const list=phrases();el.textContent=list[0]||'';};
-  const restart=()=>{if(!active)return;cycle++;clear();el.textContent='';typeLoop();};
+  const write=value=>{output.textContent=value;};
+  const renderStatic=()=>{const list=phrases();write(list[0]||'');};
+  const restart=()=>{if(!active)return;cycle++;clear();write('');typeLoop();};
   const typeLoop=()=>{
     if(!active||!config.enabled)return;
     const list=phrases(); if(!list.length)return;
@@ -25,7 +41,7 @@ document.body.classList.add('home-custom-cursor');
       const text=list[phraseIndex%list.length]; let i=0;
       const type=()=>{
         if(!active||myCycle!==cycle)return;
-        el.textContent=text.slice(0,i++);
+        write(text.slice(0,i++));
         if(i<=text.length) timer=setTimeout(type,config.typeSpeed+Math.random()*config.typeRandom);
         else if(config.loop || phraseIndex<list.length-1) timer=setTimeout(erase,config.pause);
       };
@@ -34,9 +50,9 @@ document.body.classList.add('home-custom-cursor');
         let n=text.length;
         const back=()=>{
           if(!active||myCycle!==cycle)return;
-          el.textContent=text.slice(0,Math.max(0,--n));
+          write(text.slice(0,Math.max(0,--n)));
           if(n>0) timer=setTimeout(back,config.eraseSpeed);
-          else { phraseIndex++; if(config.loop || phraseIndex<list.length) timer=setTimeout(runPhrase,config.nextDelay); else el.textContent=text; }
+          else { phraseIndex++; if(config.loop || phraseIndex<list.length) timer=setTimeout(runPhrase,config.nextDelay); else write(text); }
         };
         back();
       };
@@ -45,7 +61,9 @@ document.body.classList.add('home-custom-cursor');
     clear(); runPhrase();
   };
   window.setHeroTypewriterConfig=(incoming={})=>{
-    config={...config,...incoming,phrases:Array.isArray(incoming.phrases)?incoming.phrases.map(x=>String(x).trim()).filter(Boolean):config.phrases};
+    const preset=typeof incoming.preset==='string'&&PRESETS[incoming.preset]?incoming.preset:presetFor(incoming);
+    config={...config,...PRESETS[preset],...incoming,preset,phrases:Array.isArray(incoming.phrases)?incoming.phrases.map(x=>String(x).trim()).filter(Boolean):config.phrases};
+    el.closest('.hero-title')?.setAttribute('data-typewriter-preset',preset);
     if(reduce||!config.enabled){active=false;cycle++;clear();renderStatic();return;}
     if(observer){restart();}
   };
