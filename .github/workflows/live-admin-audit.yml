@@ -1,6 +1,14 @@
 name: Live Admin Audit
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/live-admin-audit.yml
+      - playwright.live.config.mjs
+      - tests/live/**
+      - package.json
+      - package-lock.json
   workflow_dispatch:
     inputs:
       base_url:
