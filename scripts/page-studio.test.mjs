@@ -340,3 +340,34 @@ test('Homepage Studio hydrates managed content without duplicating canonical CMS
   assert.match(runtime,/payload\.resolvedSections/);
   assert.match(runtime,/sectionData=\{\.\.\.managed,\.\.\.\(block\.data\|\|\{\}\)\}/);
 });
+
+test('structured module library offers twenty-four presets and coordinated draft-only site packs',()=>{
+  const source=read('portfolio/admin-module-library.js');
+  assert.match(source,/const sitePacks=\[/);
+  assert.match(source,/Amazon Creative Specialist/);
+  assert.match(source,/Available Freelancer/);
+  assert.match(source,/never saves|never save|never publishes|never publish/i);
+  assert.ok((source.match(/id:'(?:hero|capabilities|navigation|about|amazon|footer|social)-/g)||[]).length>=24);
+  assert.ok((source.match(/presets:\[/g)||[]).length>=5);
+});
+
+test('Homepage Studio includes twelve non-destructive layout presets',()=>{
+  const source=read('portfolio/homepage-studio.js');
+  assert.match(source,/const homepagePresets=\[/);
+  assert.ok((source.match(/^\s+\['[^']+','[^']+'/gm)||[]).length>=12);
+  assert.match(source,/top\.forEach\(block=>\{if\(!used\.has\(block\.id\)\)ordered\.push\(block\)\}\)/);
+  assert.match(source,/presetRollback/);
+});
+
+test('specialist templates and high-value portfolio widgets share schema editor and renderer support',()=>{
+  const schema=read('src/lib/page-studio.ts');
+  const editor=read('portfolio/page-studio.js');
+  const renderer=read('portfolio/page-studio-renderer.js');
+  for(const widget of ['TRUST_STRIP','OUTCOME_METRICS','PROCESS_TIMELINE','BEFORE_AFTER','FILTERABLE_PROJECT_GRID','SERVICE_PACKAGES','MEDIA_MOSAIC','AVAILABILITY_CTA']){
+    assert.match(schema,new RegExp(widget));
+    assert.match(editor,new RegExp(widget));
+    assert.match(renderer,new RegExp(`case'${widget}'`));
+  }
+  for(const slug of ['amazon-a-plus-service','amazon-storefront','brand-identity-service','web-ui-service','motion-design-service','campaign-launch'])assert.match(schema,new RegExp(slug));
+  assert.doesNotMatch(editor,/@vercel\/blob|put\(/);
+});
