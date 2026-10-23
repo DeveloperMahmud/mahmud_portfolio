@@ -13,16 +13,22 @@
   const readMine=()=>{try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');return Array.isArray(saved)?saved:[]}catch{return[]}};
   const writeMine=items=>localStorage.setItem(STORAGE_KEY,JSON.stringify(items));
   const field=id=>document.querySelector('#'+id);
+  const motionResources=[
+    {name:'LottieFiles',url:'https://lottiefiles.com/free-animations',note:'Search free animations, preview them, then download Lottie JSON. Check the license shown on the animation before use.'},
+    {name:'Lordicon',url:'https://lordicon.com/icons',note:'Useful animated interface icons. Free downloads require attribution, so keep the credit or use a license that fits the project.'},
+    {name:'Lottie docs',url:'https://docs.lottiefiles.com/',note:'Format and workflow reference. Page Studio accepts a Lottie JSON object or .json file, not a .lottie archive.'}
+  ];
   function apply(entry,status){const destination=field(entry.target);if(!destination){status.textContent='That module field is not available.';return}destination.value=JSON.stringify(entry.data,null,2);destination.dispatchEvent(new Event('input',{bubbles:true}));destination.focus();status.textContent=`${entry.title} inserted into ${targets[entry.target]}. Review it, then click SAVE SITE MODULES.`}
   function boot(){
     const form=document.querySelector('#siteConfigForm');
     if(!form||document.querySelector('#siteModuleLibrary'))return;
     const root=document.createElement('section');
     root.id='siteModuleLibrary';root.className='module-library';
-    root.innerHTML='<div class="module-library-head"><div><span class="kicker">MODULE PRESET LIBRARY</span><h3>Start structured, then make it yours.</h3><p>Insert a safe JSON starter into one module field. Nothing reaches the live site until you save Site Modules.</p></div><span class="settings-badge">DRAFT HELP</span></div><div class="module-library-tools"><label>TARGET MODULE<select id="moduleSnippetTarget"></select></label><label>MY PRESET NAME<input id="moduleSnippetName" maxlength="60" placeholder="e.g. My launch hero"></label><button class="admin-btn" type="button" id="moduleSnippetSave">SAVE CURRENT AS MY PRESET</button></div><div id="moduleLibraryCards" class="module-library-cards"></div><p id="moduleLibraryStatus" class="module-library-status">Starter presets are reusable. My presets are stored in this browser only.</p>';
+    root.innerHTML='<div class="module-library-head"><div><span class="kicker">MODULE PRESET LIBRARY</span><h3>Start structured, then make it yours.</h3><p>Insert a safe JSON starter into one module field. Nothing reaches the live site until you save Site Modules.</p></div><span class="settings-badge">DRAFT HELP</span></div><div class="module-library-tools"><label>TARGET MODULE<select id="moduleSnippetTarget"></select></label><label>MY PRESET NAME<input id="moduleSnippetName" maxlength="60" placeholder="e.g. My launch hero"></label><button class="admin-btn" type="button" id="moduleSnippetSave">SAVE CURRENT AS MY PRESET</button></div><div id="moduleLibraryCards" class="module-library-cards"></div><p id="moduleLibraryStatus" class="module-library-status">Starter presets are reusable. My presets are stored in this browser only.</p><aside class="motion-resource-library"><div><span class="kicker">MOTION JSON SOURCES</span><h3>Find it, download it, then upload the JSON.</h3><p>Good uses include CTA arrows, scroll cues, menu icons, success states, loaders, service icons and small product accents. Prefer a downloaded JSON over a remote CDN link so another service\'s bandwidth quota cannot disable it.</p></div><div id="motionResourceCards" class="motion-resource-cards"></div></aside>';
     form.insertAdjacentElement('beforebegin',root);
     const select=root.querySelector('#moduleSnippetTarget');Object.entries(targets).forEach(([value,label])=>{const option=document.createElement('option');option.value=value;option.textContent=label;select.append(option)});
-    const status=root.querySelector('#moduleLibraryStatus'),cards=root.querySelector('#moduleLibraryCards');
+    const status=root.querySelector('#moduleLibraryStatus'),cards=root.querySelector('#moduleLibraryCards'),resourceCards=root.querySelector('#motionResourceCards');
+    motionResources.forEach(resource=>{const card=document.createElement('article');card.className='motion-resource-card';const title=document.createElement('strong');title.textContent=resource.name;const note=document.createElement('p');note.textContent=resource.note;const link=document.createElement('a');link.className='admin-btn';link.href=resource.url;link.target='_blank';link.rel='noopener noreferrer';link.textContent='OPEN OFFICIAL SOURCE ↗';card.append(title,note,link);resourceCards.append(card)});
     const render=()=>{
       cards.replaceChildren();
       const all=[...starters,...readMine().map(item=>({...item,mine:true}))];

@@ -214,6 +214,14 @@ test('Homepage Studio supports reorderable nested social, code and trusted websi
   assert.match(route,/Trusted Embed Sources/);
 });
 
+test('rounded Page Studio containers clip nested column content',()=>{
+  const renderer=read('portfolio/page-studio-renderer.js');
+  const css=read('portfolio/page-studio-public.css');
+  assert.match(renderer,/data-rounded=/);
+  assert.match(css,/\.ps-widget\[data-rounded=true\]\{overflow:hidden/);
+  assert.match(css,/\[data-widget=COLUMNS\] \.ps-columns\{overflow:hidden;border-radius:inherit/);
+});
+
 test('Homepage Studio includes draft-only conversion modules with editable demo content',()=>{
   const schema=read('src/lib/homepage-studio.ts');
   const editor=read('portfolio/homepage-studio.js');
