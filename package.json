@@ -18,6 +18,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:smoke": "node scripts/smoke.mjs",
     "test:smoke:local": "node scripts/local-smoke-runner.mjs",
+    "test:smoke:static": "node scripts/static-smoke.mjs",
     "test:operations": "node --test scripts/operations.test.mjs",
     "test:slider": "node --test scripts/editorial-slider.test.mjs",
     "test:page-studio": "node --test scripts/page-studio.test.mjs",

@@ -66,6 +66,24 @@ async function attachJson(testInfo, name, value) {
   });
 }
 
+async function captureLayoutHealth(page, testInfo, name) {
+  const metrics = await page.evaluate(() => ({
+    viewport: { width: window.innerWidth, height: window.innerHeight },
+    document: {
+      width: document.documentElement.scrollWidth,
+      height: document.documentElement.scrollHeight,
+    },
+    horizontalOverflow: Math.max(0, document.documentElement.scrollWidth - window.innerWidth),
+    visibleDialogs: [...document.querySelectorAll('[role="dialog"]')].filter(node => {
+      const style = getComputedStyle(node);
+      return style.display !== 'none' && style.visibility !== 'hidden';
+    }).length,
+  }));
+  await attachJson(testInfo, `${name}-layout`, metrics);
+  expect(metrics.horizontalOverflow, `${name} has unexpected horizontal page overflow`).toBeLessThanOrEqual(2);
+  return metrics;
+}
+
 test('authenticated CMS navigation and responsive shell remain healthy', async ({ page }, testInfo) => {
   const monitor = monitorRuntime(page);
   await login(page, monitor);
@@ -86,6 +104,8 @@ test('authenticated CMS navigation and responsive shell remain healthy', async (
     await expect(page.locator('#adminMenuToggle')).toHaveAttribute('aria-expanded', 'false');
   }
 
+  await captureLayoutHealth(page, testInfo, 'cms');
+
   const shot = testInfo.outputPath(`cms-${testInfo.project.name}.png`);
   await page.screenshot({ path: shot, fullPage: true });
   await testInfo.attach(`cms-${testInfo.project.name}`, { path: shot, contentType: 'image/png' });
@@ -105,6 +125,7 @@ test('Homepage Studio and Page Studio load without mutating content', async ({ p
   await expect(page.locator('body')).toContainText('HOMEPAGE STUDIO');
   await expect(page.locator('#homepagePreview')).toBeVisible();
   await expect(page.locator('#homepagePreview')).toHaveAttribute('src', /homepage-studio-preview=1/);
+  await captureLayoutHealth(page, testInfo, 'homepage-studio');
   const homepageShot = testInfo.outputPath(`homepage-studio-${testInfo.project.name}.png`);
   await page.screenshot({ path: homepageShot, fullPage: true });
   await testInfo.attach(`homepage-studio-${testInfo.project.name}`, { path: homepageShot, contentType: 'image/png' });
@@ -112,6 +133,7 @@ test('Homepage Studio and Page Studio load without mutating content', async ({ p
   await page.goto('/page-studio.html', { waitUntil: 'domcontentloaded' });
   await expect(page.locator('body')).not.toContainText('Page Studio unavailable');
   await expect(page.locator('#studioCanvas')).toBeAttached();
+  await captureLayoutHealth(page, testInfo, 'page-studio');
   const pageStudioShot = testInfo.outputPath(`page-studio-${testInfo.project.name}.png`);
   await page.screenshot({ path: pageStudioShot, fullPage: true });
   await testInfo.attach(`page-studio-${testInfo.project.name}`, { path: pageStudioShot, contentType: 'image/png' });

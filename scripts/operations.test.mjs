@@ -34,3 +34,12 @@ test('publish checklist is read-only and exposes project plus content safety che
   assert.match(admin,/RUN CHECK/);
   assert.match(admin,/never edits or unpublishes/);
 });
+
+test('Vercel migration retries advisory-lock contention without disabling database safety',async()=>{
+  const source=await fs.readFile(new URL('./vercel-migrate.mjs',import.meta.url),'utf8');
+  assert.match(source,/MIGRATION_MAX_ATTEMPTS/);
+  assert.match(source,/bounded backoff and jitter/);
+  assert.match(source,/P1002\[\\s\\S\]\*advisory lock/);
+  assert.match(source,/attemptTimeoutMs/);
+  assert.doesNotMatch(source,/PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK/);
+});

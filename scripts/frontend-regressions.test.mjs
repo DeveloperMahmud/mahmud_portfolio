@@ -126,6 +126,7 @@ test('admin navigation remains discoverable and keyboard accessible on mobile',a
     read('portfolio/admin.js')
   ]);
   assert.doesNotMatch(html,/^<style>$/m);
+  assert.doesNotMatch(html,/<\/style>\s*<\/style>/i);
   assert.match(runtime,/id=\"adminMenuToggle\"/);
   assert.match(runtime,/aria-controls=\"adminSidebar\"/);
   assert.match(runtime,/admin-mobile-nav\.css/);
