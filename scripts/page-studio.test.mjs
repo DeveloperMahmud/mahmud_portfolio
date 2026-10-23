@@ -222,6 +222,16 @@ test('rounded Page Studio containers clip nested column content',()=>{
   assert.match(css,/\[data-widget=COLUMNS\] \.ps-columns\{overflow:hidden;border-radius:inherit/);
 });
 
+test('structured site modules include inline schemas, examples and validation help',()=>{
+  const library=read('portfolio/admin-module-library.js');
+  for(const field of ['heroConfig','capabilitiesConfig','navigationConfig','footerConfig','aboutConfig','amazonConfig','socialLinks'])assert.match(library,new RegExp(`${field}:\\{`));
+  assert.match(library,/data-guide-copy/);
+  assert.match(library,/data-guide-insert/);
+  assert.match(library,/data-guide-validate/);
+  assert.match(library,/developer\.mozilla\.org/);
+  assert.match(library,/jsonlint\.com/);
+});
+
 test('Homepage Studio includes draft-only conversion modules with editable demo content',()=>{
   const schema=read('src/lib/homepage-studio.ts');
   const editor=read('portfolio/homepage-studio.js');
