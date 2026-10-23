@@ -408,6 +408,67 @@ loadMaintenance=async function(){await loadMaintenanceBeforeTypewriterPreset();t
 $('#settingsForm')?.addEventListener('submit',async event=>{event.preventDefault();event.stopImmediatePropagation();try{const value=id=>$(id)?.value||'',typewriterConfig=buildHeroTypewriterConfig(),data={siteName:value('#settingSiteName'),title:value('#settingTitle'),email:value('#settingEmail')||null,inquiryRecipientEmail:value('#settingInquiryRecipientEmail')||null,inquirySubject:value('#settingInquirySubject')||null,phone:value('#settingPhone')||null,location:value('#settingLocation')||null,availability:$('#settingAvailability')?.checked||false,availabilityLabel:value('#settingAvailabilityLabel')||null,linkedin:value('#settingLinkedin')||null,behance:value('#settingBehance')||null,dribbble:value('#settingDribbble')||null,instagram:value('#settingInstagram')||null,github:value('#settingGithub')||null,metaTitle:value('#settingMetaTitle')||null,metaDescription:value('#settingMetaDescription')||null,ogImage:value('#settingOgImage')||null,heroImage:value('#settingHeroImage')||null,heroLeadText:value('#settingHeroLeadText').trim()||'I DESIGN',heroTypewriterPhrases:typewriterConfig.phrases,typewriterConfig};await api('/admin/maintenance/settings',{method:'PATCH',body:JSON.stringify(data)});msg($('#settingsMsg'),'Settings saved — homepage typewriter updated.',true);loadMaintenance()}catch(error){msg($('#settingsMsg'),error.message)}} ,true);
 $('#year').value=new Date().getFullYear();$('#sortOrder').value=0;$('#sliderEnabled').checked=true;$('#sliderTransition').value='AUTO';$('#contentStatus')&&($('#contentStatus').value='DRAFT');renderGallery();updateProjectSeoPreview();updateContentSeoPreview();updateSiteSeoPreview();boot();openAdminTab('dashboard');
 
+// Mobile CMS navigation: keep every dynamically-added admin destination discoverable.
+(()=>{
+  const sidebar=document.querySelector('.admin-sidebar');
+  const shell=document.querySelector('.admin-shell');
+  if(!sidebar||!shell||document.querySelector('#adminMenuToggle'))return;
+  sidebar.id='adminSidebar';
+  sidebar.setAttribute('aria-label','CMS navigation');
+  const css=document.createElement('link');
+  css.rel='stylesheet';
+  css.href='/admin-mobile-nav.css?v=20261023-1';
+  document.head.append(css);
+  const bar=document.createElement('div');
+  bar.className='admin-mobile-bar';
+  bar.innerHTML='<button type="button" class="admin-menu-toggle" id="adminMenuToggle" aria-controls="adminSidebar" aria-expanded="false"><span class="admin-menu-icon" aria-hidden="true"><i></i><i></i><i></i></span><span>MENU</span><strong id="adminMenuCurrent">DASHBOARD</strong></button>';
+  shell.before(bar);
+  const backdrop=document.createElement('button');
+  backdrop.type='button';
+  backdrop.className='admin-menu-backdrop';
+  backdrop.id='adminMenuBackdrop';
+  backdrop.tabIndex=-1;
+  backdrop.setAttribute('aria-label','Close admin menu');
+  shell.prepend(backdrop);
+  const toggle=bar.querySelector('#adminMenuToggle');
+  const current=bar.querySelector('#adminMenuCurrent');
+  let returnFocus=null;
+  const isMobile=()=>window.matchMedia('(max-width: 1050px)').matches;
+  const updateCurrent=()=>{
+    const active=sidebar.querySelector('.side-btn.active[data-tab]');
+    current.textContent=active?.textContent?.trim()||'DASHBOARD';
+  };
+  const setOpen=(open,{restoreFocus=true}={})=>{
+    const next=Boolean(open&&isMobile());
+    if(next)returnFocus=document.activeElement;
+    document.body.classList.toggle('admin-menu-open',next);
+    toggle.setAttribute('aria-expanded',String(next));
+    sidebar.setAttribute('aria-hidden',String(!next&&isMobile()));
+    if(next)sidebar.querySelector('.side-btn.active,.side-btn')?.focus();
+    else if(restoreFocus&&returnFocus instanceof HTMLElement)returnFocus.focus();
+  };
+  toggle.addEventListener('click',()=>setOpen(toggle.getAttribute('aria-expanded')!=='true'));
+  backdrop.addEventListener('click',()=>setOpen(false));
+  sidebar.addEventListener('click',event=>{
+    const item=event.target.closest('.side-btn');
+    if(!item)return;
+    queueMicrotask(updateCurrent);
+    if(isMobile())setOpen(false);
+  });
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape'&&document.body.classList.contains('admin-menu-open'))setOpen(false);
+  });
+  window.addEventListener('resize',()=>{
+    if(!isMobile()){
+      document.body.classList.remove('admin-menu-open');
+      toggle.setAttribute('aria-expanded','false');
+      sidebar.removeAttribute('aria-hidden');
+    }else if(!document.body.classList.contains('admin-menu-open'))sidebar.setAttribute('aria-hidden','true');
+  },{passive:true});
+  updateCurrent();
+  if(isMobile())sidebar.setAttribute('aria-hidden','true');
+})();
+
 function skillMonogram(name){return String(name||'?').split(/\s+/).filter(Boolean).map(word=>word[0]).join('').slice(0,3).toUpperCase()||'?'}
 function renderSkills(items){const el=$('#skillsList');if(!el)return;el.innerHTML=(items||[]).slice().sort((a,b)=>(a.sortOrder||0)-(b.sortOrder||0)).map(x=>`<div class="project-item skill-admin-item"><span class="skill-admin-icon"><img src="${esc(x.icon||'')}" alt="" onerror="this.closest('.skill-admin-icon').classList.add('fallback');this.remove()"><b>${esc(skillMonogram(x.name))}</b></span><div><strong>${esc(x.name)}</strong><small>${esc(x.category)} · ${esc(x.level||'')} · ${x.visible?'VISIBLE':'HIDDEN'}${x.featured?' · FEATURED':''}<br>${esc(x.description||'')}</small></div><div class="item-actions"><button type="button" class="admin-btn js-skill-edit" data-id="${esc(x.id||'')}">EDIT</button><button type="button" class="admin-btn danger js-skill-delete" data-id="${esc(x.id||'')}">DELETE</button></div></div>`).join('')||'<p class="notice">No tools added yet.</p>';el.querySelectorAll('.js-skill-edit').forEach(b=>b.onclick=()=>{const x=(items||[]).find(v=>v.id===b.dataset.id);if(!x)return;$('#skillId').value=x.id||'';$('#skillName').value=x.name||'';$('#skillCategory').value=x.category||'Creative / Design';$('#skillIcon').value=x.icon||'';$('#skillLevel').value=x.level||'';$('#skillDescription').value=x.description||'';$('#skillOrder').value=x.sortOrder||0;$('#skillVisible').checked=x.visible!==false;$('#skillFeatured').checked=x.featured!==false;document.querySelector('#maintenanceSkills .panel')?.scrollIntoView({behavior:'smooth',block:'start'})});el.querySelectorAll('.js-skill-delete').forEach(b=>b.onclick=async()=>{const x=(items||[]).filter(v=>v.id!==b.dataset.id);await saveSkills(x)})}
 function renderHomepage(){const root=$('#homepageSections');if(!root)return;homepageSections.sort((a,b)=>a.sortOrder-b.sortOrder).forEach((x,i)=>x.sortOrder=i);root.innerHTML=homepageSections.map((x,i)=>`<article class="homepage-section-card" data-home-section="${esc(x.key)}"><div class="homepage-section-identity"><span class="homepage-section-order">${String(i+1).padStart(2,'0')}</span><div><strong>${esc(x.label)}</strong><small>${esc(x.key)}</small></div></div><label class="homepage-label-field"><span>SECTION LABEL</span><input data-home-label="${i}" value="${esc(x.label)}"></label><div class="homepage-section-actions"><label class="homepage-enabled-toggle"><input type="checkbox" data-home-enabled="${i}" ${x.enabled?'checked':''}><span>${x.enabled?'VISIBLE':'HIDDEN'}</span></label><div class="homepage-move-actions"><button type="button" class="admin-btn" data-home-up="${i}" aria-label="Move ${esc(x.label)} up">↑</button><button type="button" class="admin-btn" data-home-down="${i}" aria-label="Move ${esc(x.label)} down">↓</button></div></div></article>`).join('');root.querySelectorAll('[data-home-label]').forEach(el=>el.addEventListener('input',()=>homepageSections[Number(el.dataset.homeLabel)].label=el.value));root.querySelectorAll('[data-home-enabled]').forEach(el=>el.addEventListener('change',()=>{const item=homepageSections[Number(el.dataset.homeEnabled)];item.enabled=el.checked;const state=el.closest('.homepage-enabled-toggle')?.querySelector('span');if(state)state.textContent=item.enabled?'VISIBLE':'HIDDEN'}));root.querySelectorAll('[data-home-up]').forEach(el=>el.addEventListener('click',()=>{const i=Number(el.dataset.homeUp);if(i>0){[homepageSections[i-1],homepageSections[i]]=[homepageSections[i],homepageSections[i-1]];renderHomepage()}}));root.querySelectorAll('[data-home-down]').forEach(el=>el.addEventListener('click',()=>{const i=Number(el.dataset.homeDown);if(i<homepageSections.length-1){[homepageSections[i+1],homepageSections[i]]=[homepageSections[i],homepageSections[i+1]];renderHomepage()}}))}

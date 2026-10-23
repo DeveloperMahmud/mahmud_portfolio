@@ -371,3 +371,17 @@ test('specialist templates and high-value portfolio widgets share schema editor 
   for(const slug of ['amazon-a-plus-service','amazon-storefront','brand-identity-service','web-ui-service','motion-design-service','campaign-launch'])assert.match(schema,new RegExp(slug));
   assert.doesNotMatch(editor,/@vercel\/blob|put\(/);
 });
+
+test('every registered Page Studio widget is selectable and has a renderer path',()=>{
+  const schema=read('src/lib/page-studio.ts');
+  const editor=read('portfolio/page-studio.js');
+  const renderer=read('portfolio/page-studio-renderer.js');
+  const match=schema.match(/PAGE_STUDIO_WIDGETS=\[([^\]]+)\]/);
+  assert.ok(match,'PAGE_STUDIO_WIDGETS registry was not found');
+  const widgets=[...match[1].matchAll(/'([A-Z_]+)'/g)].map(item=>item[1]);
+  assert.ok(widgets.length>=35,'expected the complete widget registry');
+  for(const widget of widgets){
+    assert.match(editor,new RegExp(`['\"]${widget}['\"]`),`${widget} is missing from the editor library`);
+    assert.match(renderer,new RegExp(`case'${widget}'`),`${widget} is missing from the renderer`);
+  }
+});

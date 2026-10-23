@@ -1,0 +1,29 @@
+.admin-mobile-bar,.admin-menu-backdrop{display:none}
+
+@media(max-width:1050px){
+  .admin-mobile-bar{display:block;position:sticky;top:10px;z-index:80;margin:0 0 16px}
+  .admin-menu-toggle{display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:center;gap:10px;width:100%;min-height:48px;padding:10px 13px;border:1px solid var(--line);background:rgba(10,12,10,.96);color:var(--text);font:700 9px "DM Sans",sans-serif;letter-spacing:.12em;text-align:left;backdrop-filter:blur(14px);cursor:pointer}
+  .admin-menu-toggle strong{min-width:0;color:var(--lime);font-size:8px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .admin-menu-icon{display:grid;gap:3px;width:16px}
+  .admin-menu-icon i{display:block;height:1px;background:currentColor;transition:transform .2s ease,opacity .2s ease}
+  .admin-menu-toggle[aria-expanded=true] .admin-menu-icon i:first-child{transform:translateY(4px) rotate(45deg)}
+  .admin-menu-toggle[aria-expanded=true] .admin-menu-icon i:nth-child(2){opacity:0}
+  .admin-menu-toggle[aria-expanded=true] .admin-menu-icon i:last-child{transform:translateY(-4px) rotate(-45deg)}
+  .admin-shell{display:block!important}
+  .admin-sidebar{display:block!important;position:fixed!important;inset:0 auto 0 0;z-index:102;width:min(84vw,320px);box-sizing:border-box;margin:0;padding:24px 16px 32px!important;overflow-y:auto!important;overscroll-behavior:contain;background:#0b0d0c!important;box-shadow:22px 0 60px rgba(0,0,0,.48);transform:translateX(-105%);transition:transform .24s cubic-bezier(.2,.8,.2,1)}
+  .admin-sidebar .admin-brand,.admin-sidebar .side-group{display:block!important}
+  .admin-sidebar .side-btn{min-width:0!important;padding:12px 10px}
+  .admin-menu-backdrop{position:fixed;inset:0;z-index:101;width:100%;height:100%;border:0;background:rgba(0,0,0,.64);opacity:0;pointer-events:none;transition:opacity .2s ease}
+  body.admin-menu-open{overflow:hidden}
+  body.admin-menu-open .admin-sidebar{transform:translateX(0)}
+  body.admin-menu-open .admin-menu-backdrop{display:block;opacity:1;pointer-events:auto}
+}
+
+@media(max-width:650px){
+  .admin-mobile-bar{top:6px;margin-bottom:12px}
+  .admin-menu-toggle{min-height:46px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .admin-sidebar,.admin-menu-backdrop,.admin-menu-icon i{transition:none!important}
+}

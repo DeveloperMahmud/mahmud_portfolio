@@ -118,3 +118,20 @@ test('public performance avoids duplicate font imports and serves legacy project
   assert.match(app,/stale-while-revalidate=604800/);
   assert.match(app,/stale-while-revalidate=86400/);
 });
+
+test('admin navigation remains discoverable and keyboard accessible on mobile',async()=>{
+  const [html,css,runtime]=await Promise.all([
+    read('portfolio/admin.html'),
+    read('portfolio/admin-mobile-nav.css'),
+    read('portfolio/admin.js')
+  ]);
+  assert.doesNotMatch(html,/^<style>$/m);
+  assert.match(runtime,/id=\"adminMenuToggle\"/);
+  assert.match(runtime,/aria-controls=\"adminSidebar\"/);
+  assert.match(runtime,/admin-mobile-nav\.css/);
+  assert.match(css,/@media\(max-width:1050px\)/);
+  assert.match(css,/body\.admin-menu-open \.admin-sidebar\{transform:translateX\(0\)/);
+  assert.match(runtime,/event\.key==='Escape'/);
+  assert.match(runtime,/aria-expanded/);
+  assert.match(runtime,/closest\('\.side-btn'\)/);
+});
