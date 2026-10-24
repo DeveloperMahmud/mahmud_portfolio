@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const HOMEPAGE_STUDIO_KEY='homepage_studio_state';
 export const HOMEPAGE_SECTION_KEYS=['hero','brands','featured_slider','selected_work','editorial_modules','amazon','capabilities','tools','statement','about','why_me','clients','contact'] as const;
-export const HOMEPAGE_STUDIO_BLOCKS=['HOME_SECTION','HOME_GROUP','SOCIAL_LINKS','CUSTOM_CODE','WEBSITE_EMBED','ANNOUNCEMENT','PROOF_STRIP','PROCESS_STEPS','TESTIMONIAL_CAROUSEL','FAQ'] as const;
+export const HOMEPAGE_STUDIO_BLOCKS=['HOME_SECTION','HOME_GROUP','SOCIAL_LINKS','CUSTOM_CODE','WEBSITE_EMBED','ANNOUNCEMENT','PROOF_STRIP','PROJECT_EXPLORER','BENTO_SNAPSHOT','CASE_STORY','PROCESS_STEPS','TESTIMONIAL_CAROUSEL','FAQ'] as const;
 
 export type HomepageStudioBlock={
   id:string;

@@ -136,13 +136,15 @@ async function validateHomepageEmbeds(layout:z.infer<typeof homepageStudioLayout
 }
 
 router.get('/homepage-studio',async(_req,res)=>{
-  const [row,embedSources,site,projectCount,brandCount,testimonialCount]=await Promise.all([
+  const [row,embedSources,site,projectCount,brandCount,testimonialCount,projects,brands]=await Promise.all([
     homepageStudioRow(),
     db.trustedEmbedSource.findMany({where:{enabled:true,allowIframe:true},orderBy:{name:'asc'}}),
     settings(),
     db.project.count({where:{deletedAt:null}}),
     db.brand.count({where:{deletedAt:null,active:true}}),
-    db.testimonial.count({where:{deletedAt:null}})
+    db.testimonial.count({where:{deletedAt:null}}),
+    db.project.findMany({where:{deletedAt:null,status:'PUBLISHED',visibility:'PUBLIC',clientOnly:false},orderBy:[{featured:'desc'},{sortOrder:'asc'}],take:12,select:{id:true,title:true,slug:true,category:true,service:true,client:true,coverImage:true,homepageImage:true,projectSubtitle:true,description:true,results:true,resultMetrics:{where:{verified:true,visible:true},orderBy:{sortOrder:'asc'},take:3,select:{id:true,label:true,value:true,prefix:true,suffix:true,publicNote:true}}}}),
+    db.brand.findMany({where:{deletedAt:null,active:true},orderBy:{sortOrder:'asc'},take:30,select:{id:true,name:true,logoAsset:true,logoDark:true,url:true,industry:true}})
   ]);
   const resolvedSections=resolveHomepageStudioSections(site as unknown as Record<string,any>);
   resolvedSections.brands.managedCount=brandCount;
@@ -150,7 +152,7 @@ router.get('/homepage-studio',async(_req,res)=>{
   resolvedSections.selected_work.managedCount=projectCount;
   resolvedSections.editorial_modules.managedCount=projectCount;
   resolvedSections.clients.managedCount=testimonialCount;
-  res.json({state:parseHomepageStudioState(row.config),embedSources,resolvedSections,settings:{siteName:site.siteName,socialLinks:site.socialLinks,aboutConfig:site.aboutConfig}});
+  res.json({state:parseHomepageStudioState(row.config),embedSources,resolvedSections,projects,brands,settings:{siteName:site.siteName,socialLinks:site.socialLinks,aboutConfig:site.aboutConfig,email:site.email,availability:site.availability,availabilityLabel:site.availabilityLabel}});
 });
 
 router.patch('/homepage-studio',async(req,res)=>{

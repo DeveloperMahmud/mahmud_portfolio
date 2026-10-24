@@ -385,3 +385,26 @@ test('every registered Page Studio widget is selectable and has a renderer path'
     assert.match(renderer,new RegExp(`case'${widget}'`),`${widget} is missing from the renderer`);
   }
 });
+
+test('interactive portfolio modules use managed CMS data and stay responsive',()=>{
+  const pageSchema=read('src/lib/page-studio.ts');
+  const homeSchema=read('src/lib/homepage-studio.ts');
+  const adminRoute=read('src/routes/page-studio.ts');
+  const publicRoute=read('src/routes/page-studio-public.ts');
+  const homeEditor=read('portfolio/homepage-studio.js');
+  const homeRuntime=read('portfolio/homepage-studio-runtime.js');
+  const homeCss=read('portfolio/homepage-studio-runtime.css');
+  for(const widget of ['PROJECT_EXPLORER','BENTO_SNAPSHOT','CASE_STORY']){
+    assert.match(pageSchema,new RegExp(widget));
+    assert.match(homeSchema,new RegExp(widget));
+    assert.match(homeEditor,new RegExp(widget));
+    assert.match(homeRuntime,new RegExp(`block\\.type==='${widget}'`));
+  }
+  assert.match(pageSchema,/interactive-portfolio/);
+  assert.match(adminRoute,/resultMetrics:\{where:\{verified:true,visible:true\}/);
+  assert.match(publicRoute,/projects:dynamic\.projects,brands:dynamic\.brands/);
+  assert.match(homeRuntime,/aria-selected/);
+  assert.match(homeRuntime,/prefers-reduced-motion/);
+  assert.match(homeCss,/@media\(max-width:600px\)/);
+  assert.match(homeCss,/@media\(prefers-reduced-motion:reduce\)/);
+});
