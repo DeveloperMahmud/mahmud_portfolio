@@ -136,3 +136,18 @@ test('admin navigation remains discoverable and keyboard accessible on mobile',a
   assert.match(runtime,/aria-expanded/);
   assert.match(runtime,/closest\('\.side-btn'\)/);
 });
+
+test('homepage proof strip stays visible with empty draft data and legacy fallback',async()=>{
+  const [studio,runtime,editorial]=await Promise.all([
+    read('portfolio/homepage-studio.js'),
+    read('portfolio/homepage-studio-runtime.js'),
+    read('portfolio/editorial-upgrade.js')
+  ]);
+  assert.match(studio,/added or refreshed in the draft/);
+  assert.match(studio,/!block\.data\.items\.length/);
+  assert.match(studio,/CREATIVE DISCIPLINES/);
+  assert.match(runtime,/proofFallback/);
+  assert.match(runtime,/mountLegacyProof/);
+  assert.match(runtime,/data\.items\.length\?data\.items:proofFallback/);
+  assert.match(editorial,/guardEmptyTestimonials/);
+});
