@@ -408,3 +408,23 @@ test('interactive portfolio modules use managed CMS data and stay responsive',()
   assert.match(homeCss,/@media\(max-width:600px\)/);
   assert.match(homeCss,/@media\(prefers-reduced-motion:reduce\)/);
 });
+
+test('four lightweight futuristic presets stay draft-safe and share visual systems',()=>{
+  const schema=read('src/lib/page-studio.ts');
+  const editor=read('portfolio/homepage-studio.js');
+  const homeRuntime=read('portfolio/homepage-studio-runtime.js');
+  const homeCss=read('portfolio/homepage-studio-runtime.css');
+  const pageCss=read('portfolio/page-studio-public.css');
+  for(const name of ['Neon Grid Portfolio','Signal Bento','Case File Editorial','Soft Future']){
+    assert.match(schema,new RegExp(name));
+    assert.match(editor,new RegExp(name));
+  }
+  for(const visual of ['NEON_GRID','SIGNAL_BENTO','CASE_FILE','SOFT_FUTURE']){
+    assert.match(editor,new RegExp(visual));
+    assert.match(homeCss,new RegExp(visual));
+  }
+  assert.match(homeRuntime,/dataset\.homeVisual/);
+  assert.match(pageCss,/ps-theme-neon/);
+  assert.match(pageCss,/ps-theme-soft/);
+  assert.match(editor,/unsaved draft/i);
+});
