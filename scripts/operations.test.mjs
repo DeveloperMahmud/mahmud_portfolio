@@ -43,3 +43,13 @@ test('Vercel migration retries advisory-lock contention without disabling databa
   assert.match(source,/attemptTimeoutMs/);
   assert.doesNotMatch(source,/PRISMA_SCHEMA_DISABLE_ADVISORY_LOCK/);
 });
+
+test('generic revision tools compare and restore Page Studio drafts without overwriting live snapshots',async()=>{
+  const route=await fs.readFile(new URL('../src/routes/operations.ts',import.meta.url),'utf8');
+  assert.match(route,/revision\.resourceType==='HOMEPAGE_STUDIO'/);
+  assert.match(route,/rev\.resourceType==='CUSTOM_PAGE'/);
+  assert.match(route,/studioBlocksSchema\.parse/);
+  assert.match(route,/snapshotState\.published\|\|snapshotState\.draft/);
+  assert.match(route,/next=\{\.\.\.currentState,draft:/);
+  assert.doesNotMatch(route,/HOMEPAGE_STUDIO'[\s\S]{0,900}live:false/);
+});

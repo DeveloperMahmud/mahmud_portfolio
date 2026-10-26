@@ -137,6 +137,18 @@ test('admin navigation remains discoverable and keyboard accessible on mobile',a
   assert.match(runtime,/closest\('\.side-btn'\)/);
 });
 
+test('CMS roles expose only appropriate workspaces and keep viewer and writer actions safe',async()=>{
+  const [admin,rbac]=await Promise.all([read('portfolio/admin.js'),read('src/lib/rbac.ts')]);
+  assert.match(admin,/const roleTabs=/);
+  assert.match(admin,/document\.body\.dataset\.cmsRole=currentCmsRole/);
+  assert.match(admin,/viewer=currentCmsRole==='VIEWER'/);
+  assert.match(admin,/writer=currentCmsRole==='WRITER'/);
+  assert.match(admin,/PRIVATE LEADS HIDDEN/);
+  assert.match(rbac,/Writers can only edit records that are already drafts/);
+  assert.match(rbac,/Viewer accounts have read-only access/);
+  assert.match(rbac,/Administrator access is required for accounts, system controls, recovery and global site settings/);
+});
+
 test('homepage proof strip stays visible with empty draft data and legacy fallback',async()=>{
   const [studio,runtime,editorial]=await Promise.all([
     read('portfolio/homepage-studio.js'),

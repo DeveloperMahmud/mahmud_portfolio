@@ -29,7 +29,7 @@ The builder deliberately has no paid third-party runtime dependency. Trusted ext
    npx prisma migrate deploy
    ```
 
-4. Add `PAGE_STUDIO_ENABLED=true` to the Vercel project environments where the protected builder should exist. Use Production and Preview if both are needed.
+4. No environment variable is required to enable Page Studio normally. Use the CMS **Free-tier & Activation** controls for routine access and public delivery. `PAGE_STUDIO_EMERGENCY_DISABLED=true` is an emergency lock only; leave it unset or `false` during normal operation.
 5. Redeploy the same commit. Sign in to the existing CMS and open **Page Studio** from the sidebar.
 6. Keep **PUBLIC CUSTOM PAGES** off while building and testing. Private Preview works while public delivery is off.
 7. Create a test page at `/pages/test-page`, verify all three device previews, save, and publish it.
@@ -39,7 +39,7 @@ Two switches protect production: the Vercel environment variable enables the mod
 
 ## Rollback
 
-For an immediate no-data-loss rollback, turn off **PUBLIC CUSTOM PAGES** or set `PAGE_STUDIO_ENABLED=false` and redeploy. Existing portfolio routes remain active. Do not reverse or delete migration tables during an incident; use a forward fix after service is stable.
+For an immediate no-data-loss rollback, turn off **PUBLIC CUSTOM PAGES** in the CMS. If the protected builder itself must be locked during an incident, set `PAGE_STUDIO_EMERGENCY_DISABLED=true` and redeploy. Existing portfolio routes remain active. Do not reverse or delete migration tables during an incident; use a forward fix after service is stable.
 
 ## Local verification
 
@@ -53,4 +53,4 @@ npm run test:operations
 npm run test:slider
 ```
 
-Set local `DATABASE_URL`, `JWT_SECRET`, and `PAGE_STUDIO_ENABLED=true`, then run `npm run dev`. Sign in at `/admin.html` and open `/page-studio.html`.
+Set local `DATABASE_URL` and `JWT_SECRET`, then run `npm run dev`. Sign in at `/admin.html` and open `/page-studio.html`. Make sure `PAGE_STUDIO_EMERGENCY_DISABLED` is unset or `false`.

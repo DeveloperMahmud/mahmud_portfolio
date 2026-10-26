@@ -428,3 +428,57 @@ test('four lightweight futuristic presets stay draft-safe and share visual syste
   assert.match(pageCss,/ps-theme-soft/);
   assert.match(editor,/unsaved draft/i);
 });
+
+test('Page Studio protects concurrent edits and saves before opening preview',()=>{
+  const route=read('src/routes/page-studio.ts');
+  const pageEditor=read('portfolio/page-studio.js');
+  const homeEditor=read('portfolio/homepage-studio.js');
+  assert.match(route,/EXPECTED_VERSION_REQUIRED/);
+  assert.match(route,/code:'EDIT_CONFLICT'/);
+  assert.match(route,/updateMany\(\{where:\{id:existing\.id,updatedAt:expectedUpdatedAt\}/);
+  assert.match(route,/expected=req\.body\?\.expectedUpdatedAt\?\?null/);
+  assert.match(pageEditor,/studioPreview'\)\.onclick=async/);
+  assert.match(pageEditor,/Preview stopped because the latest draft could not be saved/);
+  assert.match(homeEditor,/expectedUpdatedAt:state\.updatedAt\?\?null/);
+  assert.match(homeEditor,/if\(dirty&&!await save\(\)\)return/);
+});
+
+test('publish preflight blocks sample copy, broken CTAs and missing image alternatives',()=>{
+  const route=read('src/routes/page-studio.ts');
+  const pageEditor=read('portfolio/page-studio.js');
+  const homeEditor=read('portfolio/homepage-studio.js');
+  assert.match(route,/function studioPublishIssues/);
+  assert.match(route,/PLACEHOLDER_CONTENT/);
+  assert.match(route,/MISSING_IMAGE_ALT/);
+  assert.match(route,/BROKEN_CTA/);
+  assert.match(route,/status\(422\).*issues/);
+  assert.match(pageEditor,/Array\.isArray\(data\.issues\)/);
+  assert.match(homeEditor,/Array\.isArray\(data\.issues\)/);
+});
+
+test('role scopes protect private CMS data and global Page Studio controls',()=>{
+  const rbac=read('src/lib/rbac.ts');
+  const route=read('src/routes/page-studio.ts');
+  const editor=read('portfolio/page-studio.js');
+  const homeEditor=read('portfolio/homepage-studio.js');
+  assert.match(rbac,/const readScopes/);
+  assert.match(rbac,/This account cannot view that CMS area/);
+  assert.match(rbac,/const editorWriteScopes/);
+  assert.match(rbac,/Administrator access is required for accounts, system controls, recovery and global site settings/);
+  for(const endpoint of ['reusable-blocks','templates','taxonomy','navigation','embed-sources','config'])assert.match(route,new RegExp(`router\\.(?:post|patch|delete)\\('\\/${endpoint}[^\\n]*adminOnly`));
+  assert.match(route,/permissions:\{editContent:\['ADMIN','EDITOR'\]\.includes\(role\(res\)\),manageGlobalControls/);
+  assert.match(editor,/canManageGlobalControls/);
+  assert.match(editor,/canEditContent/);
+  assert.match(editor,/READ ONLY/);
+  assert.match(editor,/PAGE_STUDIO_DROP'&&current&&canEditContent\(\)/);
+  assert.match(homeEditor,/canEditContent/);
+  assert.match(homeEditor,/hs-read-only/);
+});
+
+test('disabled Page Studio remains recoverable and guide documents the emergency lock',()=>{
+  const route=read('src/routes/page-studio.ts');
+  const guide=read('PAGE_STUDIO_GUIDE.md');
+  assert.match(route,/req\.path==='\/bootstrap'\|\|req\.path==='\/config'/);
+  assert.match(guide,/PAGE_STUDIO_EMERGENCY_DISABLED=true/);
+  assert.doesNotMatch(guide,/PAGE_STUDIO_ENABLED/);
+});
