@@ -151,7 +151,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/#admin-/);
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
-  assert.match(html,/admin\.js\?v=20261027-1/);
+  assert.match(html,/admin\.js\?v=20261027-2/);
   assert.match(polish,/2026 admin shell refresh/);
   assert.match(account,/HOW THE PRIVATE ADMIN URL WORKS/);
 });
