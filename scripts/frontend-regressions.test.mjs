@@ -154,10 +154,11 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261027-3/);
   assert.match(html,/admin-page-studio\.js\?v=20261027-2/);
-  assert.match(html,/admin-navigation-runtime\.js\?v=20261027-3/);
+  assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
   assert.match(navigation,/MutationObserver/);
   assert.match(navigation,/window\.openAdminTab\?\./);
+  assert.match(navigation,/button\.onclick=event/);
   assert.match(navigation,/window\.applyAdminRoleAccess\?\./);
   assert.match(navigation,/dataset\.cmsRole==='ADMIN'/);
   assert.match(navigation,/button\.hidden=false/);

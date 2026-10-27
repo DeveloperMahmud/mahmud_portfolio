@@ -9,11 +9,11 @@
     root.querySelectorAll?.(selector).forEach(button=>{
       if(button.dataset.adminNavBound==='true')return;
       button.dataset.adminNavBound='true';
-      button.addEventListener('click',event=>{
+      button.onclick=event=>{
         if(button.disabled||button.hidden)return;
         event.preventDefault();
         window.openAdminTab?.(button.dataset.tab);
-      });
+      };
     });
     queueMicrotask(syncRoleVisibility);
   }
