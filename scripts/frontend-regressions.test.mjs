@@ -138,9 +138,10 @@ test('admin navigation remains discoverable and keyboard accessible on mobile',a
 });
 
 test('admin destinations use delegated navigation and versioned shell assets',async()=>{
-  const [html,runtime,polish,account]=await Promise.all([
+  const [html,runtime,navigation,polish,account]=await Promise.all([
     read('portfolio/admin.html'),
     read('portfolio/admin.js'),
+    read('portfolio/admin-navigation-runtime.js'),
     read('portfolio/admin-ui-polish.css'),
     read('portfolio/admin-account-upgrade.js')
   ]);
@@ -152,6 +153,10 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261027-2/);
+  assert.match(html,/admin-navigation-runtime\.js\?v=20261027-1/);
+  assert.match(navigation,/dataset\.adminNavBound/);
+  assert.match(navigation,/MutationObserver/);
+  assert.match(navigation,/window\.openAdminTab\?\./);
   assert.match(polish,/2026 admin shell refresh/);
   assert.match(account,/HOW THE PRIVATE ADMIN URL WORKS/);
 });
