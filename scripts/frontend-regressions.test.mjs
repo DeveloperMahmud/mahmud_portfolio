@@ -152,7 +152,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/#admin-/);
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
-  assert.match(html,/admin\.js\?v=20261027-3/);
+  assert.match(html,/admin\.js\?v=20261027-4/);
   assert.match(html,/admin-page-studio\.js\?v=20261027-2/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
@@ -163,6 +163,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(navigation,/dataset\.cmsRole==='ADMIN'/);
   assert.match(navigation,/button\.hidden=false/);
   assert.match(runtime,/window\.applyAdminRoleAccess=applyRoleAccess/);
+  assert.match(runtime,/Object\.hasOwn\(roleTabs,currentCmsRole\)\?roleTabs\[currentCmsRole\]:roleTabs\.VIEWER/);
   assert.match(polish,/\[hidden\]\{display:none!important\}/);
   assert.match(polish,/2026 admin shell refresh/);
   assert.match(account,/HOW THE PRIVATE ADMIN URL WORKS/);
