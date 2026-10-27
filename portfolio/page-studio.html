@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/page-studio.css">
+  <link rel="stylesheet" href="/page-studio.css?v=20261027-studio-v3">
   <link rel="stylesheet" href="/admin-ui-polish.css?v=20261014-3">
 </head>
 <body>
@@ -44,6 +44,6 @@
   <div id="studioToast" class="studio-toast" role="status"></div>
   <dialog id="newPageDialog" class="studio-dialog"><form method="dialog" id="newPageForm"><header><div><span>NEW CUSTOM PAGE</span><h2>Start with structure.</h2></div><button value="cancel" aria-label="Close">×</button></header><label>PAGE TITLE<input id="newPageTitle" required maxlength="160"></label><label>SLUG<input id="newPageSlug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*"></label><label>STARTING TEMPLATE<select id="newPageTemplate"></select></label><footer><button value="cancel">CANCEL</button><button id="createPage" value="default" class="primary">CREATE PAGE</button></footer></form></dialog>
   <dialog id="mediaPickerDialog" class="studio-dialog media-picker"><div class="media-picker-shell"><header><div><span>EXISTING ASSETS</span><h2>Choose media.</h2></div><button id="closeMediaPicker" type="button" aria-label="Close">×</button></header><label>SEARCH MEDIA<input id="mediaPickerSearch" placeholder="Filename, title or alt text"></label><div id="mediaPickerGrid" class="media-picker-grid"></div><footer><small>Selecting an existing asset performs zero Blob writes.</small><button id="cancelMediaPicker" type="button">CANCEL</button></footer></div></dialog>
-  <script src="/page-studio.js" defer></script>
+  <script src="/page-studio.js?v=20261027-studio-v3" defer></script>
 </body>
 </html>

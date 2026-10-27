@@ -1,15 +1,24 @@
 import { z } from 'zod';
 
-export const PAGE_STUDIO_SCHEMA_VERSION=2;
+export const PAGE_STUDIO_SCHEMA_VERSION=3;
+export const PAGE_STUDIO_WIDGET_VERSION=1;
 export const PAGE_STUDIO_WIDGETS=['SECTION','COLUMNS','HERO','HEADING','TEXT','RICH_TEXT','BUTTON','IMAGE','GALLERY','VIDEO','CTA','STATS','QUOTE','EDITORIAL_SHOWCASE','COLLECTION_GRID','IMAGE_TEXT_SPLIT','FEATURE_CARDS','TRUST_STRIP','OUTCOME_METRICS','PROCESS_TIMELINE','BEFORE_AFTER','FILTERABLE_PROJECT_GRID','PROJECT_EXPLORER','BENTO_SNAPSHOT','CASE_STORY','SERVICE_PACKAGES','MEDIA_MOSAIC','AVAILABILITY_CTA','TESTIMONIAL_CAROUSEL','PROJECT_GRID','JOURNAL_FEED','BRAND_GRID','SOCIAL_LINKS','CV_DOWNLOAD','CONTACT','FAQ','SPACER','DIVIDER','LOTTIE','EMBED','WEBSITE_EMBED','CUSTOM_CODE'] as const;
 export type PageStudioWidgetType=typeof PAGE_STUDIO_WIDGETS[number];
 
+const widgetGroups:Record<string,readonly PageStudioWidgetType[]>={
+  LAYOUT:['SECTION','COLUMNS','SPACER','DIVIDER'],CONTENT:['HERO','HEADING','TEXT','RICH_TEXT','STATS','QUOTE','OUTCOME_METRICS','PROCESS_TIMELINE','CASE_STORY'],CONVERSION:['BUTTON','CTA','COLLECTION_GRID','FEATURE_CARDS','SERVICE_PACKAGES','AVAILABILITY_CTA','CONTACT','FAQ'],MEDIA:['IMAGE','GALLERY','VIDEO','BEFORE_AFTER','MEDIA_MOSAIC'],EDITORIAL:['EDITORIAL_SHOWCASE','IMAGE_TEXT_SPLIT','BENTO_SNAPSHOT'],DYNAMIC:['TRUST_STRIP','FILTERABLE_PROJECT_GRID','PROJECT_EXPLORER','TESTIMONIAL_CAROUSEL','PROJECT_GRID','JOURNAL_FEED','BRAND_GRID','SOCIAL_LINKS','CV_DOWNLOAD'],MOTION:['LOTTIE'],EMBED:['EMBED','WEBSITE_EMBED'],ADVANCED:['CUSTOM_CODE']
+};
+const widgetLabels:Partial<Record<PageStudioWidgetType,string>>={RICH_TEXT:'Rich text',EDITORIAL_SHOWCASE:'Editorial showcase',COLLECTION_GRID:'Collection grid',IMAGE_TEXT_SPLIT:'Image + text split',FEATURE_CARDS:'Feature cards',TRUST_STRIP:'Trust strip',OUTCOME_METRICS:'Outcome metrics',PROCESS_TIMELINE:'Process timeline',BEFORE_AFTER:'Before / after',FILTERABLE_PROJECT_GRID:'Filterable projects',PROJECT_EXPLORER:'Project explorer',BENTO_SNAPSHOT:'Bento snapshot',CASE_STORY:'Case story',SERVICE_PACKAGES:'Service packages',MEDIA_MOSAIC:'Media mosaic',AVAILABILITY_CTA:'Availability CTA',TESTIMONIAL_CAROUSEL:'Testimonial carousel',PROJECT_GRID:'Project grid',JOURNAL_FEED:'Journal feed',BRAND_GRID:'Brand grid',SOCIAL_LINKS:'Social links',CV_DOWNLOAD:'CV download',WEBSITE_EMBED:'Website embed',CUSTOM_CODE:'HTML / CSS / JS'};
+const widgetDescriptions:Partial<Record<PageStudioWidgetType,string>>={SECTION:'A themed container for nested widgets.',COLUMNS:'Responsive nested columns, up to six.',HERO:'Large page introduction and CTA.',HEADING:'Semantic H1-H6 title and eyebrow.',TEXT:'Responsive paragraph or short body copy.',RICH_TEXT:'Readable long-form copy.',BUTTON:'Standalone configurable action button.',IMAGE:'Media Library or external CDN image.',GALLERY:'Multiple images in a responsive grid.',VIDEO:'Hosted video or approved embed.',CTA:'Focused conversion section.',STATS:'Metrics and proof points.',QUOTE:'Testimonial or statement.',TRUST_STRIP:'Live CMS brand logos in a credibility rail.',PROJECT_EXPLORER:'Image-led project tabs from published work.',TESTIMONIAL_CAROUSEL:'Auto-moving cards from CMS testimonials.',PROJECT_GRID:'Live published projects.',JOURNAL_FEED:'Live published articles.',BRAND_GRID:'Live brand collection.',SOCIAL_LINKS:'Site Settings social profiles.',CV_DOWNLOAD:'Current CMS-managed CV.',CONTACT:'Friendly inquiry prompt.',LOTTIE:'URL, pasted JSON or local JSON file.',EMBED:'Trusted iframe source.',WEBSITE_EMBED:'Approved external website iframe.',CUSTOM_CODE:'Isolated custom code with network access disabled.'};
+export const PAGE_STUDIO_WIDGET_REGISTRY=PAGE_STUDIO_WIDGETS.map(type=>({type,version:PAGE_STUDIO_WIDGET_VERSION,group:Object.entries(widgetGroups).find(([,types])=>types.includes(type))?.[0]||'CONTENT',label:widgetLabels[type]||type.toLowerCase().split('_').map(word=>word[0].toUpperCase()+word.slice(1)).join(' '),description:widgetDescriptions[type]||'Reusable responsive portfolio component.'}));
+
 const jsonRecord=z.record(z.string(),z.unknown()).default({});
-export type StudioBlock={id:string;type:PageStudioWidgetType;enabled:boolean;data:Record<string,unknown>;style:Record<string,unknown>;responsive:Record<string,unknown>;motion:Record<string,unknown>;children:StudioBlock[];globalBlockId?:string|null;globalVersion?:number|null};
+export type StudioBlock={id:string;type:PageStudioWidgetType;widgetVersion:number;enabled:boolean;data:Record<string,unknown>;style:Record<string,unknown>;responsive:Record<string,unknown>;motion:Record<string,unknown>;children:StudioBlock[];globalBlockId?:string|null;globalVersion?:number|null};
 
 export const studioBlockSchema:z.ZodType<StudioBlock>=z.lazy(()=>z.object({
   id:z.string().min(1).max(90),
   type:z.enum(PAGE_STUDIO_WIDGETS),
+  widgetVersion:z.number().int().min(1).max(PAGE_STUDIO_WIDGET_VERSION).default(PAGE_STUDIO_WIDGET_VERSION),
   enabled:z.boolean().default(true),
   data:jsonRecord,
   style:jsonRecord,
@@ -85,7 +94,7 @@ export function defaultBlock(type:PageStudioWidgetType,id:string):StudioBlock{
   content.DIVIDER={style:'SOLID',width:100};
   content.LOTTIE={...content.LOTTIE,animationData:null};
   content.CUSTOM_CODE={...content.CUSTOM_CODE,html:'<div class="custom-card"><h2>Custom block</h2><p>Add isolated HTML, CSS and JavaScript.</p></div>',js:''};
-  return {id,type,enabled:true,data:content[type],style:{theme:'DEFAULT',align:'LEFT',padding:'MEDIUM',marginTop:0,marginBottom:0,paddingX:0,paddingY:0,borderWidth:0,borderRadius:0,borderColor:'',backgroundColor:'',textColor:'',customClass:'',customCss:''},responsive:{hideDesktop:false,hideTablet:false,hideMobile:false},motion:{enabled:false},children:[]};
+  return {id,type,widgetVersion:PAGE_STUDIO_WIDGET_VERSION,enabled:true,data:content[type],style:{theme:'DEFAULT',align:'LEFT',padding:'MEDIUM',marginTop:0,marginBottom:0,paddingX:0,paddingY:0,borderWidth:0,borderRadius:0,borderColor:'',backgroundColor:'',textColor:'',customClass:'',customCss:''},responsive:{hideDesktop:false,hideTablet:false,hideMobile:false},motion:{enabled:false},children:[]};
 }
 
 function presetBlock(type:PageStudioWidgetType,id:string,visual:'NEON_GRID'|'SIGNAL_BENTO'|'CASE_FILE'|'SOFT_FUTURE',data:Record<string,unknown>={}){
@@ -120,7 +129,13 @@ export const DEFAULT_PAGE_TEMPLATES=[
 ];
 
 export function slugify(value:string){return value.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,80)}
-export function cloneBlocks(value:unknown){return JSON.parse(JSON.stringify(studioBlocksSchema.parse(value))) as StudioBlock[]}
+function migrateBlockValue(value:unknown):unknown{
+  if(!value||typeof value!=='object'||Array.isArray(value))return value;
+  const block=value as Record<string,unknown>;
+  return {...block,widgetVersion:Number(block.widgetVersion)||PAGE_STUDIO_WIDGET_VERSION,data:block.data&&typeof block.data==='object'&&!Array.isArray(block.data)?block.data:{},style:block.style&&typeof block.style==='object'&&!Array.isArray(block.style)?block.style:{},responsive:block.responsive&&typeof block.responsive==='object'&&!Array.isArray(block.responsive)?block.responsive:{},motion:block.motion&&typeof block.motion==='object'&&!Array.isArray(block.motion)?block.motion:{},children:Array.isArray(block.children)?block.children.map(migrateBlockValue):[]};
+}
+export function migrateStudioBlocks(value:unknown){return studioBlocksSchema.parse(Array.isArray(value)?value.map(migrateBlockValue):value)}
+export function cloneBlocks(value:unknown){return JSON.parse(JSON.stringify(migrateStudioBlocks(value))) as StudioBlock[]}
 
 export function resolveGlobalBlocks(blocks:StudioBlock[],masters:Array<{id:string;version:number;mode:string;active:boolean;block:unknown}>){
   const byId=new Map(masters.filter(item=>item.active&&item.mode==='GLOBAL').map(item=>[item.id,item]));

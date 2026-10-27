@@ -1,12 +1,14 @@
 import { z } from 'zod';
 
 export const HOMEPAGE_STUDIO_KEY='homepage_studio_state';
+export const HOMEPAGE_STUDIO_WIDGET_VERSION=1;
 export const HOMEPAGE_SECTION_KEYS=['hero','brands','featured_slider','selected_work','editorial_modules','amazon','capabilities','tools','statement','about','why_me','clients','contact'] as const;
 export const HOMEPAGE_STUDIO_BLOCKS=['HOME_SECTION','HOME_GROUP','SOCIAL_LINKS','CUSTOM_CODE','WEBSITE_EMBED','ANNOUNCEMENT','PROOF_STRIP','PROJECT_EXPLORER','BENTO_SNAPSHOT','CASE_STORY','PROCESS_STEPS','TESTIMONIAL_CAROUSEL','FAQ'] as const;
 
 export type HomepageStudioBlock={
   id:string;
   type:typeof HOMEPAGE_STUDIO_BLOCKS[number];
+  widgetVersion:number;
   enabled:boolean;
   data:Record<string,unknown>;
   children:HomepageStudioBlock[];
@@ -16,6 +18,7 @@ const record=z.record(z.string(),z.unknown()).default({});
 export const homepageStudioBlockSchema:z.ZodType<HomepageStudioBlock>=z.lazy(()=>z.object({
   id:z.string().min(1).max(90),
   type:z.enum(HOMEPAGE_STUDIO_BLOCKS),
+  widgetVersion:z.number().int().min(1).max(HOMEPAGE_STUDIO_WIDGET_VERSION).default(HOMEPAGE_STUDIO_WIDGET_VERSION),
   enabled:z.boolean().default(true),
   data:record,
   children:z.array(homepageStudioBlockSchema).max(30).default([])
@@ -97,9 +100,10 @@ export function defaultHomepageStudioLayout():HomepageStudioLayout{
   return {version:1,blocks:HOMEPAGE_SECTION_KEYS.map(key=>({
     id:`home-${key}`,
     type:'HOME_SECTION' as const,
+    widgetVersion:HOMEPAGE_STUDIO_WIDGET_VERSION,
     enabled:true,
     data:{sectionKey:key,label:labels[key]},
-    children:key==='about'?[{id:'home-about-socials',type:'SOCIAL_LINKS' as const,enabled:true,data:{heading:'Find me online',style:'BUTTONS'},children:[]}]:[]
+    children:key==='about'?[{id:'home-about-socials',type:'SOCIAL_LINKS' as const,widgetVersion:HOMEPAGE_STUDIO_WIDGET_VERSION,enabled:true,data:{heading:'Find me online',style:'BUTTONS'},children:[]}]:[]
   }))};
 }
 

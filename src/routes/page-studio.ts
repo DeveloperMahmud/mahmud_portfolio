@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { db } from '../lib/db.js';
 import { requireAuth } from '../lib/auth.js';
 import { createRevision } from '../lib/revisions.js';
-import { DEFAULT_PAGE_STUDIO_CONFIG, DEFAULT_PAGE_TEMPLATES, cloneBlocks, normalizePagePath, pageStudioConfigSchema, pageStudioSystemEnabled, parsePageStudioConfig, resolveGlobalBlocks, slugify, studioBlockSchema, studioBlocksSchema, type StudioBlock } from '../lib/page-studio.js';
+import { DEFAULT_PAGE_STUDIO_CONFIG, DEFAULT_PAGE_TEMPLATES, PAGE_STUDIO_SCHEMA_VERSION, PAGE_STUDIO_WIDGET_REGISTRY, cloneBlocks, normalizePagePath, pageStudioConfigSchema, pageStudioSystemEnabled, parsePageStudioConfig, resolveGlobalBlocks, slugify, studioBlockSchema, studioBlocksSchema, type StudioBlock } from '../lib/page-studio.js';
 import { HOMEPAGE_STUDIO_KEY, collectHomepageBlocks, defaultHomepageStudioState, homepageStudioLayoutSchema, parseHomepageStudioState, resolveHomepageStudioSections } from '../lib/homepage-studio.js';
 
 const router=Router();
@@ -56,11 +56,18 @@ async function studioPublishIssues(input:{title?:string;seoTitle?:string|null;se
   const issues:PublishIssue[]=[],blocks=allBlocks(input.blocks),add=(code:PublishIssue['code'],severity:PublishIssue['severity'],message:string,blockId?:string)=>issues.push({code,severity,message,blockId});
   if(!blocks.length)add('EMPTY_PAGE','ERROR','Add at least one visible widget before publishing.');
   const enabled=blocks.filter(block=>block.enabled!==false);
-  if(!enabled.some(block=>block.type==='HERO'||(block.type==='HEADING'&&Number(block.data.level)===1)))add('MISSING_H1','WARNING','Add one clear H1 using a Hero or H1 Heading widget.');
+  const h1Blocks=enabled.filter(block=>block.type==='HERO'||(block.type==='HEADING'&&Number(block.data.level)===1));
+  if(!h1Blocks.length)add('MISSING_H1','WARNING','Add one clear H1 using a Hero or H1 Heading widget.');
+  if(h1Blocks.length>1)add('MULTIPLE_H1','WARNING','Use one primary H1 per page; change additional Hero or Heading widgets to lower heading levels.');
+  if(enabled.length>80)add('LARGE_PAGE','WARNING','This page has more than 80 visible widgets. Review performance and split very long content when practical.');
   for(const block of enabled){
     if(blockTextValues(block.data).some(value=>placeholderPattern.test(value)))add('PLACEHOLDER_CONTENT','ERROR','Replace sample or placeholder copy before publishing.',block.id);
     if(block.type==='IMAGE'&&String(block.data.url||'').trim()&&!String(block.data.alt||'').trim())add('MISSING_IMAGE_ALT','ERROR','Add alternative text to this image, or remove it if it is decorative.',block.id);
     if(block.type==='GALLERY'&&Array.isArray(block.data.items)&&block.data.items.some((item:any)=>String(item?.url||'').trim()&&!String(item?.alt||'').trim()))add('MISSING_GALLERY_ALT','ERROR','Every meaningful gallery image needs alternative text.',block.id);
+    if(block.type==='BEFORE_AFTER'&&(!String(block.data.beforeImage||'').trim()||!String(block.data.afterImage||'').trim()))add('INCOMPLETE_COMPARISON','ERROR','Before / after widgets need both images before publishing.',block.id);
+    if(block.type==='BEFORE_AFTER'&&(!String(block.data.beforeAlt||'').trim()||!String(block.data.afterAlt||'').trim()))add('MISSING_COMPARISON_ALT','ERROR','Add alternative text for both comparison images.',block.id);
+    if(['VIDEO','EMBED','WEBSITE_EMBED'].includes(block.type)&&String(block.data.url||'').trim()&&!String(block.data.title||'').trim())add('MISSING_EMBED_TITLE','ERROR','Add an accessible title to this media or embed widget.',block.id);
+    if(block.type==='CUSTOM_CODE'&&(String(block.data.html||'').trim()||String(block.data.css||'').trim()||String(block.data.js||'').trim()))add('CUSTOM_CODE_REVIEW','WARNING','Custom code is isolated, but should still be reviewed on desktop, tablet and mobile before publishing.',block.id);
     if(['BUTTON','CTA','HERO','AVAILABILITY_CTA'].includes(block.type)){
       const label=String(block.data.label||block.data.ctaLabel||block.data.primaryLabel||'').trim(),url=String(block.data.url||block.data.ctaUrl||block.data.primaryUrl||'').trim();
       if(label&&!url)add('BROKEN_CTA','ERROR','A visible CTA label needs a destination URL.',block.id);
@@ -94,7 +101,7 @@ router.get('/bootstrap',async(_req,res)=>{
   ]);
   const dynamic={projects,content,brands,testimonials,settings:{siteName:siteSettings.siteName,title:siteSettings.title,navigationConfig:siteSettings.navigationConfig,footerConfig:siteSettings.footerConfig,aboutConfig:siteSettings.aboutConfig,socialLinks:siteSettings.socialLinks,featureFlags:siteSettings.featureFlags}};
   const resolvedPages=pages.map(page=>({...page,blocks:resolveGlobalBlocks(studioBlocksSchema.parse(page.blocks),reusableBlocks)}));
-  res.json({systemEnabled:true,config:studioConfig,permissions:{editContent:['ADMIN','EDITOR'].includes(role(res)),manageGlobalControls:role(res)==='ADMIN'},pages:resolvedPages,templates,reusableBlocks,taxonomy,navigationPresets,embedSources,media,dynamic,usage:{mediaAssets:mediaCount,mediaBytes:mediaBytes._sum.size||0,configuredMediaQuota:Number(process.env.MEDIA_STORAGE_QUOTA_BYTES||1073741824)},limits:{blobWritesOnPageSave:0,mediaCopiedOnDuplicate:false}});
+  res.json({systemEnabled:true,schemaVersion:PAGE_STUDIO_SCHEMA_VERSION,widgetRegistry:PAGE_STUDIO_WIDGET_REGISTRY,config:studioConfig,permissions:{editContent:['ADMIN','EDITOR'].includes(role(res)),manageGlobalControls:role(res)==='ADMIN'},pages:resolvedPages,templates,reusableBlocks,taxonomy,navigationPresets,embedSources,media,dynamic,usage:{mediaAssets:mediaCount,mediaBytes:mediaBytes._sum.size||0,configuredMediaQuota:Number(process.env.MEDIA_STORAGE_QUOTA_BYTES||1073741824)},limits:{blobWritesOnPageSave:0,mediaCopiedOnDuplicate:false}});
 });
 
 router.get('/pages/:id',async(req,res)=>{const [page,masters]=await Promise.all([db.customPage.findFirst({where:{id:req.params.id,deletedAt:null},include:{taxonomy:{include:{term:true}},navbarPreset:true}}),db.reusableBlock.findMany({where:{active:true}})]);if(!page)return res.status(404).json({error:'Page not found.'});res.json({page:{...page,blocks:resolveGlobalBlocks(studioBlocksSchema.parse(page.blocks),masters)}});});

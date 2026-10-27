@@ -35,7 +35,17 @@ The builder deliberately has no paid third-party runtime dependency. Trusted ext
 7. Create a test page at `/pages/test-page`, verify all three device previews, save, and publish it.
 8. Turn on **Manage → Free-tier & activation → PUBLIC CUSTOM PAGES** only after the test is approved.
 
-Two switches protect production: the Vercel environment variable enables the module, while the CMS public switch enables published custom-page delivery. Turning either switch off leaves all stored builder data intact.
+Two CMS switches protect production: **CMS ENABLED** controls editing and **PUBLIC CUSTOM PAGES** controls delivery. The optional `PAGE_STUDIO_EMERGENCY_DISABLED=true` environment variable is a final incident lock. Turning any of these controls off leaves stored builder data intact.
+
+## Studio Foundation v3
+
+- The server now owns the canonical widget registry used by the editor library. This prevents labels, categories and supported widget versions drifting between the API and browser UI.
+- Every Page Studio block has a `widgetVersion`. Older blocks are normalized automatically when read or saved, without rewriting the live published snapshot until the page is explicitly published again.
+- Global design tokens live inside the existing `themeConfig` JSON, so no destructive database migration is required. Admins can control heading/body fonts, content width, section spacing, base radius and motion scale alongside the existing colors and grain settings.
+- Columns support explicit tablet and mobile column counts. Existing layouts keep safe inherited defaults.
+- Publish preflight also checks multiple H1 widgets, incomplete comparisons, untitled embeds, large pages and custom-code review requirements.
+
+The upgrade is backward compatible: published snapshots, legacy homepage sections, templates and reusable blocks continue to parse through the migration layer.
 
 ## Rollback
 

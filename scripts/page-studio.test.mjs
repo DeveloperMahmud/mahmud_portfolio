@@ -482,3 +482,61 @@ test('disabled Page Studio remains recoverable and guide documents the emergency
   assert.match(guide,/PAGE_STUDIO_EMERGENCY_DISABLED=true/);
   assert.doesNotMatch(guide,/PAGE_STUDIO_ENABLED/);
 });
+
+test('Studio Foundation v3 centralizes widget metadata and migrates legacy blocks',()=>{
+  const schema=read('src/lib/page-studio.ts');
+  const route=read('src/routes/page-studio.ts');
+  const editor=read('portfolio/page-studio.js');
+  assert.match(schema,/PAGE_STUDIO_SCHEMA_VERSION=3/);
+  assert.match(schema,/PAGE_STUDIO_WIDGET_REGISTRY/);
+  assert.match(schema,/widgetVersion:z\.number\(\)/);
+  assert.match(schema,/function migrateBlockValue/);
+  assert.match(schema,/export function migrateStudioBlocks/);
+  assert.match(route,/widgetRegistry:PAGE_STUDIO_WIDGET_REGISTRY/);
+  assert.match(editor,/function syncWidgetRegistry/);
+  assert.match(editor,/widgetVersion:version/);
+});
+
+test('global design tokens and responsive column overrides remain JSON-backed',()=>{
+  const auth=read('src/routes/auth.ts');
+  const runtime=read('portfolio/theme-runtime.js');
+  const account=read('portfolio/admin-account-upgrade.js');
+  const renderer=read('portfolio/page-studio-renderer.js');
+  const css=read('portfolio/page-studio-public.css');
+  for(const token of ['headingFont','bodyFont','containerWidth','sectionSpacing','radiusBase','motionScale']){
+    assert.match(auth,new RegExp(token));
+    assert.match(runtime,new RegExp(token));
+    assert.match(account,new RegExp(token));
+  }
+  assert.match(renderer,/--ps-tablet-columns/);
+  assert.match(renderer,/--ps-mobile-columns/);
+  assert.match(css,/var\(--ps-tablet-columns/);
+  assert.match(css,/var\(--ps-mobile-columns/);
+});
+
+test('editor safeguards support labels, locks and reusable styles without changing public copy',()=>{
+  const editor=read('portfolio/page-studio.js');
+  const renderer=read('portfolio/page-studio-renderer.js');
+  assert.match(editor,/styleClipboard/);
+  assert.match(editor,/data-editor-label/);
+  assert.match(editor,/data-block-locked/);
+  assert.match(editor,/COPY STYLE/);
+  assert.match(editor,/RESET STYLE/);
+  assert.match(editor,/Unlock this widget before moving it/);
+  assert.match(renderer,/style\.editorLabel/);
+  assert.match(renderer,/editor&&!style\.locked/);
+});
+
+test('publish quality checks cover structural and advanced widgets',()=>{
+  const route=read('src/routes/page-studio.ts');
+  for(const code of ['MULTIPLE_H1','LARGE_PAGE','INCOMPLETE_COMPARISON','MISSING_COMPARISON_ALT','MISSING_EMBED_TITLE','CUSTOM_CODE_REVIEW'])assert.match(route,new RegExp(code));
+});
+
+test('Homepage Studio blocks carry a backward-compatible widget version',()=>{
+  const schema=read('src/lib/homepage-studio.ts');
+  const editor=read('portfolio/homepage-studio.js');
+  assert.match(schema,/HOMEPAGE_STUDIO_WIDGET_VERSION=1/);
+  assert.match(schema,/widgetVersion:z\.number\(\).*\.default\(HOMEPAGE_STUDIO_WIDGET_VERSION\)/);
+  assert.match(schema,/widgetVersion:HOMEPAGE_STUDIO_WIDGET_VERSION/);
+  assert.match(editor,/widgetVersion:1/);
+});

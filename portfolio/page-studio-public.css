@@ -35,3 +35,13 @@
 .ps-theme-signal{--ps-accent:#8dffcf;background:radial-gradient(circle at 88% 12%,rgba(141,255,207,.11),transparent 34%),#0b0e0d!important;overflow:hidden}.ps-theme-signal :is(.ps-bento-snapshot>*,.ps-explorer-stage article,.ps-feature-card,.ps-testimonial-card,.ps-availability-cta){border-radius:18px}.ps-theme-signal img{border-radius:14px}
 .ps-theme-case-file{--ps-accent:#ff695c;background:#0d0d0c!important}.ps-theme-case-file :is(h1,h2,h3,.ps-heading){font-family:Georgia,"Times New Roman",serif!important;font-weight:500!important}.ps-theme-case-file :is(.ps-explorer-stage article,.ps-case-story article,.ps-outcome-grid article){border-color:rgba(247,242,232,.28)}
 .ps-theme-soft{--ps-accent:#225c4b;--ps-text:#111714;--ps-muted:#5d6963;--ps-line:rgba(17,23,20,.17);color:var(--ps-text)!important;background:radial-gradient(circle at 88% 12%,rgba(89,177,145,.16),transparent 31%),#f1f0eb!important;overflow:hidden}.ps-theme-soft :is(.ps-bento-snapshot>*,.ps-explorer-stage article,.ps-case-story article,.ps-testimonial-card,.ps-faq details,.ps-availability-cta){background:rgba(255,255,255,.65);border-color:var(--ps-line);border-radius:22px}.ps-theme-soft :is(a,h1,h2,h3,strong,.ps-heading){color:#111714}.ps-theme-soft .ps-button{background:#225c4b;color:#fff}
+/* Global Studio design tokens; block-level overrides still win. */
+html[data-theme-tokens=ready] body{font-family:var(--font-body,"DM Sans",Arial,sans-serif)}
+html[data-theme-tokens=ready] :is(h1,h2,h3,h4,h5,h6,.ps-heading){font-family:var(--font-heading,"Space Grotesk",Arial,sans-serif)!important}
+html[data-theme-tokens=ready] .ps-section-inner{max-width:var(--content-max-width,1320px)}
+html[data-theme-tokens=ready] .ps-section{padding-block:var(--section-spacing,96px)}
+@media(prefers-reduced-motion:reduce){html{--motion-scale:0!important}}
+@media(max-width:900px){.ps-columns{grid-template-columns:repeat(var(--ps-tablet-columns,2),minmax(0,1fr))}}
+@media(max-width:620px){.ps-columns{grid-template-columns:repeat(var(--ps-mobile-columns,1),minmax(0,1fr))}}
+.ps-editor .ps-widget.is-locked{outline-style:solid;outline-color:color-mix(in srgb,var(--ps-accent) 38%,transparent)}
+.ps-editor .ps-widget.is-locked>.ps-editor-badge{display:block;opacity:.82}
