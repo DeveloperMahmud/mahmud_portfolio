@@ -457,7 +457,12 @@ loadMaintenance=async function(){await loadMaintenanceBeforeTypewriterPreset();t
 $('#settingsForm')?.addEventListener('submit',async event=>{event.preventDefault();event.stopImmediatePropagation();try{const value=id=>$(id)?.value||'',typewriterConfig=buildHeroTypewriterConfig(),data={siteName:value('#settingSiteName'),title:value('#settingTitle'),email:value('#settingEmail')||null,inquiryRecipientEmail:value('#settingInquiryRecipientEmail')||null,inquirySubject:value('#settingInquirySubject')||null,phone:value('#settingPhone')||null,location:value('#settingLocation')||null,availability:$('#settingAvailability')?.checked||false,availabilityLabel:value('#settingAvailabilityLabel')||null,linkedin:value('#settingLinkedin')||null,behance:value('#settingBehance')||null,dribbble:value('#settingDribbble')||null,instagram:value('#settingInstagram')||null,github:value('#settingGithub')||null,metaTitle:value('#settingMetaTitle')||null,metaDescription:value('#settingMetaDescription')||null,ogImage:value('#settingOgImage')||null,heroImage:value('#settingHeroImage')||null,heroLeadText:value('#settingHeroLeadText').trim()||'I DESIGN',heroTypewriterPhrases:typewriterConfig.phrases,typewriterConfig};await api('/admin/maintenance/settings',{method:'PATCH',body:JSON.stringify(data)});msg($('#settingsMsg'),'Settings saved — homepage typewriter updated.',true);loadMaintenance()}catch(error){msg($('#settingsMsg'),error.message)}} ,true);
 $('#year').value=new Date().getFullYear();$('#sortOrder').value=0;$('#sliderEnabled').checked=true;$('#sliderTransition').value='AUTO';$('#contentStatus')&&($('#contentStatus').value='DRAFT');renderGallery();updateProjectSeoPreview();updateContentSeoPreview();updateSiteSeoPreview();boot();
 const initialAdminTab=location.hash.match(/^#admin-([a-z0-9-]+)$/)?.[1]||'dashboard';
-openAdminTab(initialAdminTab,{syncUrl:false})||openAdminTab('dashboard',{syncUrl:false});
+function openInitialAdminTab(attempt=0){
+  if(openAdminTab(initialAdminTab,{syncUrl:false}))return;
+  if(attempt<40)return setTimeout(()=>openInitialAdminTab(attempt+1),50);
+  openAdminTab('dashboard',{syncUrl:false});
+}
+openInitialAdminTab();
 
 // Mobile CMS navigation: keep every dynamically-added admin destination discoverable.
 (()=>{
