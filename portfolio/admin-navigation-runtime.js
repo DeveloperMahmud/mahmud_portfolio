@@ -11,6 +11,7 @@
         window.openAdminTab?.(button.dataset.tab);
       });
     });
+    queueMicrotask(()=>window.applyAdminRoleAccess?.());
   }
   function start(){
     bind();

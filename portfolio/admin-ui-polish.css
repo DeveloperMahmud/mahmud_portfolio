@@ -12,6 +12,7 @@
 
 /* 2026 admin shell refresh: clearer hierarchy, dependable focus and calmer density. */
 .admin-page{--admin-radius:12px;--admin-soft:rgba(255,255,255,.035);--admin-lime-soft:rgba(198,255,76,.075)}
+.admin-page [hidden]{display:none!important}
 .admin-page .admin{width:min(100%,1900px);margin-inline:auto;padding-top:36px}
 .admin-page .back{display:inline-flex;align-items:center;min-height:38px;margin-bottom:18px;padding:0 12px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:8px;font-weight:700;letter-spacing:.1em;transition:.18s ease}
 .admin-page .back:hover{border-color:rgba(198,255,76,.45);color:var(--lime);background:var(--admin-lime-soft)}
