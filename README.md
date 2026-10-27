@@ -2,6 +2,8 @@
 
 A dark editorial portfolio and production CMS for Mahmudul Hassan, positioned as a Visual Designer, E-commerce Designer, and Art Director. The existing vanilla frontend, Express 5 API, Prisma, and PostgreSQL architecture is preserved.
 
+For versioned implementation notes, compatibility details, verification results, and rollback references, see [CHANGELOG.md](CHANGELOG.md).
+
 ## Editorial featured slider
 
 The existing featured slider now uses an editorial left/media/right composition while retaining CMS ordering, project URLs, autoplay, swipe, keyboard controls, and every primary transition (`AUTO`, `MASK`, `DIAGONAL`, `SPLIT`, `CURTAIN`, `ZOOM`, `SLIDE`). Its progress line represents the active slide index across enabled slides.
