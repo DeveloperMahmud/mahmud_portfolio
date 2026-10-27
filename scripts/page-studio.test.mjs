@@ -540,3 +540,14 @@ test('Homepage Studio blocks carry a backward-compatible widget version',()=>{
   assert.match(schema,/widgetVersion:HOMEPAGE_STUDIO_WIDGET_VERSION/);
   assert.match(editor,/widgetVersion:1/);
 });
+
+test('public Widget QA Lab covers every registered widget without database writes',()=>{
+  const schema=read('src/lib/page-studio.ts');
+  const fixture=read('portfolio/widget-qa.js');
+  const html=read('portfolio/widget-qa.html');
+  const registered=[...schema.matchAll(/export const PAGE_STUDIO_WIDGETS=\[([^\]]+)\]/g)][0][1].match(/'([A-Z_]+)'/g).map(value=>value.slice(1,-1));
+  for(const widget of registered)assert.match(fixture,new RegExp(`block\\('${widget}'`),`${widget} is missing from the QA fixture`);
+  assert.match(html,/noindex,nofollow,noarchive/);
+  assert.match(html,/page-studio-renderer\.js/);
+  assert.doesNotMatch(fixture,/\/api\/admin|fetch\(|credentials:/);
+});

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Widget QA Lab — Mahmudul Hassan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/page-studio-public.css?v=20261027-widget-qa-1">
+  <style>
+    .qa-toolbar{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px clamp(16px,3vw,42px);background:rgba(7,9,8,.94);border-bottom:1px solid rgba(198,255,76,.3);backdrop-filter:blur(16px);font:600 12px/1.3 "DM Sans",sans-serif;letter-spacing:.08em}
+    .qa-toolbar strong{color:#c6ff4c}.qa-toolbar nav{display:flex;gap:8px;flex-wrap:wrap}.qa-toolbar a{color:#f4f5ef;text-decoration:none;border:1px solid #30352f;padding:8px 11px}.qa-toolbar a:hover{border-color:#c6ff4c;color:#c6ff4c}
+    .qa-summary{max-width:1320px;margin:0 auto;padding:26px clamp(16px,4vw,56px);color:#a9afa7;font:500 13px/1.6 "DM Sans",sans-serif}.qa-summary b{color:#f4f5ef}.qa-index{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.qa-index span{border:1px solid #293028;padding:5px 8px;color:#c6ff4c;font-size:10px}
+    @media(max-width:620px){.qa-toolbar{align-items:flex-start;flex-direction:column}.qa-toolbar nav{width:100%}.qa-toolbar a{flex:1;text-align:center}.qa-summary{padding-top:18px}}
+  </style>
+</head>
+<body>
+  <div class="qa-toolbar"><div><strong>WIDGET QA LAB</strong><br><span id="qaStatus">Loading fixture…</span></div><nav><a href="#pageStudioRoot">TOP</a><a href="/page-studio.html">PAGE STUDIO</a><a href="/">SITE</a></nav></div>
+  <section class="qa-summary"><b>Responsive production-renderer fixture.</b> Every registered Page Studio widget appears below with representative content. This page is excluded from search indexing and does not use database or Blob quota.<div id="qaIndex" class="qa-index"></div></section>
+  <header id="pageStudioNavigation" class="ps-navigation"></header>
+  <main id="pageStudioRoot"><div class="ps-empty">Preparing all widgets…</div></main>
+  <script src="/page-studio-renderer.js?v=20261027-widget-qa-1"></script>
+  <script src="/widget-qa.js?v=20261027-widget-qa-1"></script>
+</body>
+</html>

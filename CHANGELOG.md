@@ -29,6 +29,7 @@ This file records production-facing changes, compatibility notes, verification r
 - Rounded Studio containers clip nested content consistently.
 - Updated static asset version parameters prevent browsers from retaining old Studio or theme files after deployment.
 - Page Studio documentation now accurately distinguishes normal CMS feature controls from the emergency environment lock.
+- Added a no-index `/widget-qa.html` lab that renders all 42 registered widgets with the production renderer, representative local media, dynamic sample content, and zero database or Blob writes.
 
 ### Compatibility and safety
 
