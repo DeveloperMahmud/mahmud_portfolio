@@ -9,3 +9,59 @@
 .manager-card [data-nav-index]{gap:11px;padding:14px;background:#0c0f0d}
 .nav-item-options label{min-height:34px;padding:7px 9px;border:1px solid var(--line);background:#090b09;color:var(--text)}
 @media(max-width:680px){.manager-card input:not([type=checkbox]),.manager-card select,.manager-card textarea{font-size:16px}}
+
+/* 2026 admin shell refresh: clearer hierarchy, dependable focus and calmer density. */
+.admin-page{--admin-radius:12px;--admin-soft:rgba(255,255,255,.035);--admin-lime-soft:rgba(198,255,76,.075)}
+.admin-page .admin{width:min(100%,1900px);margin-inline:auto;padding-top:36px}
+.admin-page .back{display:inline-flex;align-items:center;min-height:38px;margin-bottom:18px;padding:0 12px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:8px;font-weight:700;letter-spacing:.1em;transition:.18s ease}
+.admin-page .back:hover{border-color:rgba(198,255,76,.45);color:var(--lime);background:var(--admin-lime-soft)}
+.admin-page .admin-shell{grid-template-columns:248px minmax(0,1fr);gap:20px}
+.admin-page .admin-sidebar{top:18px;max-height:calc(100vh - 36px);overflow:auto;padding:18px 14px;border-color:#303630;border-radius:var(--admin-radius);background:linear-gradient(180deg,rgba(18,21,18,.98),rgba(10,12,10,.97));box-shadow:0 24px 70px rgba(0,0,0,.22);scrollbar-width:thin;scrollbar-color:#343a34 transparent}
+.admin-page .admin-brand{margin:-2px 2px 19px;padding:0 4px 17px;border-bottom:1px solid var(--line);font-size:20px}
+.admin-page .admin-brand small{margin-top:6px;color:#777e76}
+.admin-page .side-group{margin:19px 8px 7px;color:#697068;font-weight:700}
+.admin-page .side-btn{position:relative;min-height:42px;margin:2px 0;padding:0 12px;border-radius:8px;color:#a0a69e;font-weight:700;transition:color .16s ease,background .16s ease,border-color .16s ease,transform .16s ease}
+.admin-page .side-btn:hover{color:var(--text);border-color:#353b35;background:rgba(255,255,255,.04);transform:translateX(2px)}
+.admin-page .side-btn.active{color:var(--lime);border-color:rgba(198,255,76,.28);background:linear-gradient(90deg,rgba(198,255,76,.1),rgba(198,255,76,.025));box-shadow:inset 2px 0 0 var(--lime)}
+.admin-page .side-btn[aria-current=page]:after{content:"";position:absolute;right:11px;top:50%;width:5px;height:5px;border-radius:50%;background:var(--lime);box-shadow:0 0 12px rgba(198,255,76,.7);transform:translateY(-50%)}
+.admin-page .admin-main{min-width:0}
+.admin-page .admin-main>div:not(.hidden){animation:adminPanelIn .2s ease both}
+@keyframes adminPanelIn{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
+.admin-page .panel,.admin-page .dash-card,.admin-page .dash-row,.admin-page .settings-card,.admin-page .project-item{border-color:#2d332d;border-radius:var(--admin-radius);background:linear-gradient(180deg,rgba(16,19,16,.96),rgba(11,13,11,.96));box-shadow:0 16px 45px rgba(0,0,0,.1)}
+.admin-page .panel{padding:clamp(18px,2vw,28px)}
+.admin-page .panel h1,.admin-page .panel h2,.admin-page .panel h3,.admin-page .system-head h1{letter-spacing:-.035em}
+.admin-page .dash-card{transition:border-color .18s ease,transform .18s ease,background .18s ease}
+.admin-page .dash-card:hover{transform:translateY(-2px);border-color:#444c44;background:#141814}
+.admin-page .admin-btn,.admin-page .tab,.admin-page .maintenance-subtab{border-radius:8px;transition:border-color .16s ease,color .16s ease,background .16s ease,transform .16s ease}
+.admin-page .admin-btn:hover,.admin-page .maintenance-subtab:hover{border-color:#4b544b;background:#171b17;transform:translateY(-1px)}
+.admin-page .admin-btn.primary:hover{border-color:#d4ff72;background:#d4ff72;color:#090a09}
+.admin-page input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=range]),.admin-page select,.admin-page textarea{border-radius:8px!important;border-color:#303630!important;background:#0a0d0a!important;transition:border-color .16s ease,box-shadow .16s ease,background .16s ease}
+.admin-page input:not([type=checkbox]):not([type=radio]):focus,.admin-page select:focus,.admin-page textarea:focus{border-color:rgba(198,255,76,.7)!important;background:#0d110d!important;box-shadow:0 0 0 3px rgba(198,255,76,.07)!important;outline:0!important}
+.admin-page .maintenance-subtabs{top:10px;padding:7px;border-radius:11px;background:rgba(10,13,10,.93);backdrop-filter:blur(15px);box-shadow:0 12px 40px rgba(0,0,0,.2)}
+.admin-page .maintenance-subtab.active{border-color:rgba(198,255,76,.28);background:var(--admin-lime-soft);color:var(--lime)}
+.admin-page .system-head{margin-bottom:20px;padding:2px 2px 16px;border-bottom:1px solid var(--line)}
+.admin-page .system-savebar{border-radius:12px;box-shadow:0 -18px 45px rgba(0,0,0,.18)}
+.admin-page .admin-url-guide{margin-top:14px;border:1px solid #303630;border-radius:10px;background:#090c09;color:var(--muted)}
+.admin-page .admin-url-guide summary{padding:13px 14px;color:var(--text);font-size:8px;font-weight:800;letter-spacing:.11em;cursor:pointer}
+.admin-page .admin-url-guide ol,.admin-page .admin-url-guide p{margin:0;padding:0 34px 15px;font-size:10px;line-height:1.7}
+.admin-page .admin-url-guide p{padding-inline:14px}
+.admin-page .admin-url-guide code{color:var(--lime)}
+.admin-page :is(button,a,input,select,textarea):focus-visible{outline:2px solid var(--lime)!important;outline-offset:3px!important}
+
+@media(max-width:1050px){
+  .admin-page .admin{padding-top:14px}
+  .admin-page .admin-shell{display:block}
+  .admin-page .admin-mobile-bar{top:8px;margin-bottom:14px}
+  .admin-page .admin-menu-toggle{border-radius:11px;box-shadow:0 14px 38px rgba(0,0,0,.28)}
+  .admin-page .admin-sidebar{border-radius:0 14px 14px 0;max-height:none}
+  .admin-page .side-btn{min-height:46px}
+}
+@media(max-width:650px){
+  .admin-page .admin{padding-inline:max(12px,env(safe-area-inset-left));padding-bottom:32px}
+  .admin-page .panel{padding:16px;border-radius:10px}
+  .admin-page .admin-top h1,.admin-page .dash-head h1,.admin-page .system-head h1{font-size:clamp(36px,12vw,54px)}
+  .admin-page .maintenance-subtabs{position:static;display:flex;flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity}
+  .admin-page .maintenance-subtab{flex:0 0 auto;scroll-snap-align:start;min-height:44px}
+  .admin-page .admin-url-guide ol{padding-left:32px;padding-right:14px}
+}
+@media(prefers-reduced-motion:reduce){.admin-page .admin-main>div:not(.hidden){animation:none}.admin-page .side-btn,.admin-page .admin-btn,.admin-page .dash-card{transition:none}}

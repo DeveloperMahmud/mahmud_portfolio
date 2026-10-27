@@ -153,8 +153,53 @@ async function optimizeMedia(m){
 function uploadOneWithProgress(file,onProgress){return new Promise((resolve,reject)=>{const xhr=new XMLHttpRequest();xhr.open('POST','/api/admin/media/upload');xhr.withCredentials=true;xhr.setRequestHeader('Content-Type',file.type);xhr.setRequestHeader('X-Filename',encodeURIComponent(file.name));xhr.upload.onprogress=e=>{if(e.lengthComputable)onProgress(e.loaded,e.total)};xhr.onload=()=>{let d={};try{d=JSON.parse(xhr.responseText||'{}')}catch{}if(xhr.status>=200&&xhr.status<300)resolve(d);else reject(new Error(d.error||'Image upload failed'));};xhr.onerror=()=>reject(new Error('Upload connection failed.'));xhr.ontimeout=()=>reject(new Error('Upload timed out.'));xhr.timeout=120000;xhr.send(file)})}
 async function uploadMediaFiles(files){const list=[...files];if(!list.length)return;const max=25*1024*1024;const valid=list.filter(f=>f.size<=max&&f.type.startsWith('image/'));const skipped=list.length-valid.length;if(!valid.length){showToast('No valid image files selected.',false);return}let done=0,failed=0;setMediaProgress('UPLOADING MEDIA…',valid.length,0,0);try{for(const f of valid){try{mediaUploadState.currentFile=f.name;mediaUploadState.currentPct=0;renderMediaProgress();await uploadOneWithProgress(f,(loaded,total)=>{mediaUploadState.currentPct=total?Math.round((loaded/total)*100):0;renderMediaProgress()});done++;mediaUploadState.done=done;mediaUploadState.currentPct=0;renderMediaProgress()}catch(e){failed++;mediaUploadState.failed=failed;renderMediaProgress()}}showToast(`${done} uploaded${failed?` · ${failed} failed`:''}${skipped?` · ${skipped} skipped`:''}.`,failed===0);await loadMedia()}finally{finishMediaProgress();document.querySelector('#mediaUpload').value=''}}
 
-function openAdminTab(name){$$('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));document.querySelector('.admin-main > .admin-top')?.classList.toggle('hidden',name!=='dashboard');['dashboard','analytics','seo','operations','leads','motion','projects','content','brands','media','imports','homepage','production-navigation','control-center','maintenance','account'].forEach(k=>{const el=$('#'+k+'Tab');if(el)el.classList.toggle('hidden',name!==k)});if(name==='dashboard')loadDashboard();if(name==='account')loadAccount();if(name==='maintenance'){switchMaintenancePanel('overview');loadMaintenance()}if(name==='media'){loadMediaView();loadMedia()}if(name==='homepage')loadHomepage();if(name==='production-navigation')window.loadProductionNavigation?.();if(name==='control-center')window.loadControlCenter?.();if(name==='analytics')window.loadAnalytics?.();if(name==='seo')window.loadSeo?.();if(name==='operations')window.loadOperations?.();if(name==='leads')window.loadLeadCenter?.();if(name==='motion')window.loadMotionControls?.()}
+const ADMIN_TAB_NAMES=['dashboard','analytics','seo','operations','leads','motion','projects','content','brands','media','imports','homepage','production-navigation','control-center','maintenance','account'];
+function openAdminTab(name,{syncUrl=true}={}){
+  name=String(name||'dashboard').trim();
+  const panel=$('#'+name+'Tab');
+  if(!panel)return false;
+  $$('.tab[data-tab]').forEach(item=>{
+    const active=item.dataset.tab===name;
+    item.classList.toggle('active',active);
+    if(active)item.setAttribute('aria-current','page');else item.removeAttribute('aria-current');
+  });
+  document.querySelector('.admin-main > .admin-top')?.classList.toggle('hidden',name!=='dashboard');
+  ADMIN_TAB_NAMES.forEach(key=>$('#'+key+'Tab')?.classList.toggle('hidden',name!==key));
+  panel.classList.remove('hidden');
+  if(syncUrl){
+    const url=new URL(location.href);
+    url.hash='admin-'+name;
+    history.replaceState({adminTab:name},'',url);
+  }
+  document.dispatchEvent(new CustomEvent('admin:tabchange',{detail:{name,panel}}));
+  if(name==='dashboard')loadDashboard();
+  if(name==='account')loadAccount();
+  if(name==='maintenance'){switchMaintenancePanel('overview');loadMaintenance()}
+  if(name==='media'){loadMediaView();loadMedia()}
+  if(name==='homepage')loadHomepage();
+  if(name==='production-navigation')window.loadProductionNavigation?.();
+  if(name==='control-center')window.loadControlCenter?.();
+  if(name==='analytics')window.loadAnalytics?.();
+  if(name==='seo')window.loadSeo?.();
+  if(name==='operations')window.loadOperations?.();
+  if(name==='leads')window.loadLeadCenter?.();
+  if(name==='motion')window.loadMotionControls?.();
+  return true;
+}
 window.openAdminTab=openAdminTab;
+// One delegated handler covers both server-rendered and asynchronously injected destinations.
+// Capture phase also prevents stale per-button handlers from running the same loader twice.
+document.addEventListener('click',event=>{
+  const item=event.target.closest?.('.tab[data-tab]');
+  if(!item||item.disabled||item.hidden)return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  openAdminTab(item.dataset.tab);
+},true);
+window.addEventListener('hashchange',()=>{
+  const name=location.hash.match(/^#admin-([a-z0-9-]+)$/)?.[1];
+  if(name)openAdminTab(name,{syncUrl:false});
+});
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function isoToLocal(v){if(!v)return '';const d=new Date(v);if(Number.isNaN(d.getTime()))return '';const pad=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`}
 function localToIso(v){return v?new Date(v).toISOString():null}
@@ -278,7 +323,7 @@ async function runSheetImport(kind){const fileId=kind==='projects'?'#projectShee
 $('#projectBatchImport')?.addEventListener('click',()=>runSheetImport('projects'));$('#contentBatchImport')?.addEventListener('click',()=>runSheetImport('content'));
 $('#loginForm').onsubmit=async e=>{e.preventDefault();const btn=$('#loginForm button[type=submit]');btn.disabled=true;btn.textContent='SIGNING IN...';msg($('#loginMsg'),'');try{await api('/auth/login',{method:'POST',body:JSON.stringify({email:$('#loginEmail').value.trim(),password:$('#loginPassword').value})});const ok=await boot();if(!ok)throw new Error('Login succeeded, but the session could not be verified. Restart the server and try again.');msg($('#loginMsg'),'Signed in successfully.',true)}catch(e){msg($('#loginMsg'),e.message)}finally{btn.disabled=false;btn.textContent='SIGN IN'}};
 $('#logout').onclick=async()=>{await api('/auth/logout',{method:'POST'});location.reload()};
-$$('.tab').forEach(t=>t.onclick=()=>openAdminTab(t.dataset.tab));
+// Tab navigation is delegated near openAdminTab so controls injected later work too.
 function renderProjects(){const el=$('#projectList');if(!el)return;const q=String($('#projectSearch')?.value||'').trim().toLowerCase();const list=projects.filter(p=>!q||[p.title,p.client,p.category,p.service,p.status,p.visibility].some(v=>String(v||'').toLowerCase().includes(q)));const count=$('#projectResultCount');if(count)count.textContent=`${list.length} / ${projects.length}`;el.innerHTML=list.map(p=>`<div class="project-item"><input type="checkbox" class="project-select" value="${esc(p.id)}"><img src="${esc(p.coverImage||'assets/amazon-01.svg')}" alt=""><div><strong>${esc(p.title)}</strong><small>${esc(p.category)} · ${statusPill(p.status)} · ${statusPill(p.visibility)}${p.featured?' · FEATURED':''}${p.sliderEnabled!==false?' · SLIDER ON':' · SLIDER OFF'}${p.clientOnly?' · CLIENT ONLY':''}</small></div><div class="item-actions"><button type="button" class="admin-btn js-edit" data-id="${esc(p.id)}">EDIT</button><button type="button" class="admin-btn js-share" data-id="${esc(p.id)}">SHARE</button>${p.accessTokenHash?'<button type="button" class="admin-btn js-revoke" data-id="'+esc(p.id)+'">REVOKE</button>':''}<button type="button" class="admin-btn danger js-delete" data-id="${esc(p.id)}">DELETE</button></div></div>`).join('')||'<p class="notice">No matching projects.</p>';el.querySelectorAll('.js-edit').forEach(b=>b.addEventListener('click',()=>editProject(b.dataset.id)));el.querySelectorAll('.js-share').forEach(b=>b.addEventListener('click',()=>shareProject(b.dataset.id)));el.querySelectorAll('.js-revoke').forEach(b=>b.addEventListener('click',()=>revokeShare(b.dataset.id)));el.querySelectorAll('.js-delete').forEach(b=>b.addEventListener('click',()=>deleteProject(b.dataset.id)))}
 function renderContent(){const el=$('#contentList');if(!el)return;const q=String($('#contentSearch')?.value||'').trim().toLowerCase();const list=contentItems.filter(c=>!q||[c.title,c.type,c.category,c.status,c.author].some(v=>String(v||'').toLowerCase().includes(q)));const count=$('#contentResultCount');if(count)count.textContent=`${list.length} / ${contentItems.length}`;el.innerHTML=list.map(c=>{const rid=String(c?.id||'').trim();const slug=String(c?.slug||'').trim();return `<div class="project-item"><input type="checkbox" class="content-select" value="${esc(rid)}"><img src="${esc(c.coverImage||'assets/amazon-01.svg')}" alt=""><div><strong>${esc(c.title)}</strong><small>${esc(c.type)} · ${esc(c.category||'UNCATEGORIZED')} · ${statusPill(c.status)}${c.featured?' · FEATURED':''}</small></div><div><button type="button" class="admin-btn js-edit-content" data-id="${esc(rid)}" data-slug="${esc(slug)}">EDIT</button><button type="button" class="admin-btn danger js-delete-content" data-id="${esc(rid)}" data-slug="${esc(slug)}">DELETE</button></div></div>`}).join('')||'<p class="notice">No matching content.</p>';el.querySelectorAll('.js-edit-content').forEach(b=>b.addEventListener('click',()=>editContent(b.dataset.id,b.dataset.slug)));el.querySelectorAll('.js-delete-content').forEach(b=>b.addEventListener('click',()=>deleteContent(b.dataset.id,b.dataset.slug)))}
 async function bulk(path,ids,action){if(!ids.length){alert('Select at least one item.');return}if(action==='DELETE'&&!confirm(`Delete ${ids.length} selected item(s)? This cannot be undone.`))return;try{await api(path,{method:'POST',body:JSON.stringify({ids,action})});await load()}catch(e){alert(e.message)}}
@@ -410,7 +455,9 @@ function buildHeroTypewriterConfig(){const field=ensureHeroTypewriterPreset(),pr
 const loadMaintenanceBeforeTypewriterPreset=loadMaintenance;
 loadMaintenance=async function(){await loadMaintenanceBeforeTypewriterPreset();try{const current=await api('/admin/maintenance/settings');hydrateHeroTypewriterPreset(current.settings?.typewriterConfig||{})}catch{hydrateHeroTypewriterPreset({})}};
 $('#settingsForm')?.addEventListener('submit',async event=>{event.preventDefault();event.stopImmediatePropagation();try{const value=id=>$(id)?.value||'',typewriterConfig=buildHeroTypewriterConfig(),data={siteName:value('#settingSiteName'),title:value('#settingTitle'),email:value('#settingEmail')||null,inquiryRecipientEmail:value('#settingInquiryRecipientEmail')||null,inquirySubject:value('#settingInquirySubject')||null,phone:value('#settingPhone')||null,location:value('#settingLocation')||null,availability:$('#settingAvailability')?.checked||false,availabilityLabel:value('#settingAvailabilityLabel')||null,linkedin:value('#settingLinkedin')||null,behance:value('#settingBehance')||null,dribbble:value('#settingDribbble')||null,instagram:value('#settingInstagram')||null,github:value('#settingGithub')||null,metaTitle:value('#settingMetaTitle')||null,metaDescription:value('#settingMetaDescription')||null,ogImage:value('#settingOgImage')||null,heroImage:value('#settingHeroImage')||null,heroLeadText:value('#settingHeroLeadText').trim()||'I DESIGN',heroTypewriterPhrases:typewriterConfig.phrases,typewriterConfig};await api('/admin/maintenance/settings',{method:'PATCH',body:JSON.stringify(data)});msg($('#settingsMsg'),'Settings saved — homepage typewriter updated.',true);loadMaintenance()}catch(error){msg($('#settingsMsg'),error.message)}} ,true);
-$('#year').value=new Date().getFullYear();$('#sortOrder').value=0;$('#sliderEnabled').checked=true;$('#sliderTransition').value='AUTO';$('#contentStatus')&&($('#contentStatus').value='DRAFT');renderGallery();updateProjectSeoPreview();updateContentSeoPreview();updateSiteSeoPreview();boot();openAdminTab('dashboard');
+$('#year').value=new Date().getFullYear();$('#sortOrder').value=0;$('#sliderEnabled').checked=true;$('#sliderTransition').value='AUTO';$('#contentStatus')&&($('#contentStatus').value='DRAFT');renderGallery();updateProjectSeoPreview();updateContentSeoPreview();updateSiteSeoPreview();boot();
+const initialAdminTab=location.hash.match(/^#admin-([a-z0-9-]+)$/)?.[1]||'dashboard';
+openAdminTab(initialAdminTab,{syncUrl:false})||openAdminTab('dashboard',{syncUrl:false});
 
 // Mobile CMS navigation: keep every dynamically-added admin destination discoverable.
 (()=>{

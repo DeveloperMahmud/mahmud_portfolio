@@ -137,6 +137,24 @@ test('admin navigation remains discoverable and keyboard accessible on mobile',a
   assert.match(runtime,/closest\('\.side-btn'\)/);
 });
 
+test('admin destinations use delegated navigation and versioned shell assets',async()=>{
+  const [html,runtime,polish,account]=await Promise.all([
+    read('portfolio/admin.html'),
+    read('portfolio/admin.js'),
+    read('portfolio/admin-ui-polish.css'),
+    read('portfolio/admin-account-upgrade.js')
+  ]);
+  assert.match(runtime,/document\.addEventListener\('click',event=>\{/);
+  assert.match(runtime,/closest\?\.\('\.tab\[data-tab\]'\)/);
+  assert.match(runtime,/window\.openAdminTab=openAdminTab/);
+  assert.match(runtime,/aria-current/);
+  assert.match(runtime,/#admin-/);
+  assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
+  assert.match(html,/admin\.js\?v=20261027-1/);
+  assert.match(polish,/2026 admin shell refresh/);
+  assert.match(account,/HOW THE PRIVATE ADMIN URL WORKS/);
+});
+
 test('CMS roles expose only appropriate workspaces and keep viewer and writer actions safe',async()=>{
   const [admin,rbac]=await Promise.all([read('portfolio/admin.js'),read('src/lib/rbac.ts')]);
   assert.match(admin,/const roleTabs=/);
