@@ -170,6 +170,8 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(polish,/visibility:hidden;pointer-events:none/);
   assert.match(runtime,/classList\.add\('cms-workspace-active'\)/);
   assert.match(polish,/body\.admin-page\.cms-workspace-active\{height:100dvh/);
+  assert.match(polish,/\.admin-page\.cms-workspace-active \.admin-main\{[^}]*overflow-y:auto[^}]*border:1px solid #303630[^}]*border-radius:var\(--admin-radius\)/);
+  assert.match(polish,/\.admin-page\.cms-workspace-active \.admin-main::-webkit-scrollbar-track\{margin-block:10px/);
   assert.match(polish,/\.admin-main\{height:100%;min-height:0;overflow-x:hidden;overflow-y:auto/);
   assert.match(polish,/@media\(min-width:1051px\)/);
   assert.match(polish,/input\[type=checkbox\]:not\(\.media-check\).*width:18px!important/);
