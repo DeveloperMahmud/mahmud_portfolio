@@ -38,6 +38,9 @@
 .admin-page .admin-btn.primary:hover{border-color:#d4ff72;background:#d4ff72;color:#090a09}
 .admin-page input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=range]),.admin-page select,.admin-page textarea{border-radius:8px!important;border-color:#303630!important;background:#0a0d0a!important;transition:border-color .16s ease,box-shadow .16s ease,background .16s ease}
 .admin-page input:not([type=checkbox]):not([type=radio]):focus,.admin-page select:focus,.admin-page textarea:focus{border-color:rgba(198,255,76,.7)!important;background:#0d110d!important;box-shadow:0 0 0 3px rgba(198,255,76,.07)!important;outline:0!important}
+.admin-page input[type=checkbox]:not(.media-check){box-sizing:border-box!important;display:inline-block;flex:0 0 18px;width:18px!important;height:18px!important;min-width:18px!important;min-height:18px!important;margin:0!important;padding:0!important;vertical-align:middle;accent-color:var(--lime)}
+.admin-page :is(.form,fieldset)>label:has(>input[type=checkbox]):not(.toggle-field):not(.inspector-check){display:flex!important;min-height:44px;align-items:center;gap:10px;padding:10px 12px;border:1px solid #303630;border-radius:8px;background:#0a0d0a;color:#a8aea6;line-height:1.35;cursor:pointer}
+.admin-page :is(.form,fieldset)>label:has(>input[type=checkbox]):not(.toggle-field):not(.inspector-check):focus-within{border-color:rgba(198,255,76,.7);box-shadow:0 0 0 3px rgba(198,255,76,.07)}
 .admin-page .maintenance-subtabs{top:10px;padding:7px;border-radius:11px;background:rgba(10,13,10,.93);backdrop-filter:blur(15px);box-shadow:0 12px 40px rgba(0,0,0,.2)}
 .admin-page .maintenance-subtab.active{border-color:rgba(198,255,76,.28);background:var(--admin-lime-soft);color:var(--lime)}
 .admin-page .system-head{margin-bottom:20px;padding:2px 2px 16px;border-bottom:1px solid var(--line)}

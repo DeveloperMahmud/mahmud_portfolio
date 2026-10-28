@@ -153,7 +153,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261028-1/);
-  assert.match(html,/admin-page-studio\.js\?v=20261028-8/);
+  assert.match(html,/admin-page-studio\.js\?v=20261028-9/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
   assert.match(navigation,/MutationObserver/);
@@ -172,6 +172,8 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(polish,/body\.admin-page\.cms-workspace-active\{height:100dvh/);
   assert.match(polish,/\.admin-main\{height:100%;min-height:0;overflow-x:hidden;overflow-y:auto/);
   assert.match(polish,/@media\(min-width:1051px\)/);
+  assert.match(polish,/input\[type=checkbox\]:not\(\.media-check\).*width:18px!important/);
+  assert.match(polish,/label:has\(>input\[type=checkbox\]\):not\(\.toggle-field\):not\(\.inspector-check\)/);
   assert.match(account,/HOW THE PRIVATE ADMIN URL WORKS/);
 });
 
