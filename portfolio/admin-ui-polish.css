@@ -123,6 +123,7 @@
 .admin-page .homepage-proof-editor textarea{min-height:64px;resize:vertical}
 .admin-page .homepage-proof-items{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
 .admin-page .homepage-proof-items>article{display:grid;gap:9px;padding:12px;border:1px solid var(--line);background:#090c0a}
+.admin-page [data-home-drag],.admin-page [data-proof-drag]{cursor:grab;transition:border-color .18s ease,opacity .18s ease,transform .18s ease}.admin-page [data-home-drag].is-dragging,.admin-page [data-proof-drag].is-dragging{opacity:.42}.admin-page [data-home-drag].is-drag-target,.admin-page [data-proof-drag].is-drag-target{border-color:var(--lime);transform:translateY(2px);box-shadow:inset 3px 0 0 var(--lime)}
 .admin-page .homepage-proof-items>article>span{color:var(--lime);font:700 10px var(--admin-display)}
 .admin-page .homepage-proof-item-actions{display:flex;gap:6px;flex-wrap:wrap}
 .admin-page .site-modules-workspace{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,.75fr);gap:18px;align-items:start;margin-top:18px}

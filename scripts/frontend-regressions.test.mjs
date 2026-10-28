@@ -153,7 +153,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261027-4/);
-  assert.match(html,/admin-page-studio\.js\?v=20261028-2/);
+  assert.match(html,/admin-page-studio\.js\?v=20261028-3/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
   assert.match(navigation,/MutationObserver/);
@@ -218,10 +218,27 @@ test('homepage proof content is manageable and reusable across both studios',asy
   assert.match(manager,/How I Work \/ Proof Cards/);
   assert.match(manager,/data-proof-add/);
   assert.match(manager,/data-proof-up/);
+  assert.match(manager,/data-proof-drag/);
+  assert.match(manager,/draggedSection/);
   assert.match(manager,/data-home-enabled/);
   assert.match(studio,/type:'PROOF_STRIP'/);
   assert.match(pageStudio,/Proof cards \/ outcome metrics/);
   assert.match(publicRoute,/homepageSections/);
+});
+
+test('structured module presets expose non-destructive hover and keyboard previews',async()=>{
+  const [library,css]=await Promise.all([
+    read('portfolio/admin-module-library.js'),
+    read('portfolio/admin-module-library.css')
+  ]);
+  assert.match(library,/modulePresetPreview/);
+  assert.match(library,/previewPreset/);
+  assert.match(library,/mouseenter/);
+  assert.match(library,/focusin/);
+  assert.match(library,/PREVIEW/);
+  assert.match(library,/site-module-preset-preview/);
+  assert.match(css,/\.module-library-browser/);
+  assert.match(css,/\.module-preset-preview/);
 });
 
 test('structured site modules have safe visual previews and the inspector scrolls independently',async()=>{
