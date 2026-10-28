@@ -66,3 +66,49 @@
   .admin-page .admin-url-guide ol{padding-left:32px;padding-right:14px}
 }
 @media(prefers-reduced-motion:reduce){.admin-page .admin-main>div:not(.hidden){animation:none}.admin-page .side-btn,.admin-page .admin-btn,.admin-page .dash-card{transition:none}}
+
+/* 2026-10 coherence pass: one visual system across static and injected workspaces. */
+.admin-page .admin-main{container-type:inline-size}
+.admin-page .admin-top{align-items:center;margin-bottom:20px;padding:18px 20px;border:1px solid #293029;border-radius:var(--admin-radius);background:linear-gradient(110deg,rgba(198,255,76,.045),rgba(13,16,13,.88) 38%,rgba(13,16,13,.7));box-shadow:0 16px 45px rgba(0,0,0,.1)}
+.admin-page .admin-top h1{margin:5px 0 8px;font-size:clamp(34px,4.2vw,64px)}
+.admin-page .admin-top .notice{max-width:720px;margin:0}
+.admin-page :is(.panel-heading-row,.media-head,.lead-center-head,.system-head,.settings-card-head){align-items:flex-start;gap:18px}
+.admin-page :is(.panel-heading-row,.media-head,.lead-center-head)>div:first-child{min-width:0}
+.admin-page :is(.panel-heading-row,.media-head,.lead-center-head) h1,.admin-page :is(.panel-heading-row,.media-head,.lead-center-head) h2{overflow-wrap:anywhere}
+.admin-page .kicker{font-weight:800;letter-spacing:.16em}
+.admin-page .notice{line-height:1.65}
+.admin-page .admin-grid{grid-template-columns:minmax(300px,.82fr) minmax(0,1.6fr);align-items:start}
+.admin-page .admin-actions{align-items:center}
+.admin-page .admin-btn{display:inline-flex;min-height:40px;align-items:center;justify-content:center;line-height:1.2;text-align:center}
+.admin-page :is(.form,.settings-fields,.lead-edit-form)>label{min-width:0}
+.admin-page :is(.form,.settings-fields,.lead-edit-form)>label>input,.admin-page :is(.form,.settings-fields,.lead-edit-form)>label>select{min-height:44px}
+.admin-page :is(.project-item,.dash-row,.ops-row,.manager-card){min-width:0;overflow-wrap:anywhere}
+.admin-page .project-item>*{min-width:0}
+.admin-page .project-item :is(strong,small){overflow-wrap:anywhere}
+.admin-page .tabs,.admin-page .maintenance-subtabs{scrollbar-width:thin;scrollbar-color:#394139 transparent}
+.admin-page :is(.tabs,.maintenance-subtabs)::-webkit-scrollbar{height:5px}
+.admin-page :is(.tabs,.maintenance-subtabs)::-webkit-scrollbar-thumb{border-radius:999px;background:#394139}
+.admin-page :is(.error,.success,[role=status]){overflow-wrap:anywhere}
+
+@container(max-width:760px){
+  .admin-page .admin-grid{grid-template-columns:1fr}
+  .admin-page :is(.panel-heading-row,.media-head,.lead-center-head,.settings-card-head){align-items:stretch;flex-direction:column}
+  .admin-page :is(.panel-heading-row,.media-head,.lead-center-head)>.admin-actions{width:100%;margin-top:0}
+}
+
+@media(max-width:1050px){
+  .admin-page .admin-sidebar{visibility:hidden;pointer-events:none;will-change:transform}
+  .admin-page.admin-menu-open .admin-sidebar{visibility:visible;pointer-events:auto}
+  .admin-page .admin-menu-backdrop{visibility:hidden}
+  .admin-page.admin-menu-open .admin-menu-backdrop{visibility:visible}
+}
+@media(max-width:650px){
+  .admin-page .admin-top{margin-bottom:14px;padding:15px}
+  .admin-page .admin-top h1{font-size:clamp(32px,11vw,48px)}
+  .admin-page .admin-btn{min-height:44px}
+  .admin-page .admin-actions{display:grid;grid-template-columns:1fr;width:100%}
+  .admin-page .admin-actions>.admin-btn,.admin-page .admin-actions>label.admin-btn{width:100%;box-sizing:border-box}
+  .admin-page :is(.tabs,.maintenance-subtabs){max-width:100%;overflow-x:auto;overscroll-behavior-x:contain}
+  .admin-page .project-item{grid-template-columns:52px minmax(0,1fr)}
+  .admin-page .project-item .item-actions{display:grid;grid-template-columns:1fr;grid-column:1/-1}
+}
