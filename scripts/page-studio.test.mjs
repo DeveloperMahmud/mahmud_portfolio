@@ -73,9 +73,16 @@ test('revision restore preserves live status and unpublish remains explicit',()=
 
 test('responsive toolbar keeps save, preview and device controls available',()=>{
   const css=read('portfolio/page-studio.css');
+  const pageHtml=read('portfolio/page-studio.html');
+  const homepageHtml=read('portfolio/homepage-studio.html');
+  const homepagePolish=read('portfolio/homepage-studio-polish.css');
   assert.doesNotMatch(css,/\.studio-actions #studioSave\{display:none\}/);
   assert.match(css,/\.studio-actions #studioSave,\.studio-actions #studioPreview\{display:block\}/);
   assert.match(css,/\.studio-devices\{display:flex;order:4/);
+  assert.match(pageHtml,/class="studio-back" href="\/admin\.html#admin-dashboard"/);
+  assert.match(homepageHtml,/class="hs-back" href="\/admin\.html#admin-homepage"/);
+  assert.match(css,/\.studio-back\{display:inline-flex/);
+  assert.match(homepagePolish,/\.hs-back\{display:inline-flex/);
 });
 
 test('common YouTube share URLs are normalized before trusted-origin validation',()=>{
