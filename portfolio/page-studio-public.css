@@ -45,3 +45,4 @@ html[data-theme-tokens=ready] .ps-section{padding-block:var(--section-spacing,96
 @media(max-width:620px){.ps-columns{grid-template-columns:repeat(var(--ps-mobile-columns,1),minmax(0,1fr))}}
 .ps-editor .ps-widget.is-locked{outline-style:solid;outline-color:color-mix(in srgb,var(--ps-accent) 38%,transparent)}
 .ps-editor .ps-widget.is-locked>.ps-editor-badge{display:block;opacity:.82}
+.ps-focus-pulse{outline:2px solid var(--ps-accent)!important;outline-offset:4px!important;animation:ps-focus-pulse 1.4s ease}@keyframes ps-focus-pulse{0%,100%{box-shadow:none}35%{box-shadow:0 0 0 12px rgba(198,255,76,.12)}}

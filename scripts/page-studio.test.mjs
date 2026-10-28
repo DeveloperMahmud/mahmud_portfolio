@@ -558,3 +558,22 @@ test('public Widget QA Lab covers every registered widget without database write
   assert.match(html,/page-studio-renderer\.js/);
   assert.doesNotMatch(fixture,/\/api\/admin|fetch\(|credentials:/);
 });
+
+test('visual studios expose reversible history, layer navigation and preview focus',()=>{
+  const homepageHtml=read('portfolio/homepage-studio.html');
+  const homepageEditor=read('portfolio/homepage-studio.js');
+  const homepageRuntime=read('portfolio/homepage-studio-runtime.js');
+  const pageHtml=read('portfolio/page-studio.html');
+  const pageEditor=read('portfolio/page-studio.js');
+  const pageRenderer=read('portfolio/page-studio-renderer.js');
+  for(const marker of ['homepageUndo','homepageRedo','homepageNavigator'])assert.match(homepageHtml,new RegExp(marker));
+  assert.match(homepageEditor,/travelHistory/);
+  assert.match(homepageEditor,/homepage-studio-recovery/);
+  assert.match(homepageEditor,/7\*864e5/);
+  assert.match(homepageRuntime,/HOMEPAGE_STUDIO_FOCUS/);
+  assert.match(homepageRuntime,/data\.showLabel/);
+  for(const marker of ['studioUndo','studioRedo','studioNavigator'])assert.match(pageHtml,new RegExp(marker));
+  assert.match(pageEditor,/renderStudioNavigator/);
+  assert.match(pageEditor,/PAGE_STUDIO_FOCUS/);
+  assert.match(pageRenderer,/PAGE_STUDIO_FOCUS/);
+});

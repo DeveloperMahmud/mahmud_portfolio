@@ -16,7 +16,7 @@
     <a class="hs-brand" href="/admin.html"><span>MH</span><strong>HOMEPAGE STUDIO<small>EXISTING SITE VISUAL EDITOR</small></strong></a>
     <div class="hs-state"><strong id="saveState">LOADING…</strong><small id="liveState">Production fallback remains active.</small></div>
     <div class="hs-devices" role="group" aria-label="Preview device"><button class="active" data-device="desktop">DESKTOP</button><button data-device="tablet">TABLET</button><button data-device="mobile">MOBILE</button></div>
-    <div class="hs-actions"><a class="hs-back" href="/admin.html#admin-homepage">&larr; BACK TO CMS</a><button id="loadDemoKit">LOAD DEMO KIT</button><button id="saveDraft">SAVE DRAFT</button><button id="disableLayout" class="danger" hidden>DISABLE</button><button id="publishLayout" class="primary">PUBLISH</button></div>
+    <div class="hs-actions"><a class="hs-back" href="/admin.html#admin-homepage">&larr; BACK TO CMS</a><button id="toggleHomepageNavigator" aria-pressed="false">NAVIGATOR</button><button id="homepageUndo" title="Undo (Ctrl/Cmd + Z)" disabled>&#8630;</button><button id="homepageRedo" title="Redo (Ctrl/Cmd + Shift + Z)" disabled>&#8631;</button><button id="loadDemoKit">LOAD DEMO KIT</button><button id="saveDraft">SAVE DRAFT</button><button id="disableLayout" class="danger" hidden>DISABLE</button><button id="publishLayout" class="primary">PUBLISH</button></div>
   </header>
   <main class="hs-shell">
     <aside class="hs-sidebar">
@@ -30,7 +30,7 @@
     </section>
     <section class="hs-preview-panel">
       <div class="hs-preview-head"><div><span>LIVE PREVIEW</span><strong id="previewLabel">DESKTOP · FIT</strong><small id="previewHint">Loading responsive canvas…</small></div><button id="refreshPreview">REFRESH</button></div>
-      <div id="previewViewport" class="hs-preview-viewport" data-device="desktop"><div id="previewCanvas" class="hs-preview-canvas"><iframe id="homepagePreview" src="/?homepage-studio-preview=1" title="Homepage Studio live preview"></iframe></div></div>
+      <div id="previewViewport" class="hs-preview-viewport" data-device="desktop"><div id="previewCanvas" class="hs-preview-canvas"><iframe id="homepagePreview" src="/?homepage-studio-preview=1" title="Homepage Studio live preview"></iframe></div><span class="hs-preview-scroll-cue">SCROLL PREVIEW &darr;</span></div>
     </section>
     <aside class="hs-inspector">
       <div class="hs-panel-head"><span id="inspectorKicker">BLOCK</span><h2 id="inspectorTitle">Select a block.</h2><p id="inspectorHelp">Choose a section or module to edit its controls.</p></div>
@@ -38,7 +38,8 @@
       <section class="hs-roadmap"><strong>FUTURE-PROOF FOUNDATION</strong><ul><li>Existing sections remain the source of truth.</li><li>Draft and published layouts are separate.</li><li>New reusable modules can be added without redesigning the homepage.</li><li>Media is referenced, never duplicated.</li></ul></section>
     </aside>
   </main>
+  <aside id="homepageNavigator" class="hs-navigator" hidden aria-label="Homepage layers"><header><div><span>LAYERS</span><strong>Homepage navigator</strong></div><button id="closeHomepageNavigator" type="button" aria-label="Close navigator">&times;</button></header><div id="homepageNavigatorList"></div><p>Click a layer to select it and move the live preview to that section.</p></aside>
   <div id="toast" class="hs-toast" role="status"></div>
-  <script src="/homepage-studio.js?v=20261028-2" defer></script>
+  <script src="/homepage-studio.js?v=20261028-3" defer></script>
 </body>
 </html>
