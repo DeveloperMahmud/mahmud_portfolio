@@ -97,14 +97,15 @@ export function resolveHomepageStudioSections(siteSettings:Record<string,any>):R
 }
 
 export function defaultHomepageStudioLayout():HomepageStudioLayout{
-  return {version:1,blocks:HOMEPAGE_SECTION_KEYS.map(key=>({
+  const blocks:HomepageStudioBlock[]=HOMEPAGE_SECTION_KEYS.flatMap(key=>[{
     id:`home-${key}`,
     type:'HOME_SECTION' as const,
     widgetVersion:HOMEPAGE_STUDIO_WIDGET_VERSION,
     enabled:true,
     data:{sectionKey:key,label:labels[key]},
     children:key==='about'?[{id:'home-about-socials',type:'SOCIAL_LINKS' as const,widgetVersion:HOMEPAGE_STUDIO_WIDGET_VERSION,enabled:true,data:{heading:'Find me online',style:'BUTTONS'},children:[]}]:[]
-  }))};
+  },...(key==='brands'?[{id:'home-proof-strip',type:'PROOF_STRIP' as const,widgetVersion:HOMEPAGE_STUDIO_WIDGET_VERSION,enabled:true,data:{eyebrow:'HOW I WORK',heading:'Clear systems. Focused creative.',mode:'OUTCOMES',speed:28,items:[{value:'05',label:'CREATIVE DISCIPLINES',detail:'Amazon, brand, web, motion and technical.'},{value:'01',label:'CONNECTED PROCESS',detail:'From a focused brief to production-ready delivery.'},{value:'READY',label:'STRUCTURED HANDOFF',detail:'Clear files, reusable systems and documented delivery.'}]},children:[]}]:[])]);
+  return {version:1,blocks};
 }
 
 export function defaultHomepageStudioState():HomepageStudioState{
@@ -115,7 +116,7 @@ export function parseHomepageStudioState(value:unknown):HomepageStudioState{
   const fallback=defaultHomepageStudioState();
   const source=value&&typeof value==='object'&&!Array.isArray(value)?value:{};
   const parsed=homepageStudioStateSchema.safeParse({...fallback,...source});
-  return parsed.success?parsed.data:fallback;
+  const state=parsed.success?parsed.data:fallback;if(!collectHomepageBlocks(state.draft).some(block=>block.type==='PROOF_STRIP')){const proof=defaultHomepageStudioLayout().blocks.find(block=>block.type==='PROOF_STRIP');const brands=state.draft.blocks.findIndex(block=>block.type==='HOME_SECTION'&&block.data.sectionKey==='brands');if(proof)state.draft.blocks.splice(brands<0?1:brands+1,0,proof)}return state;
 }
 
 export function collectHomepageBlocks(layout:HomepageStudioLayout){

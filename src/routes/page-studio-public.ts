@@ -41,11 +41,11 @@ export async function sendStudioPage(req:Request,res:Response,next:NextFunction)
 }
 
 router.get('/homepage-layout',async(_req,res)=>{
-  if(!pageStudioSystemEnabled())return res.json({live:false,layout:null});
-  const [row,settings,origins,dynamic]=await Promise.all([db.homepageSection.findUnique({where:{key:HOMEPAGE_STUDIO_KEY}}),db.siteSettings.findFirst(),trustedOrigins(),dynamicData()]);
+  if(!pageStudioSystemEnabled()){const homepageSections=await db.homepageSection.findMany({where:{key:{not:HOMEPAGE_STUDIO_KEY}},orderBy:{sortOrder:'asc'}});return res.json({live:false,layout:null,homepageSections})}
+  const [row,homepageSections,settings,origins,dynamic]=await Promise.all([db.homepageSection.findUnique({where:{key:HOMEPAGE_STUDIO_KEY}}),db.homepageSection.findMany({where:{key:{not:HOMEPAGE_STUDIO_KEY}},orderBy:{sortOrder:'asc'}}),db.siteSettings.findFirst(),trustedOrigins(),dynamicData()]);
   const state=parseHomepageStudioState(row?.config);
   res.set('Cache-Control','public, max-age=30, s-maxage=120, stale-while-revalidate=300');
-  res.json({live:state.live&&Boolean(state.published),layout:state.live?state.published:null,publishedAt:state.publishedAt,trustedOrigins:origins,resolvedSections:resolveHomepageStudioSections((settings||{}) as unknown as Record<string,any>),projects:dynamic.projects,brands:dynamic.brands,settings:{socialLinks:settings?.socialLinks||[],featureFlags:settings?.featureFlags||{},email:settings?.email||'',availability:settings?.availability||false,availabilityLabel:settings?.availabilityLabel||''}});
+  res.json({live:state.live&&Boolean(state.published),layout:state.live?state.published:null,publishedAt:state.publishedAt,homepageSections,trustedOrigins:origins,resolvedSections:resolveHomepageStudioSections((settings||{}) as unknown as Record<string,any>),projects:dynamic.projects,brands:dynamic.brands,settings:{socialLinks:settings?.socialLinks||[],featureFlags:settings?.featureFlags||{},email:settings?.email||'',availability:settings?.availability||false,availabilityLabel:settings?.availabilityLabel||''}});
 });
 router.get('/status',async(_req,res)=>{const {config}=await state();res.json({systemEnabled:pageStudioSystemEnabled(),publicEnabled:pageStudioSystemEnabled()&&config.publicEnabled,customPathsEnabled:config.customPathsEnabled})});
 router.get('/data',async(_req,res)=>{if(!(await publicStudioEnabled()))return res.status(404).json({error:'Page Studio public pages are disabled.'});const [data,origins,navigationPreset]=await Promise.all([dynamicData(),trustedOrigins(),db.navigationPreset.findFirst({where:{enabled:true,isGlobal:true}})]);res.json({dynamic:data,trustedOrigins:origins,navigationPreset})});

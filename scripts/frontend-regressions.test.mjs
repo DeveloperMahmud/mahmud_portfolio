@@ -153,7 +153,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261027-4/);
-  assert.match(html,/admin-page-studio\.js\?v=20261028-1/);
+  assert.match(html,/admin-page-studio\.js\?v=20261028-2/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
   assert.match(navigation,/MutationObserver/);
@@ -206,4 +206,51 @@ test('homepage proof-to-work transition stays compact on wide displays',async()=
   assert.match(html,/homepage-studio-runtime\.css\?v=20261028-1/);
   assert.match(runtimeCss,/\.homepage-studio-proof-fallback\+\.featured-slider-section/);
   assert.match(runtimeCss,/padding-block:clamp\(42px,4\.5vw,68px\)!important/);
+});
+
+test('homepage proof content is manageable and reusable across both studios',async()=>{
+  const [manager,studio,pageStudio,publicRoute]=await Promise.all([
+    read('portfolio/admin-homepage-controls.js'),
+    read('src/lib/homepage-studio.ts'),
+    read('portfolio/page-studio.js'),
+    read('src/routes/page-studio-public.ts')
+  ]);
+  assert.match(manager,/How I Work \/ Proof Cards/);
+  assert.match(manager,/data-proof-add/);
+  assert.match(manager,/data-proof-up/);
+  assert.match(manager,/data-home-enabled/);
+  assert.match(studio,/type:'PROOF_STRIP'/);
+  assert.match(pageStudio,/Proof cards \/ outcome metrics/);
+  assert.match(publicRoute,/homepageSections/);
+});
+
+test('structured site modules have safe visual previews and the inspector scrolls independently',async()=>{
+  const [manager,adminCss,studioCss,studioHtml]=await Promise.all([
+    read('portfolio/admin-homepage-controls.js'),
+    read('portfolio/admin-ui-polish.css'),
+    read('portfolio/homepage-studio-polish.css'),
+    read('portfolio/homepage-studio.html')
+  ]);
+  assert.match(manager,/siteModulePreviewDefinitions/);
+  assert.match(manager,/data-site-module-preview/);
+  assert.match(manager,/Fix the JSON syntax/);
+  assert.match(adminCss,/\.site-modules-workspace/);
+  assert.match(studioCss,/\.hs-inspector\{position:sticky/);
+  assert.match(studioCss,/overflow-y:auto/);
+  assert.match(studioHtml,/homepage-studio-polish\.css/);
+});
+
+test('lead and analytics workspaces expose authenticated spreadsheet exports',async()=>{
+  const [leads,analyticsUi,operations,analyticsRoute]=await Promise.all([
+    read('portfolio/admin-leads.js'),
+    read('portfolio/admin-export-controls.js'),
+    read('src/routes/operations.ts'),
+    read('src/routes/analytics.ts')
+  ]);
+  assert.match(leads,/inquiries\.xlsx/);
+  assert.match(analyticsUi,/analytics\/export\.xlsx/);
+  assert.match(analyticsUi,/encodeURIComponent/);
+  assert.match(operations,/Sensitive XLSX export/);
+  assert.match(operations,/application\/vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet/);
+  assert.match(analyticsRoute,/adminAnalytics\.get\('\/export\.xlsx'/);
 });

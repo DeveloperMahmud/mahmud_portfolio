@@ -6,7 +6,7 @@ const widgetDefinitions=[
 ];
 widgetDefinitions.push(
  ['DYNAMIC','TRUST_STRIP','Trust strip','Live CMS brand logos in a compact credibility rail.'],
- ['CONTENT','OUTCOME_METRICS','Outcome metrics','Editable proof points with useful context.'],
+ ['CONTENT','OUTCOME_METRICS','Proof cards / outcome metrics','Editable proof points, service outcomes and measurable results.'],
  ['CONTENT','PROCESS_TIMELINE','Process timeline','A numbered path from brief to delivery.'],
  ['MEDIA','BEFORE_AFTER','Before / after','Two-image transformation comparison.'],
  ['DYNAMIC','FILTERABLE_PROJECT_GRID','Filterable projects','Published work with category filters.'],
