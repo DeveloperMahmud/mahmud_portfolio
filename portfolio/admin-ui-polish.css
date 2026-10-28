@@ -113,6 +113,19 @@
   .admin-page .project-item .item-actions{display:grid;grid-template-columns:1fr;grid-column:1/-1}
 }
 
+/* Desktop CMS workspace: navigation and content scroll independently. */
+@media(min-width:1051px){
+  body.admin-page.cms-workspace-active{height:100dvh;min-height:0;overflow:hidden}
+  .admin-page.cms-workspace-active .admin{display:grid;height:100dvh;min-height:0;grid-template-rows:auto minmax(0,1fr);padding-top:18px;padding-bottom:18px}
+  .admin-page.cms-workspace-active .back{width:max-content;margin-bottom:12px}
+  .admin-page.cms-workspace-active #cms{min-height:0;overflow:hidden}
+  .admin-page.cms-workspace-active .admin-shell{height:100%;min-height:0;align-items:stretch;overflow:hidden}
+  .admin-page.cms-workspace-active .admin-sidebar{position:relative;top:auto;height:100%;max-height:none;overscroll-behavior:contain;scrollbar-gutter:stable}
+  .admin-page.cms-workspace-active .admin-main{height:100%;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-right:8px;scrollbar-width:thin;scrollbar-color:#394139 transparent}
+  .admin-page.cms-workspace-active .admin-main::-webkit-scrollbar{width:7px}
+  .admin-page.cms-workspace-active .admin-main::-webkit-scrollbar-thumb{border-radius:999px;background:#394139}
+}
+
 /* Homepage proof manager + structured module preview workspace. */
 .admin-page .homepage-section-card.is-proof-manager{grid-template-columns:minmax(180px,.75fr) minmax(260px,1.45fr) auto;border-color:rgba(198,255,76,.35);background:linear-gradient(125deg,rgba(198,255,76,.055),rgba(13,16,13,.94) 38%)}
 .admin-page .homepage-proof-editor{grid-column:1/-1;margin-top:6px;border-top:1px solid var(--line);padding-top:12px}
