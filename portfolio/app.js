@@ -1,4 +1,3 @@
-document.body.classList.add('home-custom-cursor');
 // Hero typewriter — CMS controlled, repeats only while the headline is visible.
 (function initHeroTypewriter(){
   const el=document.querySelector('[data-typewriter]');

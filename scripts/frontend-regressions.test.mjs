@@ -208,6 +208,13 @@ test('homepage proof-to-work transition stays compact on wide displays',async()=
   assert.match(runtimeCss,/padding-block:clamp\(42px,4\.5vw,68px\)!important/);
 });
 
+test('homepage uses the native cursor without a perpetual cursor animation loop',async()=>{
+  const [source,index]=await Promise.all([read('portfolio/app.js'),read('portfolio/index.html')]);
+  assert.doesNotMatch(source,/classList\.add\('home-custom-cursor'\)/);
+  assert.doesNotMatch(index,/<div class="cursor"/);
+  assert.match(index,/app\.js\?v=20261028-1/);
+});
+
 test('homepage proof content is manageable and reusable across both studios',async()=>{
   const [manager,studio,pageStudio,publicRoute]=await Promise.all([
     read('portfolio/admin-homepage-controls.js'),
