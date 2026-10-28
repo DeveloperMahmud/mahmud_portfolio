@@ -197,3 +197,13 @@ test('homepage proof strip stays visible with empty draft data and legacy fallba
   assert.match(runtime,/data\.items\.length\?data\.items:proofFallback/);
   assert.match(editorial,/guardEmptyTestimonials/);
 });
+
+test('homepage proof-to-work transition stays compact on wide displays',async()=>{
+  const [html,runtimeCss]=await Promise.all([
+    read('portfolio/index.html'),
+    read('portfolio/homepage-studio-runtime.css')
+  ]);
+  assert.match(html,/homepage-studio-runtime\.css\?v=20261028-1/);
+  assert.match(runtimeCss,/\.homepage-studio-proof-fallback\+\.featured-slider-section/);
+  assert.match(runtimeCss,/padding-block:clamp\(42px,4\.5vw,68px\)!important/);
+});

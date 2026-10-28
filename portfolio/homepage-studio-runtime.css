@@ -27,3 +27,10 @@
 html[data-theme-tokens=ready] :is(.homepage-studio-proof,.homepage-studio-testimonials,.homepage-studio-faq,.homepage-studio-process,.homepage-studio-project-explorer,.homepage-studio-bento,.homepage-studio-case-story){padding-block:var(--section-spacing,96px)}
 html[data-theme-tokens=ready] :is(.homepage-studio-module-head,.homepage-studio-proof-grid,.homepage-studio-testimonial-rail,.homepage-studio-faq-list,.homepage-studio-process-grid,.homepage-studio-explorer-shell,.homepage-studio-bento-grid,.homepage-studio-case-story-grid,.homepage-studio-brand-viewport){max-width:var(--content-max-width,1320px)}
 html[data-theme-tokens=ready] :is(.homepage-studio-module-head h2,.homepage-studio-explorer-stage h3,.homepage-studio-bento-grid h3,.homepage-studio-case-story-grid h3){font-family:var(--font-heading,"Space Grotesk",Arial,sans-serif)}
+
+/* Keep the legacy proof-to-work transition intentional on wide displays. */
+.homepage-studio-proof-fallback{padding-block:clamp(42px,4.5vw,68px)!important;background:radial-gradient(circle at 82% 18%,rgba(198,255,76,.065),transparent 32%),linear-gradient(180deg,#0d100e,#090b0a)}
+.homepage-studio-proof-fallback .homepage-studio-module-head{margin-bottom:20px}
+.homepage-studio-proof-fallback .homepage-studio-proof-grid article{display:flex;min-height:118px;flex-direction:column;justify-content:flex-end;background:linear-gradient(145deg,rgba(198,255,76,.09),rgba(255,255,255,.018))}
+.homepage-studio-proof-fallback+.featured-slider-section{padding-top:clamp(56px,4vw,72px)}
+@media(max-width:760px){.homepage-studio-proof-fallback{padding-block:48px!important}.homepage-studio-proof-fallback+.featured-slider-section{padding-top:56px}}
