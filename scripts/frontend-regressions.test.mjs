@@ -153,7 +153,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261028-1/);
-  assert.match(html,/admin-page-studio\.js\?v=20261028-9/);
+  assert.match(html,/admin-page-studio\.js\?v=20261028-10/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
   assert.match(navigation,/MutationObserver/);
@@ -295,4 +295,22 @@ test('lead and analytics workspaces expose authenticated spreadsheet exports',as
   assert.match(operations,/Sensitive XLSX export/);
   assert.match(operations,/application\/vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet/);
   assert.match(analyticsRoute,/adminAnalytics\.get\('\/export\.xlsx'/);
+});
+
+test('admin collection controls keep consistent spacing and Brand field geometry',async()=>{
+  const [admin,polish]=await Promise.all([
+    read('portfolio/admin.js'),
+    read('portfolio/admin-ui-polish.css')
+  ]);
+  assert.match(admin,/renderBrands\(\).*class="item-actions"/s);
+  assert.match(polish,/\.admin-page \.bulkbar>label\{[^}]*min-height:44px[^}]*padding:0 11px/);
+  assert.match(polish,/\.admin-page \.project-item>\.item-actions\{[^}]*gap:8px/);
+  assert.match(polish,/#brandForm>label:has\(#brandActive\)\{[^}]*min-height:48px/);
+});
+
+test('public loading frames remain intentional and multiline conversion headings breathe',async()=>{
+  const [styles,index]=await Promise.all([read('portfolio/styles.css'),read('portfolio/index.html')]);
+  assert.match(styles,/\.project-media-wrap\{[^}]*radial-gradient\(circle at 78% 18%/);
+  assert.match(styles,/\.contact-inner h2\{line-height:\.88\}/);
+  assert.match(index,/styles\.css\?v=20261028-2/);
 });

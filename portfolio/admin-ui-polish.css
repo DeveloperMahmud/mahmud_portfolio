@@ -190,3 +190,16 @@
 .admin-page #inquiryList{gap:10px}.admin-page #inquiryList>.project-item{grid-template-columns:minmax(0,1fr) minmax(170px,240px);align-items:start;padding:16px;border-radius:9px;background:#0b0e0c}.admin-page #inquiryList>.project-item>div{display:grid;gap:12px}.admin-page #inquiryList textarea{width:100%;min-height:96px;resize:vertical;background:#090c0a;border:1px solid var(--line);color:var(--text);padding:11px}.admin-page #inquiryList select{width:100%;min-height:48px;background:#090c0a;border:1px solid var(--line);color:var(--text);padding:10px}.admin-page #inquiryList label{display:grid;gap:7px;color:var(--muted);font-size:8px;letter-spacing:.1em}
 .admin-page .team-create{grid-template-columns:minmax(220px,1.2fr) minmax(220px,1fr) minmax(170px,.7fr) auto}.admin-page .team-create>*{min-width:0}.admin-page .ops-check input[type=checkbox],.admin-page .form-label input[type=checkbox]{width:18px!important;height:18px!important;min-height:18px!important;margin:0!important;flex:0 0 18px;padding:0!important}
 @media(max-width:900px){.admin-page #activityList{grid-template-columns:1fr}.admin-page #inquiryList>.project-item{grid-template-columns:1fr}.admin-page .team-create{grid-template-columns:1fr 1fr}}@media(max-width:620px){.admin-page .team-create{grid-template-columns:1fr}}
+
+/* Form rhythm: bulk tools, card actions and Brand fields share one geometry. */
+.admin-page .bulkbar{gap:10px;padding:12px}
+.admin-page .bulkbar>label{display:inline-flex;min-height:44px;align-items:center;gap:8px;margin-right:auto;padding:0 11px;border:1px solid #303630;border-radius:7px;background:#090c0a}
+.admin-page .bulkbar>label input[type=checkbox]{margin:0!important}
+.admin-page .project-item>.item-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.admin-page #brandForm{align-items:start}
+.admin-page #brandForm>label{min-width:0;align-self:start}
+.admin-page #brandForm>label>input:not([type=checkbox]){min-height:48px}
+.admin-page #brandForm>label:has(#brandActive){display:flex!important;min-height:48px;align-self:end;align-items:center;gap:9px;margin:0!important;padding:0 12px;border:1px solid #303630;border-radius:8px;background:#090c0a}
+.admin-page #brandForm>label:has(#brandActive) input{margin:0!important}
+.admin-page #brandForm>.admin-actions{grid-column:1/-1;margin-top:2px}
+@media(max-width:650px){.admin-page .project-item>.item-actions{display:grid}.admin-page .bulkbar>label{margin-right:0}}
