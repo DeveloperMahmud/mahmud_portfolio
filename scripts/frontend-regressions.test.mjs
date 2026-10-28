@@ -153,7 +153,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261027-4/);
-  assert.match(html,/admin-page-studio\.js\?v=20261028-6/);
+  assert.match(html,/admin-page-studio\.js\?v=20261028-7/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
   assert.match(navigation,/MutationObserver/);
@@ -253,7 +253,7 @@ test('structured module presets expose non-destructive hover and keyboard previe
   assert.match(css,/\.module-preset-preview/);
   assert.match(css,/height:clamp\(540px,68vh,760px\)/);
   assert.match(css,/overflow-y:auto/);
-  assert.match(css,/\.module-preset-stage:is\(\.is-capabilitiesConfig,\.is-navigationConfig,\.is-socialLinks\)\{min-height:0/);
+  assert.match(css,/\.is-footerConfig,\.is-aboutConfig,\.is-amazonConfig\)\{min-height:0;justify-content:flex-start/);
 });
 
 test('structured site modules have safe visual previews and the inspector scrolls independently',async()=>{
