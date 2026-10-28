@@ -126,6 +126,19 @@
 .admin-page [data-home-drag],.admin-page [data-proof-drag]{cursor:grab;transition:border-color .18s ease,opacity .18s ease,transform .18s ease}.admin-page [data-home-drag].is-dragging,.admin-page [data-proof-drag].is-dragging{opacity:.42}.admin-page [data-home-drag].is-drag-target,.admin-page [data-proof-drag].is-drag-target{border-color:var(--lime);transform:translateY(2px);box-shadow:inset 3px 0 0 var(--lime)}
 .admin-page .homepage-proof-items>article>span{color:var(--lime);font:700 10px var(--admin-display)}
 .admin-page .homepage-proof-item-actions{display:flex;gap:6px;flex-wrap:wrap}
+.admin-page .homepage-source-editor{grid-column:1/-1;margin-top:6px;border-top:1px solid var(--line);padding-top:12px}
+.admin-page .homepage-source-editor summary{width:max-content;color:var(--lime);font-size:8px;font-weight:800;letter-spacing:.1em;cursor:pointer;list-style:none}
+.admin-page .homepage-source-editor summary::-webkit-details-marker{display:none}
+.admin-page .homepage-source-editor summary::before{content:'›';display:inline-block;margin-right:7px;transition:transform .18s ease}
+.admin-page .homepage-source-editor[open] summary::before{transform:rotate(90deg)}
+.admin-page .homepage-source-card{display:grid;grid-template-columns:minmax(220px,1fr) auto;align-items:end;gap:18px;margin-top:13px;padding:14px;border:1px solid var(--line);background:#090c0a}
+.admin-page .homepage-source-card>div:first-child{display:grid;gap:5px}
+.admin-page .homepage-source-card span{color:var(--muted);font-size:7px;font-weight:800;letter-spacing:.12em}
+.admin-page .homepage-source-card strong{font:600 16px var(--admin-display)}
+.admin-page .homepage-source-card p{max-width:620px;margin:0;color:var(--muted);font-size:10px;line-height:1.55}
+.admin-page .homepage-source-actions{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap}
+.admin-page .homepage-editor-target{outline:1px solid var(--lime);outline-offset:6px;animation:homepage-editor-pulse 1.8s ease}
+@keyframes homepage-editor-pulse{0%,100%{box-shadow:none}35%{box-shadow:0 0 0 8px rgba(198,255,76,.12)}}
 .admin-page .site-modules-workspace{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,.75fr);gap:18px;align-items:start;margin-top:18px}
 .admin-page .site-modules-editor{min-width:0}
 .admin-page .site-module-preview{position:sticky;top:18px;max-height:calc(100vh - 36px);overflow:auto;overscroll-behavior:contain;border:1px solid rgba(198,255,76,.28);border-radius:12px;background:rgba(9,12,10,.96);padding:16px;scrollbar-width:thin;scrollbar-color:#46503f transparent}
@@ -146,4 +159,4 @@
 .admin-page .module-preview-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px;border-bottom:1px solid var(--line)}.admin-page .module-preview-nav>strong{font:700 20px var(--admin-display)}.admin-page .module-preview-nav nav{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}.admin-page .module-preview-nav span{font-size:7px;font-weight:800;letter-spacing:.09em}
 .admin-page .module-preview-social{align-items:flex-start;gap:8px}.admin-page .module-preview-social b{padding:9px 11px;border:1px solid var(--line);font-size:8px}.admin-page .site-module-preview-error{padding:24px;color:#ff9d9d}
 @media(max-width:1050px){.admin-page .site-modules-workspace{grid-template-columns:1fr}.admin-page .site-module-preview{position:relative;top:auto;max-height:none}.admin-page .homepage-proof-items{grid-template-columns:1fr 1fr}}
-@media(max-width:650px){.admin-page .homepage-section-card.is-proof-manager{grid-template-columns:52px minmax(0,1fr)}.admin-page .homepage-proof-fields,.admin-page .homepage-proof-items{grid-template-columns:1fr}.admin-page .homepage-section-card.is-proof-manager>.homepage-label-field,.admin-page .homepage-section-card.is-proof-manager>.homepage-section-actions{grid-column:1/-1}.admin-page .site-module-preview-canvas{min-height:300px}}
+@media(max-width:650px){.admin-page .homepage-section-card.is-proof-manager{grid-template-columns:52px minmax(0,1fr)}.admin-page .homepage-proof-fields,.admin-page .homepage-proof-items,.admin-page .homepage-source-card{grid-template-columns:1fr}.admin-page .homepage-section-card.is-proof-manager>.homepage-label-field,.admin-page .homepage-section-card.is-proof-manager>.homepage-section-actions{grid-column:1/-1}.admin-page .homepage-source-actions{display:grid;justify-content:stretch}.admin-page .homepage-source-actions>.admin-btn{width:100%}.admin-page .site-module-preview-canvas{min-height:300px}}

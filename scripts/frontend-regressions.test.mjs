@@ -153,7 +153,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261027-4/);
-  assert.match(html,/admin-page-studio\.js\?v=20261028-5/);
+  assert.match(html,/admin-page-studio\.js\?v=20261028-6/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
   assert.match(navigation,/MutationObserver/);
@@ -221,6 +221,11 @@ test('homepage proof content is manageable and reusable across both studios',asy
   assert.match(manager,/data-proof-drag/);
   assert.match(manager,/draggedSection/);
   assert.match(manager,/data-home-enabled/);
+  assert.match(manager,/homepageEditorRoutes/);
+  assert.match(manager,/EDIT CONTENT & SETTINGS/);
+  assert.match(manager,/data-home-editor/);
+  assert.match(manager,/openHomepageEditor/);
+  assert.match(manager,/maintenance-subtab/);
   assert.match(studio,/type:'PROOF_STRIP'/);
   assert.match(pageStudio,/Proof cards \/ outcome metrics/);
   assert.match(publicRoute,/homepageSections/);
