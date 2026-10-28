@@ -91,6 +91,11 @@
 .admin-page .tabs,.admin-page .maintenance-subtabs{scrollbar-width:thin;scrollbar-color:#394139 transparent}
 .admin-page :is(.tabs,.maintenance-subtabs)::-webkit-scrollbar{height:5px}
 .admin-page :is(.tabs,.maintenance-subtabs)::-webkit-scrollbar-thumb{border-radius:999px;background:#394139}
+.admin-page .ops-nav{max-width:100%;margin:0 0 16px;padding:8px;border:1px solid #303630;border-radius:11px;background:rgba(10,13,10,.93);overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scroll-padding-inline:8px;scrollbar-width:thin;scrollbar-color:#394139 transparent}
+.admin-page .ops-nav .admin-btn{flex:0 0 auto;min-height:44px}
+.admin-page .ops-nav::-webkit-scrollbar{height:5px}
+.admin-page .ops-nav::-webkit-scrollbar-track{margin-inline:8px;background:transparent}
+.admin-page .ops-nav::-webkit-scrollbar-thumb{border-radius:999px;background:#394139}
 .admin-page :is(.error,.success,[role=status]){overflow-wrap:anywhere}
 
 @container(max-width:760px){
