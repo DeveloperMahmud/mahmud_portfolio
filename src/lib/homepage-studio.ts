@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const HOMEPAGE_STUDIO_KEY='homepage_studio_state';
 export const HOMEPAGE_STUDIO_WIDGET_VERSION=1;
-export const HOMEPAGE_SECTION_KEYS=['hero','brands','featured_slider','selected_work','editorial_modules','amazon','capabilities','tools','statement','about','why_me','clients','contact'] as const;
+export const HOMEPAGE_SECTION_KEYS=['hero','brands','featured_slider','selected_work','creative_lab','editorial_modules','amazon','capabilities','tools','statement','about','why_me','clients','contact'] as const;
 export const HOMEPAGE_STUDIO_BLOCKS=['HOME_SECTION','HOME_GROUP','SOCIAL_LINKS','CUSTOM_CODE','WEBSITE_EMBED','ANNOUNCEMENT','PROOF_STRIP','PROJECT_EXPLORER','BENTO_SNAPSHOT','CASE_STORY','PROCESS_STEPS','TESTIMONIAL_CAROUSEL','FAQ'] as const;
 
 export type HomepageStudioBlock={
@@ -55,7 +55,7 @@ export const homepageStudioStateSchema=z.object({
 }).strict();
 export type HomepageStudioState=z.infer<typeof homepageStudioStateSchema>;
 
-const labels:Record<(typeof HOMEPAGE_SECTION_KEYS)[number],string>={hero:'Hero',brands:'Brand / Client Strip',featured_slider:'Featured Project Slider',selected_work:'Selected Work',editorial_modules:'Editorial Modules',amazon:'Amazon / E-commerce',capabilities:'Capabilities',tools:'Tools / Skills',statement:'Designer Statement',about:'About',why_me:'Why Work With Me',clients:'Clients / Testimonials',contact:'Contact'};
+const labels:Record<(typeof HOMEPAGE_SECTION_KEYS)[number],string>={hero:'Hero',brands:'Brand / Client Strip',featured_slider:'Featured Project Slider',selected_work:'Selected Work',creative_lab:'Creative Lab / Tools I Built',editorial_modules:'Editorial Modules',amazon:'Amazon / E-commerce',capabilities:'Capabilities',tools:'Tools / Skills',statement:'Designer Statement',about:'About',why_me:'Why Work With Me',clients:'Clients / Testimonials',contact:'Contact'};
 
 export type HomepageResolvedSection={
   source:string;
@@ -74,16 +74,17 @@ const textValue=(value:unknown,fallback:string)=>typeof value==='string'&&value.
  * keeps only visual overrides; managed projects, skills, brands and testimonials
  * remain the canonical records so the same content is never duplicated.
  */
-export function resolveHomepageStudioSections(siteSettings:Record<string,any>):Record<string,HomepageResolvedSection>{
+export function resolveHomepageStudioSections(siteSettings:Record<string,any>,homepageSections:Array<{key:string;config:unknown}>=[]):Record<string,HomepageResolvedSection>{
   const hero=objectValue(siteSettings.heroConfig),amazon=objectValue(siteSettings.amazonConfig),statement=objectValue(siteSettings.statementConfig),about=objectValue(siteSettings.aboutConfig),inquiry=objectValue(siteSettings.inquiryConfig),slider=objectValue(siteSettings.sliderConfig),editorial=objectValue(slider.editorialHome),testimonial=objectValue(slider.testimonialCarousel);
   const primary=objectValue(hero.primaryCta),secondary=objectValue(hero.secondaryCta),phrases=listValue(siteSettings.heroTypewriterPhrases).filter(value=>typeof value==='string'&&value.trim());
   const skills=listValue(siteSettings.skillsConfig),capabilities=listValue(siteSettings.capabilitiesConfig),socials=listValue(siteSettings.socialLinks);
-  const managerUrl='/admin.html';
+  const managerUrl='/admin.html',creativeLab=objectValue(homepageSections.find(section=>section.key==='creative_lab')?.config);
   return {
     hero:{source:'SITE SETTINGS / HERO',managerLabel:'OPEN SITE SETTINGS',managerUrl,fields:{eyebrow:textValue(hero.eyebrow,'AMAZON A+ / E-COMMERCE / BRANDING / WEB / MOTION'),leadText:textValue(siteSettings.heroLeadText,'I DESIGN'),phrases:(phrases.length?phrases:['BRANDS THAT SELL.','I CREATE E-COMMERCE EXPERIENCES.','CREATIVE THINKING. TECHNICAL PRECISION.']).join('\n'),description:textValue(hero.supportingCopy,'Creative design focused on Amazon, e-commerce and visual communication - backed by a technical, detail-driven mindset.'),primaryLabel:textValue(primary.label,'EXPLORE WORK'),primaryUrl:textValue(primary.url,'#work'),secondaryLabel:textValue(secondary.label,"LET'S WORK TOGETHER"),secondaryUrl:textValue(secondary.url,'#contact'),image:textValue(hero.desktopImage,textValue(siteSettings.heroImage,'/assets/home-hero-default.png'))}},
     brands:{source:'BRAND LIBRARY',managerLabel:'MANAGE BRANDS',managerUrl,fields:{eyebrow:'SELECTED BRANDS / CLIENT WORK'}},
     featured_slider:{source:'PUBLISHED PROJECTS / SLIDER SETTINGS',managerLabel:'MANAGE PROJECTS & SLIDER',managerUrl,fields:{eyebrow:textValue(slider.eyebrow,'SELECTED WORK'),heading:textValue(slider.headline,'Top work.\nMade to move.')}},
     selected_work:{source:'PUBLISHED PROJECTS',managerLabel:'MANAGE PROJECTS',managerUrl,fields:{eyebrow:'SELECTED WORK',heading:'Selected work.\nBuilt with intent.',description:'A focused mix of Amazon, e-commerce, branding, digital, motion and technical work. Each project can become a full case study.',primaryLabel:'VIEW FULL ARCHIVE',primaryUrl:'/work.html'}},
+    creative_lab:{source:'HOMEPAGE MANAGER / PUBLISHED CREATIVE LAB',managerLabel:'EDIT TEASER IN HOMEPAGE MANAGER',managerUrl,fields:{eyebrow:textValue(creativeLab.eyebrow,'TOOLS I BUILT / CREATIVE LAB'),heading:textValue(creativeLab.title,'Small tools for clearer creative work.'),description:textValue(creativeLab.summary,'Explore practical concept tools for e-commerce visuals, creative planning and production workflows.'),primaryLabel:textValue(creativeLab.ctaLabel,'EXPLORE ALL TOOLS'),primaryUrl:textValue(creativeLab.ctaUrl,'/creative-lab')}},
     editorial_modules:{source:'EDITORIAL MODULE SETTINGS / PROJECTS',managerLabel:'MANAGE EDITORIAL MODULE',managerUrl,fields:{eyebrow:textValue(editorial.eyebrow,'EDITORIAL / SELECTED DIRECTIONS'),heading:textValue(editorial.heading,'A more considered way to explore the work.'),description:textValue(editorial.text,'Move through focused collections, disciplines and outcomes without losing the story behind each project.'),primaryLabel:textValue(editorial.primaryLabel,'VIEW ALL WORK'),primaryUrl:textValue(editorial.primaryUrl,'/work.html'),secondaryLabel:textValue(editorial.secondaryLabel,'START A CONVERSATION'),secondaryUrl:textValue(editorial.secondaryUrl,'#contact')}},
     amazon:{source:'SITE MODULES / AMAZON',managerLabel:'OPEN SITE MODULES',managerUrl,fields:{eyebrow:textValue(amazon.eyebrow,'PRIMARY SPECIALIZATION'),heading:textValue(amazon.heading,'AMAZON\n/ E-COMMERCE'),description:textValue(amazon.copy,'I create product-focused visual systems for brands selling on Amazon - from A+ Content and Brand Story to Storefronts, listing images and product infographics.')}},
     capabilities:{source:'CAPABILITIES MANAGER',managerLabel:'MANAGE CAPABILITIES',managerUrl,managedCount:capabilities.length,fields:{eyebrow:'CAPABILITIES',heading:'One creative\nfoundation.',description:'Multiple disciplines, one consistent approach to hierarchy, clarity, craft and detail.'}},
@@ -116,7 +117,7 @@ export function parseHomepageStudioState(value:unknown):HomepageStudioState{
   const fallback=defaultHomepageStudioState();
   const source=value&&typeof value==='object'&&!Array.isArray(value)?value:{};
   const parsed=homepageStudioStateSchema.safeParse({...fallback,...source});
-  const state=parsed.success?parsed.data:fallback;if(!collectHomepageBlocks(state.draft).some(block=>block.type==='PROOF_STRIP')){const proof=defaultHomepageStudioLayout().blocks.find(block=>block.type==='PROOF_STRIP');const brands=state.draft.blocks.findIndex(block=>block.type==='HOME_SECTION'&&block.data.sectionKey==='brands');if(proof)state.draft.blocks.splice(brands<0?1:brands+1,0,proof)}return state;
+  const state=parsed.success?parsed.data:fallback;if(!collectHomepageBlocks(state.draft).some(block=>block.type==='PROOF_STRIP')){const proof=defaultHomepageStudioLayout().blocks.find(block=>block.type==='PROOF_STRIP');const brands=state.draft.blocks.findIndex(block=>block.type==='HOME_SECTION'&&block.data.sectionKey==='brands');if(proof)state.draft.blocks.splice(brands<0?1:brands+1,0,proof)}if(!collectHomepageBlocks(state.draft).some(block=>block.type==='HOME_SECTION'&&block.data.sectionKey==='creative_lab')){const teaser=defaultHomepageStudioLayout().blocks.find(block=>block.type==='HOME_SECTION'&&block.data.sectionKey==='creative_lab'),work=state.draft.blocks.findIndex(block=>block.type==='HOME_SECTION'&&block.data.sectionKey==='selected_work');if(teaser)state.draft.blocks.splice(work<0?state.draft.blocks.length:work+1,0,teaser)}return state;
 }
 
 export function collectHomepageBlocks(layout:HomepageStudioLayout){

@@ -6,6 +6,7 @@ const readScopes:Record<string,RegExp[]>={
   EDITOR:[
     /^\/(?:projects|content|brands|media|import|export)(?:\/|$)/,
     /^\/maintenance\/(?:settings|brand-assets|homepage)(?:\/|$)/,
+    /^\/creative-tools(?:\/|$)/,
     /^\/page-studio(?:\/|$)/,
     /^\/seo(?:\/|$)/,
     /^\/operations\/(?:revisions|trash|previews|media\/maintenance)(?:\/|$)/
@@ -19,12 +20,14 @@ const readScopes:Record<string,RegExp[]>={
   VIEWER:[
     /^\/(?:projects|content|brands|media)(?:\/|$)/,
     /^\/maintenance\/(?:brand-assets|homepage)(?:\/|$)/,
+    /^\/creative-tools(?:\/|$)/,
     /^\/page-studio(?:\/|$)/
   ]
 };
 const editorWriteScopes=[
   /^\/(?:projects|content|brands|media|import)(?:\/|$)/,
-  /^\/maintenance\/(?:brand-assets|homepage|testimonials|reviews)(?:\/|$)/,
+  /^\/maintenance\/(?:brand-assets|homepage|testimonials|reviews|recruiter-profile|studio-profile|presentation-profile)(?:\/|$)/,
+  /^\/creative-tools(?:\/|$)/,
   /^\/page-studio(?:\/|$)/,
   /^\/seo(?:\/|$)/,
   /^\/operations\/(?:previews|media\/maintenance|media\/[^/]+\/replace)(?:\/|$)/

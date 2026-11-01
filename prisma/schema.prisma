@@ -19,6 +19,37 @@ enum Visibility {
   PRIVATE
 }
 
+enum CreativeToolKind {
+  FLAGSHIP
+  MINI
+}
+
+enum CreativeToolProductStatus {
+  PLANNED
+  PREVIEW
+  BETA
+  LIVE
+  ARCHIVED
+}
+
+enum CreativeToolDemoMode {
+  CONCEPT
+  SAMPLE_INTERACTIVE
+  ACTUAL
+}
+
+enum CreativeToolActionBehavior {
+  AUTO
+  DEMO
+  LIVE
+  DETAILS
+}
+
+enum CreativeToolLinkTarget {
+  SAME_TAB
+  NEW_TAB
+}
+
 enum UserRole {
   ADMIN
   EDITOR
@@ -136,6 +167,75 @@ model ProjectMetric {
 
   @@index([projectId, sortOrder])
   @@index([projectId, verified, visible])
+}
+
+model CreativeTool {
+  id                    String                     @id @default(cuid())
+  canonicalId           String?                    @unique
+  systemSeeded          Boolean                    @default(false)
+  seedVersion           Int?
+  slug                  String                     @unique
+  publishedSlug         String?                    @unique
+  kind                  CreativeToolKind
+  category              String                     @default("GENERAL")
+  tags                  String[]                   @default([])
+  title                 String
+  subtitle              String?
+  shortDescription      String?
+  overview              String?
+  problemStatement      String?
+  audience              String[]                   @default([])
+  featureBullets        String[]                   @default([])
+  proposedInputs        String[]                   @default([])
+  proposedOutputs       String[]                   @default([])
+  limitations           String[]                   @default([])
+  iconKey               String?
+  coverImage            String?
+  galleryImages         Json                       @default("[]")
+  pageBlocks            Json                       @default("[]")
+  productStatus         CreativeToolProductStatus  @default(PLANNED)
+  demoMode              CreativeToolDemoMode       @default(CONCEPT)
+  demoNotice            String?
+  visibility            Visibility                 @default(PUBLIC)
+  visible               Boolean                    @default(true)
+  featured              Boolean                    @default(false)
+  sortOrder             Int                        @default(0)
+  demoUrl               String?
+  liveUrl               String?
+  documentationUrl      String?
+  liveUrlVerifiedAt     DateTime?
+  primaryLabel          String?
+  primaryBehavior       CreativeToolActionBehavior @default(AUTO)
+  primaryTarget         CreativeToolLinkTarget     @default(SAME_TAB)
+  primaryStyle          String?
+  secondaryLabel        String?
+  secondaryBehavior     CreativeToolActionBehavior?
+  secondaryUrl          String?
+  secondaryTarget       CreativeToolLinkTarget     @default(SAME_TAB)
+  secondaryStyle        String?
+  status                ProjectStatus              @default(DRAFT)
+  publishedSnapshot     Json?
+  publishedAt           DateTime?
+  scheduledAt           DateTime?
+  publicModifiedAt      DateTime?
+  seoTitle              String?
+  seoDescription        String?
+  ogImage               String?
+  canonicalUrl          String?
+  noIndex               Boolean                    @default(false)
+  noFollow              Boolean                    @default(false)
+  includeSitemap        Boolean                    @default(true)
+  createdAt             DateTime                   @default(now())
+  updatedAt             DateTime                   @updatedAt
+  deletedAt             DateTime?
+  deletedBy             String?
+
+  @@index([status, visibility, visible, scheduledAt])
+  @@index([kind, productStatus, sortOrder])
+  @@index([category, sortOrder])
+  @@index([featured, visible, sortOrder])
+  @@index([productStatus, visible])
+  @@index([deletedAt, updatedAt])
 }
 
 model AnalyticsEvent {

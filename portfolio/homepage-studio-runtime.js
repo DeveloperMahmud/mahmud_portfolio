@@ -1,5 +1,5 @@
 (()=>{'use strict';
-const selectors={hero:['.hero'],brands:['.brand-strip'],featured_slider:['#special'],selected_work:['#work'],editorial_modules:['#editorialModules'],amazon:['#amazon'],capabilities:['#services'],tools:['#skills'],statement:['.statement'],about:['#about'],why_me:['#why-work'],clients:['#testimonials'],contact:['#contact']};
+const selectors={hero:['.hero'],brands:['.brand-strip'],featured_slider:['#special'],selected_work:['#work'],creative_lab:['#creative-lab-teaser'],editorial_modules:['#editorialModules'],amazon:['#amazon'],capabilities:['#services'],tools:['#skills'],statement:['.statement'],about:['#about'],why_me:['#why-work'],clients:['#testimonials'],contact:['#contact']};
 const officialOrigins=['https://www.youtube.com','https://youtube.com','https://www.youtube-nocookie.com','https://player.vimeo.com','https://www.figma.com'];
 const proofFallback=[{value:'05',label:'CREATIVE DISCIPLINES',detail:'Amazon, brand, web, motion and technical.'},{value:'01',label:'CONNECTED PROCESS',detail:'From a focused brief to production-ready delivery.'},{value:'READY',label:'STRUCTURED HANDOFF',detail:'Clear files, reusable systems and documented delivery.'}];
 let applying=false,studioApplied=false,lastSocialTemplate=null,lastPayload=null;
@@ -22,6 +22,7 @@ function applySectionOverrides(node,data={},key=''){
   }else if(key==='brands')text('.brand-strip-head span:first-child','eyebrow');
   else if(key==='featured_slider'){text('.special-head .kicker','eyebrow');heading('.special-head h2')}
   else if(key==='selected_work'){text('.section-head .kicker','eyebrow');heading('.section-head h2');text('.section-head>p','description');link(':scope>p .button','primaryLabel','primaryUrl')}
+  else if(key==='creative_lab'){text('#creativeLabTeaserEyebrow','eyebrow');heading('#creativeLabTeaserTitle');text('#creativeLabTeaserSummary','description');link('#creativeLabTeaserCta','primaryLabel','primaryUrl')}
   else if(key==='editorial_modules'){text('.editorial-copy .kicker','eyebrow');heading('.editorial-copy h2');text('.editorial-copy>p','description');link('.editorial-actions a:nth-child(1)','primaryLabel','primaryUrl');link('.editorial-actions a:nth-child(2)','secondaryLabel','secondaryUrl')}
   else if(key==='amazon'){text('.amazon-intro .kicker','eyebrow');heading('.amazon-intro h2');text('.amazon-intro p','description')}
   else if(key==='capabilities'||key==='tools'){text('.section-head .kicker','eyebrow');heading('.section-head h2');text('.section-head>p','description')}

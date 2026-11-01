@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Presentation — Mahmudul Hassan</title>
+  <meta name="description" content="A focused portfolio presentation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/presentation.css?v=20261101-1">
+</head>
+<body>
+  <a class="skip-link" href="#presentationStage">Skip to presentation</a>
+  <div class="presentation-shell">
+    <header class="presentation-header">
+      <a class="presentation-brand" href="/" aria-label="Mahmudul Hassan home"><strong>MH</strong><span>MAHMUDUL HASSAN</span></a>
+      <div class="presentation-meta"><span id="presentationMode">FOCUSED VIEW</span><span id="presentationDuration">PAUSE OR EXPLORE FREELY</span></div>
+      <a class="presentation-exit" id="presentationExit" href="/hire">EXIT PRESENTATION</a>
+    </header>
+
+    <div class="presentation-progress" aria-label="Presentation progress">
+      <div id="presentationProgress" role="progressbar" aria-valuemin="1" aria-valuemax="8" aria-valuenow="1" aria-valuetext="Step 1 of 8"><i></i></div>
+      <span id="presentationCounter">01 / 08</span>
+    </div>
+
+    <main id="presentationStage" class="presentation-stage" tabindex="-1" aria-live="polite">
+      <section class="presentation-loading"><span>PREPARING PUBLISHED EVIDENCE</span><h1>A focused portfolio view.</h1><p>Only public, published records can appear here.</p></section>
+    </main>
+
+    <footer class="presentation-controls" aria-label="Presentation controls">
+      <button type="button" id="presentationPrevious" aria-label="Previous step">← PREVIOUS</button>
+      <button type="button" id="presentationPlayback" aria-pressed="false">START GUIDED VIEW</button>
+      <button type="button" id="presentationNext" aria-label="Next step">NEXT →</button>
+    </footer>
+    <p class="presentation-shortcuts">Arrow keys move between steps · Space pauses or resumes · No audio</p>
+  </div>
+  <script src="/analytics.js?v=20261101-1" defer></script>
+  <script src="/presentation.js?v=20261101-1" defer></script>
+</body>
+</html>

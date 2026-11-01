@@ -6,6 +6,7 @@ import { requireAuth } from '../lib/auth.js';
 import { createRevision } from '../lib/revisions.js';
 import { DEFAULT_PAGE_STUDIO_CONFIG, DEFAULT_PAGE_TEMPLATES, PAGE_STUDIO_SCHEMA_VERSION, PAGE_STUDIO_WIDGET_REGISTRY, cloneBlocks, normalizePagePath, pageStudioConfigSchema, pageStudioSystemEnabled, parsePageStudioConfig, resolveGlobalBlocks, slugify, studioBlockSchema, studioBlocksSchema, type StudioBlock } from '../lib/page-studio.js';
 import { HOMEPAGE_STUDIO_KEY, collectHomepageBlocks, defaultHomepageStudioState, homepageStudioLayoutSchema, parseHomepageStudioState, resolveHomepageStudioSections } from '../lib/homepage-studio.js';
+import { pageStudioCreativeTools } from '../lib/page-studio-creative-tools.js';
 
 const router=Router();
 router.use(requireAuth);
@@ -45,14 +46,15 @@ function validateAdvancedBlocks(blocks:StudioBlock[]){
 }
 
 type PublishIssue={code:string;severity:'ERROR'|'WARNING';message:string;blockId?:string};
-const placeholderPattern=/(?:replace this (?:sample|answer)|demo company|sample client|add clear, useful copy|add your answer here|your headline|lorem ipsum|client notes will appear here)/i;
+const placeholderPattern=/(?:replace this (?:sample|answer)|demo company|sample client|add clear, useful copy|add your answer here|your headline|lorem ipsum|client notes will appear here|evidence required:)/i;
+const technicalCaseStudyEvidenceKeys=['motivation','constraints','architecture','component-library','creation-workflow','qa-reliability','accessibility','security','lessons-tradeoffs','individual-contribution'] as const;
 function blockTextValues(value:unknown):string[]{
   if(typeof value==='string')return [value];
   if(Array.isArray(value))return value.flatMap(blockTextValues);
   if(value&&typeof value==='object')return Object.entries(value as Record<string,unknown>).filter(([key])=>!/(?:url|src|image|icon|color|id)$/i.test(key)).flatMap(([,nested])=>blockTextValues(nested));
   return [];
 }
-async function studioPublishIssues(input:{title?:string;seoTitle?:string|null;seoDescription?:string|null;blocks:StudioBlock[];homepage?:boolean}){
+async function studioPublishIssues(input:{title?:string;seoTitle?:string|null;seoDescription?:string|null;templateKey?:string|null;blocks:StudioBlock[];homepage?:boolean}){
   const issues:PublishIssue[]=[],blocks=allBlocks(input.blocks),add=(code:PublishIssue['code'],severity:PublishIssue['severity'],message:string,blockId?:string)=>issues.push({code,severity,message,blockId});
   if(!blocks.length)add('EMPTY_PAGE','ERROR','Add at least one visible widget before publishing.');
   const enabled=blocks.filter(block=>block.enabled!==false);
@@ -76,6 +78,12 @@ async function studioPublishIssues(input:{title?:string;seoTitle?:string|null;se
   }
   if(!input.homepage&&!String(input.seoTitle||input.title||'').trim())add('MISSING_SEO_TITLE','WARNING','Add a useful SEO title.');
   if(!input.homepage&&!String(input.seoDescription||'').trim())add('MISSING_SEO_DESCRIPTION','WARNING','Add a search description before launch.');
+  if(input.templateKey==='page-studio-technical-case-study'){
+    const evidenceKeys=new Set(enabled.map(block=>String(block.data.evidenceKey||'')).filter(Boolean));
+    const missing=technicalCaseStudyEvidenceKeys.filter(key=>!evidenceKeys.has(key));
+    if(missing.length)add('INCOMPLETE_TECHNICAL_CASE_STUDY','ERROR',`Restore and complete the required evidence sections: ${missing.join(', ')}.`);
+    if(!enabled.some(block=>['IMAGE','GALLERY','MEDIA_MOSAIC','VIDEO'].includes(block.type)&&JSON.stringify(block.data).match(/https?:\/\/|\/uploads\//)))add('MISSING_CASE_STUDY_EVIDENCE','WARNING','Add at least one authorized screenshot, diagram or inspectable media reference before launch.');
+  }
   if(enabled.some(block=>block.type==='TESTIMONIAL_CAROUSEL')&&!await db.testimonial.count({where:{deletedAt:null,published:true}}))add('NO_TESTIMONIALS','WARNING','The testimonial carousel has no published client notes.');
   return issues;
 }
@@ -96,10 +104,10 @@ router.use(async(req,res,next)=>{if(req.path==='/bootstrap'||req.path==='/config
 
 router.get('/bootstrap',async(_req,res)=>{
   await seedTemplates();const siteSettings=await settings(),studioConfig=parsePageStudioConfig(siteSettings.pageStudioConfig);
-  const [pages,templates,reusableBlocks,taxonomy,navigationPresets,embedSources,mediaCount,mediaBytes,media,projects,content,brands,testimonials]=await Promise.all([
-    db.customPage.findMany({where:{deletedAt:null},orderBy:{updatedAt:'desc'},include:{taxonomy:{include:{term:true}}}}),db.pageTemplate.findMany({where:{active:true},orderBy:[{category:'asc'},{name:'asc'}]}),db.reusableBlock.findMany({where:{active:true},orderBy:[{category:'asc'},{name:'asc'}]}),db.taxonomyTerm.findMany({where:{active:true},orderBy:[{type:'asc'},{sortOrder:'asc'},{name:'asc'}]}),db.navigationPreset.findMany({where:{enabled:true},orderBy:[{isGlobal:'desc'},{name:'asc'}]}),db.trustedEmbedSource.findMany({orderBy:{name:'asc'}}),db.media.count({where:{deletedAt:null}}),db.media.aggregate({where:{deletedAt:null},_sum:{size:true}}),db.media.findMany({where:{deletedAt:null,status:'COMPLETE',mimeType:{startsWith:'image/'}},orderBy:{createdAt:'desc'},take:200,select:{id:true,url:true,filename:true,originalName:true,mimeType:true,size:true,width:true,height:true,alt:true,title:true}}),db.project.findMany({where:{deletedAt:null,status:'PUBLISHED',visibility:'PUBLIC',clientOnly:false},orderBy:[{featured:'desc'},{sortOrder:'asc'}],take:50,select:{id:true,title:true,slug:true,category:true,service:true,client:true,coverImage:true,homepageImage:true,projectSubtitle:true}}),db.content.findMany({where:{deletedAt:null,status:'PUBLISHED'},orderBy:[{featured:'desc'},{publishedAt:'desc'}],take:30,select:{id:true,title:true,slug:true,category:true,excerpt:true,coverImage:true,publishedAt:true}}),db.brand.findMany({where:{deletedAt:null,active:true},orderBy:{sortOrder:'asc'},take:50,select:{id:true,name:true,logoAsset:true,logoDark:true,url:true,industry:true}}),db.testimonial.findMany({where:{deletedAt:null,published:true},orderBy:[{featured:'desc'},{sortOrder:'asc'}],take:30,select:{id:true,client:true,company:true,role:true,quote:true,photo:true,featured:true}})
+  const [pages,templates,reusableBlocks,taxonomy,navigationPresets,embedSources,mediaCount,mediaBytes,media,projects,content,brands,testimonials,creativeTools]=await Promise.all([
+    db.customPage.findMany({where:{deletedAt:null},orderBy:{updatedAt:'desc'},include:{taxonomy:{include:{term:true}}}}),db.pageTemplate.findMany({where:{active:true},orderBy:[{category:'asc'},{name:'asc'}]}),db.reusableBlock.findMany({where:{active:true},orderBy:[{category:'asc'},{name:'asc'}]}),db.taxonomyTerm.findMany({where:{active:true},orderBy:[{type:'asc'},{sortOrder:'asc'},{name:'asc'}]}),db.navigationPreset.findMany({where:{enabled:true},orderBy:[{isGlobal:'desc'},{name:'asc'}]}),db.trustedEmbedSource.findMany({orderBy:{name:'asc'}}),db.media.count({where:{deletedAt:null}}),db.media.aggregate({where:{deletedAt:null},_sum:{size:true}}),db.media.findMany({where:{deletedAt:null,status:'COMPLETE',mimeType:{startsWith:'image/'}},orderBy:{createdAt:'desc'},take:200,select:{id:true,url:true,filename:true,originalName:true,mimeType:true,size:true,width:true,height:true,alt:true,title:true}}),db.project.findMany({where:{deletedAt:null,status:'PUBLISHED',visibility:'PUBLIC',clientOnly:false},orderBy:[{featured:'desc'},{sortOrder:'asc'}],take:50,select:{id:true,title:true,slug:true,category:true,service:true,client:true,coverImage:true,homepageImage:true,projectSubtitle:true}}),db.content.findMany({where:{deletedAt:null,status:'PUBLISHED'},orderBy:[{featured:'desc'},{publishedAt:'desc'}],take:30,select:{id:true,title:true,slug:true,category:true,excerpt:true,coverImage:true,publishedAt:true}}),db.brand.findMany({where:{deletedAt:null,active:true},orderBy:{sortOrder:'asc'},take:50,select:{id:true,name:true,logoAsset:true,logoDark:true,url:true,industry:true}}),db.testimonial.findMany({where:{deletedAt:null,published:true},orderBy:[{featured:'desc'},{sortOrder:'asc'}],take:30,select:{id:true,client:true,company:true,role:true,quote:true,photo:true,featured:true}}),pageStudioCreativeTools()
   ]);
-  const dynamic={projects,content,brands,testimonials,settings:{siteName:siteSettings.siteName,title:siteSettings.title,navigationConfig:siteSettings.navigationConfig,footerConfig:siteSettings.footerConfig,aboutConfig:siteSettings.aboutConfig,socialLinks:siteSettings.socialLinks,featureFlags:siteSettings.featureFlags}};
+  const dynamic={projects,content,brands,testimonials,creativeTools,settings:{siteName:siteSettings.siteName,title:siteSettings.title,navigationConfig:siteSettings.navigationConfig,footerConfig:siteSettings.footerConfig,aboutConfig:siteSettings.aboutConfig,socialLinks:siteSettings.socialLinks,featureFlags:siteSettings.featureFlags}};
   const resolvedPages=pages.map(page=>({...page,blocks:resolveGlobalBlocks(studioBlocksSchema.parse(page.blocks),reusableBlocks)}));
   res.json({systemEnabled:true,schemaVersion:PAGE_STUDIO_SCHEMA_VERSION,widgetRegistry:PAGE_STUDIO_WIDGET_REGISTRY,config:studioConfig,permissions:{editContent:['ADMIN','EDITOR'].includes(role(res)),manageGlobalControls:role(res)==='ADMIN'},pages:resolvedPages,templates,reusableBlocks,taxonomy,navigationPresets,embedSources,media,dynamic,usage:{mediaAssets:mediaCount,mediaBytes:mediaBytes._sum.size||0,configuredMediaQuota:Number(process.env.MEDIA_STORAGE_QUOTA_BYTES||1073741824)},limits:{blobWritesOnPageSave:0,mediaCopiedOnDuplicate:false}});
 });
@@ -118,7 +126,7 @@ router.patch('/pages/:id',async(req,res)=>{
   try{const normalized=await normalizeInput(parsed.data,existing.id);const {termIds,status:_ignoredStatus,...data}=normalized;const page=await db.$transaction(async tx=>{const result=await tx.customPage.updateMany({where:{id:existing.id,updatedAt:expectedUpdatedAt},data:{...data,blocks:jsonValue(data.blocks),scheduledAt:data.scheduledAt?new Date(data.scheduledAt):null}});if(result.count!==1)throw new Error('EDIT_CONFLICT');if(Array.isArray(req.body.termIds)){await tx.pageTaxonomyAssignment.deleteMany({where:{pageId:existing.id}});if(termIds.length)await tx.pageTaxonomyAssignment.createMany({data:termIds.map(termId=>({pageId:existing.id,termId})),skipDuplicates:true})}return tx.customPage.findUniqueOrThrow({where:{id:existing.id}})});res.json({page});}catch(error){if(error instanceof Error&&error.message==='EDIT_CONFLICT')return res.status(409).json({error:'This page changed while you were saving. Reload it before trying again.',code:'EDIT_CONFLICT'});res.status(400).json({error:error instanceof Error?error.message:'Could not save page.'})}
 });
 router.post('/pages/:id/publish',async(req,res)=>{
-  const page=await db.customPage.findFirst({where:{id:req.params.id,deletedAt:null}});if(!page)return res.status(404).json({error:'Page not found.'});const blocks=studioBlocksSchema.parse(page.blocks);await validateEmbeds(blocks);const issues=await studioPublishIssues({title:page.title,seoTitle:page.seoTitle,seoDescription:page.seoDescription,blocks}),blocking=issues.filter(issue=>issue.severity==='ERROR');if(blocking.length)return res.status(422).json({error:'Publish preflight found required fixes.',issues});
+  const page=await db.customPage.findFirst({where:{id:req.params.id,deletedAt:null}});if(!page)return res.status(404).json({error:'Page not found.'});const blocks=studioBlocksSchema.parse(page.blocks);await validateEmbeds(blocks);const issues=await studioPublishIssues({title:page.title,seoTitle:page.seoTitle,seoDescription:page.seoDescription,templateKey:page.templateKey,blocks}),blocking=issues.filter(issue=>issue.severity==='ERROR');if(blocking.length)return res.status(422).json({error:'Publish preflight found required fixes.',issues});
   const studioConfig=await config();
   await createRevision('CUSTOM_PAGE',page.id,page,{actorId:actor(res),summary:'Published Page Studio page',sourceAction:'PUBLISH',retentionCount:studioConfig.maxRevisions});const now=new Date(),{publishedSnapshot:_previousSnapshot,...pageFields}=page,publishedSnapshot=jsonValue(JSON.parse(JSON.stringify({...pageFields,blocks,publishedPath:page.path,publishedAt:page.publishedAt||now,publicModifiedAt:now})));const updated=await db.customPage.update({where:{id:page.id},data:{status:'PUBLISHED',publishedPath:page.path,publishedSnapshot,publishedAt:page.publishedAt||now,publicModifiedAt:now}});await db.activityLog.create({data:{action:'PUBLISH',entity:'CUSTOM_PAGE',entityId:page.id,actorId:actor(res),label:page.title}});res.json({page:updated,url:updated.publishedPath,issues});
 });
@@ -176,7 +184,7 @@ async function validateHomepageEmbeds(layout:z.infer<typeof homepageStudioLayout
 }
 
 router.get('/homepage-studio',async(_req,res)=>{
-  const [row,embedSources,site,projectCount,brandCount,testimonialCount,projects,brands]=await Promise.all([
+  const [row,embedSources,site,projectCount,brandCount,testimonialCount,projects,brands,homepageSections]=await Promise.all([
     homepageStudioRow(),
     db.trustedEmbedSource.findMany({where:{enabled:true,allowIframe:true},orderBy:{name:'asc'}}),
     settings(),
@@ -184,9 +192,10 @@ router.get('/homepage-studio',async(_req,res)=>{
     db.brand.count({where:{deletedAt:null,active:true}}),
     db.testimonial.count({where:{deletedAt:null}}),
     db.project.findMany({where:{deletedAt:null,status:'PUBLISHED',visibility:'PUBLIC',clientOnly:false},orderBy:[{featured:'desc'},{sortOrder:'asc'}],take:12,select:{id:true,title:true,slug:true,category:true,service:true,client:true,coverImage:true,homepageImage:true,projectSubtitle:true,description:true,results:true,resultMetrics:{where:{verified:true,visible:true},orderBy:{sortOrder:'asc'},take:3,select:{id:true,label:true,value:true,prefix:true,suffix:true,publicNote:true}}}}),
-    db.brand.findMany({where:{deletedAt:null,active:true},orderBy:{sortOrder:'asc'},take:30,select:{id:true,name:true,logoAsset:true,logoDark:true,url:true,industry:true}})
+    db.brand.findMany({where:{deletedAt:null,active:true},orderBy:{sortOrder:'asc'},take:30,select:{id:true,name:true,logoAsset:true,logoDark:true,url:true,industry:true}}),
+    db.homepageSection.findMany({where:{key:{not:HOMEPAGE_STUDIO_KEY}},orderBy:{sortOrder:'asc'}})
   ]);
-  const resolvedSections=resolveHomepageStudioSections(site as unknown as Record<string,any>);
+  const resolvedSections=resolveHomepageStudioSections(site as unknown as Record<string,any>,homepageSections);
   resolvedSections.brands.managedCount=brandCount;
   resolvedSections.featured_slider.managedCount=projectCount;
   resolvedSections.selected_work.managedCount=projectCount;
