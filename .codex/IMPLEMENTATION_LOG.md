@@ -1,5 +1,11 @@
 # Implementation Log
 
+## 2026-11-01 — Preview runtime environment hardening
+
+- Diagnosed the Vercel `FUNCTION_INVOCATION_FAILED` startup path: Preview uses `NODE_ENV=production`, while the environment guard previously required a production Blob token even for an intentionally isolated preview environment.
+- Preview deployments now allow media storage to remain unconfigured; upload controls continue to report storage unavailable until a Preview-scoped provider exists. Production deployments still require `BLOB_READ_WRITE_TOKEN`.
+- `DATABASE_URL` and a secure 32+ character `JWT_SECRET` remain mandatory for Preview. No secret was added to source control.
+
 ## 2026-11-01 — Recoverable Vercel Preview checkpoint
 
 - Colocated the unchanged V2 master specification inside `docs/` and updated repository recovery references so source, Git metadata, agent instructions and progress records live under one canonical project root.

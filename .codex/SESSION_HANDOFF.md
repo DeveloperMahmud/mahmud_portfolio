@@ -1,5 +1,11 @@
 # Session Handoff
 
+## Preview runtime fix — 2026-11-01
+
+- Vercel Preview returned `500 FUNCTION_INVOCATION_FAILED` after branch deployment.
+- The startup environment guard was adjusted so an isolated Preview can run without sharing production Blob storage. Production still requires Blob; Preview still requires its separate `DATABASE_URL` and a secure 32+ character `JWT_SECRET`.
+- Next action: build, commit and push this fix to `codex/v2-preview-2026-11-01`, then verify the redeployment. If 500 remains, inspect the first Function Log line; the most likely remaining configuration is a missing/short Preview-scoped `JWT_SECRET` or unreachable Preview `DATABASE_URL`.
+
 ## Latest preview deployment checkpoint — 2026-11-01
 
 1. Canonical project root: `D:/Web Works/search-hub/.portfolio-codex-work`; source, `.git`, `AGENTS.md`, `.codex/*` and `docs/MAHMUD_CODEX_MASTER_IMPLEMENTATION_INSTRUCTIONS_V2.md` are colocated here.
