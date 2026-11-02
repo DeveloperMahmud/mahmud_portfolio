@@ -1,5 +1,26 @@
 # Session Handoff
 
+## Preview runtime crash fix checkpoint — 2026-11-02
+
+1. Authorized Preview request reached the app and returned `500 FUNCTION_INVOCATION_FAILED`.
+2. Vercel runtime logs identified the exact cause: `Error: .omit() cannot be used on object schemas containing refinements` at `src/lib/creative-tools-admin.ts:90`.
+3. Local fix: `creativeToolDraftFieldsSchema` is now constructed before refinement; `creativeToolDraftPatchSchema` extends it with `expectedUpdatedAt` and then adds the non-empty patch refinement. No data model or API contract was changed.
+4. Files changed for the fix: `src/lib/creative-tools-admin.ts`, `scripts/creative-tool-editor.test.mjs`, plus the four recovery files.
+5. Tests: compiled module import passes; Creative Tool focused suites 10/10; all repository tests 232/232; TypeScript build and `git diff --check` pass.
+6. Exact next action: commit and push the fix to `codex/v2-preview-2026-11-01`, monitor the new Vercel deployment, then verify `/api/health`, `/`, `/hire`, `/studio`, `/creative-lab`, `/admin.html`, Preview migrations and authenticated CMS behavior. Do not push main or run production migrations.
+
+## Preview deployment checkpoint — 2026-11-02
+
+1. Consolidated V2 batch commit: `94a22f0` (`Complete Portfolio V2 tools quality and preview release gate`).
+2. Pushed branch: `codex/v2-preview-2026-11-01`; `main` and production were not changed.
+3. Vercel status: deployment `8TnSMRhbBR6nNhoUJjzHetvyFEGd` completed successfully.
+4. Preview URL: `https://mahmudportfolio-git-codex-v2-preview-2026-11-01-alpha-8307.vercel.app`.
+5. Runtime state: Vercel Deployment Protection redirects `/api/health`, `/`, `/hire`, `/studio`, `/creative-lab` and `/admin.html` to Vercel login. Application routes, Preview DB migrations, authenticated CMS and backup/restore are therefore NOT VERIFIED.
+6. P8-001 and P8-003 remain `IN_PROGRESS`; P3-007 remains DB-runtime blocked and P4-003 remains blocked on owner-supplied real case-study facts/media.
+7. Tests already passed before push: Prisma validate/generate, all 42 test files (232/232), static smoke, performance budget, TypeScript build and diff check. Vercel build status passed. Local Playwright visual execution remains unavailable because browser binaries are absent.
+8. Exact next action: use an authorized Vercel Preview login session or a scoped Deployment Protection bypass for this preview, then verify health, public routes, admin login/RBAC, migrations and backup/restore against the separate Preview database. Do not use production credentials, push main or run production migrations.
+9. Relevant resume checks: `git -c safe.directory="D:/Web Works/search-hub/.portfolio-codex-work" status --short --branch` and `git -c safe.directory="D:/Web Works/search-hub/.portfolio-codex-work" log -2 --oneline --decorate`.
+
 ## Phase 8 pre-push checkpoint — 2026-11-02
 
 1. Local release gate passes: Prisma validate/generate, all 42 test files (232/232 tests), static smoke, performance budget, TypeScript build and diff check.

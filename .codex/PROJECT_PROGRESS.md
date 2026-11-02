@@ -16,6 +16,23 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 
 ## Current state
 
+### Latest checkpoint — 2026-11-02 (Preview runtime crash fixed locally)
+
+- Authorized Preview access exposed a real serverless import crash: Zod v4 rejected `.omit()` on the refined `creativeToolDraftPatchSchema` at `src/lib/creative-tools-admin.ts`.
+- Refactored the schemas around one unrefined `creativeToolDraftFieldsSchema`, then extended it with `expectedUpdatedAt` before applying the patch-level refinement. Draft validation and snapshot boundaries remain unchanged.
+- Added a regression assertion that forbids composing the refined patch schema with `.omit()`.
+- Verification: compiled module import succeeds, focused Creative Tool suites pass 10/10, all repository tests pass 232/232, TypeScript build and diff check pass.
+- Exact next action: commit and push this runtime fix to `codex/v2-preview-2026-11-01`, wait for the replacement Vercel Preview deployment, then retest health/public/admin routes and Preview DB behavior. Production/main remains unauthorized.
+
+### Latest checkpoint — 2026-11-02 (Preview branch deployed)
+
+- Commit `94a22f0` (`Complete Portfolio V2 tools quality and preview release gate`) was pushed to `codex/v2-preview-2026-11-01`; `main` was not changed.
+- GitHub/Vercel reports deployment `8TnSMRhbBR6nNhoUJjzHetvyFEGd` as successful for commit `94a22f0`.
+- Preview URL: `https://mahmudportfolio-git-codex-v2-preview-2026-11-01-alpha-8307.vercel.app`.
+- Runtime route checks are blocked by Vercel Deployment Protection: `/api/health`, `/`, `/hire`, `/studio`, `/creative-lab` and `/admin.html` all redirect to the Vercel login flow. This proves protection is active, not that the application routes or Preview database are healthy.
+- P8-001 remains `IN_PROGRESS`; Preview DB migrations, authenticated route behavior and backup/restore remain unverified. P8-003 remains `IN_PROGRESS` because the authorized Preview release exists but application monitoring is protection-blocked. Production/main release is still unauthorized.
+- Exact next action: obtain an authorized Vercel Preview session or scoped Deployment Protection bypass for this preview, then test health/public/admin routes and Preview DB migration state without touching production. Separately, P4-003 still requires owner-supplied real case-study evidence.
+
 ### Latest checkpoint — 2026-11-02 (Phase 8 local release gate)
 
 - P8-001 is `IN_PROGRESS`: Prisma validate/generate, all 42 test files (232/232 tests), static smoke, performance budget, TypeScript build and diff check pass. Production-like Preview DB migration/auth/backup-restore acceptance is still pending.

@@ -20,12 +20,14 @@ test('draft editor is authenticated, role bounded and never publishes implicitly
 
 test('server validates every editable field and prevents lost updates',async()=>{
   const [schema,route]=await Promise.all([read('src/lib/creative-tools-admin.ts'),read('src/routes/creative-tools-admin.ts')]);
-  const draftStart=schema.indexOf('export const creativeToolDraftPatchSchema');
-  const draftEnd=schema.indexOf('export const creativeToolDraftFieldsSchema',draftStart);
-  assert.ok(draftStart>=0&&draftEnd>draftStart,'draft patch schema must remain independently bounded');
+  const draftStart=schema.indexOf('const creativeToolDraftFieldsShape');
+  const draftEnd=schema.indexOf('export const creativeToolRevisionSnapshotSchema',draftStart);
+  assert.ok(draftStart>=0&&draftEnd>draftStart,'draft field and patch schemas must remain independently bounded');
   const draftSchema=schema.slice(draftStart,draftEnd);
   for(const field of ['title','slug','category','tags','overview','problemStatement','audience','featureBullets','proposedInputs','proposedOutputs','limitations','iconKey','coverImage','galleryImages','productStatus','demoMode','demoNotice','visibility','visible','featured','sortOrder','demoUrl','liveUrl','documentationUrl','primaryLabel','primaryBehavior','secondaryLabel','secondaryBehavior','seoTitle','seoDescription','ogImage','canonicalUrl','noIndex','noFollow','includeSitemap'])assert.match(draftSchema,new RegExp(`${field}:`));
   for(const forbidden of ['canonicalId: z','systemSeeded: z','seedVersion: z','kind: z','publishedSnapshot: z','publishedSlug: z','status: z','pageBlocks: z'])assert.doesNotMatch(draftSchema,new RegExp(forbidden));
+  assert.match(draftSchema,/creativeToolDraftFieldsSchema\.extend\(\{[\s\S]*expectedUpdatedAt:/);
+  assert.doesNotMatch(draftSchema,/creativeToolDraftPatchSchema\.omit\(/,'refined Zod schemas must not be composed with omit at module load');
   assert.match(schema,/Use a public HTTPS URL without credentials or a fragment/);
   assert.match(route,/status\(428\)/);
   assert.match(route,/EXPECTED_VERSION_REQUIRED/);

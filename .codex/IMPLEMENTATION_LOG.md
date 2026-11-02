@@ -1,5 +1,20 @@
 # Implementation Log
 
+## 2026-11-02 — Zod v4 serverless import crash fix
+
+- Used the authorized Vercel runtime log for the protected Preview and traced `500 FUNCTION_INVOCATION_FAILED` to `.omit()` being called on a refined Zod object in `src/lib/creative-tools-admin.ts`.
+- Replaced the unsafe composition with a reusable strict draft-fields schema, extended it for optimistic concurrency, and applied the non-empty patch refinement only to the final patch schema.
+- Updated the editor regression test to cover the shared field shape and explicitly reject the unsafe refined-schema `.omit()` pattern.
+- Validation: compiled module import succeeds, focused suites 10/10, full repository suite 232/232, TypeScript build and diff check pass. Replacement Preview deployment is pending.
+
+## 2026-11-02 — Preview branch deployment checkpoint
+
+- Committed the consolidated V2 implementation and recovery batch as `94a22f0`, then pushed only `codex/v2-preview-2026-11-01`; `main` was not modified.
+- GitHub commit status reports Vercel deployment `8TnSMRhbBR6nNhoUJjzHetvyFEGd` completed successfully.
+- Discovered the generated Preview URL: `https://mahmudportfolio-git-codex-v2-preview-2026-11-01-alpha-8307.vercel.app`.
+- Read-only checks of health, homepage, recruiter, studio, Creative Lab and admin routes all reached Vercel login because Deployment Protection is enabled. No application or Preview DB health claim is made from those redirects.
+- No database command, environment change, production deployment or main-branch push was performed. P8-001/P8-003 remain in progress pending authorized protected-preview runtime verification.
+
 ## 2026-11-02 — Phase 8 local release gate
 
 - Validated Prisma schema and regenerated Prisma Client without connecting to or migrating a database.

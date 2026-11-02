@@ -36,8 +36,7 @@ const nullableInternalUrl = internalPathOrHttps.nullable().optional();
 const nullableExternalUrl = publicHttpsUrlSchema.nullable().optional();
 const shortList = (maxItems: number, maxLength: number) => z.array(z.string().trim().min(1).max(maxLength)).max(maxItems).optional();
 
-export const creativeToolDraftPatchSchema = z.object({
-  expectedUpdatedAt: z.string().datetime(),
+const creativeToolDraftFieldsShape = {
   slug: slugSchema.optional(),
   category: z.string().trim().min(1).max(120).optional(),
   tags: shortList(20, 60),
@@ -83,11 +82,16 @@ export const creativeToolDraftPatchSchema = z.object({
   noIndex: z.boolean().optional(),
   noFollow: z.boolean().optional(),
   includeSitemap: z.boolean().optional()
+};
+
+export const creativeToolDraftFieldsSchema = z.object(creativeToolDraftFieldsShape).strict();
+
+export const creativeToolDraftPatchSchema = creativeToolDraftFieldsSchema.extend({
+  expectedUpdatedAt: z.string().datetime()
 }).strict().refine(value => Object.keys(value).some(key => key !== 'expectedUpdatedAt'), {
   message: 'Provide at least one draft field to update.'
 });
 
-export const creativeToolDraftFieldsSchema = creativeToolDraftPatchSchema.omit({ expectedUpdatedAt: true });
 export const creativeToolRevisionSnapshotSchema = z.object({
   schemaVersion: z.literal(1),
   resource: z.literal('CREATIVE_TOOL_DRAFT'),
