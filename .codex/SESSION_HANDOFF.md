@@ -1,5 +1,15 @@
 # Session Handoff
 
+## Restore safety hardening checkpoint — 2026-11-03
+
+1. Current task: P8-001/P8-003 Preview acceptance remains `IN_PROGRESS`; P3-007/non-admin RBAC remains unverified.
+2. Implemented locally: private-aware pre-restore snapshots, durable private-data metadata, one serializable restore transaction, consistent `SKIP_EXISTING`, accurate created/updated/skipped counters, immutable update protection, date normalization and fail-closed natural-key identity checks.
+3. Pending cache/version changes for the fixed account form are also present in `portfolio/admin-page-studio.js`, `portfolio/admin.html` and `scripts/frontend-regressions.test.mjs`.
+4. Files modified/created: `src/lib/backup-restore.ts`, `src/routes/operations.ts`, `scripts/operations.test.mjs`, the three account cache/version files above, and the four recovery Markdown files.
+5. Validation passed: `npm.cmd run build`; `npm.cmd run typecheck`; `npm.cmd run test:operations` (9/9); `npm.cmd run test:frontend` (21/21); `git diff --check`.
+6. Not verified: no Preview/live restore was run. Cross-database relationship remapping is intentionally not attempted; a natural-key/different-ID collision stops and rolls back instead of silently corrupting references.
+7. Exact next action: commit and push only `codex/v2-preview-2026-11-01`, monitor Vercel, then perform a reversible backup/restore drill using test-owned Preview records and confirm the pre-restore payload remains downloadable. Do not push main or touch production.
+
 ## Preview Viewer/account checkpoint — 2026-11-02
 
 1. Current task remains P8-001/P8-003 Preview acceptance (`IN_PROGRESS`).

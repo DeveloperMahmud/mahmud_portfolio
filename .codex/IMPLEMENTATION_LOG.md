@@ -1,5 +1,13 @@
 # Implementation Log
 
+## 2026-11-03 — Atomic backup/restore safety hardening
+
+- Audited the existing restore path and found inconsistent `SKIP_EXISTING`, non-atomic sequential writes, incomplete private pre-restore recovery and misleading taxonomy counters.
+- Added pure backup-row normalization/identity helpers and moved all restore mutations plus success history into one serializable Prisma transaction.
+- Pre-restore recovery now includes inquiries when the validated source backup includes them and records `includesPrivateData` on the durable backup row.
+- Existing natural-key rows with a different backup ID now fail closed before that row is written; failed transactions return `rolledBack: true`, retain the pre-restore artifact and do not report rolled-back counters as completed work.
+- Validation: operations 9/9, frontend 21/21, TypeScript build/typecheck and diff check passed. No database restore was executed; Preview runtime acceptance remains pending.
+
 ## 2026-11-02 — Preview Viewer lifecycle and account-create fix
 
 - Used the separate Preview database to create one temporary Viewer account for RBAC acceptance; the account was disabled after the isolated-login attempt.

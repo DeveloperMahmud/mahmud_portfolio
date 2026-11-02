@@ -16,6 +16,15 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 
 ## Current state
 
+### Latest checkpoint — 2026-11-03 (Restore safety hardening implemented locally)
+
+- P8-001/P8-003 remain `IN_PROGRESS`; main/production remain untouched. The working Preview branch is `codex/v2-preview-2026-11-01`.
+- The pending account asset cache/version patch is present and frontend regressions pass 21/21.
+- Backup restore now creates a private-aware pre-restore recovery payload, records its private-data scope, and runs every content mutation plus success audit inside one serializable transaction.
+- `SKIP_EXISTING` now applies consistently to all exported collections; page-taxonomy no-ops count as skipped; responses distinguish created/updated/skipped; natural-key ID mismatches fail closed; date-shaped fields are normalized; failed transactions report rollback and retain the pre-restore payload.
+- Verification: TypeScript build, typecheck, operations 9/9, frontend 21/21 and `git diff --check` pass. No live/Preview database restore has been executed, so runtime backup/restore acceptance is still `NOT VERIFIED`.
+- Exact next action: commit/push this bounded patch to the Preview branch, wait for Vercel Ready, then run a reversible test-owned Preview backup/restore drill before promoting P8-001.
+
 ### Latest checkpoint — 2026-11-02 (Preview Viewer lifecycle partially verified)
 
 - Created one test-owned `VIEWER` account in the separate Preview database, confirmed the Account list round-trip, attempted an isolated-host login, then disabled the account and confirmed `User access updated.` No owner record or production data was changed.

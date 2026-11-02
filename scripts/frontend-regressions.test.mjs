@@ -157,7 +157,8 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261102-4/);
-  assert.match(html,/admin-page-studio\.js\?v=20261028-10/);
+  assert.match(html,/admin-page-studio\.js\?v=20261102-11/);
+  assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
   assert.match(navigation,/MutationObserver/);
