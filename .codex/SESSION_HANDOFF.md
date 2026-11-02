@@ -2,15 +2,16 @@
 
 ## Authenticated CMS/mobile drawer checkpoint — 2026-11-02
 
+0. Follow-up deployment: commit `555e6c6` (`Fix mobile CMS drawer navigation`) and the preceding documentation commit `dce9acf` were pushed only to `codex/v2-preview-2026-11-01`. Vercel deployment `8wpfNd8c6v2T7oKBuySifBHzEy9w` is `Ready`; its immutable URL serves `admin-mobile-nav.css?v=20261102-1`.
 1. Last browser-verified work: ADMIN dashboard; Creative Lab manager with 12 tools; one F01 editor opened/closed without mutation; Analytics, SEO & Visibility, Control Center and Settings / Site loaded.
 2. Current task: P8-001/P8-003 Preview acceptance remains `IN_PROGRESS`.
 3. Mobile defect evidence: at 462 px, `#adminMenuToggle` reached `aria-expanded=true` and body had `admin-menu-open`, while `#adminSidebar` stayed at `x=-336px` with `translateX(-105%)`; lower CMS navigation was unusable.
 4. Local fix: `portfolio/admin-mobile-nav.css` adds a specific open-state transform, `portfolio/admin.js` cache-busts the stylesheet to `v=20261102-1`, and `scripts/frontend-regressions.test.mjs` protects the behavior.
 5. Validation: frontend regressions 21/21; TypeScript build passed. No CMS/DB mutation was performed.
-6. Git state before this checkpoint: Preview branch was ahead by one documentation commit (`dce9acf`); the mobile fix and this documentation are uncommitted.
-7. Next exact action: review/stage/commit and push only `codex/v2-preview-2026-11-01`, monitor Vercel, then re-open the stable branch alias at mobile width and verify the drawer reaches `x=0` and System Health is reachable.
-8. After that, finish read-only Lead Center, Account, Page Studio and Homepage Studio checks. Backup/restore and role-denial mutation are still unverified and must not be claimed.
-9. Production/main remains unauthorized. Four historical `/uploads/portfolio/...` assets remain missing.
+6. Git state after the follow-up: Preview branch is clean and synchronized through `555e6c6`; `main` and production were not changed.
+7. Root cause of the apparent alias staleness: `admin.html` still referenced `/admin.js?v=20261028-1`, so the authenticated branch-alias browser reused the old parent loader, while the immutable deployment host fetched the new loader. `admin.html` now points to `/admin.js?v=20261102-2`; focused regression coverage protects both cache keys.
+8. Next exact action: run frontend/build validation, commit/push the cache-key follow-up to Preview, then verify the stable alias loads `admin.js?v=20261102-2`, the nested mobile CSS loads `v=20261102-1`, and the drawer reaches `x=0`. Then finish read-only System Health, Lead Center, Account, Page Studio and Homepage Studio checks.
+9. Backup/restore and non-admin role-denial mutation are still unverified and must not be claimed. Production/main remains unauthorized. Four historical `/uploads/portfolio/...` assets remain missing.
 
 ## Preview catalog activation checkpoint — 2026-11-02
 

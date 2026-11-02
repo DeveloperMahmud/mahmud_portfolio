@@ -2,6 +2,8 @@
 
 ## 2026-11-02 — Authenticated Preview CMS audit and mobile navigation correction
 
+- Committed and pushed the correction as `555e6c6` to the authorized Preview branch only. Vercel reports deployment `8wpfNd8c6v2T7oKBuySifBHzEy9w` Ready.
+- The immutable deployment contains the cache-busted `v=20261102-1` stylesheet. Repeated checks of the stable branch alias still returned `v=20261023-1`; investigation found `admin.html` had not version-bumped its `/admin.js` parent loader. Bumped it to `v=20261102-2` and added regression assertions for both loader layers. Authenticated mobile visual verification remains pending the follow-up deploy.
 - Reused the owner-authenticated Preview CMS session without requesting or exposing credentials.
 - Browser-verified the ADMIN dashboard, Creative Lab manager/editor, Analytics, SEO & Visibility, Control Center and Settings / Site without saving, publishing or changing runtime controls.
 - Reproduced the mobile drawer failure at 462 px: the toggle state and accessibility attributes changed, but the computed transform stayed at `matrix(1,0,0,1,-336,0)`.

@@ -18,11 +18,12 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 
 ### Latest checkpoint — 2026-11-02 (Authenticated CMS audit and mobile drawer fix)
 
+- Preview commit `555e6c6` is pushed and Vercel deployment `8wpfNd8c6v2T7oKBuySifBHzEy9w` is `Ready`. The immutable deployment serves the new `admin-mobile-nav.css?v=20261102-1`. The stable alias reused cached `/admin.js?v=20261028-1`, so `admin.html` now bumps the parent loader to `v=20261102-2` and focused regression coverage checks both cache keys.
 - The owner-authenticated ADMIN Preview session loaded the dashboard and Creative Lab manager with 12 canonical tools. One F01 draft editor was opened and closed without mutation; its published state, editable fields, draft/publish separation and revision controls rendered correctly.
 - Read-only navigation/browser evidence passed for Analytics, SEO & Visibility, Control Center and Settings / Site. No content, feature flag, account, backup or publication state was changed.
 - At the 462 px browser viewport, the mobile menu toggle correctly set `aria-expanded=true` and `admin-menu-open`, but the drawer retained `translateX(-105%)` and remained at `x=-336px`. This blocked lower navigation such as System Health & Recovery.
 - Added a higher-specificity mobile drawer open rule with an explicit cache-busted stylesheet URL, plus a regression assertion. Frontend regressions pass 21/21 and TypeScript build passes.
-- P8-001 and P8-003 remain `IN_PROGRESS`. Exact next action: commit/push the authorized Preview branch, wait for Vercel, confirm the drawer reaches `x=0` on mobile, then finish read-only System Health, Lead Center, Account, Page Studio and Homepage Studio checks. Backup/restore mutation and non-admin RBAC remain unverified.
+- P8-001 and P8-003 remain `IN_PROGRESS`. Exact next action: validate and deploy the parent cache-key follow-up, confirm the drawer reaches `x=0` on mobile, then finish read-only System Health, Lead Center, Account, Page Studio and Homepage Studio checks. Backup/restore mutation and non-admin RBAC remain unverified.
 
 ### Latest checkpoint — 2026-11-02 (Preview catalog activation pending redeploy)
 
