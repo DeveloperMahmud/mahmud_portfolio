@@ -1,5 +1,14 @@
 # Session Handoff
 
+## Preview Viewer/account checkpoint — 2026-11-02
+
+1. Current task remains P8-001/P8-003 Preview acceptance (`IN_PROGRESS`).
+2. A test-owned Viewer was created in Preview, seen in the ADMIN account list, used for an isolated-host login attempt, and then disabled; cleanup confirmation was `User access updated.`
+3. The create UI threw after the successful server response because `event.currentTarget` was read after `await`. `portfolio/admin-account-upgrade.js` now captures the form before awaiting and `scripts/frontend-regressions.test.mjs` protects the fix.
+4. Validation: frontend 21/21, TypeScript build and diff check pass.
+5. The isolated Viewer tab left the sign-in shell but became unresponsive to further inspection. Do not claim allowed/denied workspace verification.
+6. Exact next action: commit/push the account fix only to `codex/v2-preview-2026-11-01`, verify the deployed form, then perform reversible backup/restore acceptance using only test-owned Preview data. Production/main remains unauthorized.
+
 ## Final mobile CMS acceptance checkpoint — 2026-11-02
 
 1. Preview commit `a65519c` (`Integrate mobile drawer close with CMS router`) is deployed on the stable branch alias; `main` and production remain unchanged.

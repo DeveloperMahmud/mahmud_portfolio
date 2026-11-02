@@ -183,6 +183,9 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(polish,/input\[type=checkbox\]:not\(\.media-check\).*width:18px!important/);
   assert.match(polish,/label:has\(>input\[type=checkbox\]\):not\(\.toggle-field\):not\(\.inspector-check\)/);
   assert.match(account,/HOW THE PRIVATE ADMIN URL WORKS/);
+  assert.match(account,/const form=event\.currentTarget;try\{/);
+  assert.match(account,/form\.reset\(\)/);
+  assert.doesNotMatch(account,/event\.currentTarget\.reset\(\)/);
 });
 
 test('CMS roles expose only appropriate workspaces and keep viewer and writer actions safe',async()=>{

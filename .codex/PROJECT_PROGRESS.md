@@ -16,6 +16,13 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 
 ## Current state
 
+### Latest checkpoint — 2026-11-02 (Preview Viewer lifecycle partially verified)
+
+- Created one test-owned `VIEWER` account in the separate Preview database, confirmed the Account list round-trip, attempted an isolated-host login, then disabled the account and confirmed `User access updated.` No owner record or production data was changed.
+- The live create flow exposed an async form bug: `event.currentTarget` became null after the request. The handler now captures the form before `await`; frontend regressions 21/21, TypeScript build and diff check pass.
+- The isolated Viewer login left the sign-in shell, but browser inspection of that host became unresponsive before allowed/denied workspaces could be evidenced. Non-admin RBAC therefore remains `IN_PROGRESS`, not verified.
+- Exact next action: deploy the form fix to Preview, verify the create form no longer throws, then complete reversible backup/restore acceptance with test-owned Preview data. Four historical upload assets still need an owner decision.
+
 ### Latest checkpoint — 2026-11-02 (Mobile CMS acceptance verified)
 
 - Preview commit `a65519c` is deployed on the stable branch alias. At 462x698 the CMS loads `admin.js?v=20261102-4` and the corrected mobile stylesheet.

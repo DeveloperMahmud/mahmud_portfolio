@@ -1,5 +1,13 @@
 # Implementation Log
 
+## 2026-11-02 — Preview Viewer lifecycle and account-create fix
+
+- Used the separate Preview database to create one temporary Viewer account for RBAC acceptance; the account was disabled after the isolated-login attempt.
+- Confirmed account persistence and cleanup in the ADMIN Account workspace. No production/main change and no owner-content mutation occurred.
+- Found and fixed the Users & roles create-handler error caused by reading `event.currentTarget` after an asynchronous request; the form element is now captured before `await`.
+- Added a focused regression contract. Frontend tests pass 21/21, TypeScript build passes and `git diff --check` passes.
+- The Viewer login progressed beyond the sign-in shell, but the isolated immutable deployment tab became unresponsive before workspace permissions could be collected. Live non-admin RBAC remains partially verified only.
+
 ## 2026-11-02 — Final mobile CMS browser acceptance
 
 - Deployed Preview commit `a65519c` and verified the stable alias at 462x698.
