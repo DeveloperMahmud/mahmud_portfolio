@@ -1,5 +1,18 @@
 # Session Handoff
 
+## Consolidated Preview quality checkpoint — 2026-11-03
+
+1. Last verified completed task: public Preview visual coverage for the six flagship demo routes at desktop and mobile widths, with no checked horizontal overflow or console errors.
+2. Current task: P8-001/P8-003 release acceptance remains `IN_PROGRESS`; P8-002 is complete.
+3. Exact implementation state: restore hardening is deployed to the authorized Preview branch; build/typecheck and focused release suites pass. Public homepage/CMS shell propagation and six flagship interfaces are browser-observed.
+4. Files modified by this checkpoint: only the four persistent recovery Markdown files. No application source was changed during this evidence-recording step.
+5. Unfinished work: authenticated reversible Preview backup/restore, complete non-admin RBAC matrix, test-owned mutation cleanup, and an owner decision/recovery path for four historical missing uploads.
+6. Tests executed: build; typecheck; operations 9/9; frontend 21/21; V2 quality 4/4; performance budget; Creative Lab Phase 2 4/4; thumbnail 6/6; contrast 5/5; planner 4/4; brief 4/4; audit 4/4; review workspaces 4/4; release configuration with a loopback non-production validation URL; diff check.
+7. Browser evidence: all six flagship demo routes rendered at 1440x900 and 390x844; no checked horizontal overflow or browser-console error; homepage checked 11 visible images with 0 broken. This does not verify every interactive upload/export/approval flow.
+8. SEO evidence limitation: Vercel Deployment Protection intercepted unauthenticated `/sitemap.xml`, `/robots.txt`, and `/llms.txt` probes with its HTML login shell. Treat those endpoint contents as `NOT VERIFIED`, not broken.
+9. Next exact development action: with a safe authenticated Preview CMS session, create only test-owned records, download a private-aware backup, exercise MERGE/REPLACE rollback boundaries and restore counters, verify allowed/denied non-admin workspaces, then remove or disable only those test records.
+10. Resume command: `Set-Location 'D:\Web Works\search-hub\.portfolio-codex-work'; git status --short; Get-Content .codex\SESSION_HANDOFF.md -TotalCount 45`.
+
 ## Restore safety hardening checkpoint — 2026-11-03
 
 1. Current task: P8-001/P8-003 Preview acceptance remains `IN_PROGRESS`; P3-007/non-admin RBAC remains unverified.
