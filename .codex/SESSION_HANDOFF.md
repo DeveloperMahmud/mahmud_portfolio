@@ -560,3 +560,10 @@ Always reconcile these notes with the actual repository before resuming.
 8. Known issues: four historical `/uploads/portfolio/...` image paths return 404; missing local media is separate from the seed defect. Production/main remains unauthorized.
 9. Next exact action: review diff, commit and push only the portable seed fix and recovery documentation to `codex/v2-preview-2026-11-01`, then inspect the resulting Vercel deployment.
 10. Resume commands: `git status --short --branch`, `git diff --check`, `npm.cmd run test:creative-tool-seed`, `npm.cmd run typecheck`.
+
+### Follow-up state
+
+- Commit `5f3efbe` was pushed and Vercel deployment `B62G5aRKbExmoVehrPf9YJ1955bc` became Ready.
+- Browser evidence confirms exactly 12 public tools and both 6-tool type filters.
+- Representative detail rendering then exposed a missing `statusBadge` shared export. The worktree contains the fix in `portfolio/creative-lab-components.js`, its regression in `scripts/creative-tool-detail.test.mjs`, and updated recovery records.
+- Current exact next action: commit/push this detail-route fix to the authorized Preview branch, wait for redeploy, re-open one detail and one demo route, then enter `/admin.html` for authenticated CMS/RBAC checks.

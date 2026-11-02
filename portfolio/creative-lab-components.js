@@ -106,6 +106,7 @@
   global.CreativeLabUI=Object.freeze({
     STATUS_LABELS,
     escapeHtml,
+    statusBadge,
     resolvePrimaryAction,
     renderToolCard,
     renderEmptyState

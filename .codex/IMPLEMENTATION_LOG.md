@@ -875,3 +875,10 @@
 - `npm.cmd run test:creative-tool-seed` — 6/6 passed.
 - `npm.cmd run typecheck` — passed.
 - A fresh Preview deploy and browser confirmation of exactly 12 tools are still required; this checkpoint is not `VERIFIED` yet.
+
+## 2026-11-02 — Creative Lab public-route recovery
+
+- Preview commit `5f3efbe` deployed Ready and browser verification confirmed 12 total tools, including correct 6 flagship / 6 mini filter results.
+- A representative detail route failed closed with `ui.statusBadge is not a function`; the helper existed but was omitted from the frozen `CreativeLabUI` public export.
+- Exported `statusBadge` and added a focused static regression so detail/demo consumers cannot silently depend on a private helper again.
+- Creative Tool detail checks pass 3/3 and both shared/detail JavaScript files pass syntax validation. Redeploy browser verification remains pending.
