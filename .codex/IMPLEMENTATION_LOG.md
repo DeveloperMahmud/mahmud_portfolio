@@ -882,3 +882,10 @@
 - A representative detail route failed closed with `ui.statusBadge is not a function`; the helper existed but was omitted from the frozen `CreativeLabUI` public export.
 - Exported `statusBadge` and added a focused static regression so detail/demo consumers cannot silently depend on a private helper again.
 - Creative Tool detail checks pass 3/3 and both shared/detail JavaScript files pass syntax validation. Redeploy browser verification remains pending.
+
+### Deployment verification
+
+- Vercel deployments `3YCNAjvW2Z4dXymsrqQFR178vHph` (`14c0e3c`) and `3zohkgHfeyuqj2JunL2XZ9StYMhV` (`945ed90`) became Ready.
+- Added a versioned shared-component script URL after the stable branch alias retained an older cached helper export.
+- Stable branch browser verification now passes for the Amazon Thumbnail Readability Tester detail page and interactive browser-local demo.
+- CMS shell loads but shows the application sign-in form; Vercel authentication does not create a CMS session.

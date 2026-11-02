@@ -567,3 +567,10 @@ Always reconcile these notes with the actual repository before resuming.
 - Browser evidence confirms exactly 12 public tools and both 6-tool type filters.
 - Representative detail rendering then exposed a missing `statusBadge` shared export. The worktree contains the fix in `portfolio/creative-lab-components.js`, its regression in `scripts/creative-tool-detail.test.mjs`, and updated recovery records.
 - Current exact next action: commit/push this detail-route fix to the authorized Preview branch, wait for redeploy, re-open one detail and one demo route, then enter `/admin.html` for authenticated CMS/RBAC checks.
+
+### Verified deployment state
+
+- `14c0e3c` and cache-busting follow-up `945ed90` are pushed to `codex/v2-preview-2026-11-01` and both Vercel deployments are Ready.
+- Stable Preview alias passes browser checks for 12 catalog tools, 6 flagship, 6 mini, the F01 detail page and its interactive demo.
+- `/admin.html` currently shows the CMS sign-in form. Next exact action is user sign-in on the stable Preview CMS, followed by read-only/authenticated navigation and role-boundary checks. Never request or expose the password.
+- Four historical `/uploads/portfolio/...` assets remain 404 and need a later media repair/migration decision.
