@@ -1,5 +1,14 @@
 # Session Handoff
 
+## Preview catalog activation checkpoint — 2026-11-02
+
+1. Commit `f18d79f` deployed successfully and removed the serverless import crash.
+2. Browser-verified routes: `/`, `/hire`, `/studio`, `/creative-lab`, `/admin.html`. The public experiences and CMS login shell render.
+3. Creative Lab shows 0 tools with no browser error. This indicates the Preview schema/API is reachable but the canonical seed was not executed.
+4. Local change: `package.json` now runs `node scripts/seed-creative-tools.mjs` after migrations in `vercel-build`; `scripts/creative-tool-seed.test.mjs` verifies safe ordering. Existing owner fields remain preserved by the seed update branch.
+5. Tests: seed suite 5/5, TypeScript build and `git diff --check` pass.
+6. Exact next action: commit/push the seed activation to `codex/v2-preview-2026-11-01`, monitor Vercel, verify exactly 12 public tools and their demo routes, then obtain CMS login for authenticated CRUD/RBAC and backup/restore checks. Do not push main or touch production.
+
 ## Preview runtime crash fix checkpoint — 2026-11-02
 
 1. Authorized Preview request reached the app and returned `500 FUNCTION_INVOCATION_FAILED`.

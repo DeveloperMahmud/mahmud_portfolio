@@ -16,6 +16,14 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 
 ## Current state
 
+### Latest checkpoint — 2026-11-02 (Preview catalog activation pending redeploy)
+
+- The fixed Preview loads `/`, `/hire`, `/studio`, `/creative-lab` and `/admin.html`; the Zod serverless crash is resolved.
+- Creative Lab reaches its public API without an error but reports 0 tools, proving the Preview database migration is reachable while the canonical catalog was not seeded by deployment.
+- Added the already-tested idempotent `seed-creative-tools.mjs` step to `vercel-build` after migrations and before TypeScript build. Existing canonical rows retain all owner-editable fields; only missing rows are created and seed metadata is refreshed.
+- Focused seed/deploy-order checks pass 5/5, TypeScript build and diff check pass.
+- Exact next action: push this Preview-only branch change, confirm Vercel migration/seed/build success, verify 12 public tools and demos, then continue authenticated CMS/RBAC and backup/restore checks.
+
 ### Latest checkpoint — 2026-11-02 (Preview runtime crash fixed locally)
 
 - Authorized Preview access exposed a real serverless import crash: Zod v4 rejected `.omit()` on the refined `creativeToolDraftPatchSchema` at `src/lib/creative-tools-admin.ts`.

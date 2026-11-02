@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { CREATIVE_TOOLS } from './creative-tools-catalog.mjs';
 import { createData, publishedSnapshot, updateData, validateCreativeToolCatalog } from './seed-creative-tools.mjs';
 
@@ -40,3 +41,11 @@ test('upsert update branch preserves all owner-editable fields', () => {
   assert.equal(created.publishedAt.toISOString(), '2026-01-01T00:00:00.000Z');
 });
 
+test('Vercel deploy seeds the canonical catalog only after migrations', async () => {
+  const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
+  const command = pkg.scripts['vercel-build'];
+  const migrateIndex = command.indexOf('node scripts/vercel-migrate.mjs');
+  const seedIndex = command.indexOf('node scripts/seed-creative-tools.mjs');
+  const buildIndex = command.indexOf('npm run build');
+  assert.ok(migrateIndex >= 0 && seedIndex > migrateIndex && buildIndex > seedIndex);
+});

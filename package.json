@@ -13,7 +13,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
-    "vercel-build": "prisma generate && node scripts/vercel-migrate.mjs && npm run build",
+    "vercel-build": "prisma generate && node scripts/vercel-migrate.mjs && node scripts/seed-creative-tools.mjs && npm run build",
     "db:seed": "tsx scripts/seed.ts",
     "db:seed:creative-tools": "node scripts/seed-creative-tools.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",

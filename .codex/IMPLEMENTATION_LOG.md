@@ -1,5 +1,12 @@
 # Implementation Log
 
+## 2026-11-02 — Preview canonical catalog activation
+
+- Browser verification confirmed the replacement Preview renders homepage, Recruiter Mode, Studio Mode, Creative Lab and CMS login shell after the Zod fix.
+- Creative Lab returned a valid empty catalog rather than an API failure. The separate Preview database was migrated but had never received the canonical 12-tool seed.
+- Extended `vercel-build` to execute the existing idempotent Creative Lab seed after `vercel-migrate.mjs` and before compilation. The upsert update branch preserves owner-editable fields.
+- Added a deployment-order regression. Focused checks pass 5/5; TypeScript build and diff check pass. Runtime seeding awaits the next Preview deployment.
+
 ## 2026-11-02 — Zod v4 serverless import crash fix
 
 - Used the authorized Vercel runtime log for the protected Preview and traced `500 FUNCTION_INVOCATION_FAILED` to `.omit()` being called on a refined Zod object in `src/lib/creative-tools-admin.ts`.
