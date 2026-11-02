@@ -9,9 +9,10 @@
 4. Local fix: `portfolio/admin-mobile-nav.css` adds a specific open-state transform, `portfolio/admin.js` cache-busts the stylesheet to `v=20261102-1`, and `scripts/frontend-regressions.test.mjs` protects the behavior.
 5. Validation: frontend regressions 21/21; TypeScript build passed. No CMS/DB mutation was performed.
 6. Git state after the follow-up: Preview branch is clean and synchronized through `555e6c6`; `main` and production were not changed.
-7. Root cause of the apparent alias staleness: `admin.html` still referenced `/admin.js?v=20261028-1`, so the authenticated branch-alias browser reused the old parent loader, while the immutable deployment host fetched the new loader. `admin.html` now points to `/admin.js?v=20261102-2`; focused regression coverage protects both cache keys.
-8. Next exact action: run frontend/build validation, commit/push the cache-key follow-up to Preview, then verify the stable alias loads `admin.js?v=20261102-2`, the nested mobile CSS loads `v=20261102-1`, and the drawer reaches `x=0`. Then finish read-only System Health, Lead Center, Account, Page Studio and Homepage Studio checks.
-9. Backup/restore and non-admin role-denial mutation are still unverified and must not be claimed. Production/main remains unauthorized. Four historical `/uploads/portfolio/...` assets remain missing.
+7. Commit `b002827` fixed the parent cache key. The authenticated stable alias then loaded `admin.js?v=20261102-2` plus `admin-mobile-nav.css?v=20261102-1`; after its transition, the mobile drawer reached `x=0` and System Health opened successfully.
+8. Follow-up defect: clicking a lower navigation item left the drawer open. The local fix replaces the sidebar-local close listener with delegated document handling for `.admin-sidebar .side-btn` and advances the loader cache key to `admin.js?v=20261102-3`.
+9. Next exact action: run frontend/build validation, commit/push the delegated-close follow-up to Preview, verify the drawer closes after navigation, then finish read-only Lead Center, Account, Page Studio and Homepage Studio checks.
+10. Backup/restore and non-admin role-denial mutation are still unverified and must not be claimed. Production/main remains unauthorized. Four historical `/uploads/portfolio/...` assets remain missing.
 
 ## Preview catalog activation checkpoint — 2026-11-02
 

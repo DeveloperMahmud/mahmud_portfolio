@@ -507,8 +507,8 @@ openInitialAdminTab();
   };
   toggle.addEventListener('click',()=>setOpen(toggle.getAttribute('aria-expanded')!=='true'));
   backdrop.addEventListener('click',()=>setOpen(false));
-  sidebar.addEventListener('click',event=>{
-    const item=event.target.closest('.side-btn');
+  document.addEventListener('click',event=>{
+    const item=event.target.closest?.('.admin-sidebar .side-btn');
     if(!item)return;
     queueMicrotask(updateCurrent);
     if(isMobile())setOpen(false);

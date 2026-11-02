@@ -130,14 +130,14 @@ test('admin navigation remains discoverable and keyboard accessible on mobile',a
   assert.match(runtime,/id=\"adminMenuToggle\"/);
   assert.match(runtime,/aria-controls=\"adminSidebar\"/);
   assert.match(runtime,/admin-mobile-nav\.css/);
-  assert.match(html,/admin\.js\?v=20261102-2/);
+  assert.match(html,/admin\.js\?v=20261102-3/);
   assert.match(runtime,/admin-mobile-nav\.css\?v=20261102-1/);
   assert.match(css,/@media\(max-width:1050px\)/);
   assert.match(css,/body\.admin-menu-open \.admin-sidebar\{transform:translateX\(0\)/);
   assert.match(css,/body\.admin-page\.admin-menu-open #adminSidebar\{transform:translateX\(0\)!important\}/);
   assert.match(runtime,/event\.key==='Escape'/);
   assert.match(runtime,/aria-expanded/);
-  assert.match(runtime,/closest\('\.side-btn'\)/);
+  assert.match(runtime,/closest\?\.\('\.admin-sidebar \.side-btn'\)/);
 });
 
 test('admin destinations use delegated navigation and versioned shell assets',async()=>{
@@ -155,7 +155,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/#admin-/);
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
-  assert.match(html,/admin\.js\?v=20261102-2/);
+  assert.match(html,/admin\.js\?v=20261102-3/);
   assert.match(html,/admin-page-studio\.js\?v=20261028-10/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
