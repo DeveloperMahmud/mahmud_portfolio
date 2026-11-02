@@ -9,6 +9,7 @@
 5. Validation passed: `npm.cmd run build`; `npm.cmd run typecheck`; `npm.cmd run test:operations` (9/9); `npm.cmd run test:frontend` (21/21); `git diff --check`.
 6. Not verified: no Preview/live restore was run. Cross-database relationship remapping is intentionally not attempted; a natural-key/different-ID collision stops and rolls back instead of silently corrupting references.
 7. Exact next action: commit and push only `codex/v2-preview-2026-11-01`, monitor Vercel, then perform a reversible backup/restore drill using test-owned Preview records and confirm the pre-restore payload remains downloadable. Do not push main or touch production.
+8. Deployment evidence: `cf230f2` reached the stable Preview alias. Browser inspection loaded the homepage and CMS sign-in shell, with `/admin-page-studio.js?v=20261102-11` present. Backup/restore runtime semantics remain unverified.
 
 ## Preview Viewer/account checkpoint — 2026-11-02
 

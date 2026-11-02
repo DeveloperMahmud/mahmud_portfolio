@@ -7,6 +7,7 @@
 - Pre-restore recovery now includes inquiries when the validated source backup includes them and records `includesPrivateData` on the durable backup row.
 - Existing natural-key rows with a different backup ID now fail closed before that row is written; failed transactions return `rolledBack: true`, retain the pre-restore artifact and do not report rolled-back counters as completed work.
 - Validation: operations 9/9, frontend 21/21, TypeScript build/typecheck and diff check passed. No database restore was executed; Preview runtime acceptance remains pending.
+- Pushed commit `cf230f2` only to `codex/v2-preview-2026-11-01`. Browser evidence confirms the stable Preview alias serves the new CMS loader version and both homepage/CMS sign-in surfaces load; main and production were unchanged.
 
 ## 2026-11-02 — Preview Viewer lifecycle and account-create fix
 

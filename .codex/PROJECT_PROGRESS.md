@@ -24,6 +24,7 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - `SKIP_EXISTING` now applies consistently to all exported collections; page-taxonomy no-ops count as skipped; responses distinguish created/updated/skipped; natural-key ID mismatches fail closed; date-shaped fields are normalized; failed transactions report rollback and retain the pre-restore payload.
 - Verification: TypeScript build, typecheck, operations 9/9, frontend 21/21 and `git diff --check` pass. No live/Preview database restore has been executed, so runtime backup/restore acceptance is still `NOT VERIFIED`.
 - Exact next action: commit/push this bounded patch to the Preview branch, wait for Vercel Ready, then run a reversible test-owned Preview backup/restore drill before promoting P8-001.
+- Deployment evidence: Preview commit `cf230f2` was pushed; the stable Preview alias loads the public homepage and CMS sign-in shell and serves `admin-page-studio.js?v=20261102-11`. This verifies release propagation, not restore behavior.
 
 ### Latest checkpoint — 2026-11-02 (Preview Viewer lifecycle partially verified)
 
