@@ -4,7 +4,7 @@
 
 - Committed and pushed the correction as `555e6c6` to the authorized Preview branch only. Vercel reports deployment `8wpfNd8c6v2T7oKBuySifBHzEy9w` Ready.
 - Commit `b002827` advanced the parent loader to `admin.js?v=20261102-2`. The authenticated stable alias then loaded both new layers; the drawer reached `x=0` and System Health opened at 462 px.
-- The live check exposed a second issue: side navigation changed panels but did not close the drawer. Replaced the sidebar-local click listener with delegated document handling and advanced the loader to `v=20261102-3`; focused/browser recheck is pending.
+- The live check exposed a second issue: side navigation changed panels but did not close the drawer. The canonical capture-phase tab router stopped later click listeners, so it now invokes the mobile close callback itself; the loader advances to `v=20261102-4`. Focused/browser recheck is pending.
 - Reused the owner-authenticated Preview CMS session without requesting or exposing credentials.
 - Browser-verified the ADMIN dashboard, Creative Lab manager/editor, Analytics, SEO & Visibility, Control Center and Settings / Site without saving, publishing or changing runtime controls.
 - Reproduced the mobile drawer failure at 462 px: the toggle state and accessibility attributes changed, but the computed transform stayed at `matrix(1,0,0,1,-336,0)`.

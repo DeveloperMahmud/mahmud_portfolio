@@ -197,6 +197,7 @@ document.addEventListener('click',event=>{
   event.preventDefault();
   event.stopImmediatePropagation();
   openAdminTab(item.dataset.tab);
+  window.closeAdminMobileMenu?.();
 },true);
 window.addEventListener('hashchange',()=>{
   const name=location.hash.match(/^#admin-([a-z0-9-]+)$/)?.[1];
@@ -505,14 +506,9 @@ openInitialAdminTab();
     if(next)sidebar.querySelector('.side-btn.active,.side-btn')?.focus();
     else if(restoreFocus&&returnFocus instanceof HTMLElement)returnFocus.focus();
   };
+  window.closeAdminMobileMenu=()=>setOpen(false);
   toggle.addEventListener('click',()=>setOpen(toggle.getAttribute('aria-expanded')!=='true'));
   backdrop.addEventListener('click',()=>setOpen(false));
-  document.addEventListener('click',event=>{
-    const item=event.target.closest?.('.admin-sidebar .side-btn');
-    if(!item)return;
-    queueMicrotask(updateCurrent);
-    if(isMobile())setOpen(false);
-  });
   document.addEventListener('keydown',event=>{
     if(event.key==='Escape'&&document.body.classList.contains('admin-menu-open'))setOpen(false);
   });

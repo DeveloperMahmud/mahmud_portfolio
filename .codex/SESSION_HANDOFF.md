@@ -10,8 +10,8 @@
 5. Validation: frontend regressions 21/21; TypeScript build passed. No CMS/DB mutation was performed.
 6. Git state after the follow-up: Preview branch is clean and synchronized through `555e6c6`; `main` and production were not changed.
 7. Commit `b002827` fixed the parent cache key. The authenticated stable alias then loaded `admin.js?v=20261102-2` plus `admin-mobile-nav.css?v=20261102-1`; after its transition, the mobile drawer reached `x=0` and System Health opened successfully.
-8. Follow-up defect: clicking a lower navigation item left the drawer open. The local fix replaces the sidebar-local close listener with delegated document handling for `.admin-sidebar .side-btn` and advances the loader cache key to `admin.js?v=20261102-3`.
-9. Next exact action: run frontend/build validation, commit/push the delegated-close follow-up to Preview, verify the drawer closes after navigation, then finish read-only Lead Center, Account, Page Studio and Homepage Studio checks.
+8. Follow-up defect: clicking a lower navigation item left the drawer open. Browser evidence traced this to the existing capture-phase tab router calling `stopImmediatePropagation()` before a later close listener. The local correction invokes `window.closeAdminMobileMenu()` from that canonical router, exposes the bounded close callback from the mobile setup and advances the loader to `admin.js?v=20261102-4`.
+9. Next exact action: run frontend/build validation, commit/push the canonical-router close fix to Preview, verify the drawer closes after navigation, then finish read-only Lead Center, Account, Page Studio and Homepage Studio checks.
 10. Backup/restore and non-admin role-denial mutation are still unverified and must not be claimed. Production/main remains unauthorized. Four historical `/uploads/portfolio/...` assets remain missing.
 
 ## Preview catalog activation checkpoint — 2026-11-02
