@@ -1,5 +1,14 @@
 # Session Handoff
 
+## Final mobile CMS acceptance checkpoint — 2026-11-02
+
+1. Preview commit `a65519c` (`Integrate mobile drawer close with CMS router`) is deployed on the stable branch alias; `main` and production remain unchanged.
+2. Browser evidence at 462x698 confirms the alias loads `/admin.js?v=20261102-4` and `/admin-mobile-nav.css?v=20261102-1`.
+3. The drawer opens at `x=0`, lower items are scroll-reachable, selecting Account/Lead Center/System Health changes the active workspace, and the drawer closes to `x=-336`, `aria-expanded=false`, `aria-hidden=true`.
+4. Read-only browser checks also opened Page Studio and Homepage Studio; both render their authenticated workspaces and visible Back to CMS actions. No save, publish, account, feature-flag, backup or content mutation was performed.
+5. P8-001/P8-003 remain `IN_PROGRESS`: backup/restore acceptance, non-admin RBAC, and test-owned mutation/cleanup are still unverified. Four historical upload assets remain missing.
+6. Exact next action: use a separate non-admin test account and test-owned Preview records to verify denial/allowed boundaries and reversible backup/restore behavior without touching owner content or production.
+
 ## Authenticated CMS/mobile drawer checkpoint — 2026-11-02
 
 0. Follow-up deployment: commit `555e6c6` (`Fix mobile CMS drawer navigation`) and the preceding documentation commit `dce9acf` were pushed only to `codex/v2-preview-2026-11-01`. Vercel deployment `8wpfNd8c6v2T7oKBuySifBHzEy9w` is `Ready`; its immutable URL serves `admin-mobile-nav.css?v=20261102-1`.

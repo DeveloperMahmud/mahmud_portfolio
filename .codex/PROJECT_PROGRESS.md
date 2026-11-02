@@ -16,6 +16,13 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 
 ## Current state
 
+### Latest checkpoint — 2026-11-02 (Mobile CMS acceptance verified)
+
+- Preview commit `a65519c` is deployed on the stable branch alias. At 462x698 the CMS loads `admin.js?v=20261102-4` and the corrected mobile stylesheet.
+- Browser evidence verifies drawer open position `x=0`, scroll access to lower navigation, Account/Lead Center/System Health routing, and automatic close with `aria-expanded=false`, `aria-hidden=true`, `x=-336`.
+- Page Studio and Homepage Studio both opened from the authenticated CMS and rendered their workspaces plus Back to CMS controls. No mutation was performed.
+- P8-001/P8-003 remain `IN_PROGRESS`; next acceptance work is non-admin role verification and reversible backup/restore using test-owned Preview data only.
+
 ### Latest checkpoint — 2026-11-02 (Authenticated CMS audit and mobile drawer fix)
 
 - Preview commit `b002827` is deployed. The authenticated stable alias now loads `admin.js?v=20261102-2` and `admin-mobile-nav.css?v=20261102-1`; the drawer reaches `x=0` and System Health opens at 462 px.

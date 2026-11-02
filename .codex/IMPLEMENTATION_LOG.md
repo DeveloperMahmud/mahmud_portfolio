@@ -1,5 +1,13 @@
 # Implementation Log
 
+## 2026-11-02 — Final mobile CMS browser acceptance
+
+- Deployed Preview commit `a65519c` and verified the stable alias at 462x698.
+- Confirmed the drawer opens at `x=0`, lower navigation is reachable, Account/Lead Center/System Health render, and navigation closes the drawer with correct accessibility state.
+- Opened Page Studio and Homepage Studio read-only; both authenticated workspaces and Back to CMS controls render.
+- Reset the temporary browser viewport after responsive testing. No CMS or database mutation was performed.
+- Remaining: non-admin RBAC, test-owned backup/restore acceptance, and four legacy missing-upload decisions.
+
 ## 2026-11-02 — Authenticated Preview CMS audit and mobile navigation correction
 
 - Committed and pushed the correction as `555e6c6` to the authorized Preview branch only. Vercel reports deployment `8wpfNd8c6v2T7oKBuySifBHzEy9w` Ready.
