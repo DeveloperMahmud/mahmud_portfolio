@@ -475,7 +475,7 @@ openInitialAdminTab();
   sidebar.setAttribute('aria-label','CMS navigation');
   const css=document.createElement('link');
   css.rel='stylesheet';
-  css.href='/admin-mobile-nav.css?v=20261023-1';
+  css.href='/admin-mobile-nav.css?v=20261102-1';
   document.head.append(css);
   const bar=document.createElement('div');
   bar.className='admin-mobile-bar';

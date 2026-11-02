@@ -1,5 +1,14 @@
 # Implementation Log
 
+## 2026-11-02 — Authenticated Preview CMS audit and mobile navigation correction
+
+- Reused the owner-authenticated Preview CMS session without requesting or exposing credentials.
+- Browser-verified the ADMIN dashboard, Creative Lab manager/editor, Analytics, SEO & Visibility, Control Center and Settings / Site without saving, publishing or changing runtime controls.
+- Reproduced the mobile drawer failure at 462 px: the toggle state and accessibility attributes changed, but the computed transform stayed at `matrix(1,0,0,1,-336,0)`.
+- Added `body.admin-page.admin-menu-open #adminSidebar{transform:translateX(0)!important}` and bumped the dynamically loaded mobile-navigation stylesheet version to invalidate the cached rule.
+- Added focused regression coverage. `node --test scripts/frontend-regressions.test.mjs` passes 21/21 and `npm.cmd run build` passes.
+- Remaining verification: Preview redeploy and mobile browser recheck; System Health, Lead Center, Account and both builders; backup/restore mutation and non-admin RBAC.
+
 ## 2026-11-02 — Preview canonical catalog activation
 
 - Browser verification confirmed the replacement Preview renders homepage, Recruiter Mode, Studio Mode, Creative Lab and CMS login shell after the Zod fix.

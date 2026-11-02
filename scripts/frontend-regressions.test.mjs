@@ -132,6 +132,7 @@ test('admin navigation remains discoverable and keyboard accessible on mobile',a
   assert.match(runtime,/admin-mobile-nav\.css/);
   assert.match(css,/@media\(max-width:1050px\)/);
   assert.match(css,/body\.admin-menu-open \.admin-sidebar\{transform:translateX\(0\)/);
+  assert.match(css,/body\.admin-page\.admin-menu-open #adminSidebar\{transform:translateX\(0\)!important\}/);
   assert.match(runtime,/event\.key==='Escape'/);
   assert.match(runtime,/aria-expanded/);
   assert.match(runtime,/closest\('\.side-btn'\)/);
