@@ -3,6 +3,7 @@
   const grid=document.querySelector('#labGrid'),summary=document.querySelector('#labSummary'),counts=document.querySelector('#labCounts'),search=document.querySelector('#labSearch'),status=document.querySelector('#labStatus'),buttons=[...document.querySelectorAll('[data-kind]')];
   if(!grid||!window.CreativeLabUI)return;
   let kind='',timer=0,request=0;
+  const viewedTools=new Set();
 
   const setBusy=value=>{grid.setAttribute('aria-busy',String(value));};
   function params(){const query=new URLSearchParams();if(kind)query.set('kind',kind);if(search?.value.trim())query.set('q',search.value.trim());if(status?.value)query.set('status',status.value);return query.toString();}
@@ -12,6 +13,7 @@
     counts.innerHTML=`<span>${Number(data.counts?.total||0)} TOOLS</span><span>${Number(data.counts?.flagship||0)} FLAGSHIP</span><span>${Number(data.counts?.mini||0)} MINI</span>`;
     summary.textContent=`Showing ${tools.length} ${tools.length===1?'tool':'tools'}${kind?` · ${kind.toLowerCase()}`:''}${status?.value?` · ${status.value.toLowerCase()}`:''}`;
     grid.innerHTML=tools.length?tools.map(window.CreativeLabUI.renderToolCard).join(''):window.CreativeLabUI.renderEmptyState('Try a different search, type or status.');
+    if('IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{const id=entry.target.dataset.toolCard;if(entry.isIntersecting&&entry.intersectionRatio>=.5&&id&&!viewedTools.has(id)){viewedTools.add(id);window.portfolioAnalytics?.track('tool_card_view',{ctaId:id.slice(0,80),sourceContext:'creative_lab',targetType:'tool'});observer.unobserve(entry.target)}}),{threshold:[.5]});grid.querySelectorAll('[data-tool-card]').forEach(card=>observer.observe(card))}
     grid.querySelector('[data-lab-reset]')?.addEventListener('click',reset);
   }
   function fail(){summary.textContent='Creative Lab could not be loaded.';grid.innerHTML=window.CreativeLabUI.renderEmptyState('Please refresh the page or return later.');grid.querySelector('[data-lab-reset]')?.addEventListener('click',load);}

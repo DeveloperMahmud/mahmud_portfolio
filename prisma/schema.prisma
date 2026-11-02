@@ -694,6 +694,91 @@ model ProjectReview {
   @@index([projectId, createdAt])
 }
 
+model ReviewWorkspace {
+  id          String   @id @default(cuid())
+  title       String
+  projectId   String?
+  status      String   @default("OPEN")
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  closedAt    DateTime?
+  versions    ReviewVersion[]
+  tokens      ReviewAccessToken[]
+  comments    ReviewComment[]
+  decisions   ReviewDecision[]
+
+  @@index([status, updatedAt])
+}
+
+model ReviewVersion {
+  id          String   @id @default(cuid())
+  workspaceId String
+  workspace   ReviewWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  version     Int
+  label       String
+  mediaId     String
+  publicUrl   String
+  note        String?
+  createdById String?
+  createdAt   DateTime @default(now())
+  comments    ReviewComment[]
+  decisions   ReviewDecision[]
+
+  @@unique([workspaceId, version])
+  @@index([workspaceId, createdAt])
+}
+
+model ReviewAccessToken {
+  id          String   @id @default(cuid())
+  workspaceId String
+  workspace   ReviewWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  tokenHash   String   @unique
+  label       String?
+  canComment  Boolean  @default(true)
+  canDecide   Boolean  @default(false)
+  expiresAt   DateTime
+  revokedAt   DateTime?
+  createdById String?
+  createdAt   DateTime @default(now())
+  comments    ReviewComment[]
+  decisions   ReviewDecision[]
+
+  @@index([workspaceId, expiresAt])
+}
+
+model ReviewComment {
+  id          String   @id @default(cuid())
+  workspaceId String
+  workspace   ReviewWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  versionId   String
+  version     ReviewVersion @relation(fields: [versionId], references: [id], onDelete: Cascade)
+  tokenId     String?
+  token       ReviewAccessToken? @relation(fields: [tokenId], references: [id], onDelete: SetNull)
+  authorName  String
+  body        String
+  anchor      Json     @default("{}")
+  createdAt   DateTime @default(now())
+
+  @@index([workspaceId, versionId, createdAt])
+}
+
+model ReviewDecision {
+  id          String   @id @default(cuid())
+  workspaceId String
+  workspace   ReviewWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  versionId   String
+  version     ReviewVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
+  tokenId     String?
+  token       ReviewAccessToken? @relation(fields: [tokenId], references: [id], onDelete: SetNull)
+  decision    String
+  actorName   String
+  note        String?
+  createdAt   DateTime @default(now())
+
+  @@index([workspaceId, versionId, createdAt])
+}
+
 model Media {
   id String @id @default(cuid())
   key String @unique

@@ -87,14 +87,14 @@
     const media=image
       ?`<img src="${escapeHtml(image)}" alt="${escapeHtml(tool.coverImageAlt||'')}" loading="lazy" decoding="async">`
       :`<span class="lab-card__monogram" aria-hidden="true">${escapeHtml(text(tool.title||'T').slice(0,1).toUpperCase())}</span>`;
-    return `<article class="lab-card" data-kind="${escapeHtml(text(tool.kind).toLowerCase())}" data-status="${escapeHtml(text(tool.productStatus||tool.status).toLowerCase())}">
+    return `<article class="lab-card" data-kind="${escapeHtml(text(tool.kind).toLowerCase())}" data-status="${escapeHtml(text(tool.productStatus||tool.status).toLowerCase())}" data-tool-card="${escapeHtml(text(tool.canonicalId||tool.publishedSlug))}">
       <div class="lab-card__media">${media}</div>
       <div class="lab-card__body">
         <div class="lab-card__meta">${statusBadge(tool.productStatus||tool.status)}<span>${escapeHtml(tool.category||tool.kind||'Creative tool')}</span></div>
         <h3>${title}</h3>
         <p>${description}</p>
         ${tags.length?`<ul class="lab-tags" aria-label="Tags">${tags.map(tag=>`<li>${escapeHtml(tag)}</li>`).join('')}</ul>`:''}
-        <a class="lab-action" href="${escapeHtml(action.href)}"${action.target==='_blank'?' target="_blank"':''}${action.rel?` rel="${action.rel}"`:''}><span>${escapeHtml(action.label)}</span><span aria-hidden="true">↗</span></a>
+        <a class="lab-action" data-tool-action="${/^https:\/\//i.test(action.href)?'live':action.href.endsWith('/demo')?'demo':'detail'}" href="${escapeHtml(action.href)}"${action.target==='_blank'?' target="_blank"':''}${action.rel?` rel="${action.rel}"`:''}><span>${escapeHtml(action.label)}</span><span aria-hidden="true">↗</span></a>
       </div>
     </article>`;
   }

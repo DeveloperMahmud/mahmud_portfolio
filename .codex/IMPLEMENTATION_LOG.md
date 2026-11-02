@@ -1,5 +1,76 @@
 # Implementation Log
 
+## 2026-11-02 — Phase 8 local release gate
+
+- Validated Prisma schema and regenerated Prisma Client without connecting to or migrating a database.
+- Ran every repository test file: 232/232 passed after reconciling one stale analytics source assertion with the new route-prefix context logic.
+- Static smoke, measured performance budget, TypeScript build and diff safety pass.
+- Added operational, migration, verification and preview release documents with explicit rollback and data-boundary notes.
+- P8-001/P8-003 remain in progress until the separate Vercel Preview database and deployed routes are checked. Production/main release is not authorized.
+
+## 2026-11-02 — Phase 7 quality, security, performance and portability gate
+
+- Added static accessibility/security/portability checks plus a desktop/mobile Playwright route and overflow runner backed by a loopback-only static server.
+- Added keyboard arrow/Home/End navigation and roving tab focus to Page Studio project explorer tabs, a public focus-visible rule and deferred the homepage fallback-media script.
+- Hardened legacy project share links with mandatory expiry, audit/revoke events, rate limiting, token URL logging suppression, privacy headers, redacted project DTOs and redacted review responses.
+- Added measured critical-asset budgets. Seven named assets total 424,033 bytes and all safeguards/budgets pass.
+- Upgraded WordPress handoff to v2: clean enabled content, semantic design tokens, media manifest and migration notes; editor state, animation data and custom JavaScript are omitted, and dynamic blocks are marked for manual review.
+- Added Creative Lab admin/roadmap, WordPress migration, operations/release and verification documents.
+- Quality 4/4, Page Studio 49/49, frontend 21/21, performance budget and TypeScript build pass. Playwright visual run was attempted but browser binaries are not installed; no visual verification is claimed.
+
+## 2026-11-02 — P7-001 SEO/GEO and P7-002 analytics
+
+- Added published/indexable Creative Lab tools, published service routes and stable recruiter/studio/lab routes to the dynamic sitemap with URL deduplication.
+- Extended llms.txt with public portfolio experiences and published indexable tools; demos and review sessions remain excluded/noindex.
+- Added privacy-conscious tool-card/detail/demo/live and recruiter-CTA events, dynamic card observation, report grouping and an Event taxonomy XLSX sheet.
+- Existing DNT/GPC, admin, local and bot exclusions plus salted hashes are preserved. Combined checks pass 3/3 and build passes; runtime verification remains pending.
+
+## 2026-11-02 — P6-006 secure public-safe review workflow
+
+- Added additive review workspace/version/token/comment/decision schema and migration without modifying the legacy share workflow.
+- Implemented admin create/version/token/revoke/close APIs with public Media-only enforcement and ActivityLog records.
+- Implemented fragment token exchange into a strict HttpOnly scoped session, redacted workspace DTO, version-bound comments and append-only decisions.
+- Added no-store/noindex/referrer/CSP, origin validation and dedicated rate limiting; no raw token is persisted or left in the URL after exchange.
+- Security checks pass 4/4, existing F06 prototype checks pass 3/3 and build passes. Migration/runtime/browser remain unverified; confidential storage remains blocked.
+
+## 2026-11-02 — P6-005 Listing Visual Audit
+
+- Replaced the fixed fictional F05 findings with an eight-criterion browser-local human review workspace.
+- Each status stays attached to a visible evidence/rationale note; the summary exposes factual counts only and deliberately avoids an aggregate quality/compliance score.
+- Added bounded normalization plus local JSON/text exports. No artwork upload, computer vision, network request, persistence or marketplace certification is claimed.
+- Focused checks pass 4/4; JavaScript syntax, TypeScript build and diff check pass. Browser/responsive and DB-backed verification remain outstanding.
+
+## 2026-11-02 — P6-004 Smart Creative Brief Builder
+
+- Upgraded canonical F04 with bounded project fields, clarification-question generation, readiness state and local JSON/text exports.
+- All content stays in the tab; no submit, persistence, email, approval, contract or AI-generation behavior is claimed.
+- Focused checks pass 4/4; JavaScript syntax and TypeScript build pass. Browser/export/responsive and DB-backed verification remain outstanding.
+
+## 2026-11-02 — P6-003 A+ Creative Planner
+
+- Replaced the fixed F03 fictional board with a bounded browser-local structured planner on the same canonical route.
+- Added editable product/category/marketplace/audience/tone, 4–9 listing and 3–7 A+ role counts, verified-USP, available-asset and evidence fields.
+- Added deterministic role mapping, asset/evidence checklists, exact cross-lane repetition flags and local JSON/text brief exports.
+- No AI generation, network request, persistence, invented claims, universal program requirements or marketplace compliance certification is represented.
+- Verification: focused 4/4, F01 6/6, F02 5/5, Phase 2 aggregate 4/4, JavaScript syntax, TypeScript build and diff check passed. Browser/export/responsive and DB-backed acceptance remain outstanding.
+
+## 2026-11-02 — P6-002 Text Readability & Contrast Analyzer
+
+- Replaced the fixed F02 sample states with a bounded real color-pair workflow while preserving the canonical route and tool record.
+- Added exact WCAG relative-luminance contrast math, normal/large-text AA/AAA thresholds, editable type/scale preview and deterministic pixel sampling from a locally decoded image.
+- Added 12 MB / 40 MP file safeguards, local text report export, object-URL cleanup and explicit anti-aliasing/gradient/human-review cautions.
+- The tool does not run OCR, locate text, upload files, create a whole-image accessibility score or certify conformance.
+- Verification: focused 5/5, Phase 2 gate 4/4, JavaScript syntax, TypeScript build and diff check passed. Browser interactions/visuals and DB-backed acceptance remain outstanding.
+
+## 2026-11-02 — P6-001 Thumbnail Readability engine
+
+- Upgraded the canonical F01 concept route in place; no parallel tool/CMS record or dependency was added.
+- Added a small browser-local analysis module with PNG/JPEG/WebP, 12 MB, 12,000 px and 40 MP safeguards, deterministic source/preview facts, global luminance-spread and edge-density observations.
+- Replaced an early arbitrary `/100` prototype score with factual metrics and four explicit human-review checks, preventing unsupported readability/compliance certainty.
+- Added local text report export documenting the measurement method, preview scale facts, human decisions and limitations.
+- Added stale-state cleanup and object-URL revocation for replacement, invalid, decode-failed and page-exit paths.
+- Verification: focused 6/6, detail-route 3/3, Phase 2 gate 4/4, JavaScript syntax, TypeScript build and diff check passed. Browser file/download/responsive and DB-backed verification remain outstanding.
+
 ## 2026-11-01 — Preview runtime environment hardening
 
 - Diagnosed the Vercel `FUNCTION_INVOCATION_FAILED` startup path: Preview uses `NODE_ENV=production`, while the environment guard previously required a production Blob token even for an intentionally isolated preview environment.
@@ -722,3 +793,42 @@
 ### Next action
 
 - P4-003: reconcile the existing Project/case-study implementation with the verified case-study contract and add only missing evidence-led fields, presentation and tests.
+## 2026-11-02 — P5-003 Visual Brief to PDF
+
+### Changes made
+
+- Activated canonical M03 as a real browser-local visual-brief workflow instead of a static print sample.
+- Added bounded editable brief fields, optional 2 MB PNG/JPEG/WebP logo, accent color, visible-section controls, branded preview, reset and browser print/Save-as-PDF behavior.
+- Added print-only styles that remove editor controls and concept notes while preserving accessible structured brief content.
+- Kept all user content local to the tab and added explicit limitations: the output is not approval, a contract, delivery evidence or substantiated-claim evidence.
+- Reconciled the aggregate mini-tool regression contract with the activated M03 behavior.
+
+### Verification
+
+- `npm.cmd run test:visual-brief-pdf-engine` — 4/4 passed.
+- `npm.cmd run test:mini-tool-demos` — 4/4 passed.
+- `node --check portfolio/creative-tool-mini-demos.js`, `npm.cmd run build` and `git diff --check` passed.
+- Browser print/PDF and responsive visual evidence is still pending; P5-003 is `COMPLETED`, not `VERIFIED`.
+
+### Next action
+
+- Implement P5-004 Brand Asset Kit Generator on canonical M04, preserving the local/privacy boundary and avoiding unlicensed asset/font claims.
+## 2026-11-02 — P5-004 and Phase 5 code gate
+
+### Changes made
+
+- Activated canonical M04 as a browser-local Brand Asset Kit Generator with editable identity, three-color palette, safe system-font direction, logo usage and imagery guidance.
+- Added one token-driven starter-guide preview, versioned JSON export, printable guide and explicit trademark/font/accessibility/ownership limitations.
+- Reused the existing mini-tool shell and global design language; no persistence, extra dependency, remote font or parallel CMS model was added.
+
+### Verification
+
+- M01 4/4, M02 4/4, M03 4/4, M04 4/4 and M06 3/3 focused checks passed.
+- Aggregate mini-tool checks 4/4 and presentation safety checks 5/5 passed.
+- JavaScript syntax, TypeScript build and `git diff --check` passed.
+- P5-001/P5-002/P5-003/P5-004/P5-006 are `COMPLETED`, not `VERIFIED`; browser and DB evidence is still pending.
+- P5-005 is `BLOCKED` by the missing real P4-003 case-study evidence despite its shared safe foundation passing focused checks.
+
+### Next action
+
+- Audit P6-001 against the existing flagship demo shell and implement an independent bounded engine path without weakening P3-007 or publishing fake results.

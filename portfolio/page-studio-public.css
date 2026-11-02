@@ -3,6 +3,7 @@
 @media(max-width:600px){.ps-section{padding:50px 6vw}.ps-hero{padding:110px 6vw 60px;min-height:75vh}.ps-hero-copy h1{font-size:clamp(48px,17vw,80px)}.ps-grid{grid-template-columns:1fr}.ps-card-body{padding:14px}.ps-navigation{padding:0 6vw}}
 .ps-rich-text p{margin:0 0 1.15em}.ps-rich-text p:last-child{margin-bottom:0}.ps-brand-media{display:grid;place-items:center;padding:28px;background:#f2f3ee}.ps-brand-media img{width:100%;height:100%;object-fit:contain}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+:where(a,button,input,select,textarea,summary,[tabindex]):focus-visible{outline:2px solid var(--ps-accent);outline-offset:3px}
 .ps-embed video{display:block;width:100%;max-height:80vh;background:#050605}.ps-faq{border-top:1px solid var(--ps-line)}.ps-faq details{border-bottom:1px solid var(--ps-line);padding:20px 0}.ps-faq summary{cursor:pointer;font:600 clamp(17px,2vw,23px) "Space Grotesk"}.ps-faq p{max-width:760px;color:var(--ps-muted);line-height:1.7}.ps-lottie{display:inline-grid;place-items:center;width:var(--ps-lottie-size);height:var(--ps-lottie-size);font-size:calc(var(--ps-lottie-size)*.55);color:var(--ps-accent);cursor:pointer}.ps-lottie svg{width:100%!important;height:100%!important}
 
 /* Editorial widgets: reusable, media-efficient modules for Page Studio. */

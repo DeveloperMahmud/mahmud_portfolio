@@ -1,5 +1,116 @@
 # Session Handoff
 
+## Phase 8 pre-push checkpoint — 2026-11-02
+
+1. Local release gate passes: Prisma validate/generate, all 42 test files (232/232 tests), static smoke, performance budget, TypeScript build and diff check.
+2. P8-001 remains `IN_PROGRESS` until separate Preview DB migration/authenticated runtime and backup/restore acceptance. P8-002 is code/documentation complete. P8-003 is authorized for preview only and remains `IN_PROGRESS`.
+3. Release notes: `docs/release-notes-v2-preview-2026-11-02.md`. Rollback code baseline before this batch: `400b7dc`.
+4. Playwright suite exists but local Chromium/WebKit binaries are missing; no visual pass is claimed.
+5. Exact next action: stage all intended Phase 5–8/recovery changes, commit on `codex/v2-preview-2026-11-01`, push that branch once, monitor Vercel Preview and test public/admin/health routes. Do not push main or run a local migration.
+
+## Phase 7 code gate — 2026-11-02
+
+1. P7-001 through P7-007 are code-level complete; P7-006 performance budget is verified. Browser/runtime work remains unverified.
+2. Added `scripts/v2-quality-gates.test.mjs`, `scripts/performance-budget.mjs`, `scripts/static-preview-server.mjs`, `tests/v2-visual.spec.mjs` and `playwright.v2.config.mjs`.
+3. Accessibility changes: Page Studio project tabs support Arrow/Home/End and roving focus; public widgets have visible focus; motion/semantic/static checks pass.
+4. Security changes: legacy share expiry/revoke/audit/rate limit/log suppression/privacy headers/redacted DTO; modern Review Workspace remains the recommended path. Confidential binary review remains blocked without private storage.
+5. Portability changes: WordPress handoff v2 exports enabled clean content, semantic design tokens, media manifest and migration notes; editor state, animation data and custom JS are excluded.
+6. Documentation added: Creative Lab admin/roadmap, WordPress migration, operations/release, verification report.
+7. Tests: quality 4/4, Page Studio 49/49, frontend 21/21, performance budget (424,033 measured bytes) and TypeScript build pass. Playwright visual execution was attempted but local Chromium/WebKit binaries are absent.
+8. Exact next action: execute Phase 8 consolidated Prisma/build/regression/data-safety checks, reconcile docs and blockers, then commit/push `codex/v2-preview-2026-11-01` once and test Vercel Preview. Do not push main or apply migrations locally.
+
+## P7-001/P7-002 checkpoint — 2026-11-02
+
+1. SEO discovery and Creative Lab analytics are code-level `COMPLETED`, not `VERIFIED`.
+2. Affected files: `src/app.ts`, `src/routes/analytics.ts`, `portfolio/analytics.js`, `portfolio/creative-lab.js`, `portfolio/creative-lab-components.js`, `portfolio/creative-tool.js`, `scripts/creative-lab-discovery-analytics.test.mjs`, `package.json`, four recovery files.
+3. Published/indexable tools/services enter sitemap; llms.txt includes public projects/articles/tools. Demo/review routes stay noindex.
+4. Tool and recruiter analytics taxonomy is accepted/exported while existing DNT/GPC, local, admin and bot privacy guards remain.
+5. Validation: combined suite 3/3, JavaScript syntax, TypeScript build and diff check pass. Runtime crawler/reporting/browser evidence pending.
+6. Next exact action: complete P7-003–P7-007 quality/security/performance/export work, then Phase 8; do not stop at phase boundary.
+
+## Phase 6 code gate — 2026-11-02
+
+1. P6-001 through P6-006 are code-level `COMPLETED`, not `VERIFIED`; P3-007 safe DB-backed acceptance remains unresolved.
+2. P6-006 adds migration `0025_review_workspaces`, review schema, admin APIs, public session/comment/decision APIs and `/creative-review.html`.
+3. Security properties: raw tokens stored hash-only; 1–30 day expiry; scoped comment/decision permissions; revoke/close; strict HttpOnly cookie; fragment removal; public-safe DTOs; immutable versions/decisions; origin/rate-limit/noindex/no-store/referrer/CSP; audit events.
+4. Only existing public Media assets are allowed. Confidential binary delivery is still blocked without private storage and signed authenticated delivery.
+5. Validation: Prisma generation, security 4/4, prototype 3/3, JavaScript syntax, TypeScript build and diff check pass. Migration/runtime/browser/RBAC remain unverified.
+6. Next exact action: implement P7-001 SEO/GEO integration and continue through all dependency-ready Phase 7/8 tasks, then consolidated validation and one preview-branch push/test.
+
+## P6-005 code checkpoint — 2026-11-02
+
+1. Phase 6 remains active; P6-005 is `COMPLETED`, not `VERIFIED`.
+2. `listing-audit-engine.js` supplies eight bounded criteria, normalized human statuses, attached evidence notes, factual counts and local JSON/text output. F05 provides the accessible editor.
+3. Files: `portfolio/listing-audit-engine.js`, `portfolio/creative-tool.html`, `portfolio/creative-tool.js`, `portfolio/creative-lab.css`, `scripts/audit-demo.test.mjs`, and all four recovery records.
+4. Focused checks 4/4, JavaScript syntax, TypeScript build and diff check pass. Browser/export/responsive and P3-007 DB-backed acceptance remain pending.
+5. High-specialist P6-006 audit found existing `/share` unsafe to reuse directly. Implement an isolated review domain with hashed expiring scoped tokens, redacted DTOs, immutable versions/decisions, origin/rate-limit/security headers and public-safe existing Media only.
+6. Confidential review uploads remain blocked until private object storage/signed authenticated delivery exists.
+7. Next exact action: implement the public-safe P6-006 review MVP, then continue directly through Phases 7–8 before one consolidated preview push/test.
+
+## P6-004 code checkpoint — 2026-11-02
+
+1. Phase 6 remains active; do not stop at the phase boundary.
+2. P6-004 is `COMPLETED`, not `VERIFIED`. `creative-brief-engine.js` sanitizes/bounds input, creates clarification questions/readiness and local JSON/text output; F04 provides the editor and preview.
+3. Files: `portfolio/creative-brief-engine.js`, `portfolio/creative-tool.html`, `portfolio/creative-tool.js`, `portfolio/creative-lab.css`, `scripts/brief-demo.test.mjs`, and four recovery records.
+4. Focused checks 4/4, JavaScript syntax and TypeScript build pass. Browser/export/responsive and DB-backed P3-007 acceptance remain pending.
+5. Next exact action: implement P6-005 Listing Visual Audit engine, then P6-006 per high-specialist security review; continue through Phases 7–8 before one preview push/test.
+
+## P6-003 code checkpoint — 2026-11-02
+
+1. Active phase: Phase 6 — Flagship Tool Functional Activation.
+2. Last task: P6-003 A+ Creative Planner is `COMPLETED`, not `VERIFIED`; P6-001/P6-002 remain code-complete.
+3. Exact implementation: `creative-planner-engine.js` sanitizes/bounds inputs, creates deterministic listing/A+ role maps, attaches available assets, records evidence, flags exact cross-lane repetition and generates local JSON/text exports. F03 supplies the accessible form and responsive board.
+4. Files added/modified for P6-003: `portfolio/creative-planner-engine.js`, `portfolio/creative-tool.html`, `portfolio/creative-tool.js`, `portfolio/creative-lab.css`, `scripts/planner-demo.test.mjs`, plus the four recovery records.
+5. Validation: P6-003 4/4; P6-002 5/5; P6-001 6/6; Phase 2 gate 4/4; JavaScript syntax, TypeScript build and diff check pass.
+6. Still required: browser export and desktop/mobile visual checks plus P3-007 DB-backed persistence/public acceptance. No remote save/publish has been added or claimed.
+7. Exact next action: implement P6-004 Smart Creative Brief Builder as a bounded local validation/clarification/export workflow, preserving its no-delivery/no-consent/no-durable-save boundary.
+8. Branch is `codex/v2-preview-2026-11-01`; push only after the authorized batch is complete, then run one consolidated gate and Vercel Preview test against the separate Preview database.
+
+## P6-002 code checkpoint — 2026-11-02
+
+1. Current active phase: Phase 6 — Flagship Tool Functional Activation.
+2. Last meaningful task: P6-002 Text Readability & Contrast Analyzer is `COMPLETED`, not `VERIFIED`; P6-001 is also code-complete.
+3. Exact implementation: `contrast-analyzer-engine.js` provides six-digit color parsing, WCAG relative-luminance ratio, normal/large-text thresholds, bounded local-image validation, deterministic pixel sampling and limitation-bearing report output. Canonical F02 exposes editable colors, size, weight, scale, local image sampler and download.
+4. Files added/modified for P6-002: `portfolio/contrast-analyzer-engine.js`, `portfolio/creative-tool.html`, `portfolio/creative-tool.js`, `portfolio/creative-lab.css`, `scripts/contrast-demo.test.mjs`, plus all four recovery records.
+5. Tests: P6-002 5/5, Phase 2 gate 4/4, both JavaScript syntax checks, TypeScript build and `git diff --check` pass. P6-001 regressions remained 6/6 earlier in this checkpoint.
+6. Still required: browser file/pixel/download/desktop/mobile review and DB-backed P3-007 acceptance. Do not promote either task to `VERIFIED` without this evidence.
+7. Exact next action: implement P6-003 A+ Creative Planner as a local structured plan builder/exporter with bounded inputs, distinct listing/A+ roles and explicit evidence/current-requirement review gates.
+8. Branch remains `codex/v2-preview-2026-11-01`; do not push until the user-authorized batch is complete, then run one consolidated gate, push once and test Vercel Preview with its separate Preview database.
+
+## P6-001 code checkpoint — 2026-11-02
+
+1. Current active phase: Phase 6 — Flagship Tool Functional Activation.
+2. Last meaningful task: P6-001 Amazon Thumbnail Readability Tester is `COMPLETED`, not `VERIFIED`.
+3. Exact implementation state: canonical F01 now uses `thumbnail-readability-engine.js` for bounded file/dimension validation, deterministic luminance-spread and edge-density observations, preview upscaling facts and a method-bearing local report. The UI shows 80/120/160 px previews and four human checks; it has no composite score.
+4. Files created/modified for P6-001: `portfolio/thumbnail-readability-engine.js`, `portfolio/creative-tool.html`, `portfolio/creative-tool.js`, `scripts/thumbnail-demo.test.mjs`, plus the four `.codex` records. Shared Phase 5 changes remain uncommitted in the same authorized batch.
+5. Safety: PNG/JPEG/WebP only, 12 MB, 12,000 px and 40 MP limits; invalid/decode-failed replacements revoke object URLs and clear stale results. No input is uploaded or persisted.
+6. Tests executed: P6-001 6/6, Creative Tool detail 3/3, Phase 2 aggregate 4/4, both JavaScript syntax checks, TypeScript build and `git diff --check` pass.
+7. Still required: real browser upload/download and desktop/mobile visual checks; DB-backed P3-007 acceptance. These are not claimed verified.
+8. Exact next action: implement P6-002 Text Readability & Contrast Analyzer as the next dependency-ready Phase 6 code task, retaining honest limitations and avoiding a fake full-image accessibility/compliance score.
+9. Branch remains `codex/v2-preview-2026-11-01`. Do not push yet; after the authorized implementation batch is complete, consolidate tests, push this preview branch once and test the Vercel Preview deployment against its separate Preview database.
+
+## Phase 5 code gate — 2026-11-02
+
+1. P5-001, P5-002, P5-003, P5-004 and P5-006 are code-level `COMPLETED`, not `VERIFIED`.
+2. P5-004 now provides editable local brand tokens, safe system-font presets, consistent live preview, versioned JSON download and print output without persistence or network transfer.
+3. P5-005 is `BLOCKED`: the existing safe presentation foundation passes tests but requires at least two real complete public case studies from P4-003. Do not substitute fictional projects or enable the public route prematurely.
+4. Consolidated checks pass: M01 4/4, M02 4/4, M03 4/4, M04 4/4, M06 3/3, aggregate mini tools 4/4, presentation 5/5, JavaScript syntax, TypeScript build and diff check.
+5. Browser file/clipboard/download/print workflows, desktop/mobile visuals and DB-backed acceptance remain unverified.
+6. Exact next action: audit P6-001 and the shared flagship demo architecture, then implement only an independent bounded engine path that does not require unsafe database mutation. Preserve P3-007 as a release/verification blocker.
+7. Do not push until the authorized implementation batch is complete; then push the preview branch once and test the Vercel Preview deployment against its separate Preview database.
+
+## Latest recovery checkpoint — 2026-11-02 (P5-003 complete)
+
+1. Active phase: Phase 5 — Six mini-tool engines. Phase 4 evidence blockers and P3-007 DB verification remain preserved.
+2. Last meaningful task: P5-003 Visual Brief to PDF is `COMPLETED`, not `VERIFIED`.
+3. Exact state: canonical M03 has bounded editable title/brand/objective/deliverables/timeline, optional local-only logo, accent and section visibility, accessible live preview, reset and browser print/Save-as-PDF. No input is transmitted or persisted.
+4. Modified files: `portfolio/creative-tool-mini-demos.js`, `portfolio/creative-lab.css`, `scripts/visual-brief-pdf-engine.test.mjs`, `scripts/mini-tool-demos.test.mjs`, `package.json`, and all four `.codex` recovery files.
+5. Tests run: M03 focused 4/4, aggregate mini-tool 4/4, JavaScript syntax, TypeScript build and `git diff --check` pass.
+6. Still required: actual browser print/PDF validation, desktop/mobile visual review, accessibility interaction review and safe DB-backed P3-007 acceptance.
+7. Known limitation: browser print output depends on the user's installed print/PDF engine; no custom font is embedded into a binary PDF.
+8. Next exact action: implement P5-004 Brand Asset Kit Generator on the existing M04 route with bounded editable tokens, documented system-font choices, logo-usage/imagery guidance and local printable/exportable output. Do not claim licensed proprietary assets or fonts.
+9. Branch remains `codex/v2-preview-2026-11-01`. Do not push until the user-authorized implementation batch is complete; then push once and test the Preview deployment.
+
 ## Preview runtime fix — 2026-11-01
 
 - Vercel Preview returned `500 FUNCTION_INVOCATION_FAILED` after branch deployment.

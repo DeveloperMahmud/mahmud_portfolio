@@ -4,18 +4,19 @@ import { readFile } from 'node:fs/promises';
 
 const read=path=>readFile(new URL(`../${path}`,import.meta.url),'utf8');
 
-test('all six mini tools have distinct sample experiences',async()=>{
+test('all six mini tools have distinct honest experiences',async()=>{
   const js=await read('portfolio/creative-tool-mini-demos.js');
   for(const id of ['M01','M02','M03','M04','M05','M06'])assert.match(js,new RegExp(`data-mini-demo="${id}"`));
-  for(const feature of ['BROWSER-LOCAL IMAGE QA','BROWSER-LOCAL BACKGROUND REVIEW','PRINT-STYLE SAMPLE','FICTIONAL BRAND STARTER','SAMPLE PRESENTATION FLOW','BROWSER-LOCAL HANDOFF'])assert.match(js,new RegExp(feature));
-  assert.match(js,/M01:dimensionDemo,M02:backgroundDemo,M03:pdfDemo,M04:brandKitDemo,M05:presentationDemo,M06:handoffDemo/);
+  for(const feature of ['BROWSER-LOCAL IMAGE QA','BROWSER-LOCAL BACKGROUND REVIEW','BROWSER-LOCAL PDF WORKFLOW','FICTIONAL BRAND STARTER','SAMPLE PRESENTATION FLOW','BROWSER-LOCAL HANDOFF'])assert.match(js,new RegExp(feature));
+  assert.match(js,/M01:dimensionDemo,M02:backgroundDemo,M03:pdfDemo,M04:brandKitEngineDemo,M05:presentationDemo,M06:handoffDemo/);
 });
 
 test('mini demos remain local, bounded and free of fake production operations',async()=>{
   const js=await read('portfolio/creative-tool-mini-demos.js');
   assert.doesNotMatch(js,/fetch\(|XMLHttpRequest|WebSocket|localStorage|sessionStorage|FormData/);
   assert.match(js,/never uploaded, stored or sent to the portfolio server/);
-  assert.match(js,/does not create, download, store or email a PDF/);
+  assert.match(js,/never uploads, stores or emails the brief/);
+  assert.match(js,/window\.print\(\)/);
   assert.match(js,/does not read portfolio records, publish a deck or create a share link/);
   assert.match(js,/No project name, task or completion state is sent to the server/);
 });

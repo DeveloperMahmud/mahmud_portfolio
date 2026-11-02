@@ -1,6 +1,6 @@
 # Project Progress
 
-Last reconciled: 2026-10-30 (Asia/Dhaka)  
+Last reconciled: 2026-11-02 (Asia/Dhaka)
 Canonical repository: `D:/Web Works/search-hub/.portfolio-codex-work`  
 Branch / baseline: `main` at `3f3fa90` before V2 setup changes  
 Master specification: `docs/MAHMUD_CODEX_MASTER_IMPLEMENTATION_INSTRUCTIONS_V2.md`  
@@ -16,14 +16,96 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 
 ## Current state
 
-### Latest checkpoint — 2026-11-01 (P5-002)
+### Latest checkpoint — 2026-11-02 (Phase 8 local release gate)
+
+- P8-001 is `IN_PROGRESS`: Prisma validate/generate, all 42 test files (232/232 tests), static smoke, performance budget, TypeScript build and diff check pass. Production-like Preview DB migration/auth/backup-restore acceptance is still pending.
+- P8-002 is `COMPLETED`: Creative Lab administration/roadmap, WordPress migration, environment/rollback/ownership, verification and preview release documents are in `docs/`.
+- P8-003 is `IN_PROGRESS`: the user authorized one push to `codex/v2-preview-2026-11-01` and Vercel Preview testing. Production/main remains unauthorized.
+- Playwright visual automation is configured; execution was attempted but local browser binaries are absent. This is recorded as NOT VISUALLY VERIFIED, not a false pass.
+- Exact next action: stage and commit the complete recoverable batch, push the existing preview branch once, then inspect the Vercel Preview deployment, migrations and public/admin routes using the separate Preview database.
+
+### Latest checkpoint — 2026-11-02 (Phase 7 code gate)
+
+- P7-001 through P7-007 are code-level complete; P7-006 is `VERIFIED` by measured repository budgets, while browser/runtime-dependent work remains `COMPLETED`, not `VERIFIED`.
+- Added a bounded accessibility/security/portability suite, Page Studio keyboard tab behavior and visible focus treatment.
+- Hardened legacy project share links with mandatory 1–30 day expiry, revoke/audit, dedicated rate limit, token-log suppression, redacted project output and reviewer-PII-free responses. The isolated Review Workspace remains the recommended path.
+- Added desktop/mobile Playwright regression artifacts and a loopback-only static preview server. Execution was attempted but browser binaries are absent, so no visual verification is claimed.
+- Critical asset budgets pass: 424,033 measured bytes across seven named entry assets; lazy media, reduced motion, no autoplay and deferred head scripts pass.
+- Page Studio WordPress handoff v2 excludes editor state, animation data and executable JavaScript; it emits semantic tokens, media remapping and manual-review notes. Migration documentation was added.
+- Validation: quality 4/4, Page Studio 49/49, frontend 21/21, performance budget and TypeScript build pass. Exact next action: Phase 8 consolidated regression/data-safety gate, operations/release docs reconciliation, then one authorized preview-branch commit/push and Preview test.
+
+### Previous checkpoint — 2026-11-02 (P7-001/P7-002 code complete)
+
+- P7-001 and P7-002 are `COMPLETED`, not `VERIFIED`.
+- Sitemap now includes stable recruiter/studio/lab routes, published service routes and only published/indexable Creative Lab records; llms.txt exposes only public indexable projects/articles/tools with the tool limitation boundary.
+- Demo and review routes remain noindex; review pages also remain no-store.
+- Analytics now accepts tool card/detail/demo/live and recruiter CTA events, respects DNT/GPC/admin/local/bot exclusions, keeps identifiers salted/hashed and exports an Event taxonomy worksheet.
+- Validation: combined discovery/analytics suite 3/3, JavaScript syntax, TypeScript build and diff check pass. Live crawler/analytics configuration and browser interactions remain unverified.
+- Exact next action: P7-003 through P7-007 quality/security/performance/export audit and fixes, then Phase 8.
+
+### Latest checkpoint — 2026-11-02 (Phase 6 code gate)
+
+- P6-006 Review & Approval is `COMPLETED`, not `VERIFIED`; all six Phase 6 engine code tasks are now complete, while P3-007 DB acceptance remains pending.
+- Added isolated review workspaces, immutable media-backed versions, hash-only 1–30 day scoped tokens, revoke/close, fragment exchange to strict HttpOnly session, redacted DTOs, comments and append-only exact-version decisions.
+- Public review routes use origin checks, dedicated rate limiting, no-store/noindex/referrer/CSP controls and ActivityLog audit events. Only existing `PUBLIC` complete Media assets are eligible.
+- Confidential binary review remains explicitly `BLOCKED` until private object storage plus authenticated signed delivery exists.
+- Validation: Prisma generation, review security 4/4, F06 prototype 3/3, JavaScript syntax, TypeScript build and diff check pass. Migration was not applied; DB runtime/browser/RBAC behavior remains unverified.
+- Exact next action: start P7-001 SEO/GEO integration, then continue through Phase 8 before the authorized one-time preview push/test.
+
+### Latest checkpoint — 2026-11-02 (P6-005 code complete)
+
+- P6-005 Listing Visual Audit is `COMPLETED`, not `VERIFIED`; Phase 6 continues.
+- Canonical F05 now records eight bounded human findings and visible evidence notes, reports only factual clear/review/not-checked counts and exports local JSON/text.
+- It does not upload artwork, run computer vision, calculate a quality score, certify compliance or persist/transmit input.
+- Validation: focused 4/4, JavaScript syntax, TypeScript build and diff check pass. Browser/export/responsive and P3-007 DB-backed acceptance remain pending.
+- Exact next action: implement P6-006 as an isolated, redacted, expiring-token public-safe review MVP. Confidential binary delivery remains blocked until private object storage and signed authenticated delivery exist.
+
+### Latest checkpoint — 2026-11-02 (P6-004 code complete)
+
+- P6-004 Smart Creative Brief Builder is `COMPLETED`, not `VERIFIED`; Phase 6 continues without a phase-boundary stop.
+- Canonical F04 now builds a bounded local brief, identifies missing brand/product/goal/audience/deliverable/deadline/asset information and exports local JSON/text. No network, persistence, email, approval, contract or AI-generation claim exists.
+- Validation: focused 4/4, JavaScript syntax and TypeScript build pass. Browser/export/responsive and P3-007 DB-backed acceptance remain pending.
+- Exact next action: P6-005 criteria-driven Listing Visual Audit engine, with explainable authored/human findings and no opaque automated certainty.
+
+### Latest checkpoint — 2026-11-02 (P6-003 code complete)
+
+- P6-003 Amazon Listing & Premium A+ Creative Planner is `COMPLETED`, not `VERIFIED`; Phase 6 remains active.
+- Canonical F03 now turns bounded local product, audience, tone, marketplace, verified USP, asset and evidence inputs into a deterministic 4–9 image sequence and 3–7 A+ module map.
+- It flags exact message reuse across listing/A+, exposes asset/evidence checklists and exports versioned JSON plus a human-readable brief locally. It does not invent copy/evidence, claim universal program rules or certify marketplace compliance.
+- Validation: P6-003 4/4, P6-002 5/5, P6-001 6/6, Phase 2 aggregate 4/4, JavaScript syntax, TypeScript build and diff check pass.
+- Not verified: real browser export interactions, desktop/mobile visual review and P3-007 DB-backed persistence/public acceptance.
+- Exact next action: implement P6-004 Smart Creative Brief Builder with bounded validation, missing-information prompts and local printable/JSON output; do not imply delivery, consent or durable save.
+- Preview push remains deferred until the authorized implementation batch is complete.
+
+### Latest checkpoint — 2026-11-02 (P6-002 code complete)
+
+- P6-002 Text Readability & Contrast Analyzer is `COMPLETED`, not `VERIFIED`; Phase 6 remains active.
+- Canonical F02 now calculates the exact WCAG contrast ratio for known foreground/background colors, selects normal/large-text AA and AAA thresholds from editable size/weight, updates a scale preview and can sample representative pixels from a bounded browser-local image.
+- Local-image processing is limited to PNG/JPEG/WebP, 12 MB and 40 MP. No OCR, text detection, remote upload, persistence, whole-image accessibility score or conformance certification is claimed.
+- Validation: P6-002 focused 5/5, Phase 2 aggregate 4/4, JavaScript syntax, TypeScript build and diff check pass. A boundary fixture was corrected from `#777777` (4.48:1) to `#767676`; the production formula was correct.
+- Not verified: real browser pixel sampling/report download, desktop/mobile visual review and P3-007 DB-backed acceptance.
+- Exact next action: implement P6-003 A+ Creative Planner as a bounded structured local planning/export workflow without inventing product evidence or universal marketplace requirements.
+- Preview push remains deferred until the authorized implementation batch is complete.
+
+### Latest checkpoint — 2026-11-02 (P6-001 code complete)
+
+- Current active phase: **Phase 6 — Flagship Tool Functional Activation**. Earlier evidence and DB verification blockers remain preserved.
+- P6-001 Amazon Thumbnail Readability Tester is `COMPLETED`, not `VERIFIED`.
+- The canonical F01 route now decodes PNG/JPEG/WebP locally, enforces 12 MB / 12,000 px / 40 MP safety limits, renders 80/120/160 px previews, reports source dimensions plus global luminance-spread and edge-density observations, tracks four explicit human checks and exports a local evidence report.
+- Removed the prototype `/100` score because it implied unsupported certainty. No OCR, product identification, compliance certification, claim validation or performance prediction is represented.
+- Validation: P6-001 focused 6/6, Creative Tool detail 3/3, Phase 2 aggregate 4/4, JavaScript syntax, TypeScript build and diff check pass.
+- Not verified: real browser file/download behavior, desktop/mobile visual review and DB-backed P3-007 public/CMS acceptance.
+- Exact next action: implement P6-002 Text Readability & Contrast Analyzer as a bounded browser-local engine, preserving the same honest evidence/no-certification boundary.
+- Do not push yet. The user authorized one preview-branch push and deployment test only after the implementation batch is complete.
+
+### Latest checkpoint — 2026-11-02 (Phase 5 code gate)
 
 - Current active phase: **Phase 5 — Six mini-tool engines**. Phase 4 evidence-dependent items remain blocked/in progress, not skipped or completed.
-- Current task: **P5-002 Product Background Inspector — IN_PROGRESS**.
-- Implemented this Phase 5 pass: P5-001 image dimension/safe-zone engine, P5-006 project handoff workflow, and P5-002 browser-local near-white/edge/transparency sampler.
-- Validation: focused tests for all three engines are authored but intentionally deferred to the Phase 5 batch checkpoint under the user’s credit-saving workflow.
-- Not verified: JavaScript/browser execution, desktop/mobile visuals, focused/regression suites and P3-007 DB-backed acceptance.
-- Exact next action: implement P5-003 Visual Brief to PDF, then the remaining Phase 5 engines; run one consolidated Phase 5 validation checkpoint before claiming completion.
+- Phase 5 implementation state: P5-001, P5-002, P5-003, P5-004 and P5-006 are `COMPLETED`, not `VERIFIED`. P5-005 is `BLOCKED` by P4-003 real case-study evidence.
+- Newly completed: P5-004 Brand Asset Kit Generator with bounded editable identity/palette/type/guidance tokens, system-font presets, token-driven preview, versioned local JSON and print output.
+- Consolidated validation: M01 4/4, M02 4/4, M03 4/4, M04 4/4, M06 3/3, aggregate mini tools 4/4, presentation safety 5/5, JavaScript syntax, TypeScript build and diff check pass.
+- Not verified: browser file/clipboard/download/print interactions, generated PDF/font rendering, desktop/mobile visuals and DB-backed P3-007 acceptance.
+- Exact next action: preserve P5-005/P4-003 as evidence-blocked; audit the first independent Phase 6 engine implementation path without weakening the P3-007 database/publication dependency.
 - This checkpoint supersedes older current-task wording below; the historical entries remain for recovery context.
 
 > Recovery checkpoint (2026-11-01): the evidence-backed active phase is **Phase 4 — Portfolio, recruiter and client conversion experiences**. P4-004 and P4-007 are code-complete; P4-003 is `BLOCKED` on 4–6 real case-study facts/media. P4-005 now has a tested, default-OFF presentation foundation but remains `IN_PROGRESS` until that real evidence and DB/browser verification exist. P3-007 remains independently `BLOCKED` on a safe non-production database target. This checkpoint supersedes older active-phase wording below.
@@ -61,6 +143,11 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - P5-002 Product Background Inspector. Browser-local sampling engine code is implemented; batch validation is deferred.
 
 ## Completed but not verified
+
+- P6-004 Smart Creative Brief Builder. Bounded clarification/export workflow passes focused/build checks; browser and DB-backed acceptance remain pending.
+- P6-003 Amazon Listing & Premium A+ Creative Planner. Bounded deterministic plan/repetition/evidence/export workflow passes focused/static/build checks; browser and DB-backed acceptance remain pending.
+- P6-002 Text Readability & Contrast Analyzer. Exact color contrast, type thresholds, local pixel sampling and evidence export pass focused/static/build checks; browser and DB-backed acceptance remain pending.
+- P6-001 Amazon Thumbnail Readability Tester engine. Browser-local bounded analysis and report export pass focused/static/build checks; browser and DB-backed acceptance remain pending.
 
 - P4-001 Recruiter Mode. Code, focused regressions and static responsive shell checks pass; authenticated DB-backed save/role/API output remains pending.
 - P4-002 Client / Studio Mode. Code, focused regressions, build and static desktop/mobile checks pass; authenticated DB-backed save/role/API output remains pending.

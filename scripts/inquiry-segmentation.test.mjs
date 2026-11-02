@@ -34,7 +34,7 @@ test('analytics uses bounded experience contexts and aggregate intent counts',as
   assert.match(route,/'hire','studio','service'/);
   assert.match(route,/inquiryIntents/);
   assert.match(route,/add\('Inquiry intent',data\.inquiryIntents\)/);
-  assert.match(client,/pageContext=location\.pathname==='\/hire'/);
+  assert.match(client,/pageContext=location\.pathname\.startsWith\('\/hire'\)/);
   assert.doesNotMatch(client,/email|message|company/);
 });
 

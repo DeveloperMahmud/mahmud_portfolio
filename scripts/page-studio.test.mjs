@@ -174,7 +174,9 @@ test('widget inspector flushes edits before reselection and pages have a portabl
   assert.match(editor,/flushInspectorDraft\(\);selectedId=event\.data\.id/);
   assert.match(editor,/input\.tagName==='SELECT'\?'change':'input'/);
   assert.match(editor,/function exportWordPress\(\)/);
-  assert.match(editor,/portfolio-page-studio-wordpress-handoff\/v1/);
+  assert.match(editor,/portfolio-page-studio-wordpress-handoff\/v2/);
+  assert.match(editor,/requiresManualReview/);
+  assert.match(editor,/mediaManifest/);
   assert.match(html,/id="studioWordpress"/);
 });
 

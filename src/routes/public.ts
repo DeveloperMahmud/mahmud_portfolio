@@ -141,6 +141,7 @@ router.get('/brands', async (_req, res) => {
 router.get('/homepage',async(_req,res)=>{const sections=await db.homepageSection.findMany({where:{enabled:true},orderBy:[{sortOrder:'asc'},{label:'asc'}]});res.set('Cache-Control','public, max-age=60, s-maxage=300, stale-while-revalidate=600');res.json({sections});});
 
 router.post('/share/:token/review', async (req, res) => {
+  res.set({'Cache-Control':'private, no-store','X-Robots-Tag':'noindex,nofollow,noarchive','Referrer-Policy':'no-referrer'});
   const tokenHash = hashShareToken(req.params.token);
   const project = await db.project.findFirst({ where: { deletedAt:null,accessTokenHash: tokenHash, status: 'PUBLISHED', visibility: { in: ['UNLISTED', 'PRIVATE'] } } });
   if (!project || (project.clientExpiresAt && project.clientExpiresAt < new Date())) return res.status(404).json({ error: 'Share link is invalid or expired' });
@@ -148,13 +149,14 @@ router.post('/share/:token/review', async (req, res) => {
   if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
   const review = await db.projectReview.create({ data: { projectId: project.id, ...parsed.data } });
   await db.activityLog.create({ data: { action: parsed.data.decision === 'APPROVED' ? 'CLIENT_APPROVED' : 'CLIENT_REQUESTED_CHANGES', entity: 'PROJECT_REVIEW', entityId: review.id, label: `${project.title} · ${parsed.data.clientName}` } });
-  res.status(201).json({ ok: true, review });
+  res.status(201).json({ ok: true, review: { id:review.id,decision:review.decision,createdAt:review.createdAt } });
 });
 
 router.get('/share/:token', async (req, res) => {
+  res.set({'Cache-Control':'private, no-store','X-Robots-Tag':'noindex,nofollow,noarchive','Referrer-Policy':'no-referrer'});
   const tokenHash = hashShareToken(req.params.token);
   const project = await db.project.findFirst({ where: { deletedAt:null,accessTokenHash: tokenHash, status: 'PUBLISHED', visibility: { in: ['UNLISTED', 'PRIVATE'] } } });
   if (!project || (project.clientExpiresAt && project.clientExpiresAt < new Date())) return res.status(404).json({ error: 'Share link is invalid or expired' });
-  res.json({ project });
+  res.json({ project:publicProjectDto(project as unknown as Record<string,unknown>) });
 });
 export default router;
