@@ -854,3 +854,24 @@
 ### Next action
 
 - Audit P6-001 against the existing flagship demo shell and implement an independent bounded engine path without weakening P3-007 or publishing fake results.
+
+## 2026-11-02 — Preview runtime and Creative Lab seed recovery
+
+### Evidence
+
+- Vercel Preview deployment `Co9bYQYmXu1sMYJ1tYsUSnMddvcq` is Ready for branch `codex/v2-preview-2026-11-01` at commit `0d3ebe0`.
+- Authenticated browser verification opened the homepage, Recruiter Mode, Studio Mode, Creative Lab and admin shell.
+- Runtime logs showed successful public settings/projects/brands/homepage-layout responses and four missing legacy local-upload images.
+- Creative Lab loaded successfully but returned zero tools after deployment.
+
+### Root cause and fix
+
+- The catalog seed's `isMain` comparison built a Windows-oriented file URL. On Vercel Linux the module exited cleanly without invoking the seed, so the build looked successful while no canonical rows were created.
+- Switched the entrypoint comparison to Node's portable `pathToFileURL(process.argv[1])`.
+- Added a focused regression assertion for portable entrypoint detection.
+
+### Verification
+
+- `npm.cmd run test:creative-tool-seed` — 6/6 passed.
+- `npm.cmd run typecheck` — passed.
+- A fresh Preview deploy and browser confirmation of exactly 12 tools are still required; this checkpoint is not `VERIFIED` yet.

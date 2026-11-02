@@ -547,3 +547,16 @@ Always reconcile these notes with the actual repository before resuming.
 - Browser: static admin shell and both new assets load; authenticated editor visuals and persistence are not verified because no safe DB-backed local session exists.
 - Exact next action: obtain/use a safe non-production PostgreSQL target, start the full Express app, verify ADMIN/EDITOR save plus VIEWER/WRITER/MODERATOR denial and sibling preservation, then visually verify `/admin…#homepage` and `/hire` at desktop/mobile. Do not begin P4-002 first.
 - Verification environment evidence: no `.env`, `TEST_DATABASE_URL`, `DATABASE_URL`, Docker or local `psql` is available. Publish-safety regressions pass 3/3; do not substitute production credentials for the missing QA database.
+
+## Preview seed recovery checkpoint — 2026-11-02
+
+1. Last verified completed task: Preview runtime loads the public homepage, `/hire`, `/studio`, `/creative-lab` and `/admin.html`; public runtime APIs observed in Vercel logs return HTTP 200.
+2. Current task: P8-001/P8-003 Preview verification, specifically activation of the canonical 12-tool Creative Lab catalog (`IN_PROGRESS`).
+3. Exact implementation state: commit `0d3ebe0` deployed successfully, but Creative Lab shows zero tools. Source inspection proved the seed direct-execution guard is non-portable on Linux. The worktree now contains the portable `pathToFileURL(process.argv[1])` fix plus a regression test.
+4. Files modified: `scripts/seed-creative-tools.mjs`, `scripts/creative-tool-seed.test.mjs`, `.codex/IMPLEMENTATION_CHECKLIST.md`, `.codex/PROJECT_PROGRESS.md`, `.codex/IMPLEMENTATION_LOG.md`, `.codex/SESSION_HANDOFF.md`.
+5. Unfinished: commit/push the fix to the authorized Preview branch, wait for Vercel redeploy, confirm build seed output and exactly 12 public tools (6 flagship, 6 mini), then continue CMS/RBAC verification.
+6. Tests executed: Creative Tool seed 6/6 passed; TypeScript typecheck passed.
+7. Tests still required: fresh Preview deployment, public catalog/detail/demo browser checks, CMS login and role/persistence checks, Preview backup/restore drill.
+8. Known issues: four historical `/uploads/portfolio/...` image paths return 404; missing local media is separate from the seed defect. Production/main remains unauthorized.
+9. Next exact action: review diff, commit and push only the portable seed fix and recovery documentation to `codex/v2-preview-2026-11-01`, then inspect the resulting Vercel deployment.
+10. Resume commands: `git status --short --branch`, `git diff --check`, `npm.cmd run test:creative-tool-seed`, `npm.cmd run typecheck`.

@@ -49,3 +49,9 @@ test('Vercel deploy seeds the canonical catalog only after migrations', async ()
   const buildIndex = command.indexOf('npm run build');
   assert.ok(migrateIndex >= 0 && seedIndex > migrateIndex && buildIndex > seedIndex);
 });
+
+test('seed entrypoint detection is portable across Windows and Vercel Linux paths', async () => {
+  const source = await readFile(new URL('./seed-creative-tools.mjs', import.meta.url), 'utf8');
+  assert.match(source, /pathToFileURL\(process\.argv\[1\]\)/);
+  assert.doesNotMatch(source, /new URL\(`file:\/\/\//);
+});

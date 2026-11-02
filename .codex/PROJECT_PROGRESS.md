@@ -327,6 +327,13 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 
 ## Known issues and risks
 
+### Preview runtime checkpoint — 2026-11-02
+
+- Authenticated Vercel Preview browser checks confirm `/`, `/hire`, `/studio`, `/creative-lab` and `/admin.html` load; public settings, projects, brands and homepage-layout APIs return HTTP 200 in runtime logs.
+- Creative Lab currently renders `Showing 0 tools`. Root cause is verified in source: the seed script's direct-execution guard constructed a Windows-oriented `file:///` URL, so Vercel Linux exited successfully without calling `seedCreativeTools()`.
+- Replaced that guard with `pathToFileURL(process.argv[1])`; focused seed tests pass 6/6 and TypeScript typecheck passes. Redeploy/browser verification is still required before the catalog can be marked active.
+- Runtime logs expose four legacy `/uploads/portfolio/...` 404 image requests. These are missing historical local-upload assets, not a server crash; media repair/migration remains separate pending work.
+
 - P4-001 is partially implemented and must not be promoted. The nullable Creative Tool filter was fixed on 2026-10-30 and the TypeScript build now passes; the conditional-CV regression, friendly CMS controls and DB-backed verification remain unfinished.
 - The conditional CV regression is reconciled: static HTML has no dead CV link, while runtime JavaScript exposes the download only when `cvAvailable` is true.
 - Recruiter content now has a dedicated friendly editor and server-validated merge workflow; authenticated persistence, role-denial and round-trip behavior remain unverified without a safe database target.

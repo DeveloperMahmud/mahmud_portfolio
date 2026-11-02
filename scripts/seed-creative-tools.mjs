@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { CREATIVE_TOOLS, CREATIVE_TOOL_SEED_VERSION } from './creative-tools-catalog.mjs';
 
 const CANONICAL_IDS = [...Array(6)].flatMap((_, index) => [`F0${index + 1}`, `M0${index + 1}`]).sort();
@@ -80,6 +80,5 @@ export async function seedCreativeTools(prisma = new PrismaClient()) {
   }
 }
 
-const isMain = process.argv[1] && fileURLToPath(import.meta.url) === fileURLToPath(new URL(`file:///${process.argv[1].replace(/\\/g, '/')}`));
+const isMain = Boolean(process.argv[1]) && fileURLToPath(import.meta.url) === fileURLToPath(pathToFileURL(process.argv[1]));
 if (isMain) seedCreativeTools().then(rows => console.log(`Creative Lab seed complete: ${rows.length} canonical tools.`)).catch(error => { console.error(error); process.exitCode = 1; });
-
