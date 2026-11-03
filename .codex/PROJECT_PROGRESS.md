@@ -1,5 +1,13 @@
 # Project Progress
 
+## Consolidated closeout gate — 2026-11-03
+
+- Dependency-ready implementation is closed. The admin GPU/compositor mitigation is included; documented evidence/data-dependent tasks remain blocked rather than being represented as complete.
+- Final local gate passed: Prisma schema validation (with a loopback-only dummy URL; no database connection or migration), Prisma Client generation, TypeScript typecheck, production build, all 237 automated tests, 5/5 static smoke routes, performance budget (424,033 measured bytes), and `git diff --check`.
+- Preview backup integrity is verified locally: CMS-only format `mahmudul-portfolio-backup-v2`, schema `2.0`, 18 sections, checksum prefix `1d383c499dbe`, private inquiries excluded and media binaries excluded.
+- Preview restore round-trip remains `NOT VERIFIED`: the authenticated CMS is reachable and the BACKUP workspace is functional, but the available in-app browser automation cannot attach a local file to the native file input. No restore was attempted and no database was mutated. Manual upload plus `SKIP_EXISTING` remains the exact safe verification step; `REPLACE` must not be used.
+- Next action: commit and push this validated batch once to `codex/v2-preview-2026-11-01`, wait for Vercel Preview readiness, then inspect the stable Preview alias. Production/main remains untouched.
+
 Last reconciled: 2026-11-03 (Asia/Dhaka)
 Canonical repository: `D:/Web Works/search-hub/.portfolio-codex-work`  
 Branch / baseline: `main` at `3f3fa90` before V2 setup changes  
@@ -26,6 +34,40 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Authenticated backup/restore round-trip and complete non-admin RBAC acceptance remain the two release-blocking verification gaps. No production or owner data was mutated.
 - SEO runtime evidence is protected: unauthenticated requests to `/sitemap.xml`, `/robots.txt`, and `/llms.txt` returned the Vercel Deployment Protection HTML shell (`text/html`), not application responses. This is not recorded as an application failure; crawler endpoint contents remain `NOT VERIFIED` on this protected Preview alias.
 - Exact next action: obtain/retain a safe authenticated Preview CMS session and test-owned records, run the reversible backup/restore drill plus non-admin permission matrix, clean up only test-owned data, then re-run the release gate. Do not promote P8-001/P8-003 before that evidence exists.
+
+### Viewer RBAC and backup-export checkpoint — 2026-11-03
+
+- Re-enabled the existing test-owned Viewer account with a temporary password, authenticated it on an isolated current Preview deployment origin, and inspected the current deployment runtime logs.
+- Runtime evidence: `/api/auth/me`, projects, content, brands and brand-assets returned 200; analytics, maintenance settings/status, inquiries and activity returned 403. This confirms the deployed Viewer read/deny boundary for the exercised routes.
+- The isolated Viewer CMS tab became unresponsive to browser inspection after login, but Vercel runtime logs captured the authenticated requests. The test account was returned to `DISABLED` and the CMS confirmed `User access updated.`
+- Exported one CMS-only portable backup from Preview. The UI recorded `COMPLETE`, checksum prefix `1d383c499dbe`; the downloaded file is `C:/Users/USER/Downloads/mahmudul-portfolio-2026-11-02T20-14-36-322Z-v2.json` (361,079 bytes). Private inquiries were not included.
+- Restore validation and application are still pending. Uploading that local backup through the Windows file dialog requires explicit user confirmation; no restore request or data mutation has occurred.
+- P8-001/P8-003 remain `IN_PROGRESS`: Viewer runtime evidence is stronger, but the Editor/Writer/Moderator runtime matrix and reversible restore round-trip are not complete.
+
+### Non-admin role matrix checkpoint — 2026-11-03
+
+- Reused only the existing test-owned account, one role at a time, on isolated Preview deployment origins. Editor, Writer and Moderator authentication all returned 200 for login and auth/me.
+- Editor and Writer sessions loaded projects, content and brands with 200 responses. Moderator loaded projects/content/brands and the role-specific `/api/admin/operations/inquiries?pageSize=100` route with 200; maintenance settings and brand assets also loaded under the documented Moderator read scope.
+- The earlier Viewer run confirmed protected analytics/maintenance/inquiry/activity routes return 403 while its allowed content reads return 200.
+- Existing focused static regressions cover Viewer read-only writes, Writer draft-only/no-delete/no-share behavior, Editor account/system/recovery exclusion, and Moderator workflow scoping. No owner content was changed during runtime role checks.
+- Cleanup is complete: the test account is back to role `VIEWER`, status `DISABLED`, with CMS confirmation `User access updated.`
+- The non-admin runtime/read matrix is now accepted for the exercised boundaries. P8-001/P8-003 remain `IN_PROGRESS` only because the portable backup still needs server validation plus the reversible `SKIP_EXISTING` restore/pre-restore-copy drill.
+
+### Local backup integrity checkpoint — 2026-11-03
+
+- Parsed the downloaded CMS-only Preview export locally without exposing record content. Format is `mahmudul-portfolio-backup-v2`, schema is `2.0`, and all 18 data-section counts equal the manifest counts.
+- Recomputed the checksum with the same SHA-256 over `JSON.stringify(unsignedBackup)` used by the server; it exactly matches checksum prefix `1d383c499dbe`.
+- The artifact is CMS-only: `includesPrivateData=false`, no `inquiries` collection is present, and `mediaFilesIncluded=false`.
+- This is local artifact verification, not a restore. Upload/server validation and the reversible `SKIP_EXISTING` restore remain `NOT VERIFIED` and require explicit user confirmation because they upload a local file and mutate the Preview database.
+- Exact next action: after explicit confirmation, upload the exact export to the authenticated Preview CMS, run server validation, then execute only `SKIP_EXISTING`; record counters, pre-restore backup ID/checksum and rollback state. Do not use `REPLACE` and do not touch production/main.
+- External blocker audit: explicit upload/restore confirmation remained absent across three consecutive goal turns. All safe local integrity work is exhausted, so the active goal is blocked at this exact acceptance step; P8-001/P8-003 themselves remain `IN_PROGRESS`, not falsely completed.
+
+### Dependency-ready implementation closeout — 2026-11-03
+
+- The owner requested implementation-first batching: no focused test suite or browser verification is run until all dependency-ready code changes are complete.
+- Removed the perpetual public neural canvas loop from the admin shell only. Admin now retains a static branded ambient background; public routes retain the interactive animation. The asset URL is cache-busted and a regression assertion is staged for the final validation batch.
+- Reconciled P4-005 and P4-006 to `BLOCKED`: their reusable engines/templates and publish-safety code exist, but honest activation requires P4-003 real project facts/media. No placeholder client evidence was substituted.
+- Dependency-ready Phase 6 and Phase 7 source work is complete. Remaining executable work is Phase 8 consolidated validation, Preview-only reversible restore acceptance, one authorized Preview push and post-deploy checks.
 
 ### Latest checkpoint — 2026-11-03 (Restore safety hardening implemented locally)
 

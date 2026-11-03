@@ -1,5 +1,15 @@
 # Session Handoff
 
+## Final local verification checkpoint — 2026-11-03
+
+1. Last verified implementation: admin pages no longer start the public neural canvas RAF/link loop; the branded admin background is static, while public pages retain their existing effect.
+2. Verification completed: Prisma schema valid with a loopback-only dummy URL (no DB connection), Prisma Client generated, typecheck/build passed, 237/237 tests passed, static smoke 5/5 passed, performance budget passed at 424,033 bytes, and `git diff --check` passed.
+3. Current task: one authorized Preview-branch commit/push and post-deployment browser smoke.
+4. Restore acceptance state: local CMS-only backup integrity is verified, but upload/restore is `NOT VERIFIED` because the browser automation surface cannot attach the local JSON file. No restore or database mutation occurred. The remaining manual drill is: upload the named JSON, server-validate, select only `SKIP_EXISTING`, restore, and capture created/updated/skipped plus pre-restore backup evidence.
+5. Modified files in this batch: `portfolio/admin.html`, `portfolio/neural-bg.js`, `scripts/frontend-regressions.test.mjs`, and the four `.codex` tracking files.
+6. Remaining blockers: P3-007 full DB-backed CMS verification; P4-003 real commercial evidence; P4-005/P4-006/P5-005 truthful activation dependent on P4-003; four historical missing upload assets; protected crawler response contents; Preview restore round-trip described above.
+7. Next exact action: review/stage these seven files, commit once on `codex/v2-preview-2026-11-01`, push once, wait for Vercel Preview Ready, and smoke-test the stable Preview alias. Do not touch `main` or production.
+
 ## Consolidated Preview quality checkpoint — 2026-11-03
 
 1. Last verified completed task: public Preview visual coverage for the six flagship demo routes at desktop and mobile widths, with no checked horizontal overflow or console errors.
@@ -12,6 +22,23 @@
 8. SEO evidence limitation: Vercel Deployment Protection intercepted unauthenticated `/sitemap.xml`, `/robots.txt`, and `/llms.txt` probes with its HTML login shell. Treat those endpoint contents as `NOT VERIFIED`, not broken.
 9. Next exact development action: with a safe authenticated Preview CMS session, create only test-owned records, download a private-aware backup, exercise MERGE/REPLACE rollback boundaries and restore counters, verify allowed/denied non-admin workspaces, then remove or disable only those test records.
 10. Resume command: `Set-Location 'D:\Web Works\search-hub\.portfolio-codex-work'; git status --short; Get-Content .codex\SESSION_HANDOFF.md -TotalCount 45`.
+
+## Viewer RBAC and backup-export checkpoint — 2026-11-03
+
+1. Current task: P8-001/P8-003 acceptance remains `IN_PROGRESS`.
+2. Viewer runtime evidence: authenticated `auth/me`, projects, content, brands and brand-assets requests returned 200; analytics, maintenance settings/status, inquiries and activity returned 403 in the latest Preview deployment logs.
+3. Test-account cleanup: `codex.preview.rbac.20261102@example.com` was returned to `DISABLED`; the UI confirmed `User access updated.` Do not store its temporary password in repository files.
+4. Backup evidence: CMS-only export completed with checksum prefix `1d383c499dbe`; downloaded local file `C:/Users/USER/Downloads/mahmudul-portfolio-2026-11-02T20-14-36-322Z-v2.json`, 361,079 bytes. Private inquiries were excluded.
+5. No restore has run. The Backup pane currently needs the exported JSON selected, server validation completed, then a confirmed `SKIP_EXISTING` restore. This file upload requires explicit user confirmation under Windows UI automation policy.
+6. Exact next action after confirmation: select that exact file in the Preview Backup pane, verify checksum/count/conflict response, keep mode `SKIP_EXISTING`, invoke the validated restore, confirm created/updated/skipped counts and downloadable pre-restore recovery copy, then run the remaining role checks.
+
+## Non-admin role matrix checkpoint — 2026-11-03
+
+1. Used the single test-owned account sequentially as Editor, Writer and Moderator on separate Preview deployment origins; login and auth/me returned 200 for every role.
+2. Editor/Writer content reads returned 200. Moderator content reads and `/api/admin/operations/inquiries?pageSize=100` returned 200. The prior Viewer run supplied 200 allowed reads and 403 protected-route evidence.
+3. Existing regressions retain write-boundary coverage: Viewer read-only; Writer draft-only/no delete/bulk/share; Editor excluded from account/system/recovery controls; Moderator limited to leads/testimonials/reviews/review workspaces.
+4. Cleanup verified: account role `VIEWER`, status `DISABLED`, success message observed.
+5. Remaining blocker: upload the exact exported backup JSON to the Preview Operations pane, validate it, apply `SKIP_EXISTING`, and inspect counts/pre-restore recovery copy. Windows file upload awaits explicit user confirmation.
 
 ## Restore safety hardening checkpoint — 2026-11-03
 
@@ -630,3 +657,23 @@ Always reconcile these notes with the actual repository before resuming.
 - Stable Preview alias passes browser checks for 12 catalog tools, 6 flagship, 6 mini, the F01 detail page and its interactive demo.
 - `/admin.html` currently shows the CMS sign-in form. Next exact action is user sign-in on the stable Preview CMS, followed by read-only/authenticated navigation and role-boundary checks. Never request or expose the password.
 - Four historical `/uploads/portfolio/...` assets remain 404 and need a later media repair/migration decision.
+
+## Preview release acceptance checkpoint — 2026-11-03
+
+1. Last verified subtask: bounded Viewer/Editor/Writer/Moderator Preview RBAC evidence; the reused test account is back to `VIEWER` and `DISABLED`.
+2. Current task: P8-001/P8-003 reversible backup/restore acceptance (`IN_PROGRESS`).
+3. Exact state: ADMIN exported one CMS-only portable backup through Preview. The local file parses correctly; format `mahmudul-portfolio-backup-v2`, schema `2.0`, all 18 collection counts match, and the exact server checksum algorithm reproduces prefix `1d383c499dbe`.
+4. Privacy boundary: `includesPrivateData=false`, no inquiries collection, media manifest only (`mediaFilesIncluded=false`).
+5. No upload, server validation or restore has run. Do not claim round-trip acceptance.
+6. Blocker: explicit user confirmation is required before uploading the local file through the Windows dialog and before the reversible Preview mutation.
+7. Next exact action after confirmation: upload only `C:\Users\USER\Downloads\mahmudul-portfolio-2026-11-02T20-14-36-322Z-v2.json`, validate server-side, choose only `SKIP_EXISTING`, run restore, capture created/updated/skipped plus pre-restore backup evidence, and verify no private data/production mutation.
+8. Current uncommitted files: only the four `.codex` recovery Markdown files. Source code is unchanged.
+9. Blocked-audit state: the same explicit upload/restore confirmation was absent for three consecutive goal turns. No further meaningful, non-mutating acceptance work remains. Resume only after the user explicitly authorizes uploading the named CMS-only file and executing the Preview-only `SKIP_EXISTING` restore drill.
+
+## Implementation-first closeout — 2026-11-03
+
+1. Owner direction: finish all dependency-ready code first; run verification only after the implementation batch is closed.
+2. Implemented admin GPU fix in `portfolio/neural-bg.js` and `portfolio/admin.html`: admin skips the public particle/link RAF loop and uses static ambient styling; public pages are unchanged. `neural-bg.js?v=20261103-1` forces the new asset on Preview.
+3. Added the corresponding contract to `scripts/frontend-regressions.test.mjs`; it has not been executed yet by design.
+4. P4-005 and P4-006 are dependency-blocked by truthful P4-003 content, not unfinished code. P3-007 and P5-005 remain blocked for their documented external/data dependencies.
+5. Exact next action: run the single consolidated local validation gate, then perform the authorized Preview-only backup validation and `SKIP_EXISTING` restore drill, update recovery evidence, commit/push the Preview branch once, and inspect the resulting Vercel deployment. Never push main/production without separate authorization.

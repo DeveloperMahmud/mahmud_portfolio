@@ -58,6 +58,19 @@ test('public motion respects data-saving visitors and pauses the background off-
   assert.match(motion,/reduced\(\)\|\|saveData\(\)/);
 });
 
+test('admin background remains branded without running the public particle render loop',async()=>{
+  const [background,admin]=await Promise.all([
+    read('portfolio/neural-bg.js'),
+    read('portfolio/admin.html')
+  ]);
+  assert.match(background,/classList\.contains\('admin-page'\)/);
+  assert.match(background,/host\.dataset\.ambientStatic='true'/);
+  assert.match(admin,/Admin ambient background: intentionally static/);
+  assert.match(admin,/neural-bg\.js\?v=20261103-1/);
+  assert.match(admin,/\.admin-page>\.admin-ambient \.ambient-grid\{[^}]*animation:none!important/);
+  assert.match(admin,/\.admin-page>\.admin-ambient \.ambient-orb\{[^}]*animation:none!important/);
+});
+
 test('hero typewriter keeps its caret in the live text flow and offers durable presets',async()=>{
   const [runtime,admin,styles]=await Promise.all([
     read('portfolio/app.js'),

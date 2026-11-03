@@ -2,6 +2,13 @@
 (()=>{
   const host=document.querySelector('.ambient-bg');
   if(!host || host.querySelector('.neural-canvas')) return;
+  // The CMS keeps a static branded background. Its dense forms and scrolling
+  // panels do not benefit from a full-window O(n²) particle/link render loop.
+  // Public pages continue to use the interactive canvas unchanged.
+  if(document.body?.classList.contains('admin-page')){
+    host.dataset.ambientStatic='true';
+    return;
+  }
   const canvas=document.createElement('canvas');
   canvas.className='neural-canvas';
   canvas.setAttribute('aria-hidden','true');

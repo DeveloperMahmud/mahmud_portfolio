@@ -1,5 +1,13 @@
 # Implementation Log
 
+## 2026-11-03 — Consolidated closeout verification
+
+- Completed the deferred single validation gate after the implementation batch: schema validation, client generation, typecheck, build, 237 automated tests, five static smoke routes, performance budget and whitespace validation all passed.
+- Used a loopback-only dummy `DATABASE_URL` solely for Prisma schema parsing; no database connection, migration or data mutation was performed.
+- Confirmed the Preview CMS Backup workspace is authenticated and responsive. Local backup integrity remains exact and privacy-bounded.
+- Attempted to prepare the authorized Preview-only restore drill, but the in-app browser automation cannot attach the local JSON to the native file input. Recorded restore acceptance as `NOT VERIFIED`; did not substitute `REPLACE`, bypass the UI, inspect session credentials or mutate data.
+- Closed dependency-ready implementation and prepared one Preview-only commit/push. Production/main is unchanged.
+
 ## 2026-11-03 — Consolidated Preview quality evidence
 
 ### Validation
@@ -17,6 +25,28 @@
 ### Next action
 
 - Use a safe authenticated Preview CMS session and test-owned records for the reversible restore drill and non-admin permission matrix; clean up only test-owned state and rerun the release gate before any status promotion.
+
+## 2026-11-03 — Viewer RBAC and portable-backup evidence
+
+### Runtime acceptance
+
+- Re-enabled the existing test-owned Viewer account, authenticated it on the latest isolated Preview deployment origin and inspected deployment runtime logs.
+- Confirmed 200 responses for auth/me, projects, content, brands and brand-assets; confirmed 403 responses for analytics, maintenance settings/status, inquiries and activity.
+- Disabled the test Viewer after the probe and observed the CMS success message.
+
+### Backup acceptance
+
+- Exported a CMS-only portable backup through the deployed Operations workspace. The export completed with checksum prefix `1d383c499dbe` and excluded private inquiries.
+- Browser download created `C:/Users/USER/Downloads/mahmudul-portfolio-2026-11-02T20-14-36-322Z-v2.json` (361,079 bytes).
+- Validation/restore has not run; the local file upload awaits explicit user confirmation. No restore or owner-content mutation occurred.
+
+## 2026-11-03 — Non-admin Preview role matrix
+
+- Reused the test account sequentially as Editor, Writer and Moderator on isolated deployment origins; every login and auth/me request returned 200.
+- Editor and Writer loaded project/content/brand reads. Moderator additionally loaded the operations inquiry feed plus its documented maintenance reads.
+- Combined this runtime evidence with the existing role-boundary regressions and the Viewer 403 evidence; no owner content was mutated.
+- Returned the test account to `VIEWER` and `DISABLED`; CMS confirmed the update.
+- Remaining release acceptance is the exported backup validation and reversible `SKIP_EXISTING` restore/pre-restore recovery-copy check.
 
 ## 2026-11-03 — Atomic backup/restore safety hardening
 
@@ -944,3 +974,20 @@
 - Added a versioned shared-component script URL after the stable branch alias retained an older cached helper export.
 - Stable branch browser verification now passes for the Amazon Thumbnail Readability Tester detail page and interactive browser-local demo.
 - CMS shell loads but shows the application sign-in form; Vercel authentication does not create a CMS session.
+
+## 2026-11-03 — Preview backup artifact integrity
+
+- Inspected the exact CMS-only backup exported from the authenticated Preview CMS without printing or storing private record content.
+- Confirmed valid JSON, backup format `mahmudul-portfolio-backup-v2`, schema `2.0`, 18 included sections and manifest/data count parity.
+- Recomputed SHA-256 using the route's exact unsigned JSON serialization; checksum matches prefix `1d383c499dbe`.
+- Confirmed `includesPrivateData=false`, absent `inquiries`, and `mediaFilesIncluded=false`.
+- No upload or restore was performed. P8-001/P8-003 remain `IN_PROGRESS` until explicit confirmation permits server validation and a reversible Preview-only `SKIP_EXISTING` drill.
+- After three consecutive continuation turns with no explicit upload/restore authorization, the active goal reached its external blocker threshold. No application source, database, Git commit or remote branch was changed while waiting.
+
+## 2026-11-03 — Dependency-ready implementation batch closeout
+
+- Diagnosed the CMS GPU spike from source and Windows counters. The admin shell loaded the shared neural canvas, which performs pairwise particle-link rendering every animation frame, plus multiple infinite blurred ambient animations.
+- Added an admin-only static-mode guard before canvas creation. Public pages continue using the shared interactive background unchanged.
+- Replaced admin grid/orb animation with a static branded treatment and removed compositor-oriented `will-change`; cache-busted the admin neural asset.
+- Added a frontend regression contract for the static admin path. Per owner direction, execution is deferred to the final consolidated verification batch.
+- Reclassified recruiter presentation and Page Studio technical case study as blocked on truthful case-study evidence after confirming their dependency-ready engines/templates are already implemented. No fake projects, outcomes or client evidence were created.
