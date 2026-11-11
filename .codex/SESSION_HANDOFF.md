@@ -2,13 +2,13 @@
 
 ## Active Behance case-study checkpoint - 2026-11-11
 
-1. Current task: P4-003 Commercial case studies is locally `COMPLETED`; four owner-published evidence-led records meet the 4-6 acceptance range.
+1. Current task: P4-003 Commercial case studies is `VERIFIED`; four owner-published evidence-led records meet the 4-6 acceptance range and render publicly on the stable Preview alias.
 2. Slugs: `tmnt-face-body-glitter-jelly-amazon-listing`, `round-powder-brush-amazon-premium-a-plus`, `divine-face-perfecting-kit-amazon-premium-a-plus`, and `color-changing-lip-cheek-tint-amazon-premium-a-plus`.
 3. Shared source/seed/test files are under `scripts/`; ten tracked cover/board assets are under `portfolio/assets/case-studies/behance/`.
 4. Seed behavior is create-only and preserves existing CMS records. Local/manual runs default to drafts, Preview deploys publish for visibility, and production deploys skip the seed without an owner-approved production release.
-5. Validation passed: Prisma generate, typecheck, build, Behance 8/8, commercial case study 4/4, V2 contract 4/4, and diff check.
-6. No local database write, main-branch change, or production action occurred.
-7. Next exact action: commit and push `codex/v2-preview-2026-11-01`, wait for Vercel Preview readiness, then browser-check all four public case-study routes and update the persistent records with deployed evidence.
+5. Validation passed: Prisma generate, typecheck, build, Behance 9/9, commercial case study 4/4, V2 contract 4/4, and diff check.
+6. Deployment evidence: `aca2c10` reached the stable Preview alias and published the four create-only records; all four public routes rendered correct headings/deliverables, checked images loaded with valid natural dimensions, and captured console errors were zero. `b9fc0f4` then corrected source gallery metadata to those verified original dimensions.
+7. Main and production were not changed. Next exact action is owner visual review of the four Preview URLs; any copy/layout refinement should remain on the preview branch until separately approved for production.
 
 ## Final local verification checkpoint — 2026-11-03
 

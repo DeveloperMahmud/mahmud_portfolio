@@ -1,12 +1,13 @@
 # Project Progress
 
-## Behance case studies completed locally - 2026-11-11
+## Behance case studies verified on Preview - 2026-11-11
 
-- P4-003 is `COMPLETED` locally with four selected owner-published Behance case studies: Glitter Jelly listing images, Round Powder Brush A+, Divine Face Perfecting Kit A+, and Color-Changing Lip & Cheek Tint A+.
+- P4-003 is `VERIFIED` with four selected owner-published Behance case studies: Glitter Jelly listing images, Round Powder Brush A+, Divine Face Perfecting Kit A+, and Color-Changing Lip & Cheek Tint A+.
 - Each package includes role, challenge, evidence-bounded process, deliverables, Behance-attributed tools, accessible cover/board media, structured project blocks, and honest outcome language. All unverified metric arrays are empty.
 - Preview visibility is automated safely: `vercel-build` runs the create-only seed, `VERCEL_ENV=preview` publishes the records, and `VERCEL_ENV=production` skips the seed pending a separate owner-approved release. Existing CMS-edited slugs are preserved.
-- Validation passed: Prisma client generation, typecheck, build, Behance 8/8, commercial case study 4/4, V2 contract 4/4, and `git diff --check`.
-- No local database mutation or production change occurred. Next: commit/push the authorized preview branch, wait for deployment, and browser-check the four public routes before promoting to `VERIFIED`.
+- Validation passed: Prisma client generation, typecheck, build, Behance 9/9, commercial case study 4/4, V2 contract 4/4, and `git diff --check`.
+- Preview commit `aca2c10` created/published all four missing records. The stable alias rendered each public route with the correct case-study heading and deliverables; full-page asset checks found valid natural dimensions and zero broken images, and the browser error log was empty. Follow-up commit `b9fc0f4` corrected source metadata to the verified original image dimensions.
+- Main and production remain unchanged. Production seed execution is explicitly disabled pending a separate owner-approved release.
 
 ## Consolidated closeout gate — 2026-11-03
 

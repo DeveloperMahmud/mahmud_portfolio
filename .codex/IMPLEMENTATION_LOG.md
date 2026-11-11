@@ -1,6 +1,6 @@
 # Implementation Log
 
-## 2026-11-11 - Four owner-published Behance case studies completed locally
+## 2026-11-11 - Four owner-published Behance case studies verified on Preview
 
 ### Evidence and implementation
 
@@ -19,9 +19,12 @@
 ### Validation and boundary
 
 - Installed the locked dependencies for validation, generated Prisma Client, and passed typecheck plus the production TypeScript build.
-- Passed `test:behance-case-studies` 8/8, `test:commercial-case-study` 4/4, `test:v2-case-study` 4/4, and `git diff --check`.
+- Passed `test:behance-case-studies` 9/9, `test:commercial-case-study` 4/4, `test:v2-case-study` 4/4, and `git diff --check`.
 - No local database seed, main-branch change, or production mutation was performed.
-- P4-003 is `COMPLETED` at 4/4 selected evidence packages. Preview CMS insertion and browser acceptance remain before `VERIFIED`.
+- Pushed `aca2c10` to `codex/v2-preview-2026-11-01`. Its Preview build created and published the four missing records while leaving production disabled and preserving existing slugs.
+- Browser-verified all four stable Preview routes: each rendered its correct H1, structured content and deliverables; full-page checks loaded the intended assets with valid natural dimensions; the browser console error log was empty.
+- Corrected responsive-source dimension metadata to original asset dimensions, added a regression assertion, reran the full focused gate, and pushed follow-up `b9fc0f4`.
+- P4-003 is `VERIFIED` at 4/4 selected evidence packages. Main and production remain unchanged.
 
 ## 2026-11-03 — Consolidated closeout verification
 
