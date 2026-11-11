@@ -1,5 +1,15 @@
 # Session Handoff
 
+## Active Preview-experience checkpoint - 2026-11-11
+
+1. Current task: deploy and browser-verify P4-005 recruiter presentation, P4-006 Page Studio technical case study and P5-005 client/portfolio presentation after P4-003 became verified.
+2. New files: `scripts/preview-experiences.mjs`, `scripts/seed-preview-experiences.mjs`, and `scripts/preview-experiences.test.mjs`; `package.json` runs the seed after the Behance seed in `vercel-build`.
+3. Safety: the script runs only when `VERCEL_ENV=preview`, production is skipped, settings are changed only before seed marker version 1 exists, and an existing technical-case-study CMS record is never overwritten.
+4. Presentation evidence: both modes use the four verified Behance slugs and retain published/public-only runtime resolution plus noindex, keyboard, reduced-motion and analytics boundaries.
+5. Technical evidence: the create-once public page uses ten complete evidence sections, states AI-assisted engineering honestly, includes no unsupported performance claims, and intentionally invents no media.
+6. Local verification: Preview experiences 4/4, presentation 5/5, technical template 5/5, Behance 9/9, commercial 4/4, V2 case-study 4/4, typecheck/build and diff check pass.
+7. Exact next action: commit/push only `codex/v2-preview-2026-11-01`, wait for the stable Preview alias, then browser-check `/hire/presentation`, `/studio/presentation`, and `/pages/modular-page-studio-technical-case-study`. Do not touch main/production.
+
 ## Active Behance case-study checkpoint - 2026-11-11
 
 1. Current task: P4-003 Commercial case studies is `VERIFIED`; four owner-published evidence-led records meet the 4-6 acceptance range and render publicly on the stable Preview alias.

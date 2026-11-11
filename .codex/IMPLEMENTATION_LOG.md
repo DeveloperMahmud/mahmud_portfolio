@@ -1017,3 +1017,11 @@
 - Replaced admin grid/orb animation with a static branded treatment and removed compositor-oriented `will-change`; cache-busted the admin neural asset.
 - Added a frontend regression contract for the static admin path. Per owner direction, execution is deferred to the final consolidated verification batch.
 - Reclassified recruiter presentation and Page Studio technical case study as blocked on truthful case-study evidence after confirming their dependency-ready engines/templates are already implemented. No fake projects, outcomes or client evidence were created.
+## 2026-11-11 — Preview presentations and Page Studio technical case study
+
+- Reconciled the former evidence blocker after four owner-published Behance case studies passed Preview acceptance.
+- Added a one-time Preview-only seed that enables recruiter/client presentations with those four public slugs and enables public Page Studio without repeatedly overwriting later CMS settings.
+- Added a create-once published technical case study with ten repository-backed evidence sections, explicit AI-assisted contribution language, no invented outcomes and no fabricated media.
+- Production deployments skip the new seed. Existing custom-page records and post-seed CMS settings are preserved.
+- Verification passed: Preview experiences 4/4, presentation 5/5, Page Studio technical template 5/5, Behance 9/9, commercial contract 4/4, V2 case-study contract 4/4, TypeScript typecheck/build and `git diff --check`.
+- P4-005, P4-006 and P5-005 are `IN_PROGRESS` pending deployed Preview browser evidence.

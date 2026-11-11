@@ -1,5 +1,13 @@
 # Project Progress
 
+## Preview presentation and technical case-study implementation - 2026-11-11
+
+- Added a one-time, Preview-only activation seed for recruiter/client presentations and public Page Studio. Production is explicitly skipped, and the seed marker prevents later CMS edits from being overwritten.
+- Both presentation modes select the four verified Behance case studies and keep `noIndex` enabled for the focused walkthrough URLs.
+- Added a create-once, evidence-led Page Studio technical case study covering motivation, constraints, architecture, components, workflow, QA, accessibility, security, trade-offs and individual contribution. It contains no fabricated metrics or invented media; the owner will add any missing/authorized visual evidence manually.
+- Focused validation passed: Preview experiences 4/4, presentation 5/5, technical template 5/5, Behance 9/9, commercial case study 4/4, V2 case-study contract 4/4, TypeScript typecheck, production build and diff check.
+- P4-005, P4-006 and P5-005 move from `BLOCKED` to `IN_PROGRESS`; deployed Preview browser acceptance is still required before completion. Main/production remain untouched.
+
 ## Behance case studies verified on Preview - 2026-11-11
 
 - P4-003 is `VERIFIED` with four selected owner-published Behance case studies: Glitter Jelly listing images, Round Powder Brush A+, Divine Face Perfecting Kit A+, and Color-Changing Lip & Cheek Tint A+.
