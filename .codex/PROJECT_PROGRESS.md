@@ -7,7 +7,7 @@
 - Production activation is authorized and remains create-only/idempotent; no existing record or CMS setting is overwritten.
 - Local acceptance passes: 251/251 tests, 5/5 smoke checks, performance budget, Prisma validation/generation, TypeScript build and diff check.
 - Preview commit `22189d2` is deployed. Browser acceptance passes all ten routes with real source media, zero fallbacks/log errors, exact archive inclusion and no homepage auto-feature placement.
-- Next action: publish one squash release commit to `main` and verify production.
+- Released as single squash commit `91f752f` on `main`. Production browser acceptance passes 10/10 routes, source media, archive-first placement and empty browser logs.
 
 ## Preview presentation and technical case-study implementation - 2026-11-11
 

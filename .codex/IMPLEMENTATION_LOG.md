@@ -10,7 +10,8 @@
 - Added/updated regression contracts. Full validation passes: 251/251 tests, smoke 5/5, performance budget, Prisma schema/client, TypeScript build and diff check.
 - Preview commit `22189d2` reached the stable branch alias. All ten detail routes expose the expected titles and real bundled media dimensions with zero fallback images or browser logs.
 - The work archive lists all ten new slugs and the homepage lists none, confirming the intended archive-first release behavior.
-- Prepared release notes for a single squash commit on `main`; production verification is the remaining runtime step.
+- Published the complete V2 release to `main` exactly once as squash commit `91f752f`.
+- Production acceptance on `mahmudportfolio-azure.vercel.app` passes all ten new routes with real bundled media and zero fallback/log errors after edge propagation completed. The archive lists all ten and the homepage auto-features none.
 
 ## 2026-11-11 - Four owner-published Behance case studies verified on Preview
 

@@ -6,7 +6,7 @@
 - The complete 251-test suite, static smoke 5/5, performance budget, Prisma validation/generation, TypeScript build and diff check pass.
 - Stable Preview browser acceptance passes for all 10 routes: expected H1/title, real local image dimensions, zero media fallbacks and zero browser log entries.
 - The work archive exposes exactly all 10 new slugs; the homepage exposes none, confirming archive-first placement.
-- P8-003 is explicitly authorized for one rollback-friendly `main` push; production verification remains pending.
+- P8-003 production release `91f752f` is `VERIFIED`: `main` was pushed once, all ten routes/media passed, archive count is 10, homepage auto-feature count is 0, and browser logs are empty.
 
 ## Behance commercial case-study checkpoint - 2026-11-11
 
