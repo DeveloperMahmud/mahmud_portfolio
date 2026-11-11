@@ -77,6 +77,15 @@ test('every local case-study asset exists and has accessible alt text', async ()
   }
 });
 
+test('gallery metadata matches the browser-verified original asset dimensions', () => {
+  assert.deepEqual(behanceCaseStudies.map(({ project }) => project.gallery.map(({ width, height }) => [width, height])), [
+    [[808, 632], [1920, 7040]],
+    [[808, 632], [1464, 3600], [600, 2700]],
+    [[808, 632], [1464, 3600], [600, 2700]],
+    [[808, 632], [1464, 3600]],
+  ]);
+});
+
 test('seed is draft-first and preserves CMS-edited records', async () => {
   const source = await readFile(new URL('./seed-behance-case-studies.mjs', import.meta.url), 'utf8');
   assert.match(source, /PUBLISH_BEHANCE_CASE_STUDIES === 'true'/);

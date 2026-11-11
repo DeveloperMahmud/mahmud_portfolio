@@ -31,8 +31,8 @@ export const behanceCaseStudies = [
         {
           url: '/assets/case-studies/behance/tmnt-glitter-jelly/full-board.jpg',
           alt: 'Full Behance presentation board for the TMNT Face and Body Glitter Jelly Amazon listing image system',
-          width: 1640,
-          height: 5190,
+          width: 1920,
+          height: 7040,
           sortOrder: 1,
         },
       ],
@@ -196,8 +196,8 @@ export const behanceCaseStudies = [
         {
           url: '/assets/case-studies/behance/powder-brush-ebc/desktop-board.webp',
           alt: 'Desktop Premium A+ content presentation for a round face-makeup powder brush',
-          width: 1394,
-          height: 3428,
+          width: 1464,
+          height: 3600,
           sortOrder: 1,
         },
         {
@@ -372,7 +372,7 @@ export const behanceCaseStudies = [
       coverImage: '/assets/case-studies/behance/foundation-face-kit/cover.webp',
       gallery: [
         { url: '/assets/case-studies/behance/foundation-face-kit/cover.webp', alt: 'Divine Face Perfecting Foundation Kit Amazon Premium A+ content cover', width: 808, height: 632, sortOrder: 0 },
-        { url: '/assets/case-studies/behance/foundation-face-kit/desktop-board.webp', alt: 'Desktop Premium A+ content board for the Divine Face Perfecting Foundation Kit', width: 1394, height: 3428, sortOrder: 1 },
+        { url: '/assets/case-studies/behance/foundation-face-kit/desktop-board.webp', alt: 'Desktop Premium A+ content board for the Divine Face Perfecting Foundation Kit', width: 1464, height: 3600, sortOrder: 1 },
         { url: '/assets/case-studies/behance/foundation-face-kit/mobile-board.webp', alt: 'Mobile Premium A+ content board for the Divine Face Perfecting Foundation Kit', width: 600, height: 2700, sortOrder: 2 },
       ],
       challenge: 'Introduce a four-piece makeup kit as one coordinated offer while giving each component enough visual space to explain its role, then preserve the hierarchy across desktop and mobile A+ layouts.',
@@ -460,7 +460,7 @@ export const behanceCaseStudies = [
       coverImage: '/assets/case-studies/behance/color-changing-lip-tint/cover.webp',
       gallery: [
         { url: '/assets/case-studies/behance/color-changing-lip-tint/cover.webp', alt: 'Color-changing lip and cheek tint Amazon Premium A+ content cover', width: 808, height: 632, sortOrder: 0 },
-        { url: '/assets/case-studies/behance/color-changing-lip-tint/full-board.webp', alt: 'Full Amazon Premium A+ content board for a color-changing lip and cheek tint', width: 1394, height: 3428, sortOrder: 1 },
+        { url: '/assets/case-studies/behance/color-changing-lip-tint/full-board.webp', alt: 'Full Amazon Premium A+ content board for a color-changing lip and cheek tint', width: 1464, height: 3600, sortOrder: 1 },
       ],
       challenge: 'Explain a color-changing cosmetic concept quickly while balancing product identity, formula benefits, packaging values, visible transformation, and beauty lifestyle context in one continuous A+ presentation.',
       approach: 'Lead with a high-impact application image and oversized product proposition, then move into four icon-led benefits, a centered product render, before-and-after evidence imagery, packaging views, and a final exploration panel.',
