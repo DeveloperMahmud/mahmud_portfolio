@@ -5,17 +5,15 @@ import { behanceCaseStudies } from './behance-case-studies.mjs';
 const db = new PrismaClient();
 const isPreviewDeployment = process.env.VERCEL_ENV === 'preview';
 const isProductionDeployment = process.env.VERCEL_ENV === 'production';
-const publish = process.env.PUBLISH_BEHANCE_CASE_STUDIES === 'true' || isPreviewDeployment;
+const publish = process.env.PUBLISH_BEHANCE_CASE_STUDIES === 'true' || isPreviewDeployment || isProductionDeployment;
 
 let created = 0;
 let skipped = 0;
 
 try {
-  if (isProductionDeployment) {
-    console.log('skip Behance case studies: production deployments require a separate owner-approved release');
-  }
+  if (isProductionDeployment) console.log('production Behance release authorized by the owner on 2026-11-12; create-only safeguards remain active');
 
-  for (const entry of isProductionDeployment ? [] : behanceCaseStudies) {
+  for (const entry of behanceCaseStudies) {
     const { resultMetrics, ...project } = entry.project;
     const existing = await db.project.findUnique({ where: { slug: project.slug } });
 

@@ -1,5 +1,15 @@
 # Implementation Log
 
+## 2026-11-12 - Additional Behance case studies and production authorization
+
+- Verified ten additional projects against the owner's Behance profile/search records and collected fifteen original project images.
+- Added a reusable case-study factory and ten evidence-bounded records; every slug is unique and all unsupported result metrics remain empty.
+- Kept new work archive-first by disabling featured, homepage and slider placement.
+- Extended the existing create-only seed to production after explicit owner authorization, while preserving existing slugs and later CMS edits.
+- Extended the one-time V2 presentation/Page Studio activation to production without introducing repeated setting overwrites.
+- Added/updated regression contracts. Full validation passes: 251/251 tests, smoke 5/5, performance budget, Prisma schema/client, TypeScript build and diff check.
+- Prepared release notes for a single squash commit on `main`; Preview browser acceptance and production verification are the remaining runtime steps.
+
 ## 2026-11-11 - Four owner-published Behance case studies verified on Preview
 
 ### Evidence and implementation

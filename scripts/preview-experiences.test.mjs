@@ -31,11 +31,10 @@ test('technical case study publishes a stable public snapshot without fabricated
   assert.equal(snapshot.blocks.some(block => ['IMAGE', 'GALLERY', 'MEDIA_MOSAIC', 'VIDEO'].includes(block.type)), false);
 });
 
-test('deployment seed is Preview-only and preserves an existing CMS record', async () => {
+test('deployment seed is release-environment-only and preserves an existing CMS record', async () => {
   const source = await readFile(new URL('./seed-preview-experiences.mjs', import.meta.url), 'utf8');
-  assert.match(source, /VERCEL_ENV === 'preview'/);
-  assert.match(source, /only Vercel Preview deployments are authorized/);
+  assert.match(source, /\['preview', 'production'\]\.includes/);
+  assert.match(source, /only Vercel Preview and owner-authorized Production deployments are eligible/);
   assert.match(source, /findUnique\(\{ where: \{ slug: technicalCaseStudy\.slug \} \}\)/);
   assert.match(source, /preserve .*an existing CMS record was found/);
-  assert.doesNotMatch(source, /VERCEL_ENV === 'production'.*create/s);
 });

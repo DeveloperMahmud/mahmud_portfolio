@@ -2,6 +2,14 @@
 
 This file records production-facing changes, compatibility notes, verification results, and the Git commit that introduced each release. Newest entries stay at the top.
 
+## V2 portfolio and Behance expansion — 2026-11-12
+
+- Added ten owner-published Behance projects as structured, public case studies with locally bundled source media.
+- Kept the new records archive-first (`featured`, homepage and slider placement disabled) so production merchandising remains CMS-controlled.
+- Authorized the create-only Behance seed and one-time V2 experience activation for production; existing records and later CMS edits remain preserved.
+- Added focused release contracts and passed the complete 251-test suite, static smoke checks, performance budget, Prisma validation, TypeScript build and diff checks.
+- The release is prepared as one squash commit on `main` so the code change can be reverted as a single unit.
+
 ## Studio Foundation v3 — 2026-10-27
 
 - **Implementation commit:** `01f8a6c` (`Future-proof Page Studio foundations`)

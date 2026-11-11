@@ -4,9 +4,9 @@ import { PREVIEW_EXPERIENCE_SEED_VERSION, previewPresentationConfig, publishedTe
 
 const asRecord = value => value && typeof value === 'object' && !Array.isArray(value) ? value : {};
 
-export async function seedPreviewExperiences(prisma = new PrismaClient(), preview = process.env.VERCEL_ENV === 'preview') {
-  if (!preview) {
-    console.log('skip Preview experiences: only Vercel Preview deployments are authorized');
+export async function seedPreviewExperiences(prisma = new PrismaClient(), releaseDeployment = ['preview', 'production'].includes(process.env.VERCEL_ENV || '')) {
+  if (!releaseDeployment) {
+    console.log('skip portfolio experience activation: only Vercel Preview and owner-authorized Production deployments are eligible');
     await prisma.$disconnect();
     return { skipped: true };
   }
@@ -26,9 +26,9 @@ export async function seedPreviewExperiences(prisma = new PrismaClient(), previe
           pageStudioConfig: { ...pageStudio, publicEnabled: true },
         },
       });
-      console.log('activate recruiter/client presentations and public Page Studio for Preview');
+      console.log('activate recruiter/client presentations and public Page Studio for this release environment');
     } else {
-      console.log('preserve Preview presentation and Page Studio settings: seed already applied');
+      console.log('preserve presentation and Page Studio settings: seed already applied');
     }
 
     const existing = await prisma.customPage.findUnique({ where: { slug: technicalCaseStudy.slug } });

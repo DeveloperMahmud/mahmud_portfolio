@@ -6,7 +6,7 @@ import { behanceCaseStudies } from './behance-case-studies.mjs';
 const repoUrl = path => new URL(`../${path.replace(/^\//, 'portfolio/')}`, import.meta.url);
 
 test('Behance drafts keep owner-published provenance and unique slugs', () => {
-  assert.equal(behanceCaseStudies.length, 4);
+  assert.equal(behanceCaseStudies.length, 14);
   const slugs = new Set();
 
   for (const entry of behanceCaseStudies) {
@@ -78,7 +78,7 @@ test('every local case-study asset exists and has accessible alt text', async ()
 });
 
 test('gallery metadata matches the browser-verified original asset dimensions', () => {
-  assert.deepEqual(behanceCaseStudies.map(({ project }) => project.gallery.map(({ width, height }) => [width, height])), [
+  assert.deepEqual(behanceCaseStudies.slice(0, 4).map(({ project }) => project.gallery.map(({ width, height }) => [width, height])), [
     [[808, 632], [1920, 7040]],
     [[808, 632], [1464, 3600], [600, 2700]],
     [[808, 632], [1464, 3600], [600, 2700]],
@@ -86,12 +86,30 @@ test('gallery metadata matches the browser-verified original asset dimensions', 
   ]);
 });
 
-test('seed is draft-first and preserves CMS-edited records', async () => {
+test('ten additional projects preserve owner evidence and archive-first visibility', () => {
+  const additions = behanceCaseStudies.slice(4);
+  assert.equal(additions.length, 10);
+  assert.equal(new Set(additions.map(({ project }) => project.slug)).size, 10);
+  for (const { source, project } of additions) {
+    assert.equal(source.owner, 'Mahmudul Hassan');
+    assert.match(source.evidenceNote, /No client relationship or commercial performance is inferred/);
+    assert.equal(project.featured, false);
+    assert.equal(project.sliderEnabled, false);
+    assert.equal(project.showOnHomepage, false);
+    assert.equal(project.liveUrl, null);
+    assert.deepEqual(project.resultMetrics, []);
+    assert.ok(project.projectBlocks.some(block => block.type === 'GALLERY'));
+    assert.match(project.results, /No sales, conversion-rate, ranking, revenue, client-approval, or product-performance result is claimed/);
+  }
+});
+
+test('seed is draft-first locally, create-only in deployments, and preserves CMS-edited records', async () => {
   const source = await readFile(new URL('./seed-behance-case-studies.mjs', import.meta.url), 'utf8');
   assert.match(source, /PUBLISH_BEHANCE_CASE_STUDIES === 'true'/);
   assert.match(source, /VERCEL_ENV === 'preview'/);
   assert.match(source, /VERCEL_ENV === 'production'/);
-  assert.match(source, /production deployments require a separate owner-approved release/);
+  assert.match(source, /production Behance release authorized by the owner on 2026-11-12/);
+  assert.match(source, /isPreviewDeployment \|\| isProductionDeployment/);
   assert.match(source, /findUnique\(\{ where: \{ slug: project\.slug \} \}\)/);
   assert.match(source, /an existing CMS record was preserved/);
   assert.doesNotMatch(source, /\.update\(|\.upsert\(/);

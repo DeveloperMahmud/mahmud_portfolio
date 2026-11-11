@@ -1,5 +1,13 @@
 # Project Progress
 
+## 2026-11-12 - Ten-project Behance release candidate
+
+- Collected ten additional owner-published Behance projects and bundled fifteen verified source images under `portfolio/assets/case-studies/behance/`.
+- Implemented structured evidence-bounded case studies with unique slugs, empty unsupported metrics and archive-first placement.
+- Production activation is authorized and remains create-only/idempotent; no existing record or CMS setting is overwritten.
+- Local acceptance passes: 251/251 tests, 5/5 smoke checks, performance budget, Prisma validation/generation, TypeScript build and diff check.
+- Next action: deploy the Preview branch, browser-check all ten routes/archive behavior, then publish one squash release commit to `main` and verify production.
+
 ## Preview presentation and technical case-study implementation - 2026-11-11
 
 - Added a one-time, Preview-only activation seed for recruiter/client presentations and public Page Studio. Production is explicitly skipped, and the seed marker prevents later CMS edits from being overwritten.

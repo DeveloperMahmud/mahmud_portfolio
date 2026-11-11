@@ -1,5 +1,11 @@
 # V2 Implementation Checklist
 
+## Behance production-release checkpoint - 2026-11-12
+
+- Ten additional owner-published projects and verified local media are implemented with create-only, archive-first safeguards.
+- The complete 251-test suite, static smoke 5/5, performance budget, Prisma validation/generation, TypeScript build and diff check pass.
+- P8-003 is explicitly authorized for one rollback-friendly `main` push after Preview browser acceptance; production verification remains pending.
+
 ## Behance commercial case-study checkpoint - 2026-11-11
 
 - P4-003 is `VERIFIED`: 4 selected owner-published Behance projects have evidence-led case-study packages, local media, an edit-preserving seed path, and deployed Preview browser evidence.

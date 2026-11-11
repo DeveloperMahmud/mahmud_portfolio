@@ -1,3 +1,5 @@
+import { additionalBehanceCaseStudies } from './additional-behance-case-studies.mjs';
+
 export const behanceCaseStudies = [
   {
     source: {
@@ -524,3 +526,5 @@ export const behanceCaseStudies = [
     },
   },
 ];
+
+behanceCaseStudies.push(...additionalBehanceCaseStudies);

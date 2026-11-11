@@ -1,5 +1,14 @@
 # Session Handoff
 
+## 2026-11-12 release handoff
+
+1. The worktree contains ten additional Behance case studies plus fifteen verified local media assets.
+2. New entries are public/archive eligible but not featured, on the homepage or in the slider.
+3. Production seeds are authorized, create-only and idempotent; existing slugs/settings/pages remain untouched.
+4. Local release gate passes completely: 251 tests, smoke, performance, Prisma validation/generation, build and diff check.
+5. Exact next action: commit/push the Preview branch, verify all ten deployed routes and archive listing, then squash the entire V2 branch into one `main` release commit and push `main` exactly once.
+6. After the `main` deployment, verify the production archive and ten routes. Code rollback is one commit revert; additive seeded records require CMS unpublish for data-level rollback.
+
 ## Active Preview-experience checkpoint - 2026-11-11
 
 1. Completed task: P4-005 recruiter presentation, P4-006 Page Studio technical case study and P5-005 client/portfolio presentation are `VERIFIED` on stable Preview after P4-003 became verified.
