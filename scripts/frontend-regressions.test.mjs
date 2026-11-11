@@ -58,6 +58,19 @@ test('public motion respects data-saving visitors and pauses the background off-
   assert.match(motion,/reduced\(\)\|\|saveData\(\)/);
 });
 
+test('admin background remains branded without running the public particle render loop',async()=>{
+  const [background,admin]=await Promise.all([
+    read('portfolio/neural-bg.js'),
+    read('portfolio/admin.html')
+  ]);
+  assert.match(background,/classList\.contains\('admin-page'\)/);
+  assert.match(background,/host\.dataset\.ambientStatic='true'/);
+  assert.match(admin,/Admin ambient background: intentionally static/);
+  assert.match(admin,/neural-bg\.js\?v=20261103-1/);
+  assert.match(admin,/\.admin-page>\.admin-ambient \.ambient-grid\{[^}]*animation:none!important/);
+  assert.match(admin,/\.admin-page>\.admin-ambient \.ambient-orb\{[^}]*animation:none!important/);
+});
+
 test('hero typewriter keeps its caret in the live text flow and offers durable presets',async()=>{
   const [runtime,admin,styles]=await Promise.all([
     read('portfolio/app.js'),
@@ -130,11 +143,15 @@ test('admin navigation remains discoverable and keyboard accessible on mobile',a
   assert.match(runtime,/id=\"adminMenuToggle\"/);
   assert.match(runtime,/aria-controls=\"adminSidebar\"/);
   assert.match(runtime,/admin-mobile-nav\.css/);
+  assert.match(html,/admin\.js\?v=20261102-4/);
+  assert.match(runtime,/admin-mobile-nav\.css\?v=20261102-1/);
   assert.match(css,/@media\(max-width:1050px\)/);
   assert.match(css,/body\.admin-menu-open \.admin-sidebar\{transform:translateX\(0\)/);
+  assert.match(css,/body\.admin-page\.admin-menu-open #adminSidebar\{transform:translateX\(0\)!important\}/);
   assert.match(runtime,/event\.key==='Escape'/);
   assert.match(runtime,/aria-expanded/);
-  assert.match(runtime,/closest\('\.side-btn'\)/);
+  assert.match(runtime,/window\.closeAdminMobileMenu=\(\)=>setOpen\(false\)/);
+  assert.match(runtime,/openAdminTab\(item\.dataset\.tab\);\s*window\.closeAdminMobileMenu\?\.\(\)/);
 });
 
 test('admin destinations use delegated navigation and versioned shell assets',async()=>{
@@ -152,8 +169,9 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/#admin-/);
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
-  assert.match(html,/admin\.js\?v=20261028-1/);
-  assert.match(html,/admin-page-studio\.js\?v=20261028-10/);
+  assert.match(html,/admin\.js\?v=20261102-4/);
+  assert.match(html,/admin-page-studio\.js\?v=20261102-11/);
+  assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
   assert.match(navigation,/MutationObserver/);
@@ -179,6 +197,9 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(polish,/input\[type=checkbox\]:not\(\.media-check\).*width:18px!important/);
   assert.match(polish,/label:has\(>input\[type=checkbox\]\):not\(\.toggle-field\):not\(\.inspector-check\)/);
   assert.match(account,/HOW THE PRIVATE ADMIN URL WORKS/);
+  assert.match(account,/const form=event\.currentTarget;try\{/);
+  assert.match(account,/form\.reset\(\)/);
+  assert.doesNotMatch(account,/event\.currentTarget\.reset\(\)/);
 });
 
 test('CMS roles expose only appropriate workspaces and keep viewer and writer actions safe',async()=>{

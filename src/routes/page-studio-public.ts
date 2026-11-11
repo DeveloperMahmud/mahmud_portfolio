@@ -6,6 +6,7 @@ import { db } from '../lib/db.js';
 import { absolute, metadataHtml, replaceHead, seoContext } from '../lib/seo.js';
 import { pageStudioSystemEnabled, parsePageStudioConfig, resolveGlobalBlocks, studioBlocksSchema } from '../lib/page-studio.js';
 import { HOMEPAGE_STUDIO_KEY, parseHomepageStudioState, resolveHomepageStudioSections } from '../lib/homepage-studio.js';
+import { pageStudioCreativeTools } from '../lib/page-studio-creative-tools.js';
 
 const router=Router(),frontend=path.resolve(process.cwd(),'portfolio');
 
@@ -13,12 +14,12 @@ async function state(){const settings=await db.siteSettings.findFirst();return {
 export async function publicStudioEnabled(){const {config}=await state();return pageStudioSystemEnabled()&&config.publicEnabled}
 
 async function dynamicData(){
-  const now=new Date();const [projects,content,brands,testimonials,settings]=await Promise.all([
+  const now=new Date();const [projects,content,brands,testimonials,settings,creativeTools]=await Promise.all([
     db.project.findMany({where:{deletedAt:null,status:'PUBLISHED',visibility:'PUBLIC',clientOnly:false,OR:[{scheduledAt:null},{scheduledAt:{lte:now}}]},orderBy:[{featured:'desc'},{sortOrder:'asc'}],select:{id:true,title:true,slug:true,category:true,service:true,client:true,coverImage:true,homepageImage:true,projectSubtitle:true,description:true,results:true,resultMetrics:{where:{verified:true,visible:true},orderBy:{sortOrder:'asc'},take:3,select:{id:true,label:true,value:true,prefix:true,suffix:true,publicNote:true}}}}),
     db.content.findMany({where:{deletedAt:null,status:'PUBLISHED',OR:[{scheduledAt:null},{scheduledAt:{lte:now}}]},orderBy:[{featured:'desc'},{publishedAt:'desc'}],select:{id:true,title:true,slug:true,category:true,excerpt:true,coverImage:true,publishedAt:true}}),
-    db.brand.findMany({where:{deletedAt:null,active:true},orderBy:{sortOrder:'asc'},select:{id:true,name:true,logoAsset:true,logoDark:true,url:true,industry:true}}),db.testimonial.findMany({where:{deletedAt:null,published:true},orderBy:[{featured:'desc'},{sortOrder:'asc'}],take:30,select:{id:true,client:true,company:true,role:true,quote:true,photo:true,featured:true}}),db.siteSettings.findFirst()
+    db.brand.findMany({where:{deletedAt:null,active:true},orderBy:{sortOrder:'asc'},select:{id:true,name:true,logoAsset:true,logoDark:true,url:true,industry:true}}),db.testimonial.findMany({where:{deletedAt:null,published:true},orderBy:[{featured:'desc'},{sortOrder:'asc'}],take:30,select:{id:true,client:true,company:true,role:true,quote:true,photo:true,featured:true}}),db.siteSettings.findFirst(),pageStudioCreativeTools(now)
   ]);
-  return {projects,content,brands,testimonials,settings:settings?{siteName:settings.siteName,title:settings.title,email:settings.email,availability:settings.availability,availabilityLabel:settings.availabilityLabel,heroImage:settings.heroImage,navigationConfig:settings.navigationConfig,footerConfig:settings.footerConfig,aboutConfig:settings.aboutConfig,socialLinks:settings.socialLinks,featureFlags:settings.featureFlags}: {}};
+  return {projects,content,brands,testimonials,creativeTools,settings:settings?{siteName:settings.siteName,title:settings.title,email:settings.email,availability:settings.availability,availabilityLabel:settings.availabilityLabel,heroImage:settings.heroImage,navigationConfig:settings.navigationConfig,footerConfig:settings.footerConfig,aboutConfig:settings.aboutConfig,socialLinks:settings.socialLinks,featureFlags:settings.featureFlags}: {}};
 }
 
 async function trustedOrigins(){return (await db.trustedEmbedSource.findMany({where:{enabled:true,allowIframe:true},select:{origin:true}})).map(x=>x.origin)}
@@ -45,7 +46,7 @@ router.get('/homepage-layout',async(_req,res)=>{
   const [row,homepageSections,settings,origins,dynamic]=await Promise.all([db.homepageSection.findUnique({where:{key:HOMEPAGE_STUDIO_KEY}}),db.homepageSection.findMany({where:{key:{not:HOMEPAGE_STUDIO_KEY}},orderBy:{sortOrder:'asc'}}),db.siteSettings.findFirst(),trustedOrigins(),dynamicData()]);
   const state=parseHomepageStudioState(row?.config);
   res.set('Cache-Control','public, max-age=30, s-maxage=120, stale-while-revalidate=300');
-  res.json({live:state.live&&Boolean(state.published),layout:state.live?state.published:null,publishedAt:state.publishedAt,homepageSections,trustedOrigins:origins,resolvedSections:resolveHomepageStudioSections((settings||{}) as unknown as Record<string,any>),projects:dynamic.projects,brands:dynamic.brands,settings:{socialLinks:settings?.socialLinks||[],featureFlags:settings?.featureFlags||{},email:settings?.email||'',availability:settings?.availability||false,availabilityLabel:settings?.availabilityLabel||''}});
+  res.json({live:state.live&&Boolean(state.published),layout:state.live?state.published:null,publishedAt:state.publishedAt,homepageSections,trustedOrigins:origins,resolvedSections:resolveHomepageStudioSections((settings||{}) as unknown as Record<string,any>,homepageSections),projects:dynamic.projects,brands:dynamic.brands,settings:{socialLinks:settings?.socialLinks||[],featureFlags:settings?.featureFlags||{},email:settings?.email||'',availability:settings?.availability||false,availabilityLabel:settings?.availabilityLabel||''}});
 });
 router.get('/status',async(_req,res)=>{const {config}=await state();res.json({systemEnabled:pageStudioSystemEnabled(),publicEnabled:pageStudioSystemEnabled()&&config.publicEnabled,customPathsEnabled:config.customPathsEnabled})});
 router.get('/data',async(_req,res)=>{if(!(await publicStudioEnabled()))return res.status(404).json({error:'Page Studio public pages are disabled.'});const [data,origins,navigationPreset]=await Promise.all([dynamicData(),trustedOrigins(),db.navigationPreset.findFirst({where:{enabled:true,isGlobal:true}})]);res.json({dynamic:data,trustedOrigins:origins,navigationPreset})});

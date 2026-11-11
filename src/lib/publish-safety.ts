@@ -44,6 +44,15 @@ export async function projectPublishIssues(input: Record<string, any>): Promise<
   for (const [index, item] of asArray(input.gallery).entries()) issues.push(...await mediaIssues(item, `gallery[${index}]`, true));
   const body = [input.description, input.challenge, input.approach, input.process, input.results].map(text).join(' ');
   if (body.length < 120) issues.push({ field: 'caseStudy', code: 'THIN_CASE_STUDY', severity: 'WARNING', message: 'Add more project context: the challenge, approach, process or result.' });
+  if(input.featured===true){
+    if(!text(input.role))issues.push({field:'role',code:'FLAGSHIP_MISSING_ROLE',severity:'ERROR',message:'A featured case study must state your role.'});
+    if(!text(input.challenge)&&!text(input.description))issues.push({field:'challenge',code:'FLAGSHIP_MISSING_CONTEXT',severity:'ERROR',message:'A featured case study needs an honest challenge or project context.'});
+    if(!text(input.approach)&&!text(input.process))issues.push({field:'process',code:'FLAGSHIP_MISSING_PROCESS',severity:'ERROR',message:'A featured case study must explain the approach or process.'});
+    if(!asArray(input.deliverables).some(item=>text(item)))issues.push({field:'deliverables',code:'FLAGSHIP_MISSING_DELIVERABLES',severity:'ERROR',message:'A featured case study must list at least one real deliverable.'});
+    if(!text(input.results))issues.push({field:'results',code:'FLAGSHIP_MISSING_OUTCOME',severity:'ERROR',message:'A featured case study needs an honest qualitative or verified outcome.'});
+    const gallery=asArray(input.gallery),hasEvidence=Boolean(text(input.coverImage)||gallery.some(item=>text((item as any)?.url||item)));
+    if(!hasEvidence)issues.push({field:'gallery',code:'FLAGSHIP_MISSING_EVIDENCE',severity:'ERROR',message:'A featured case study must include at least one relevant visual.'});
+  }
   return issues;
 }
 

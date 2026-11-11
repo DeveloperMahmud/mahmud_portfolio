@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Explore Creative Lab concept demos for Amazon, e-commerce, design QA and creative workflow.">
+  <title>Creative Lab — Mahmudul Hassan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/creative-lab.css">
+</head>
+<body class="lab-page">
+  <div class="grain" aria-hidden="true"></div>
+  <header class="header scrolled">
+    <a class="brand" href="/"><span class="brand-mark">MH</span><span class="brand-copy"><strong>MAHMUDUL HASSAN</strong><small>CREATIVE LAB</small></span></a>
+    <nav class="desktop-nav" aria-label="Primary"><a href="/work.html">WORK</a><a href="/studio">STUDIO</a><a href="/blog.html">JOURNAL</a><a href="/hire">HIRE</a><a href="/#contact">CONTACT</a></nav>
+  </header>
+  <main class="lab-shell">
+    <section class="lab-intro" aria-labelledby="lab-title">
+      <div><span class="kicker">CREATIVE LAB / CONCEPTS &amp; WORKFLOWS</span><h1 id="lab-title">Useful ideas.<br>Built <em>visibly.</em></h1></div>
+      <div><p>A growing collection of creative workflow and design-QA tools. Every preview states what works now, what is a concept, and what is planned—without pretending a demo is a finished product.</p><div class="lab-counts" id="labCounts" aria-live="polite"><span>— TOOLS</span><span>— FLAGSHIP</span><span>— MINI</span></div></div>
+    </section>
+    <section aria-label="Creative Lab catalog">
+      <div class="lab-toolbar">
+        <div class="lab-filters" role="group" aria-label="Filter by tool type">
+          <button class="lab-filter" type="button" data-kind="" aria-pressed="true">All tools</button>
+          <button class="lab-filter" type="button" data-kind="FLAGSHIP" aria-pressed="false">Flagship</button>
+          <button class="lab-filter" type="button" data-kind="MINI" aria-pressed="false">Mini tools</button>
+        </div>
+        <div class="lab-toolbar__fields">
+          <label class="lab-search"><span>SEARCH</span><input id="labSearch" type="search" autocomplete="off" placeholder="Search tools, audience or category…"></label>
+          <label class="lab-search"><span>STATUS</span><select id="labStatus"><option value="">ALL STATES</option><option value="PREVIEW">CONCEPT DEMOS</option><option value="BETA">BETA</option><option value="LIVE">LIVE</option><option value="PLANNED">COMING SOON</option></select></label>
+        </div>
+      </div>
+      <p class="lab-results-summary" id="labSummary" role="status">Loading Creative Lab…</p>
+      <div class="lab-grid" id="labGrid" aria-busy="true"><div class="lab-loading" aria-hidden="true"><span></span><span></span><span></span></div></div>
+    </section>
+  </main>
+  <script src="/creative-lab-components.js?v=20261102-2"></script>
+  <script src="/creative-lab.js" defer></script>
+  <script src="/analytics.js"></script>
+  <script src="/responsive.js" defer></script>
+</body>
+</html>

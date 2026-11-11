@@ -6,6 +6,8 @@ const readScopes:Record<string,RegExp[]>={
   EDITOR:[
     /^\/(?:projects|content|brands|media|import|export)(?:\/|$)/,
     /^\/maintenance\/(?:settings|brand-assets|homepage)(?:\/|$)/,
+    /^\/creative-tools(?:\/|$)/,
+    /^\/review-workspaces(?:\/|$)/,
     /^\/page-studio(?:\/|$)/,
     /^\/seo(?:\/|$)/,
     /^\/operations\/(?:revisions|trash|previews|media\/maintenance)(?:\/|$)/
@@ -15,16 +17,21 @@ const readScopes:Record<string,RegExp[]>={
     /^\/(?:projects|content|brands)(?:\/|$)/,
     /^\/maintenance(?:\/|$)/,
     /^\/operations\/inquiries(?:\/|$)/
+    ,/^\/review-workspaces(?:\/|$)/
   ],
   VIEWER:[
     /^\/(?:projects|content|brands|media)(?:\/|$)/,
     /^\/maintenance\/(?:brand-assets|homepage)(?:\/|$)/,
+    /^\/creative-tools(?:\/|$)/,
     /^\/page-studio(?:\/|$)/
+    ,/^\/review-workspaces(?:\/|$)/
   ]
 };
 const editorWriteScopes=[
   /^\/(?:projects|content|brands|media|import)(?:\/|$)/,
-  /^\/maintenance\/(?:brand-assets|homepage|testimonials|reviews)(?:\/|$)/,
+  /^\/maintenance\/(?:brand-assets|homepage|testimonials|reviews|recruiter-profile|studio-profile|presentation-profile)(?:\/|$)/,
+  /^\/creative-tools(?:\/|$)/,
+  /^\/review-workspaces(?:\/|$)/,
   /^\/page-studio(?:\/|$)/,
   /^\/seo(?:\/|$)/,
   /^\/operations\/(?:previews|media\/maintenance|media\/[^/]+\/replace)(?:\/|$)/
@@ -57,6 +64,7 @@ export async function enforceAdminAccess(req:Request,res:Response,next:NextFunct
       return next();
     }
     if(user.role==='MODERATOR'){
+      if(/^\/review-workspaces(?:\/|$)/.test(path))return next();
       if(/^\/maintenance\/(inquiries|testimonials|reviews)(?:\/|$)/.test(path))return next();
       return res.status(403).json({error:'Moderator accounts can manage leads, testimonials and client-review workflows only.'});
     }

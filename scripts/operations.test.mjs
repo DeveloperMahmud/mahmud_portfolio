@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { safeSnapshot } from '../dist/src/lib/revisions.js';
 import { redact } from '../dist/src/lib/monitoring.js';
+import { assertMatchingIdentity, normalizeBackupRow, restoreUpdateData } from '../dist/src/lib/backup-restore.js';
 
 test('backup/revision snapshots remove secret-bearing fields',()=>{
   const snapshot=safeSnapshot({title:'Safe',password:'hidden',jwtToken:'hidden',nested:{apiKey:'hidden',body:'kept'},createdAt:new Date('2026-01-02T03:04:05Z')});
@@ -52,4 +53,26 @@ test('generic revision tools compare and restore Page Studio drafts without over
   assert.match(route,/snapshotState\.published\|\|snapshotState\.draft/);
   assert.match(route,/next=\{\.\.\.currentState,draft:/);
   assert.doesNotMatch(route,/HOMEPAGE_STUDIO'[\s\S]{0,900}live:false/);
+});
+
+test('backup restore helpers normalize dates and protect immutable identity',()=>{
+  const row={id:'source-id',slug:'example',scheduledAt:'2026-11-02T12:00:00.000Z',deletedAt:null,createdAt:'2026-01-01T00:00:00.000Z',updatedAt:'2026-01-02T00:00:00.000Z'};
+  const normalized=normalizeBackupRow(row);
+  assert.ok(normalized.scheduledAt instanceof Date);
+  assert.equal(normalized.deletedAt,null);
+  const update=restoreUpdateData(row);
+  assert.equal(update.id,undefined);assert.equal(update.createdAt,undefined);assert.equal(update.updatedAt,undefined);assert.equal(update.slug,'example');
+  assert.throws(()=>assertMatchingIdentity('projects',row,{id:'destination-id'}),/different id/);
+});
+
+test('portable restore is private-aware, atomic and mode-consistent',async()=>{
+  const route=await fs.readFile(new URL('../src/routes/operations.ts',import.meta.url),'utf8');
+  const restore=route.slice(route.indexOf("router.post('/backups/restore'"),route.indexOf("router.get('/revisions'"));
+  assert.match(restore,/portableSnapshot\(validation\.includesPrivateData\)/);
+  assert.match(restore,/includesPrivateData:validation\.includesPrivateData/);
+  assert.match(restore,/db\.\$transaction\(async tx=>/);
+  assert.match(restore,/existing&&p\.data\.mode==='SKIP_EXISTING'/);
+  assert.match(restore,/restore\('pageTaxonomyAssignments'/);
+  assert.match(restore,/rolledBack:true/);
+  assert.doesNotMatch(restore,/await db\.project\.(upsert|update|create)/);
 });
