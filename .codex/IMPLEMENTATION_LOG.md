@@ -1024,4 +1024,6 @@
 - Added a create-once published technical case study with ten repository-backed evidence sections, explicit AI-assisted contribution language, no invented outcomes and no fabricated media.
 - Production deployments skip the new seed. Existing custom-page records and post-seed CMS settings are preserved.
 - Verification passed: Preview experiences 4/4, presentation 5/5, Page Studio technical template 5/5, Behance 9/9, commercial contract 4/4, V2 case-study contract 4/4, TypeScript typecheck/build and `git diff --check`.
-- P4-005, P4-006 and P5-005 are `IN_PROGRESS` pending deployed Preview browser evidence.
+- Commit `e75ba51` reached the stable Preview alias. Both focused presentations rendered at 463x698; ArrowRight changed the progress state, and the public project step resolved the published TMNT evidence and work link.
+- The Page Studio technical page rendered all ten evidence sections with no scaffold placeholder, horizontal overflow or console errors. P4-005, P4-006 and P5-005 are `VERIFIED`.
+- The remaining restore drill was not attempted: the recorded backup file is absent and the current CMS browser session is signed out. Browser Use also rejects direct navigation to the text/XML crawler endpoints, so those remain unverified rather than being misreported as failures.

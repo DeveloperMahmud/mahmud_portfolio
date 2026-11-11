@@ -6,7 +6,9 @@
 - Both presentation modes select the four verified Behance case studies and keep `noIndex` enabled for the focused walkthrough URLs.
 - Added a create-once, evidence-led Page Studio technical case study covering motivation, constraints, architecture, components, workflow, QA, accessibility, security, trade-offs and individual contribution. It contains no fabricated metrics or invented media; the owner will add any missing/authorized visual evidence manually.
 - Focused validation passed: Preview experiences 4/4, presentation 5/5, technical template 5/5, Behance 9/9, commercial case study 4/4, V2 case-study contract 4/4, TypeScript typecheck, production build and diff check.
-- P4-005, P4-006 and P5-005 move from `BLOCKED` to `IN_PROGRESS`; deployed Preview browser acceptance is still required before completion. Main/production remain untouched.
+- Commit `e75ba51` reached the stable Preview alias. Recruiter and client presentations rendered at 463x698; ArrowRight advanced live progress, and the client case-study step resolved the published TMNT record with its canonical link. The technical page rendered all ten sections without placeholder text, horizontal overflow or console errors.
+- P4-005, P4-006 and P5-005 are now `VERIFIED`. Main/production remain untouched.
+- P8-001/P8-003 remain `IN_PROGRESS`: the previous local CMS-only backup is no longer present and the current browser CMS session is signed out. No restore or other database mutation was attempted. Direct Browser Use navigation to protected text/XML crawler endpoints remains blocked by the client.
 
 ## Behance case studies verified on Preview - 2026-11-11
 
