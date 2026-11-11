@@ -6,8 +6,9 @@
 2. New entries are public/archive eligible but not featured, on the homepage or in the slider.
 3. Production seeds are authorized, create-only and idempotent; existing slugs/settings/pages remain untouched.
 4. Local release gate passes completely: 251 tests, smoke, performance, Prisma validation/generation, build and diff check.
-5. Exact next action: commit/push the Preview branch, verify all ten deployed routes and archive listing, then squash the entire V2 branch into one `main` release commit and push `main` exactly once.
-6. After the `main` deployment, verify the production archive and ten routes. Code rollback is one commit revert; additive seeded records require CMS unpublish for data-level rollback.
+5. Preview commit `22189d2` is deployed and accepted: 10/10 routes, source media, archive inclusion and homepage exclusion pass with zero browser log errors.
+6. Exact next action: squash the entire V2 branch into one `main` release commit and push `main` exactly once.
+7. After the `main` deployment, verify the production archive and ten routes. Code rollback is one commit revert; additive seeded records require CMS unpublish for data-level rollback.
 
 ## Active Preview-experience checkpoint - 2026-11-11
 

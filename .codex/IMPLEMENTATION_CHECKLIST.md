@@ -4,7 +4,9 @@
 
 - Ten additional owner-published projects and verified local media are implemented with create-only, archive-first safeguards.
 - The complete 251-test suite, static smoke 5/5, performance budget, Prisma validation/generation, TypeScript build and diff check pass.
-- P8-003 is explicitly authorized for one rollback-friendly `main` push after Preview browser acceptance; production verification remains pending.
+- Stable Preview browser acceptance passes for all 10 routes: expected H1/title, real local image dimensions, zero media fallbacks and zero browser log entries.
+- The work archive exposes exactly all 10 new slugs; the homepage exposes none, confirming archive-first placement.
+- P8-003 is explicitly authorized for one rollback-friendly `main` push; production verification remains pending.
 
 ## Behance commercial case-study checkpoint - 2026-11-11
 

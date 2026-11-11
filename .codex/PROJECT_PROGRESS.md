@@ -6,7 +6,8 @@
 - Implemented structured evidence-bounded case studies with unique slugs, empty unsupported metrics and archive-first placement.
 - Production activation is authorized and remains create-only/idempotent; no existing record or CMS setting is overwritten.
 - Local acceptance passes: 251/251 tests, 5/5 smoke checks, performance budget, Prisma validation/generation, TypeScript build and diff check.
-- Next action: deploy the Preview branch, browser-check all ten routes/archive behavior, then publish one squash release commit to `main` and verify production.
+- Preview commit `22189d2` is deployed. Browser acceptance passes all ten routes with real source media, zero fallbacks/log errors, exact archive inclusion and no homepage auto-feature placement.
+- Next action: publish one squash release commit to `main` and verify production.
 
 ## Preview presentation and technical case-study implementation - 2026-11-11
 

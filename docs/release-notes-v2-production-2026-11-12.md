@@ -24,3 +24,5 @@ The complete release is delivered as one squash commit on `main`. Reverting that
 - Prisma schema validation and client generation: passed
 - TypeScript production build: passed
 - Git diff validation: passed
+- Stable Preview browser acceptance: 10/10 new routes passed, zero media fallbacks and zero browser log errors
+- Archive-first placement: all 10 appear in the work archive and none are auto-featured on the homepage
