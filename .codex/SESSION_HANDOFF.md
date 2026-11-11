@@ -1,5 +1,15 @@
 # Session Handoff
 
+## Active Behance case-study checkpoint - 2026-11-11
+
+1. Current task: P4-003 Commercial case studies is locally `COMPLETED`; four owner-published evidence-led records meet the 4-6 acceptance range.
+2. Slugs: `tmnt-face-body-glitter-jelly-amazon-listing`, `round-powder-brush-amazon-premium-a-plus`, `divine-face-perfecting-kit-amazon-premium-a-plus`, and `color-changing-lip-cheek-tint-amazon-premium-a-plus`.
+3. Shared source/seed/test files are under `scripts/`; ten tracked cover/board assets are under `portfolio/assets/case-studies/behance/`.
+4. Seed behavior is create-only and preserves existing CMS records. Local/manual runs default to drafts, Preview deploys publish for visibility, and production deploys skip the seed without an owner-approved production release.
+5. Validation passed: Prisma generate, typecheck, build, Behance 8/8, commercial case study 4/4, V2 contract 4/4, and diff check.
+6. No local database write, main-branch change, or production action occurred.
+7. Next exact action: commit and push `codex/v2-preview-2026-11-01`, wait for Vercel Preview readiness, then browser-check all four public case-study routes and update the persistent records with deployed evidence.
+
 ## Final local verification checkpoint — 2026-11-03
 
 1. Last verified implementation: admin pages no longer start the public neural canvas RAF/link loop; the branded admin background is static, while public pages retain their existing effect.

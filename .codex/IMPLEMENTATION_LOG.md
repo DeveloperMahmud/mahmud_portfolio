@@ -1,5 +1,28 @@
 # Implementation Log
 
+## 2026-11-11 - Four owner-published Behance case studies completed locally
+
+### Evidence and implementation
+
+- Inspected Mahmudul Hassan's Behance project `Amazon Listing Images | Face & Body Glitter Jelly Set`, its full presentation board, owner/date/tool metadata, description, and linked Amazon product page.
+- Stored the owner-published cover and full presentation board under `portfolio/assets/case-studies/behance/tmnt-glitter-jelly/`.
+- Added a structured Project draft with role, challenge, evidence-bounded process, deliverables, Adobe Photoshop tool attribution, accessible gallery metadata, reusable project blocks, homepage/slider/SEO fields, and the live product URL.
+- Kept `client` unset and `resultMetrics` empty. Outcome copy explicitly rejects unverified sales, conversion-rate, ranking, and revenue claims.
+- Added a create-only, idempotent seed runner. It defaults to `DRAFT`, preserves any existing CMS-edited slug, and requires an explicit environment gate before publishing.
+- Inspected `Makeup Powder Brush EBC/ Premium A+ Content For Amazon`, published June 3, 2025, and verified its desktop/mobile boards plus Behance tool attribution for Adobe Photoshop and Adobe Illustrator.
+- Added `round-powder-brush-amazon-premium-a-plus` with three accessible local assets, responsive project blocks, and evidence-bounded copy. `client`, `liveUrl`, and `resultMetrics` remain empty because the source does not verify those claims.
+- Inspected `Foundation Face Kit EBC - Premium A+ Design`, published August 6, 2025, and added verified desktop/mobile boards with Photoshop-only attribution.
+- Inspected `Color-Changing Lip tint Premium A+ Design for Amazon`, published August 7, 2025, and added its verified full board with Photoshop-only attribution.
+- All four records keep unverified metrics empty and explicitly avoid unsupported client, commercial-performance, formula-validation, or approval claims.
+- Added Preview-only visibility to `vercel-build`: Preview creates/publishes missing records after migrations, production skips the Behance seed, and existing CMS records are preserved.
+
+### Validation and boundary
+
+- Installed the locked dependencies for validation, generated Prisma Client, and passed typecheck plus the production TypeScript build.
+- Passed `test:behance-case-studies` 8/8, `test:commercial-case-study` 4/4, `test:v2-case-study` 4/4, and `git diff --check`.
+- No local database seed, main-branch change, or production mutation was performed.
+- P4-003 is `COMPLETED` at 4/4 selected evidence packages. Preview CMS insertion and browser acceptance remain before `VERIFIED`.
+
 ## 2026-11-03 — Consolidated closeout verification
 
 - Completed the deferred single validation gate after the implementation batch: schema validation, client generation, typecheck, build, 237 automated tests, five static smoke routes, performance budget and whitespace validation all passed.

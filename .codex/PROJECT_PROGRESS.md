@@ -1,5 +1,13 @@
 # Project Progress
 
+## Behance case studies completed locally - 2026-11-11
+
+- P4-003 is `COMPLETED` locally with four selected owner-published Behance case studies: Glitter Jelly listing images, Round Powder Brush A+, Divine Face Perfecting Kit A+, and Color-Changing Lip & Cheek Tint A+.
+- Each package includes role, challenge, evidence-bounded process, deliverables, Behance-attributed tools, accessible cover/board media, structured project blocks, and honest outcome language. All unverified metric arrays are empty.
+- Preview visibility is automated safely: `vercel-build` runs the create-only seed, `VERCEL_ENV=preview` publishes the records, and `VERCEL_ENV=production` skips the seed pending a separate owner-approved release. Existing CMS-edited slugs are preserved.
+- Validation passed: Prisma client generation, typecheck, build, Behance 8/8, commercial case study 4/4, V2 contract 4/4, and `git diff --check`.
+- No local database mutation or production change occurred. Next: commit/push the authorized preview branch, wait for deployment, and browser-check the four public routes before promoting to `VERIFIED`.
+
 ## Consolidated closeout gate — 2026-11-03
 
 - Dependency-ready implementation is closed. The admin GPU/compositor mitigation is included; documented evidence/data-dependent tasks remain blocked rather than being represented as complete.
