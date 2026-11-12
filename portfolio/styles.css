@@ -762,3 +762,18 @@ html[data-theme-tokens=ready] :is(.card,.panel,.project-card,.testimonial-card){
 .statement h2{line-height:.86}
 .contact-inner h2{line-height:.88}
 @media(max-width:800px){.statement h2,.contact-inner h2{line-height:.92}}
+
+/* Case-study media: editorial crops up front, readable complete boards below. */
+.project-detail-hero-frame{position:relative;display:grid;margin:28px 0 64px;overflow:hidden;border:1px solid var(--line);background:linear-gradient(145deg,#111510,#070907);box-shadow:0 28px 80px rgba(0,0,0,.28)}
+.project-detail-hero-frame .project-detail-hero{grid-area:1/1;display:block;width:100%;height:auto;max-height:76vh;margin:0;border:0;background:transparent;object-fit:cover}
+.project-detail-hero-frame:is(.is-long,.is-portrait,.is-square){aspect-ratio:16/9}
+.project-detail-hero-frame:is(.is-long,.is-portrait,.is-square) .project-detail-hero{height:100%;max-height:none;object-position:50% 8%}
+.project-detail-hero-frame figcaption{grid-area:1/1;z-index:1;align-self:end;display:flex;justify-content:space-between;gap:20px;padding:48px 20px 17px;background:linear-gradient(transparent,rgba(4,5,4,.88));color:#f4f6f1;pointer-events:none}
+.project-detail-hero-frame figcaption span{color:var(--lime);font:700 8px/1 "Space Grotesk",sans-serif;letter-spacing:.16em}
+.project-detail-hero-frame figcaption small{font-size:9px;letter-spacing:.08em;color:#c7ccc4}
+.case-gallery{align-items:start}
+.case-gallery img,.case-gallery img:nth-child(3n){grid-column:span 6;border:1px solid var(--line);box-shadow:0 22px 60px rgba(0,0,0,.2)}
+.case-gallery.is-single{grid-template-columns:minmax(0,1fr)}
+.case-gallery.is-single img,.case-gallery.is-single img:nth-child(3n){grid-column:1;width:min(100%,900px);justify-self:center}
+.case-gallery.is-single.has-long-media img{width:min(100%,780px)}
+@media(max-width:767px){.project-detail-hero-frame{margin:22px 0 48px}.project-detail-hero-frame:is(.is-long,.is-portrait,.is-square){aspect-ratio:4/3}.project-detail-hero-frame figcaption{padding:38px 14px 13px}.project-detail-hero-frame figcaption small{display:none}.case-gallery img,.case-gallery img:nth-child(3n){grid-column:span 12}.case-gallery.is-single img,.case-gallery.is-single.has-long-media img{width:100%}}

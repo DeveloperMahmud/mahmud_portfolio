@@ -1,5 +1,13 @@
 # Session Handoff
 
+## 2026-11-12 case-study media handoff
+
+1. Current branch: `codex/v2-preview-2026-11-01`.
+2. `project.js` classifies rendered images from natural dimensions and applies hero/gallery treatments without changing CMS records.
+3. `styles.css` gives tall covers an intentional editorial crop and keeps complete long boards centered at readable width.
+4. Focused validation passes 33/33 plus syntax, TypeScript and diff checks.
+5. Exact next action: push Preview, visually compare long and landscape projects on desktop/mobile, then leave `main` untouched until separately authorized.
+
 ## 2026-11-12 release handoff
 
 1. The worktree contains ten additional Behance case studies plus fifteen verified local media assets.

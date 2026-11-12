@@ -1,5 +1,11 @@
 # V2 Implementation Checklist
 
+## Case-study media polish - 2026-11-12
+
+- Long Behance boards now receive aspect-aware hero crops instead of tiny letterboxed previews.
+- Single long boards use a centered readable width; multi-image galleries use a consistent two-column desktop and one-column mobile grid.
+- Frontend/Behance tests 33/33, JavaScript syntax, TypeScript and diff checks pass; deployed Preview visual acceptance remains pending.
+
 ## Behance production-release checkpoint - 2026-11-12
 
 - Ten additional owner-published projects and verified local media are implemented with create-only, archive-first safeguards.

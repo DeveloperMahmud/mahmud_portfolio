@@ -1,5 +1,13 @@
 # Implementation Log
 
+## 2026-11-12 - Case-study image layout polish
+
+- Browser inspection reproduced the issue on a 1464x4200 board: the hero occupied a 1120x547 stage while the artwork rendered as a narrow centered strip.
+- Added runtime aspect classification (`landscape`, `square`, `portrait`, `long`) using loaded natural dimensions.
+- Replaced the bare hero image with a framed preview and intentional top crop for non-landscape artwork.
+- Single long gallery boards now center at a bounded readable width; multi-image galleries remain balanced and collapse to one column on mobile.
+- Versioned project CSS/JavaScript URLs prevent stale edge assets. Focused checks pass 33/33 with successful syntax, TypeScript and diff validation.
+
 ## 2026-11-12 - Additional Behance case studies and production authorization
 
 - Verified ten additional projects against the owner's Behance profile/search records and collected fifteen original project images.

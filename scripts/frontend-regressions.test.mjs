@@ -335,3 +335,18 @@ test('public loading frames remain intentional and multiline conversion headings
   assert.match(styles,/\.contact-inner h2\{line-height:\.88\}/);
   assert.match(index,/styles\.css\?v=20261028-2/);
 });
+
+test('case-study media adapts long Behance boards without tiny letterboxed heroes',async()=>{
+  const [project,styles,html]=await Promise.all([
+    read('portfolio/project.js'),
+    read('portfolio/styles.css'),
+    read('portfolio/project.html')
+  ]);
+  assert.match(project,/classifyProjectMedia/);
+  assert.match(project,/project-detail-hero-frame/);
+  assert.match(project,/items\.length === 1 \? ' is-single'/);
+  assert.match(styles,/\.project-detail-hero-frame:is\(\.is-long,\.is-portrait,\.is-square\)\{aspect-ratio:16\/9\}/);
+  assert.match(styles,/\.case-gallery\.is-single\.has-long-media img\{width:min\(100%,780px\)\}/);
+  assert.match(html,/project\.js\?v=20261112-case-media-1/);
+  assert.match(html,/styles\.css\?v=20261112-case-media-1/);
+});

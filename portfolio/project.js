@@ -47,6 +47,23 @@ async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fe
     return url ? `<img class="${className}" src="${esc(url)}" alt="${esc(alt || '')}" loading="lazy" decoding="async">` : '';
   }
 
+  function classifyProjectMedia(scope) {
+    scope.querySelectorAll('img').forEach(img => {
+      const apply = () => {
+        if (!img.naturalWidth || !img.naturalHeight) return;
+        const ratio = img.naturalWidth / img.naturalHeight;
+        const shape = ratio >= 1.25 ? 'landscape' : ratio >= .82 ? 'square' : ratio >= .56 ? 'portrait' : 'long';
+        img.classList.add(`media-${shape}`);
+        const frame = img.closest('.project-detail-hero-frame');
+        if (frame) frame.classList.add(`is-${shape}`);
+        const gallery = img.closest('.case-gallery');
+        if (gallery && shape === 'long') gallery.classList.add('has-long-media');
+      };
+      if (img.complete) apply();
+      else img.addEventListener('load', apply, { once: true });
+    });
+  }
+
   function safeEmbed(url) {
     try {
       const parsed = new URL(url);
@@ -64,7 +81,10 @@ async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fe
       case 'FULL_BLEED_IMAGE': return `<figure class="case-block case-image full-bleed">${image(data.url, data.alt || title)}${data.caption ? `<figcaption>${esc(data.caption)}</figcaption>` : ''}</figure>`;
       case 'IMAGE_PAIR': return `<section class="case-block case-pair">${image(data.left?.url || data.leftUrl, data.left?.alt || data.leftAlt)}${image(data.right?.url || data.rightUrl, data.right?.alt || data.rightAlt)}</section>`;
       case 'IMAGE_GRID':
-      case 'GALLERY': return `<section class="case-block case-gallery">${(data.items || data.images || []).map(item => image(item.url || item, item.alt || project?.title)).join('')}</section>`;
+      case 'GALLERY': {
+        const items = data.items || data.images || [];
+        return `<section class="case-block case-gallery${items.length === 1 ? ' is-single' : ''}">${items.map(item => image(item.url || item, item.alt || project?.title)).join('')}</section>`;
+      }
       case 'VIDEO': {
         const embed = safeEmbed(data.embedUrl || data.url || '');
         if (embed) return `<section class="case-block case-video"><iframe src="${esc(embed)}" title="${esc(title || 'Project video')}" loading="lazy" allowfullscreen></iframe></section>`;
@@ -105,7 +125,8 @@ async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fe
   function render(project, nextProject) {
     setMeta(project);
     const blocks = Array.isArray(project.projectBlocks) ? project.projectBlocks.filter(block => block.enabled !== false).sort((a, b) => a.sortOrder - b.sortOrder) : [];
-    root.innerHTML = `<article class="project-detail"><a class="article-back" href="/${demoPreview?'?demo=1#work':'#work'}">← BACK TO WORK</a><div class="project-detail-kicker">${esc(project.category || 'PROJECT')} / ${esc(project.type || 'CASE STUDY')} / ${esc(project.year || '')}</div><h1>${esc(project.title)}</h1>${project.projectSubtitle ? `<p class="project-detail-subtitle">${esc(project.projectSubtitle)}</p>` : ''}${project.client ? `<p class="project-detail-client">${esc(project.client)}${project.role ? ` · ${esc(project.role)}` : ''}</p>` : ''}${image(project.coverImage, project.title, 'project-detail-hero')}${blocks.length ? `<div class="case-blocks">${blocks.map(renderBlock).join('')}</div>` : `${renderGallery(project.gallery, project.title)}${renderLegacy(project)}`}${nextProject ? `<a class="next-project" href="/work/${encodeURIComponent(nextProject.slug)}${demoPreview?'?demo=1':''}"><span>NEXT PROJECT</span><strong>${esc(nextProject.title)} →</strong>${image(nextProject.coverImage, '')}</a>` : ''}</article>`;
+    root.innerHTML = `<article class="project-detail"><a class="article-back" href="/${demoPreview?'?demo=1#work':'#work'}">← BACK TO WORK</a><div class="project-detail-kicker">${esc(project.category || 'PROJECT')} / ${esc(project.type || 'CASE STUDY')} / ${esc(project.year || '')}</div><h1>${esc(project.title)}</h1>${project.projectSubtitle ? `<p class="project-detail-subtitle">${esc(project.projectSubtitle)}</p>` : ''}${project.client ? `<p class="project-detail-client">${esc(project.client)}${project.role ? ` · ${esc(project.role)}` : ''}</p>` : ''}<figure class="project-detail-hero-frame">${image(project.coverImage, project.title, 'project-detail-hero')}<figcaption><span>PROJECT PREVIEW</span><small>Full presentation below</small></figcaption></figure>${blocks.length ? `<div class="case-blocks">${blocks.map(renderBlock).join('')}</div>` : `${renderGallery(project.gallery, project.title)}${renderLegacy(project)}`}${nextProject ? `<a class="next-project" href="/work/${encodeURIComponent(nextProject.slug)}${demoPreview?'?demo=1':''}"><span>NEXT PROJECT</span><strong>${esc(nextProject.title)} →</strong>${image(nextProject.coverImage, '')}</a>` : ''}</article>`;
+    classifyProjectMedia(root);
   }
 
   async function load() {
