@@ -730,3 +730,5 @@ Always reconcile these notes with the actual repository before resuming.
 5. Verification passed: Prisma generate/validate, TypeScript typecheck/build, three JS syntax checks, `git diff --check`, and 38/38 focused frontend/commercial/Behance tests.
 6. Not yet visually verified: authenticated CMS save/round-trip and deployed desktop/mobile rendering.
 7. Next exact action: review the final diff, commit and push the authorized Preview branch, wait for Vercel deployment/migration, then browser-check default and customized presentation behavior. Do not push main.
+8. Deployment follow-up: `5815335` is on the remote Preview branch and the stable alias serves the new versioned project assets. Default desktop rendering is browser-verified at 1280×720 with a 1120×630 hero and no horizontal overflow.
+9. CMS authentication is absent. The sign-in shell loads, but no project mutation was attempted. Next exact runtime action is an authenticated edit/save/reload check plus mobile verification; main remains unauthorized.

@@ -496,3 +496,4 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - The public case-study renderer normalizes every value, clamps numeric ranges and applies scoped CSS variables/data attributes to modular and legacy galleries.
 - Local verification: Prisma generate/validate, typecheck, build, JS syntax, diff check and focused tests 38/38 passed.
 - Pending: commit/push only to `codex/v2-preview-2026-11-01`, wait for the Preview migration/deploy, then verify one default project and one CMS-customized project at desktop/mobile. Main remains untouched.
+- Commit `5815335` is pushed and the stable Preview alias serves the new JS/CSS. Browser evidence on the TMNT project confirms AUTO attributes, 900px/780px/16px variables, a 1120×630 hero and no desktop horizontal overflow. CMS is signed out, so a customized save/round-trip and mobile viewport remain pending; main is still untouched.

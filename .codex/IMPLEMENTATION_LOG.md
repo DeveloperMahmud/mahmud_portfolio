@@ -1063,3 +1063,6 @@
 - Existing projects remain visually unchanged through `AUTO`, 900px standard-board, 780px long-board and 16px gap defaults.
 - Added regression coverage for schema, migration, CMS payload, renderer and CSS contract.
 - Passed Prisma generate/validate, `npm.cmd run typecheck`, `npm.cmd run build`, JS syntax checks, `git diff --check`, and 38/38 focused tests. Preview deployment and authenticated visual round-trip remain pending.
+- Pushed commit `5815335` to `codex/v2-preview-2026-11-01`. The stable alias changed from the old `case-media-1/3` assets to `case-media-2/4`.
+- Browser inspection of the TMNT project confirmed AUTO hero/gallery attributes, default 900px/780px/16px CSS variables, a 1120×630 desktop hero and no horizontal overflow.
+- The Preview CMS shows its sign-in shell, so presentation-control UI and save persistence were not authenticated or mutated. Extra verification tabs were closed, preserving the owner's existing Behance tab.
