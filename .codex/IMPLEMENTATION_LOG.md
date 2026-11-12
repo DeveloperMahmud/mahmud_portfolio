@@ -7,6 +7,7 @@
 - Replaced the bare hero image with a framed preview and intentional top crop for non-landscape artwork.
 - Single long gallery boards now center at a bounded readable width; multi-image galleries remain balanced and collapse to one column on mobile.
 - Versioned project CSS/JavaScript URLs prevent stale edge assets. Focused checks pass 33/33 with successful syntax, TypeScript and diff validation.
+- First deployed measurement verified the centered 780px full-board width and zero horizontal overflow/logs. It also found the clipped hero image retained a 3208px internal layer, so the crop is now absolutely bounded to its 16:9 frame.
 
 ## 2026-11-12 - Additional Behance case studies and production authorization
 

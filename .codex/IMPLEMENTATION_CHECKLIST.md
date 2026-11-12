@@ -5,6 +5,7 @@
 - Long Behance boards now receive aspect-aware hero crops instead of tiny letterboxed previews.
 - Single long boards use a centered readable width; multi-image galleries use a consistent two-column desktop and one-column mobile grid.
 - Frontend/Behance tests 33/33, JavaScript syntax, TypeScript and diff checks pass; deployed Preview visual acceptance remains pending.
+- Live Preview measurement caught and removed an oversized clipped layer inside the new hero frame; final redeploy acceptance remains pending.
 
 ## Behance production-release checkpoint - 2026-11-12
 

@@ -5,6 +5,7 @@
 - Diagnosed the odd presentation as a layout issue: tall source boards were squeezed into a wide `object-fit: contain` hero and single-board galleries inherited a half-width grid cell.
 - Added natural-dimension media classification, editorial hero framing, centered readable long-board widths and consistent responsive galleries.
 - Local validation passes 33/33 focused tests, project JavaScript syntax, TypeScript and diff checks. Preview deployment/browser comparison is next.
+- First Preview measurement confirmed the intended 16:9 frame and 780px centered full board, then exposed an oversized internal image layer; the follow-up positions the crop to the frame bounds.
 
 ## 2026-11-12 - Ten-project Behance release candidate
 
