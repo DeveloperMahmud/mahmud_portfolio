@@ -12,6 +12,7 @@
 - The work archive lists all ten new slugs and the homepage lists none, confirming the intended archive-first release behavior.
 - Published the complete V2 release to `main` exactly once as squash commit `91f752f`.
 - Production acceptance on `mahmudportfolio-azure.vercel.app` passes all ten new routes with real bundled media and zero fallback/log errors after edge propagation completed. The archive lists all ten and the homepage auto-features none.
+- Synchronized the released application tree and whitespace cleanup to `codex/v2-preview-2026-11-01` without changing the single-commit `main` release.
 
 ## 2026-11-11 - Four owner-published Behance case studies verified on Preview
 

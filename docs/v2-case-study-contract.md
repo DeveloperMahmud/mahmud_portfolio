@@ -1,6 +1,6 @@
 # V2 Case-study Content Contract
 
-Status: verified architecture contract for P1-005  
+Status: verified architecture contract for P1-005
 Scope: commercial portfolio case studies, technical case studies, recruiter/client experiences, and Page Studio consumers
 
 ## 1. Source of truth

@@ -7,6 +7,7 @@
 - Stable Preview browser acceptance passes for all 10 routes: expected H1/title, real local image dimensions, zero media fallbacks and zero browser log entries.
 - The work archive exposes exactly all 10 new slugs; the homepage exposes none, confirming archive-first placement.
 - P8-003 production release `91f752f` is `VERIFIED`: `main` was pushed once, all ten routes/media passed, archive count is 10, homepage auto-feature count is 0, and browser logs are empty.
+- Preview branch is synchronized with the released application tree; only its later production-acceptance audit records differ from the squash commit on `main`.
 
 ## Behance commercial case-study checkpoint - 2026-11-11
 
@@ -23,7 +24,7 @@
 - Preview `SKIP_EXISTING` restore round-trip: `BLOCKED / NOT VERIFIED` because the available browser automation cannot attach the local JSON file. No database mutation occurred. Manual UI upload is still required; never use `REPLACE`.
 - Remaining verification gaps must not be promoted without evidence: P3-007, P4-005, P4-006, P5-005 and the P8-001 restore drill. P4-003 is now verified.
 
-Source specification: `docs/MAHMUD_CODEX_MASTER_IMPLEMENTATION_INSTRUCTIONS_V2.md`  
+Source specification: `docs/MAHMUD_CODEX_MASTER_IMPLEMENTATION_INSTRUCTIONS_V2.md`
 Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3BCF70407`
 
 Statuses: `NOT_STARTED`, `IN_PROGRESS`, `BLOCKED`, `COMPLETED`, `VERIFIED`. `VERIFIED` requires the acceptance criteria to be checked against the repository or a running build.

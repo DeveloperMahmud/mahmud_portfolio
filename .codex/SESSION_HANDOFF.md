@@ -7,8 +7,8 @@
 3. Production seeds are authorized, create-only and idempotent; existing slugs/settings/pages remain untouched.
 4. Local release gate passes completely: 251 tests, smoke, performance, Prisma validation/generation, build and diff check.
 5. Preview commit `22189d2` is deployed and accepted: 10/10 routes, source media, archive inclusion and homepage exclusion pass with zero browser log errors.
-6. Exact next action: squash the entire V2 branch into one `main` release commit and push `main` exactly once.
-7. Completed: `main` was pushed exactly once at `91f752f`; production acceptance passed all ten routes/media, archive inclusion, homepage exclusion and browser logs. Code rollback is one commit revert; additive seeded records require CMS unpublish for data-level rollback.
+6. Completed: `main` was pushed exactly once at `91f752f`; production acceptance passed all ten routes/media, archive inclusion, homepage exclusion and browser logs. Code rollback is one commit revert; additive seeded records require CMS unpublish for data-level rollback.
+7. Preview is synchronized with the released application tree and retains the later production-acceptance audit records.
 
 ## Active Preview-experience checkpoint - 2026-11-11
 

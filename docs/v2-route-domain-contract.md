@@ -1,7 +1,7 @@
 # V2 Route and Creative Lab Domain Contract
 
-Status: verified architecture contract  
-Date: 2026-10-29  
+Status: verified architecture contract
+Date: 2026-10-29
 Applies before any V2 schema migration or public implementation.
 
 ## 1. Route and information architecture

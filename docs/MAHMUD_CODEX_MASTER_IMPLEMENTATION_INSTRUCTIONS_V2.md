@@ -1,10 +1,10 @@
 # MAHMUD CREATIVE STUDIO — CODEX MASTER IMPLEMENTATION INSTRUCTIONS
 
-**Version:** 2.0 — expanded career, portfolio and studio specification  
-**Project:** Mahmudul Hassan / personal creative portfolio, client-facing studio, career hub, and Creative Lab  
-**Primary website:** https://mahmudportfolio-azure.vercel.app/  
-**Existing QA lab:** https://mahmudportfolio-azure.vercel.app/widget-qa.html  
-**Audience:** International e-commerce brands, Amazon sellers, creative agencies, and recruiters for remote/on-site roles (UAE, UK, Germany, and beyond).  
+**Version:** 2.0 — expanded career, portfolio and studio specification
+**Project:** Mahmudul Hassan / personal creative portfolio, client-facing studio, career hub, and Creative Lab
+**Primary website:** https://mahmudportfolio-azure.vercel.app/
+**Existing QA lab:** https://mahmudportfolio-azure.vercel.app/widget-qa.html
+**Audience:** International e-commerce brands, Amazon sellers, creative agencies, and recruiters for remote/on-site roles (UAE, UK, Germany, and beyond).
 **Instructions to Codex:** Use this document as an implementation specification. Begin by inspecting the **actual local repository**. Do not assume the production website's implementation matches the guesses/examples in this document. Implement phase-by-phase, maintain backward compatibility, and provide test evidence and a precise change log.
 
 ---
@@ -62,8 +62,8 @@ Turn the existing personal website into a coherent **designer-led personal creat
 
 **Personal brand:** Mahmudul Hassan, independent creative designer / designer-led studio. Keep claims about employment, team size, clients, portfolio, awards, performance and relocation factual and editable.
 
-**Primary positioning:** E-commerce Visual Design & Brand Experiences.  
-**Specialties:** Amazon Listing Images, Basic/Premium A+ Content, Brand Story, Storefront, Product Retouching, Lifestyle Compositing, Brand Identity, Performance Creatives.  
+**Primary positioning:** E-commerce Visual Design & Brand Experiences.
+**Specialties:** Amazon Listing Images, Basic/Premium A+ Content, Brand Story, Storefront, Product Retouching, Lifestyle Compositing, Brand Identity, Performance Creatives.
 **Differentiator:** Design + structured creative systems and useful tools.
 
 ### Proposed routes (adapt path style to existing router)

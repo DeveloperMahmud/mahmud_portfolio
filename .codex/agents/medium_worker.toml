@@ -11,4 +11,3 @@ For UI work, verify keyboard behavior, mobile layout, reduced motion, empty/erro
 Run focused validation for the files and behavior you change, then return a concise evidence-based summary with files, tests, and unresolved risks.
 Do not edit the same files as another active agent unless the parent explicitly coordinates ownership.
 """
-

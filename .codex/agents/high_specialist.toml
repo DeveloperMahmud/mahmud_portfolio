@@ -11,4 +11,3 @@ For schema work, require additive migrations, idempotent seeds, backward compati
 For publishing or security work, test both authorized and unauthorized paths and distinguish implemented, tested, and verified states.
 Keep edits focused and avoid files owned by another active agent. Return decisions, changed files, test evidence, risks, and the next safe action to the parent.
 """
-

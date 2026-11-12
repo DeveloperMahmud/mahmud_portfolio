@@ -153,4 +153,3 @@ export const CREATIVE_TOOLS = [
     {sortOrder:160, iconKey:'check-square', demoMode:'SAMPLE_INTERACTIVE', tags:['handoff','checklist','delivery']}
   )
 ];
-

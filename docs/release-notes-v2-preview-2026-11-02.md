@@ -1,6 +1,6 @@
 # Portfolio V2 preview release — 2026-11-02
 
-Target branch: `codex/v2-preview-2026-11-01`  
+Target branch: `codex/v2-preview-2026-11-01`
 Release scope: preview only; production/main is not authorized.
 
 ## Included

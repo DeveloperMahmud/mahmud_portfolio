@@ -8,6 +8,7 @@
 - Local acceptance passes: 251/251 tests, 5/5 smoke checks, performance budget, Prisma validation/generation, TypeScript build and diff check.
 - Preview commit `22189d2` is deployed. Browser acceptance passes all ten routes with real source media, zero fallbacks/log errors, exact archive inclusion and no homepage auto-feature placement.
 - Released as single squash commit `91f752f` on `main`. Production browser acceptance passes 10/10 routes, source media, archive-first placement and empty browser logs.
+- The released application tree and whitespace cleanup are synchronized to `codex/v2-preview-2026-11-01`; Preview retains its additional acceptance audit history.
 
 ## Preview presentation and technical case-study implementation - 2026-11-11
 
@@ -37,9 +38,9 @@
 - Next action: commit and push this validated batch once to `codex/v2-preview-2026-11-01`, wait for Vercel Preview readiness, then inspect the stable Preview alias. Production/main remains untouched.
 
 Last reconciled: 2026-11-03 (Asia/Dhaka)
-Canonical repository: `D:/Web Works/search-hub/.portfolio-codex-work`  
-Branch / baseline: `main` at `3f3fa90` before V2 setup changes  
-Master specification: `docs/MAHMUD_CODEX_MASTER_IMPLEMENTATION_INSTRUCTIONS_V2.md`  
+Canonical repository: `D:/Web Works/search-hub/.portfolio-codex-work`
+Branch / baseline: `main` at `3f3fa90` before V2 setup changes
+Master specification: `docs/MAHMUD_CODEX_MASTER_IMPLEMENTATION_INSTRUCTIONS_V2.md`
 Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3BCF70407`
 
 ## Preview branch checkpoint — 2026-11-01
