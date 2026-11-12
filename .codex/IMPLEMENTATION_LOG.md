@@ -7,6 +7,7 @@
 - Reinterpreted full-bleed presentation boards as centered editorial media: 900px standard maximum and 780px long-board maximum, both driven by existing CMS variables.
 - Added a subtle border, shadow and caption surface without changing source media or CMS data.
 - Cache-busted project JS/CSS and extended regression coverage. Focused tests pass 44/44; JS syntax, typecheck, build and diff check pass. Preview visual acceptance is pending.
+- Pushed `cd2000f`; stable-alias Browser QA measured the loaded 1464x3600 source at a centered 780px rendered width with `is-long has-long-media` applied and no horizontal overflow.
 
 ## 2026-11-12 - Homepage project cards open case studies
 

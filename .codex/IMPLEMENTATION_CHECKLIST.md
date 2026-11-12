@@ -6,6 +6,7 @@
 - Full-bleed presentation boards now use the CMS gallery max width (900px default); extra-tall boards use the long-board max width (780px default).
 - Standalone images receive aspect-aware classes after loading, plus a restrained frame, caption and shadow treatment.
 - Focused suites pass 44/44; JS syntax, typecheck, build and diff check pass. Preview deployment/browser measurement is pending.
+- Preview commit `cd2000f` serves the editorial-board assets. Browser measurement confirms the 1464x3600 board receives `is-long has-long-media`, renders 780px wide and centered at a 1280px viewport, and causes no horizontal overflow. Acceptance is complete.
 
 ## Homepage project-card navigation - 2026-11-12
 

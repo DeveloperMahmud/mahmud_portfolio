@@ -8,7 +8,8 @@
 4. Full-bleed blocks now use `--case-gallery-max` (900px default); long boards use `--case-long-board-max` (780px default), centered with a restrained frame/caption.
 5. Project assets use the `20261112-editorial-boards-1` cache key.
 6. Verification passes: JS syntax, 44/44 focused tests, typecheck, build and diff check.
-7. Next exact action: commit/push Preview, wait for propagation and confirm the affected board computes to 780px centered on desktop with no horizontal overflow. Main remains untouched.
+7. Commit `cd2000f` is live on Preview; Browser QA measured the loaded 1464x3600 board at 780px wide, centered at x=242.4 in a 1280px viewport, with `is-long has-long-media` and no horizontal overflow.
+8. No follow-up is required for this layout defect. Main remains untouched.
 
 ## 2026-11-12 project-card navigation handoff
 

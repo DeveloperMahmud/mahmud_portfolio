@@ -6,6 +6,7 @@
 - Standalone boards are now centered within CMS-controlled maximum widths: 900px for standard boards and 780px for extra-tall presentations.
 - Aspect classification, frame styling and caption treatment are responsive and preserve the existing image viewer.
 - Local verification passes 44/44 focused tests, JS syntax, typecheck, build and diff check. Preview browser verification is next.
+- Commit `cd2000f` is live. Browser QA confirms the affected 1464x3600 board is centered at 780px in a 1280px viewport after aspect classification, with no horizontal overflow.
 
 ## 2026-11-12 - Project-card navigation correction
 
