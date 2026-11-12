@@ -1,5 +1,13 @@
 # Implementation Log
 
+## 2026-11-12 - Contained editorial case-study boards
+
+- Browser inspection tied the screenshot to the color-changing lip-tint `FULL_BLEED_IMAGE` block and confirmed its figure was 1280px wide in a 1280px viewport while the project content column was 1120px.
+- Extended media classification to standalone case-study images so long Behance boards are identified after their natural dimensions load.
+- Reinterpreted full-bleed presentation boards as centered editorial media: 900px standard maximum and 780px long-board maximum, both driven by existing CMS variables.
+- Added a subtle border, shadow and caption surface without changing source media or CMS data.
+- Cache-busted project JS/CSS and extended regression coverage. Focused tests pass 44/44; JS syntax, typecheck, build and diff check pass. Preview visual acceptance is pending.
+
 ## 2026-11-12 - Homepage project cards open case studies
 
 - Browser reproduction confirmed the global image viewer intercepted `.project-image` clicks before the project card navigation handler.

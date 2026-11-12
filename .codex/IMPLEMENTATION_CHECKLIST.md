@@ -1,5 +1,12 @@
 # V2 Implementation Checklist
 
+## Editorial case-study board width - 2026-11-12
+
+- Reproduced the color-changing lip-tint board at 1280px viewport width: the `FULL_BLEED_IMAGE` figure expanded to the full viewport instead of respecting the case-study reading column.
+- Full-bleed presentation boards now use the CMS gallery max width (900px default); extra-tall boards use the long-board max width (780px default).
+- Standalone images receive aspect-aware classes after loading, plus a restrained frame, caption and shadow treatment.
+- Focused suites pass 44/44; JS syntax, typecheck, build and diff check pass. Preview deployment/browser measurement is pending.
+
 ## Homepage project-card navigation - 2026-11-12
 
 - Reproduced the defect on Preview: clicking a project thumbnail opened the global image viewer and left the homepage URL unchanged.

@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-12 - Professional case-study image containment
+
+- Diagnosed the unprofessional full-width board as the legacy `100vw` rule on `FULL_BLEED_IMAGE` blocks.
+- Standalone boards are now centered within CMS-controlled maximum widths: 900px for standard boards and 780px for extra-tall presentations.
+- Aspect classification, frame styling and caption treatment are responsive and preserve the existing image viewer.
+- Local verification passes 44/44 focused tests, JS syntax, typecheck, build and diff check. Preview browser verification is next.
+
 ## 2026-11-12 - Project-card navigation correction
 
 - Root cause: the global lightbox capture listener treated homepage project thumbnails as standalone zoomable media and stopped card navigation.

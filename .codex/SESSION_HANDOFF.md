@@ -1,5 +1,15 @@
 # Session Handoff
 
+## 2026-11-12 case-study board containment handoff
+
+1. Affected route: `/work/color-changing-lip-cheek-tint-amazon-premium-a-plus`.
+2. Before the fix, `.case-image.full-bleed` measured 1280px in a 1280px viewport despite a 1120px project column.
+3. `classifyProjectMedia` now marks standalone images by aspect and flags long boards.
+4. Full-bleed blocks now use `--case-gallery-max` (900px default); long boards use `--case-long-board-max` (780px default), centered with a restrained frame/caption.
+5. Project assets use the `20261112-editorial-boards-1` cache key.
+6. Verification passes: JS syntax, 44/44 focused tests, typecheck, build and diff check.
+7. Next exact action: commit/push Preview, wait for propagation and confirm the affected board computes to 780px centered on desktop with no horizontal overflow. Main remains untouched.
+
 ## 2026-11-12 project-card navigation handoff
 
 1. Preview reproduction proved that thumbnail clicks opened `.image-viewer` and did not change the homepage URL.

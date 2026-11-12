@@ -359,6 +359,8 @@ test('case-study media adapts long Behance boards without tiny letterboxed heroe
     read('portfolio/project.html')
   ]);
   assert.match(project,/classifyProjectMedia/);
+  assert.match(project,/standalone\.classList\.add\(`is-\$\{shape\}`\)/);
+  assert.match(project,/standalone && shape === 'long'/);
   assert.match(project,/project-detail-hero-frame/);
   assert.match(project,/items\.length === 1 \? ' is-single'/);
   assert.match(styles,/\.project-detail-hero-frame\{[^}]*aspect-ratio:16\/9/);
@@ -367,6 +369,8 @@ test('case-study media adapts long Behance boards without tiny letterboxed heroe
   assert.match(project,/data-gallery-columns/);
   assert.match(styles,/\.case-gallery\.is-single\.has-long-media img\{width:min\(100%,var\(--case-long-board-max,780px\)\)\}/);
   assert.match(styles,/data-hero-focal="CUSTOM"/);
-  assert.match(html,/project\.js\?v=20261112-layout-presets-1/);
-  assert.match(html,/styles\.css\?v=20261112-layout-presets-1/);
+  assert.match(styles,/\.case-image\.full-bleed\{width:min\(100%,var\(--case-gallery-max,900px\)\)/);
+  assert.match(styles,/\.case-image\.full-bleed\.has-long-media\{width:min\(100%,var\(--case-long-board-max,780px\)\)\}/);
+  assert.match(html,/project\.js\?v=20261112-editorial-boards-1/);
+  assert.match(html,/styles\.css\?v=20261112-editorial-boards-1/);
 });

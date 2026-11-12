@@ -58,6 +58,9 @@ async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fe
         if (frame) frame.classList.add(`is-${shape}`);
         const gallery = img.closest('.case-gallery, .project-detail-gallery');
         if (gallery && shape === 'long') gallery.classList.add('has-long-media');
+        const standalone = img.closest('.case-image');
+        if (standalone) standalone.classList.add(`is-${shape}`);
+        if (standalone && shape === 'long') standalone.classList.add('has-long-media');
       };
       if (img.complete) apply();
       else img.addEventListener('load', apply, { once: true });
