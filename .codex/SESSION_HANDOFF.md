@@ -7,7 +7,8 @@
 3. Preview CMS is signed out. Its deployed shell revealed a stale `admin-addendum.js` cache key that could load the old case-study editor.
 4. The worktree now cache-busts the admin addendum URL and asserts both loader versions in the focused regression suite.
 5. Post-fix checks pass: 43/43 tests, typecheck, build and diff check.
-6. Next exact action: commit/push this cache fix and the four records to the Preview branch, wait for propagation, verify the CMS shell loads `admin-case-study.js?v=20261112-3`, then finish. Main remains untouched.
+6. Cache fix `d93c729` is pushed and stable-alias Browser QA confirms `admin-addendum.js?v=20261112-layout-presets-1` loads `admin-case-study.js?v=20261112-3`.
+7. Remaining optional acceptance: sign in to Preview CMS and perform one non-production save/reload round trip. Main remains untouched.
 
 ## 2026-11-12 case-study media handoff
 

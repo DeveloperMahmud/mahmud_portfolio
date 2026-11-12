@@ -5,6 +5,7 @@
 - Preview commit `8e56754` serves `project.js?v=20261112-layout-presets-1` and `styles.css?v=20261112-layout-presets-1`.
 - The TMNT route exposes backward-compatible AUTO attributes at 1280x720 with no horizontal overflow.
 - Deployed inspection found the CMS shell could reuse an old `admin-addendum.js` URL; the shell loader is now cache-busted and protected by regression assertions.
+- Preview commit `d93c729` now serves `admin-addendum.js?v=20261112-layout-presets-1`, which loads `admin-case-study.js?v=20261112-3`; deployment propagation is browser-verified.
 - Focused tests pass 43/43, with typecheck, build and diff check also passing after the fix.
 - Authenticated CMS save/reload remains unverified because Preview is signed out.
 

@@ -6,6 +6,7 @@
 - Verified the TMNT public project at 1280x720: AUTO defaults are present and the document has no horizontal overflow.
 - The signed-out CMS shell exposed a stale loader URL: cached `admin-addendum.js?v=20261027-1` loaded the older case-study editor instead of the new preset module.
 - Cache-busted the admin addendum URL to `20261112-layout-presets-1` and added regression assertions covering both the shell loader and its `admin-case-study.js?v=20261112-3` dependency.
+- Pushed cache fix `d93c729`; after stable-alias propagation, Browser QA confirmed both new CMS asset URLs are loaded.
 - Re-ran 43/43 focused tests, TypeScript typecheck/build and `git diff --check`; all pass. Authenticated CMS save/reload remains pending because Preview is signed out.
 
 ## 2026-11-12 - Case-study image layout polish
