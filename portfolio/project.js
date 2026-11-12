@@ -97,12 +97,49 @@ async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fe
     };
   }
 
+  function normalizeImagePresentation(value = {}) {
+    const source = value && typeof value === 'object' ? value : {};
+    const mobile = source.mobile && typeof source.mobile === 'object' ? source.mobile : {};
+    const option = (candidate, allowed, fallback) => allowed.includes(candidate) ? candidate : fallback;
+    const maxWidth = Math.min(1600, Math.max(320, Number.isFinite(Number(source.maxWidth)) ? Math.round(Number(source.maxWidth)) : 900));
+    const focal = candidate => typeof candidate === 'string' && (/^\s*(?:100|\d{1,2})(?:\.\d+)?%\s+(?:100|\d{1,2})(?:\.\d+)?%\s*$/.test(candidate) || ['AUTO','INHERIT'].includes(candidate)) ? candidate.trim() : 'AUTO';
+    return {
+      width: option(source.width, ['AUTO','NARROW','CONTAINER','WIDE','FULL','CUSTOM'], 'AUTO'),
+      maxWidth,
+      fit: option(source.fit, ['AUTO','ORIGINAL','CONTAIN','COVER'], 'AUTO'),
+      aspect: option(source.aspect, ['AUTO','ORIGINAL','SQUARE','LANDSCAPE','WIDE','PORTRAIT','TALL'], 'AUTO'),
+      align: option(source.align, ['AUTO','LEFT','CENTER','RIGHT'], 'AUTO'),
+      focalPoint: focal(source.focalPoint),
+      frame: option(source.frame, ['AUTO','NONE','BORDER','SHADOW','ROUNDED','CARD'], 'AUTO'),
+      caption: option(source.caption, ['AUTO','SHOW','HIDE'], 'AUTO'),
+      span: option(source.span, ['AUTO','HALF','WIDE','FULL'], 'AUTO'),
+      mobileWidth: option(mobile.width, ['INHERIT','CONTAINER','FULL'], 'INHERIT'),
+      mobileFit: option(mobile.fit, ['INHERIT','ORIGINAL','CONTAIN','COVER'], 'INHERIT'),
+      mobileAspect: option(mobile.aspect, ['INHERIT','ORIGINAL','SQUARE','LANDSCAPE','WIDE','PORTRAIT','TALL'], 'INHERIT'),
+      mobileFocalPoint: ['AUTO','INHERIT'].includes(focal(mobile.focalPoint || 'INHERIT')) ? 'INHERIT' : focal(mobile.focalPoint)
+    };
+  }
+
+  function imagePresentationAttributes(presentation) {
+    const focal = presentation.focalPoint === 'AUTO' ? '50% 50%' : presentation.focalPoint;
+    const mobileFocal = presentation.mobileFocalPoint === 'INHERIT' ? focal : presentation.mobileFocalPoint;
+    return `data-media-width="${presentation.width}" data-media-fit="${presentation.fit}" data-media-aspect="${presentation.aspect}" data-media-align="${presentation.align}" data-media-frame="${presentation.frame}" data-media-caption="${presentation.caption}" data-media-span="${presentation.span}" data-mobile-width="${presentation.mobileWidth}" data-mobile-fit="${presentation.mobileFit}" data-mobile-aspect="${presentation.mobileAspect}" style="--case-image-max:${presentation.maxWidth}px;--case-image-focal:${esc(focal)};--case-mobile-focal:${esc(mobileFocal)}"`;
+  }
+
+  function standaloneImageBlock(data, title, fullBleed = false) {
+    const presentation = normalizeImagePresentation(data.presentation);
+    const caption = presentation.caption === 'HIDE' ? '' : data.caption;
+    return `<figure class="case-block case-image${fullBleed ? ' full-bleed' : ''}" ${imagePresentationAttributes(presentation)}>${image(data.url, data.alt || title)}${caption ? `<figcaption>${esc(caption)}</figcaption>` : ''}</figure>`;
+  }
+
   function galleryImage(item, fallbackAlt, defaultShape = 'AUTO') {
     const media = typeof item === 'string' ? { url: item } : item || {};
     const allowed = ['AUTO', 'ORIGINAL', 'SQUARE', 'LANDSCAPE', 'WIDE', 'PORTRAIT', 'TALL'];
     const requested = media.displayShape || media.shape;
     const shape = allowed.includes(requested) && requested !== 'AUTO' ? requested : defaultShape;
-    return media.url ? `<img data-display-shape="${allowed.includes(shape) ? shape : 'AUTO'}" src="${esc(media.url)}" alt="${esc(media.alt || fallbackAlt || '')}" loading="lazy" decoding="async">` : '';
+    const presentation = normalizeImagePresentation(media.presentation);
+    const focal = presentation.focalPoint === 'AUTO' ? '50% 50%' : presentation.focalPoint;
+    return media.url ? `<img data-display-shape="${allowed.includes(shape) ? shape : 'AUTO'}" data-media-fit="${presentation.fit}" data-media-frame="${presentation.frame}" data-media-span="${presentation.span}" data-mobile-fit="${presentation.mobileFit}" data-mobile-aspect="${presentation.mobileAspect}" style="--case-image-focal:${esc(focal)};--case-mobile-focal:${esc(presentation.mobileFocalPoint === 'INHERIT' ? focal : presentation.mobileFocalPoint)}" src="${esc(media.url)}" alt="${esc(media.alt || fallbackAlt || '')}" loading="lazy" decoding="async">` : '';
   }
 
   function safeEmbed(url) {
@@ -118,8 +155,8 @@ async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fe
     const title = data.heading || data.title || '';
     switch (block.type) {
       case 'TEXT': return `<section class="case-block case-text">${title ? `<h2>${esc(title)}</h2>` : ''}<p>${esc(data.text || data.body || '')}</p></section>`;
-      case 'LARGE_IMAGE': return `<figure class="case-block case-image">${image(data.url, data.alt || title)}${data.caption ? `<figcaption>${esc(data.caption)}</figcaption>` : ''}</figure>`;
-      case 'FULL_BLEED_IMAGE': return `<figure class="case-block case-image full-bleed">${image(data.url, data.alt || title)}${data.caption ? `<figcaption>${esc(data.caption)}</figcaption>` : ''}</figure>`;
+      case 'LARGE_IMAGE': return standaloneImageBlock(data, title, false);
+      case 'FULL_BLEED_IMAGE': return standaloneImageBlock(data, title, true);
       case 'IMAGE_PAIR': return `<section class="case-block case-pair">${image(data.left?.url || data.leftUrl, data.left?.alt || data.leftAlt)}${image(data.right?.url || data.rightUrl, data.right?.alt || data.rightAlt)}</section>`;
       case 'IMAGE_GRID':
       case 'GALLERY': {

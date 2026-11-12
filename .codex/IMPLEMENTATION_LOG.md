@@ -1103,3 +1103,10 @@
 - Extended legacy gallery thumbnails with per-image display-shape selection.
 - Added safe public normalization and responsive renderers for Behance Story, Dribbble Shots, Pinterest Masonry and Editorial Bento.
 - Added regression contracts and passed build/typecheck, Prisma generate/validate, JS syntax, diff check and 43/43 focused tests. Preview deployment and visual QA remain pending.
+## 2026-11-12 — Per-image CMS presentation controls
+
+- Extended existing Project JSON blocks without a database migration: standalone and gallery media now support safe width, max-width, fit, aspect, alignment, focal point, frame, caption and mobile overrides.
+- Added friendly controls to the existing CMS for LARGE_IMAGE, FULL_BLEED_IMAGE, modular gallery items and legacy uploaded-gallery items; no raw JSON is required.
+- Kept `AUTO` backward-compatible with the accepted professional Behance layout. True viewport bleed is available only through explicit `FULL`.
+- Added server-side enum/range validation, normalized public rendering and responsive CSS without allowing arbitrary CSS injection.
+- Passed 45/45 focused tests, `npm.cmd run build`, JavaScript syntax checks and `git diff --check`. Preview deploy/browser QA is the next gate; authenticated save/reload is still unavailable while signed out.

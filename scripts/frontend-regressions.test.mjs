@@ -143,7 +143,7 @@ test('admin navigation remains discoverable and keyboard accessible on mobile',a
   assert.match(runtime,/id=\"adminMenuToggle\"/);
   assert.match(runtime,/aria-controls=\"adminSidebar\"/);
   assert.match(runtime,/admin-mobile-nav\.css/);
-  assert.match(html,/admin\.js\?v=20261102-4/);
+  assert.match(html,/admin\.js\?v=20261112-image-presentation-1/);
   assert.match(runtime,/admin-mobile-nav\.css\?v=20261102-1/);
   assert.match(css,/@media\(max-width:1050px\)/);
   assert.match(css,/body\.admin-menu-open \.admin-sidebar\{transform:translateX\(0\)/);
@@ -169,7 +169,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/#admin-/);
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
-  assert.match(html,/admin\.js\?v=20261102-4/);
+  assert.match(html,/admin\.js\?v=20261112-image-presentation-1/);
   assert.match(html,/admin-page-studio\.js\?v=20261102-11/);
   assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
@@ -371,6 +371,13 @@ test('case-study media adapts long Behance boards without tiny letterboxed heroe
   assert.match(styles,/data-hero-focal="CUSTOM"/);
   assert.match(styles,/\.case-image\.full-bleed\{width:min\(100%,var\(--case-gallery-max,900px\)\)/);
   assert.match(styles,/\.case-image\.full-bleed\.has-long-media\{width:min\(100%,var\(--case-long-board-max,780px\)\)\}/);
-  assert.match(html,/project\.js\?v=20261112-editorial-boards-1/);
-  assert.match(html,/styles\.css\?v=20261112-editorial-boards-1/);
+  assert.match(project,/normalizeImagePresentation/);
+  assert.match(project,/imagePresentationAttributes/);
+  assert.match(project,/data-media-width/);
+  assert.match(styles,/data-media-width="FULL"/);
+  assert.match(styles,/data-media-fit="CONTAIN"/);
+  assert.match(styles,/data-media-frame="CARD"/);
+  assert.match(styles,/data-mobile-aspect="PORTRAIT"/);
+  assert.match(html,/project\.js\?v=20261112-image-presentation-1/);
+  assert.match(html,/styles\.css\?v=20261112-image-presentation-1/);
 });

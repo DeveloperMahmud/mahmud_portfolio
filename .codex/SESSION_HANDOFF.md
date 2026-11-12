@@ -773,3 +773,11 @@ Always reconcile these notes with the actual repository before resuming.
 4. Public rendering normalizes untrusted block data and scopes preset/shape behavior to each gallery.
 5. Verification passed: build, typecheck, Prisma generate/validate, three JS syntax checks, diff check and 43/43 focused tests.
 6. Current changes are uncommitted. Next exact action: commit/push only `codex/v2-preview-2026-11-01`, wait for stable alias propagation, browser-check default and preset rendering, then update the four records. Never push main without new authorization.
+## Current handoff — image presentation and authorized main promotion (2026-11-12)
+
+1. Owner now authorizes the accepted Preview work, Behance projects and this image-presentation feature to be promoted to `main`; future new/testing work returns to Preview first.
+2. Current branch remains `codex/v2-preview-2026-11-01`; working tree contains the image presentation implementation plus these recovery updates.
+3. CMS controls cover standalone and gallery width/max-width/fit/aspect/alignment/focal/frame/caption/mobile behavior. `AUTO` preserves existing projects; explicit `FULL` enables true bleed.
+4. Validation passed: 45/45 focused tests, TypeScript build, JS syntax and diff check.
+5. Next exact action: commit/push Preview, wait for the stable alias, browser-check default rendering/assets, fetch and inspect `origin/main...origin/codex/v2-preview-2026-11-01`, merge without force, rerun the gate, and push `main` once.
+6. Authenticated CMS save/reload remains `NOT VERIFIED` while the CMS session is signed out; do not claim that runtime mutation was exercised.

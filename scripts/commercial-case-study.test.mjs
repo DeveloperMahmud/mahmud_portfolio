@@ -75,3 +75,20 @@ test('gallery presets support narrative, shot, masonry and per-image shape workf
   assert.match(project,/galleryPresentation/);
   assert.match(project,/galleryImage/);
 });
+
+test('CMS image presentation controls are validated and remain backward compatible',async()=>{
+  const [routes,admin,form,project,styles,html]=await Promise.all([read('src/routes/admin.ts'),read('portfolio/admin.js'),read('portfolio/admin-case-study.js'),read('portfolio/project.js'),read('portfolio/styles.css'),read('portfolio/admin.html')]);
+  for(const value of ['NARROW','CONTAINER','WIDE','FULL','CUSTOM','ORIGINAL','CONTAIN','COVER','ROUNDED','CARD'])assert.match(routes,new RegExp(`'${value}'`));
+  assert.match(routes,/imagePresentationSchema/);
+  assert.match(routes,/maxWidth:z\.number\(\)\.int\(\)\.min\(320\)\.max\(1600\)/);
+  assert.match(admin,/IMAGE PRESENTATION/);
+  assert.match(admin,/data-presentation-field="width"/);
+  assert.match(admin,/data-block-item-presentation="fit"/);
+  assert.match(admin,/data-gallery-presentation="frame"/);
+  assert.match(form,/admin-case-study\.css\?v=20261112-3/);
+  assert.match(project,/normalizeImagePresentation/);
+  assert.match(project,/data-media-width/);
+  assert.match(styles,/data-media-width="FULL"/);
+  assert.match(styles,/data-mobile-width="FULL"/);
+  assert.match(html,/admin\.js\?v=20261112-image-presentation-1/);
+});

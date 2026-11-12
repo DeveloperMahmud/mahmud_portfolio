@@ -530,3 +530,10 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Added three control levels: project defaults, GALLERY/IMAGE_GRID block overrides, and individual image overrides. Legacy gallery thumbnails also expose an individual shape selector.
 - Added a CMS schematic preset preview and responsive public CSS; masonry uses 2–4 CMS columns, reduces on mobile and avoids splitting an image across columns.
 - Passed build/typecheck, Prisma validation/generation, JS syntax, diff check and 43/43 focused tests. Next: push Preview, confirm deployed assets, inspect default and preset rendering, and record remaining authenticated CMS limits.
+## Image module presentation controls — 2026-11-12
+
+- Added CMS-managed standalone/gallery image width (`AUTO`, narrow, container, wide, full, custom), max width, fit, aspect, alignment, focal point, frame, caption and mobile presentation overrides.
+- The contract is stored inside existing Project/block JSON and requires no schema migration. Server validation clamps ranges and rejects unsupported values.
+- Public rendering preserves accepted `AUTO` layouts; explicit `FULL` is the opt-in viewport-bleed mode. Responsive mobile overrides are scoped per image.
+- Local evidence: focused suites 45/45, TypeScript build, JS syntax and diff check pass.
+- Next: deploy to Preview, browser-check a default Behance case study and CMS shell assets, then reconcile Preview/main histories and promote the accepted Preview set to main under the owner's new authorization.

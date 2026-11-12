@@ -35,6 +35,6 @@ function mount(){
   refresh();
   return true;
 }
-if(!document.querySelector('link[data-case-study-admin]')){const link=document.createElement('link');link.rel='stylesheet';link.href='/admin-case-study.css?v=20261112-2';link.dataset.caseStudyAdmin='';document.head.append(link)}
+if(!document.querySelector('link[data-case-study-admin]')){const link=document.createElement('link');link.rel='stylesheet';link.href='/admin-case-study.css?v=20261112-3';link.dataset.caseStudyAdmin='';document.head.append(link)}
 if(!mount()){let attempts=0;const timer=setInterval(()=>{attempts++;if(mount()||attempts>40)clearInterval(timer)},100)}
 })();
