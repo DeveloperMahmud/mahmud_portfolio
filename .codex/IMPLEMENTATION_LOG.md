@@ -10,6 +10,7 @@
 - First deployed measurement verified the centered 780px full-board width and zero horizontal overflow/logs. It also found the clipped hero image retained a 3208px internal layer, so the crop is now absolutely bounded to its 16:9 frame.
 - Advanced the project stylesheet cache key to `20261112-case-media-2` for deterministic final Preview acceptance.
 - Landscape QA found the frame could collapse before an uncached lazy image decoded. Standardized every hero stage at 16:9 desktop / 4:3 mobile and advanced the final cache revision to `case-media-3`.
+- Final deployed Preview acceptance passes: representative landscape and long heroes share a stable 1120×630 stage, the complete long board renders centered at 780×2235, and fallback, horizontal-overflow and browser-log counts are all zero.
 
 ## 2026-11-12 - Additional Behance case studies and production authorization
 
