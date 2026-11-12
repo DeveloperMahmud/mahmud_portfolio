@@ -793,3 +793,10 @@ Always reconcile these notes with the actual repository before resuming.
 2. Full Node regressions pass 256/256; typecheck/build, JS syntax and diff check pass.
 3. `prisma validate` is locally blocked only by absent `DATABASE_URL`; do not invent or use production credentials for this check.
 4. Next exact action: stage these final records, create the merge commit, push `main` once, wait for deployment propagation, browser-check main assets/layout, close QA tabs and checkout Preview again.
+## Main promotion complete; Preview-first workflow restored (2026-11-12)
+
+1. `origin/main` is at merge commit `97419dc`; the main push was performed once without force.
+2. Vercel main branch alias visually serves the accepted image layout and new CMS assets; no horizontal overflow was observed.
+3. `mahmudportfolio-azure.vercel.app` still served an older build and may be attached to a different Vercel project/alias. Do not confuse that with Git main push failure.
+4. Current local branch is `codex/v2-preview-2026-11-01`, fast-forwarded to the merge. This final evidence commit belongs only on Preview so main remains a single rollback-friendly promotion commit.
+5. Remaining unverified scope: authenticated image-setting save/reload and real mobile viewport QA.

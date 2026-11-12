@@ -1122,3 +1122,11 @@
 - Performed a normal `--no-ff` merge, resolving duplicate snapshot conflicts in favor of the accepted Preview files. The resulting working tree has no content diff from Preview and preserves both histories.
 - Passed the complete Node regression set (256/256), TypeScript typecheck/build, JavaScript syntax checks and diff check.
 - `prisma validate` could not run in this local shell because `DATABASE_URL` is absent; no schema validation error beyond the missing environment variable was reported.
+## 2026-11-12 — Main promotion completed
+
+- Pushed merge commit `97419dc` to `origin/main` exactly once; no force push was used.
+- Verified the Vercel main branch alias serves `styles.css?v=20261112-image-presentation-1`, `admin-case-study.js?v=20261112-3` and `admin.js?v=20261112-image-presentation-1`.
+- The color-changing Behance board fully loaded at 780px centered, and client/scroll widths matched at 1265px with no horizontal overflow.
+- The CMS remains signed out, so authenticated save/reload is still not claimed.
+- The documented custom URL `mahmudportfolio-azure.vercel.app` continued to serve an older versionless build; this appears to be alias/project routing rather than the pushed main branch content.
+- Closed all QA tabs and fast-forwarded the local Preview branch to the main merge so future experiments begin Preview-first.

@@ -549,3 +549,9 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Full regression evidence: 256/256 Node tests; TypeScript typecheck/build; admin/project/case-study JavaScript syntax; clean diff check.
 - Local Prisma validation remains environment-blocked by missing `DATABASE_URL`; Preview deployment already completed migrations/build successfully for this content.
 - Next: complete the merge commit, push main once, verify the deployed main site/assets, then return the local working branch to Preview for future experiments.
+## Main promotion completed — 2026-11-12
+
+- `origin/main` now contains merge commit `97419dc`, including the Behance projects, accepted Preview refinements, gallery presets and CMS image presentation controls.
+- Main branch alias browser QA passed for assets, long-board containment and horizontal overflow. Authenticated CMS mutation and a real mobile viewport remain unverified.
+- Custom URL follow-up: `mahmudportfolio-azure.vercel.app` still returned an older versionless asset set during the same check; investigate Vercel alias/project assignment separately if that URL is intended as the canonical production domain.
+- Workflow reset: local branch is `codex/v2-preview-2026-11-01`; future new features are implemented and tested here before any later main promotion.
