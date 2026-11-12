@@ -1,5 +1,13 @@
 # V2 Implementation Checklist
 
+## Gallery preset deployment acceptance - 2026-11-12
+
+- Preview commit `8e56754` serves `project.js?v=20261112-layout-presets-1` and `styles.css?v=20261112-layout-presets-1`.
+- The TMNT route exposes backward-compatible AUTO attributes at 1280x720 with no horizontal overflow.
+- Deployed inspection found the CMS shell could reuse an old `admin-addendum.js` URL; the shell loader is now cache-busted and protected by regression assertions.
+- Focused tests pass 43/43, with typecheck, build and diff check also passing after the fix.
+- Authenticated CMS save/reload remains unverified because Preview is signed out.
+
 ## Case-study media polish - 2026-11-12
 
 - Long Behance boards now receive aspect-aware hero crops instead of tiny letterboxed previews.

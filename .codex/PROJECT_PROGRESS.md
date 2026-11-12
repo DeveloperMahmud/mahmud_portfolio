@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-12 - Gallery preset deployment follow-up
+
+- Commit `8e56754` is live on the stable Preview alias; public project assets resolve to the new layout-preset versions.
+- The TMNT page retains AUTO presentation defaults and has no horizontal overflow at 1280x720.
+- A stale admin shell loader version was identified during deployed inspection and fixed by cache-busting `admin-addendum.js`; regression coverage now prevents the shell and case-study module versions from drifting silently.
+- Post-fix verification passes 43/43 focused tests, typecheck, build and diff check. The CMS is signed out, so authenticated control rendering and persistence are not claimed as verified.
+
 ## 2026-11-12 - Case-study visual refinement
 
 - Diagnosed the odd presentation as a layout issue: tall source boards were squeezed into a wide `object-fit: contain` hero and single-board galleries inherited a half-width grid cell.

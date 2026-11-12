@@ -1,5 +1,14 @@
 # Session Handoff
 
+## 2026-11-12 gallery preset deployment handoff
+
+1. Commit `8e56754` is pushed and the stable Preview alias serves `project.js?v=20261112-layout-presets-1` plus `styles.css?v=20261112-layout-presets-1`.
+2. Public TMNT verification at 1280x720 confirms AUTO defaults and no horizontal overflow.
+3. Preview CMS is signed out. Its deployed shell revealed a stale `admin-addendum.js` cache key that could load the old case-study editor.
+4. The worktree now cache-busts the admin addendum URL and asserts both loader versions in the focused regression suite.
+5. Post-fix checks pass: 43/43 tests, typecheck, build and diff check.
+6. Next exact action: commit/push this cache fix and the four records to the Preview branch, wait for propagation, verify the CMS shell loads `admin-case-study.js?v=20261112-3`, then finish. Main remains untouched.
+
 ## 2026-11-12 case-study media handoff
 
 1. Current branch: `codex/v2-preview-2026-11-01`.

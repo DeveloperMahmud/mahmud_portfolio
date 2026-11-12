@@ -34,8 +34,10 @@ test('featured case studies have an evidence-led publish gate',async()=>{
 });
 
 test('project CMS exposes a matching flagship readiness workflow',async()=>{
-  const [loader,js,css]=await Promise.all([read('portfolio/admin-addendum.js'),read('portfolio/admin-case-study.js'),read('portfolio/admin-case-study.css')]);
+  const [html,loader,js,css]=await Promise.all([read('portfolio/admin.html'),read('portfolio/admin-addendum.js'),read('portfolio/admin-case-study.js'),read('portfolio/admin-case-study.css')]);
+  assert.match(html,/admin-addendum\.js\?v=20261112-layout-presets-1/);
   assert.match(loader,/admin-case-study\.js/);
+  assert.match(loader,/admin-case-study\.js\?v=20261112-3/);
   for(const key of ['role','context','process','deliverables','evidence','outcome'])assert.match(js,new RegExp(`key:'${key}'`));
   assert.match(js,/FEATURED \/ SPECIAL WORK/);
   assert.match(css,/\.case-readiness__grid/);
