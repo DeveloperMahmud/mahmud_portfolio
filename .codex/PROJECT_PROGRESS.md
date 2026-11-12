@@ -537,3 +537,9 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Public rendering preserves accepted `AUTO` layouts; explicit `FULL` is the opt-in viewport-bleed mode. Responsive mobile overrides are scoped per image.
 - Local evidence: focused suites 45/45, TypeScript build, JS syntax and diff check pass.
 - Next: deploy to Preview, browser-check a default Behance case study and CMS shell assets, then reconcile Preview/main histories and promote the accepted Preview set to main under the owner's new authorization.
+## Image presentation Preview acceptance — 2026-11-12
+
+- Preview commit `8ee1bb0` is live on the stable branch alias with the new project/CMS assets.
+- Existing Behance AUTO behavior is visually accepted on desktop: a long board is centered at 780px and `scrollWidth === clientWidth === 1265`.
+- CMS asset propagation is verified while signed out; authenticated edit/save/reload and a real mobile viewport remain pending and are not represented as accepted.
+- The owner has authorized merging the accepted Preview history into `main`; fetch evidence shows main has one unique release commit and Preview has 43 unique commits. Promotion must use a normal merge, never force push.

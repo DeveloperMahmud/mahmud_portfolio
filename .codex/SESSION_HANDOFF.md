@@ -781,3 +781,9 @@ Always reconcile these notes with the actual repository before resuming.
 4. Validation passed: 45/45 focused tests, TypeScript build, JS syntax and diff check.
 5. Next exact action: commit/push Preview, wait for the stable alias, browser-check default rendering/assets, fetch and inspect `origin/main...origin/codex/v2-preview-2026-11-01`, merge without force, rerun the gate, and push `main` once.
 6. Authenticated CMS save/reload remains `NOT VERIFIED` while the CMS session is signed out; do not claim that runtime mutation was exercised.
+## Preview QA completed before main promotion (2026-11-12)
+
+1. Preview `8ee1bb0` is deployed; public AUTO rendering remains professional and overflow-free on desktop.
+2. CMS shell asset propagation is verified, but authenticated mutation remains unverified because the session is signed out.
+3. Remote divergence after fetch is `1 43` for `origin/main...origin/codex/v2-preview-2026-11-01`; ordinary merge is required and force push is prohibited.
+4. Next exact action: commit/push these QA records to Preview, checkout main, merge Preview with `--no-ff`, resolve only evidence-backed conflicts, rerun focused tests/build/diff check, then push main once and return the working copy to Preview.

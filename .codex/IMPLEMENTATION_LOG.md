@@ -1110,3 +1110,9 @@
 - Kept `AUTO` backward-compatible with the accepted professional Behance layout. True viewport bleed is available only through explicit `FULL`.
 - Added server-side enum/range validation, normalized public rendering and responsive CSS without allowing arbitrary CSS injection.
 - Passed 45/45 focused tests, `npm.cmd run build`, JavaScript syntax checks and `git diff --check`. Preview deploy/browser QA is the next gate; authenticated save/reload is still unavailable while signed out.
+## 2026-11-12 — Preview acceptance for image presentation
+
+- Pushed `8ee1bb0` to the Preview branch and waited for the stable Vercel alias to serve the new versioned assets.
+- Browser-inspected the color-changing lip/cheek case study: the accepted AUTO board remained centered at 780px, the page client/scroll widths both measured 1265px and no horizontal overflow appeared.
+- Confirmed the CMS sign-in shell serves `admin-case-study.js?v=20261112-3` and `admin.js?v=20261112-image-presentation-1`.
+- Authenticated persistence is still not claimed because the CMS session is signed out. Mobile browser interaction is also not claimed because this Browser surface cannot emulate a mobile viewport.
