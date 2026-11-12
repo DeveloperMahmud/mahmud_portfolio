@@ -7,6 +7,7 @@
 - Local validation passes 33/33 focused tests, project JavaScript syntax, TypeScript and diff checks. Preview deployment/browser comparison is next.
 - First Preview measurement confirmed the intended 16:9 frame and 780px centered full board, then exposed an oversized internal image layer; the follow-up positions the crop to the frame bounds.
 - The stylesheet URL now uses the second case-media revision to make the corrected frame deterministic at the edge/browser cache.
+- Landscape QA exposed a pre-decode collapse; the final media stage now reserves 16:9 desktop and 4:3 mobile geometry for every project, with shape-aware focal positioning after load.
 
 ## 2026-11-12 - Ten-project Behance release candidate
 

@@ -7,6 +7,7 @@
 - Frontend/Behance tests 33/33, JavaScript syntax, TypeScript and diff checks pass; deployed Preview visual acceptance remains pending.
 - Live Preview measurement caught and removed an oversized clipped layer inside the new hero frame; final redeploy acceptance remains pending.
 - The project-page stylesheet cache key is advanced for the bounded-frame follow-up so Preview cannot retain the first crop implementation.
+- Hero frames now reserve a consistent responsive aspect ratio before media decode, preventing collapsed loading states on uncached landscape assets.
 
 ## Behance production-release checkpoint - 2026-11-12
 

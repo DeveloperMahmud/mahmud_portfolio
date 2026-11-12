@@ -9,6 +9,7 @@
 5. Exact next action: push Preview, visually compare long and landscape projects on desktop/mobile, then leave `main` untouched until separately authorized.
 6. First live measurement: frame 1120×630, complete board 780×2235, no overflow/logs; a follow-up bounds the cropped hero image itself to 1120×630 before final acceptance.
 7. Project CSS cache revision is `20261112-case-media-2`; do not verify the earlier revision.
+8. Final CSS cache revision is `20261112-case-media-3`; every hero reserves its responsive stage before image decode.
 
 ## 2026-11-12 release handoff
 
