@@ -487,3 +487,12 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Apply P2-001 migration to a populated database copy/target before promoting it to VERIFIED.
 - Run HTTP/browser verification for `/hire` and `/studio` when database connectivity is available.
 - Implement Phases 2–8 in dependency order, checkpointing after every meaningful task.
+
+## Case-study CMS presentation controls — 2026-11-12
+
+- Audited the Behance layout polish and confirmed that media sources were CMS-managed but the new crop/grid behavior was code-level only.
+- Added optional `Project.caseStudyStyle` JSON via additive migration `0026_case_study_style`; no existing record requires a backfill and `AUTO` preserves the accepted layout.
+- The Project editor now exposes hero aspect, fit, focal point, gallery columns, standard-board width, long-board width and gallery gap.
+- The public case-study renderer normalizes every value, clamps numeric ranges and applies scoped CSS variables/data attributes to modular and legacy galleries.
+- Local verification: Prisma generate/validate, typecheck, build, JS syntax, diff check and focused tests 38/38 passed.
+- Pending: commit/push only to `codex/v2-preview-2026-11-01`, wait for the Preview migration/deploy, then verify one default project and one CMS-customized project at desktop/mobile. Main remains untouched.

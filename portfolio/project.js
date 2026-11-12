@@ -56,12 +56,28 @@ async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fe
         img.classList.add(`media-${shape}`);
         const frame = img.closest('.project-detail-hero-frame');
         if (frame) frame.classList.add(`is-${shape}`);
-        const gallery = img.closest('.case-gallery');
+        const gallery = img.closest('.case-gallery, .project-detail-gallery');
         if (gallery && shape === 'long') gallery.classList.add('has-long-media');
       };
       if (img.complete) apply();
       else img.addEventListener('load', apply, { once: true });
     });
+  }
+
+  function normalizeCaseStudyStyle(value) {
+    const style = value && typeof value === 'object' ? value : {};
+    const option = (candidate, allowed, fallback) => allowed.includes(candidate) ? candidate : fallback;
+    const pixels = (candidate, fallback, min, max) => Math.min(max, Math.max(min, Number.isFinite(Number(candidate)) ? Math.round(Number(candidate)) : fallback));
+    const focal = typeof style.heroFocalPoint === 'string' && (/^\s*(?:100|\d{1,2})(?:\.\d+)?%\s+(?:100|\d{1,2})(?:\.\d+)?%\s*$/.test(style.heroFocalPoint) || style.heroFocalPoint === 'AUTO') ? style.heroFocalPoint.trim() : 'AUTO';
+    return {
+      heroAspect: option(style.heroAspect, ['AUTO', 'WIDE', 'LANDSCAPE', 'SQUARE', 'PORTRAIT'], 'AUTO'),
+      heroFit: option(style.heroFit, ['AUTO', 'COVER', 'CONTAIN'], 'AUTO'),
+      heroFocalPoint: focal,
+      galleryColumns: option(style.galleryColumns, ['AUTO', 'ONE', 'TWO', 'THREE'], 'AUTO'),
+      galleryMaxWidth: pixels(style.galleryMaxWidth, 900, 480, 1120),
+      longBoardMaxWidth: pixels(style.longBoardMaxWidth, 780, 480, 1120),
+      galleryGap: pixels(style.galleryGap, 16, 0, 48)
+    };
   }
 
   function safeEmbed(url) {
@@ -110,7 +126,7 @@ async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fe
 
   let project = null;
   function renderGallery(items, fallbackAlt) {
-    return items?.length ? `<section class="project-detail-gallery">${items.map(item => `<figure>${image(item.url || item, item.alt || fallbackAlt)}${item.alt ? `<figcaption>${esc(item.alt)}</figcaption>` : ''}</figure>`).join('')}</section>` : '';
+    return items?.length ? `<section class="project-detail-gallery${items.length === 1 ? ' is-single' : ''}">${items.map(item => `<figure>${image(item.url || item, item.alt || fallbackAlt)}${item.alt ? `<figcaption>${esc(item.alt)}</figcaption>` : ''}</figure>`).join('')}</section>` : '';
   }
 
   function renderLegacy(project) {
@@ -125,7 +141,10 @@ async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fe
   function render(project, nextProject) {
     setMeta(project);
     const blocks = Array.isArray(project.projectBlocks) ? project.projectBlocks.filter(block => block.enabled !== false).sort((a, b) => a.sortOrder - b.sortOrder) : [];
-    root.innerHTML = `<article class="project-detail"><a class="article-back" href="/${demoPreview?'?demo=1#work':'#work'}">← BACK TO WORK</a><div class="project-detail-kicker">${esc(project.category || 'PROJECT')} / ${esc(project.type || 'CASE STUDY')} / ${esc(project.year || '')}</div><h1>${esc(project.title)}</h1>${project.projectSubtitle ? `<p class="project-detail-subtitle">${esc(project.projectSubtitle)}</p>` : ''}${project.client ? `<p class="project-detail-client">${esc(project.client)}${project.role ? ` · ${esc(project.role)}` : ''}</p>` : ''}<figure class="project-detail-hero-frame">${image(project.coverImage, project.title, 'project-detail-hero')}<figcaption><span>PROJECT PREVIEW</span><small>Full presentation below</small></figcaption></figure>${blocks.length ? `<div class="case-blocks">${blocks.map(renderBlock).join('')}</div>` : `${renderGallery(project.gallery, project.title)}${renderLegacy(project)}`}${nextProject ? `<a class="next-project" href="/work/${encodeURIComponent(nextProject.slug)}${demoPreview?'?demo=1':''}"><span>NEXT PROJECT</span><strong>${esc(nextProject.title)} →</strong>${image(nextProject.coverImage, '')}</a>` : ''}</article>`;
+    const style = normalizeCaseStudyStyle(project.caseStudyStyle);
+    const focal = style.heroFocalPoint === 'AUTO' ? '50% 50%' : style.heroFocalPoint;
+    const presentation = `data-hero-aspect="${style.heroAspect}" data-hero-fit="${style.heroFit}" data-hero-focal="${style.heroFocalPoint === 'AUTO' ? 'AUTO' : 'CUSTOM'}" data-gallery-columns="${style.galleryColumns}" style="--case-hero-focal:${focal};--case-gallery-max:${style.galleryMaxWidth}px;--case-long-board-max:${style.longBoardMaxWidth}px;--case-gallery-gap:${style.galleryGap}px"`;
+    root.innerHTML = `<article class="project-detail" ${presentation}><a class="article-back" href="/${demoPreview?'?demo=1#work':'#work'}">← BACK TO WORK</a><div class="project-detail-kicker">${esc(project.category || 'PROJECT')} / ${esc(project.type || 'CASE STUDY')} / ${esc(project.year || '')}</div><h1>${esc(project.title)}</h1>${project.projectSubtitle ? `<p class="project-detail-subtitle">${esc(project.projectSubtitle)}</p>` : ''}${project.client ? `<p class="project-detail-client">${esc(project.client)}${project.role ? ` · ${esc(project.role)}` : ''}</p>` : ''}<figure class="project-detail-hero-frame">${image(project.coverImage, project.title, 'project-detail-hero')}<figcaption><span>PROJECT PREVIEW</span><small>Full presentation below</small></figcaption></figure>${blocks.length ? `<div class="case-blocks">${blocks.map(renderBlock).join('')}</div>` : `${renderGallery(project.gallery, project.title)}${renderLegacy(project)}`}${nextProject ? `<a class="next-project" href="/work/${encodeURIComponent(nextProject.slug)}${demoPreview?'?demo=1':''}"><span>NEXT PROJECT</span><strong>${esc(nextProject.title)} →</strong>${image(nextProject.coverImage, '')}</a>` : ''}</article>`;
     classifyProjectMedia(root);
   }
 

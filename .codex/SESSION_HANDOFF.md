@@ -720,3 +720,13 @@ Always reconcile these notes with the actual repository before resuming.
 3. Added the corresponding contract to `scripts/frontend-regressions.test.mjs`; it has not been executed yet by design.
 4. P4-005 and P4-006 are dependency-blocked by truthful P4-003 content, not unfinished code. P3-007 and P5-005 remain blocked for their documented external/data dependencies.
 5. Exact next action: run the single consolidated local validation gate, then perform the authorized Preview-only backup validation and `SKIP_EXISTING` restore drill, update recovery evidence, commit/push the Preview branch once, and inspect the resulting Vercel deployment. Never push main/production without separate authorization.
+
+## Current handoff — case-study presentation controls (2026-11-12)
+
+1. Current branch is `codex/v2-preview-2026-11-01`; main/production is not authorized.
+2. Implemented an additive nullable `Project.caseStudyStyle` JSON field and migration `0026_case_study_style`.
+3. CMS Project editor controls: hero aspect, hero fit, focal point, gallery columns, standard board max width, long board max width and gallery gap.
+4. Public renderer keeps `AUTO` backward-compatible and applies validated/clamped per-project values to both modular and legacy galleries.
+5. Verification passed: Prisma generate/validate, TypeScript typecheck/build, three JS syntax checks, `git diff --check`, and 38/38 focused frontend/commercial/Behance tests.
+6. Not yet visually verified: authenticated CMS save/round-trip and deployed desktop/mobile rendering.
+7. Next exact action: review the final diff, commit and push the authorized Preview branch, wait for Vercel deployment/migration, then browser-check default and customized presentation behavior. Do not push main.

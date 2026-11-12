@@ -41,3 +41,18 @@ test('project CMS exposes a matching flagship readiness workflow',async()=>{
   assert.match(css,/\.case-readiness__grid/);
   assert.match(css,/@media\(max-width:580px\)/);
 });
+
+test('case-study presentation is stored and editable through the CMS',async()=>{
+  const [schema,migration,routes,admin,form,project,styles]=await Promise.all([
+    read('prisma/schema.prisma'),read('prisma/migrations/0026_case_study_style/migration.sql'),read('src/routes/admin.ts'),read('portfolio/admin.js'),read('portfolio/admin-case-study.js'),read('portfolio/project.js'),read('portfolio/styles.css')
+  ]);
+  assert.match(schema,/caseStudyStyle\s+Json\?/);
+  assert.match(migration,/ADD COLUMN "caseStudyStyle" JSONB/);
+  for(const key of ['heroAspect','heroFit','heroFocalPoint','galleryColumns','galleryMaxWidth','longBoardMaxWidth','galleryGap']){
+    assert.match(routes,new RegExp(key));
+    assert.match(form,new RegExp(key));
+    assert.match(project,new RegExp(key));
+  }
+  assert.match(admin,/caseStudyStyle:window\.getCaseStudyStyle/);
+  assert.match(styles,/--case-gallery-max/);
+});

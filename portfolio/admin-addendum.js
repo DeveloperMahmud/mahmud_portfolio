@@ -1,5 +1,5 @@
 (() => {
-  if(!document.querySelector('script[data-case-study-admin]')){const script=document.createElement('script');script.src='/admin-case-study.js?v=20261101-1';script.defer=true;script.dataset.caseStudyAdmin='';document.head.append(script)}
+  if(!document.querySelector('script[data-case-study-admin]')){const script=document.createElement('script');script.src='/admin-case-study.js?v=20261112-2';script.defer=true;script.dataset.caseStudyAdmin='';document.head.append(script)}
   const side=document.querySelector('.admin-sidebar');
   const dashboardButton=side?.querySelector('[data-tab="dashboard"]');
   dashboardButton?.insertAdjacentHTML('afterend','<button class="side-btn tab" data-tab="analytics">ANALYTICS</button>');

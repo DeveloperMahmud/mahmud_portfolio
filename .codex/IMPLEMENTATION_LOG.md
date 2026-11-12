@@ -1053,3 +1053,13 @@
 - Commit `e75ba51` reached the stable Preview alias. Both focused presentations rendered at 463x698; ArrowRight changed the progress state, and the public project step resolved the published TMNT evidence and work link.
 - The Page Studio technical page rendered all ten evidence sections with no scaffold placeholder, horizontal overflow or console errors. P4-005, P4-006 and P5-005 are `VERIFIED`.
 - The remaining restore drill was not attempted: the recorded backup file is absent and the current CMS browser session is signed out. Browser Use also rejects direct navigation to the text/XML crawler endpoints, so those remain unverified rather than being misreported as failures.
+
+## 2026-11-12 — CMS-controlled case-study presentation
+
+- Confirmed the polished Behance media rules were automatic frontend defaults, not editable CMS properties.
+- Added nullable `Project.caseStudyStyle` with an additive PostgreSQL JSONB migration and strict server validation.
+- Added friendly Project editor controls for hero ratio/fit/focal point and gallery columns/widths/gap; raw JSON editing is not required.
+- Added safe frontend normalization, per-project data attributes/CSS variables, explicit aspect/fit/focal overrides, configurable modular grids and legacy-gallery support.
+- Existing projects remain visually unchanged through `AUTO`, 900px standard-board, 780px long-board and 16px gap defaults.
+- Added regression coverage for schema, migration, CMS payload, renderer and CSS contract.
+- Passed Prisma generate/validate, `npm.cmd run typecheck`, `npm.cmd run build`, JS syntax checks, `git diff --check`, and 38/38 focused tests. Preview deployment and authenticated visual round-trip remain pending.
