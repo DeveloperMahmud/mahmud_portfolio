@@ -8,6 +8,7 @@
 4. Focused validation passes 33/33 plus syntax, TypeScript and diff checks.
 5. Exact next action: push Preview, visually compare long and landscape projects on desktop/mobile, then leave `main` untouched until separately authorized.
 6. First live measurement: frame 1120×630, complete board 780×2235, no overflow/logs; a follow-up bounds the cropped hero image itself to 1120×630 before final acceptance.
+7. Project CSS cache revision is `20261112-case-media-2`; do not verify the earlier revision.
 
 ## 2026-11-12 release handoff
 
