@@ -143,7 +143,7 @@ test('admin navigation remains discoverable and keyboard accessible on mobile',a
   assert.match(runtime,/id=\"adminMenuToggle\"/);
   assert.match(runtime,/aria-controls=\"adminSidebar\"/);
   assert.match(runtime,/admin-mobile-nav\.css/);
-  assert.match(html,/admin\.js\?v=20261102-4/);
+  assert.match(html,/admin\.js\?v=20261112-image-presentation-1/);
   assert.match(runtime,/admin-mobile-nav\.css\?v=20261102-1/);
   assert.match(css,/@media\(max-width:1050px\)/);
   assert.match(css,/body\.admin-menu-open \.admin-sidebar\{transform:translateX\(0\)/);
@@ -169,7 +169,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/#admin-/);
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
-  assert.match(html,/admin\.js\?v=20261102-4/);
+  assert.match(html,/admin\.js\?v=20261112-image-presentation-1/);
   assert.match(html,/admin-page-studio\.js\?v=20261102-11/);
   assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
@@ -243,7 +243,7 @@ test('homepage uses the native cursor without a perpetual cursor animation loop'
   const [source,index]=await Promise.all([read('portfolio/app.js'),read('portfolio/index.html')]);
   assert.doesNotMatch(source,/classList\.add\('home-custom-cursor'\)/);
   assert.doesNotMatch(index,/<div class="cursor"/);
-  assert.match(index,/app\.js\?v=20261028-1/);
+  assert.match(index,/app\.js\?v=20261112-project-links-1/);
 });
 
 test('homepage proof content is manageable and reusable across both studios',async()=>{
@@ -333,5 +333,51 @@ test('public loading frames remain intentional and multiline conversion headings
   const [styles,index]=await Promise.all([read('portfolio/styles.css'),read('portfolio/index.html')]);
   assert.match(styles,/\.project-media-wrap\{[^}]*radial-gradient\(circle at 78% 18%/);
   assert.match(styles,/\.contact-inner h2\{line-height:\.88\}/);
-  assert.match(index,/styles\.css\?v=20261028-2/);
+  assert.match(index,/styles\.css\?v=20261112-project-links-1/);
+});
+
+test('homepage project thumbnails are native case-study links, not lightbox targets',async()=>{
+  const [app,viewer,styles,index]=await Promise.all([
+    read('portfolio/app.js'),
+    read('portfolio/image-viewer.js'),
+    read('portfolio/styles.css'),
+    read('portfolio/index.html')
+  ]);
+  assert.match(app,/<a class="project-card"[^>]*href="\/work\/\$\{encodeURIComponent\(p\.slug\)\}/);
+  assert.doesNotMatch(app,/<article class="project-card"/);
+  assert.match(viewer,/closest\?\.\('\.project-card,\.featured-slide'\)/);
+  assert.match(styles,/\.project-card \.project-image\{cursor:pointer\}/);
+  assert.match(index,/app\.js\?v=20261112-project-links-1/);
+  assert.match(index,/image-viewer\.js\?v=20261112-project-links-1/);
+  assert.match(index,/styles\.css\?v=20261112-project-links-1/);
+});
+
+test('case-study media adapts long Behance boards without tiny letterboxed heroes',async()=>{
+  const [project,styles,html]=await Promise.all([
+    read('portfolio/project.js'),
+    read('portfolio/styles.css'),
+    read('portfolio/project.html')
+  ]);
+  assert.match(project,/classifyProjectMedia/);
+  assert.match(project,/standalone\.classList\.add\(`is-\$\{shape\}`\)/);
+  assert.match(project,/standalone && shape === 'long'/);
+  assert.match(project,/project-detail-hero-frame/);
+  assert.match(project,/items\.length === 1 \? ' is-single'/);
+  assert.match(styles,/\.project-detail-hero-frame\{[^}]*aspect-ratio:16\/9/);
+  assert.match(styles,/\.project-detail-hero-frame \.project-detail-hero\{position:absolute;inset:0;[^}]*height:100%/);
+  assert.match(project,/normalizeCaseStudyStyle/);
+  assert.match(project,/data-gallery-columns/);
+  assert.match(styles,/\.case-gallery\.is-single\.has-long-media img\{width:min\(100%,var\(--case-long-board-max,780px\)\)\}/);
+  assert.match(styles,/data-hero-focal="CUSTOM"/);
+  assert.match(styles,/\.case-image\.full-bleed\{width:min\(100%,var\(--case-gallery-max,900px\)\)/);
+  assert.match(styles,/\.case-image\.full-bleed\.has-long-media\{width:min\(100%,var\(--case-long-board-max,780px\)\)\}/);
+  assert.match(project,/normalizeImagePresentation/);
+  assert.match(project,/imagePresentationAttributes/);
+  assert.match(project,/data-media-width/);
+  assert.match(styles,/data-media-width="FULL"/);
+  assert.match(styles,/data-media-fit="CONTAIN"/);
+  assert.match(styles,/data-media-frame="CARD"/);
+  assert.match(styles,/data-mobile-aspect="PORTRAIT"/);
+  assert.match(html,/project\.js\?v=20261112-image-presentation-1/);
+  assert.match(html,/styles\.css\?v=20261112-image-presentation-1/);
 });

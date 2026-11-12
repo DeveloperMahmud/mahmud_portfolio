@@ -1,5 +1,49 @@
 # Session Handoff
 
+## 2026-11-12 case-study board containment handoff
+
+1. Affected route: `/work/color-changing-lip-cheek-tint-amazon-premium-a-plus`.
+2. Before the fix, `.case-image.full-bleed` measured 1280px in a 1280px viewport despite a 1120px project column.
+3. `classifyProjectMedia` now marks standalone images by aspect and flags long boards.
+4. Full-bleed blocks now use `--case-gallery-max` (900px default); long boards use `--case-long-board-max` (780px default), centered with a restrained frame/caption.
+5. Project assets use the `20261112-editorial-boards-1` cache key.
+6. Verification passes: JS syntax, 44/44 focused tests, typecheck, build and diff check.
+7. Commit `cd2000f` is live on Preview; Browser QA measured the loaded 1464x3600 board at 780px wide, centered at x=242.4 in a 1280px viewport, with `is-long has-long-media` and no horizontal overflow.
+8. No follow-up is required for this layout defect. Main remains untouched.
+
+## 2026-11-12 project-card navigation handoff
+
+1. Preview reproduction proved that thumbnail clicks opened `.image-viewer` and did not change the homepage URL.
+2. `portfolio/app.js` now renders native project-card anchors to `/work/:slug`.
+3. `portfolio/image-viewer.js` ignores `.project-card` and `.featured-slide` navigation surfaces; case-study gallery images still open in the viewer.
+4. Homepage JS, viewer and stylesheet URLs use `20261112-project-links-1` cache keys.
+5. Verification passes: JS syntax, 44/44 focused tests, typecheck, build and diff check.
+6. Commit `cc7503f` is live on Preview; app, image viewer and stylesheet all serve the `20261112-project-links-1` cache key.
+7. Browser acceptance passed: clicking the first project thumbnail navigated to `/work/asf`, `.project-detail` rendered, and `.image-viewer` remained closed.
+8. No follow-up is required for this defect. Main remains untouched.
+
+## 2026-11-12 gallery preset deployment handoff
+
+1. Commit `8e56754` is pushed and the stable Preview alias serves `project.js?v=20261112-layout-presets-1` plus `styles.css?v=20261112-layout-presets-1`.
+2. Public TMNT verification at 1280x720 confirms AUTO defaults and no horizontal overflow.
+3. Preview CMS is signed out. Its deployed shell revealed a stale `admin-addendum.js` cache key that could load the old case-study editor.
+4. The worktree now cache-busts the admin addendum URL and asserts both loader versions in the focused regression suite.
+5. Post-fix checks pass: 43/43 tests, typecheck, build and diff check.
+6. Cache fix `d93c729` is pushed and stable-alias Browser QA confirms `admin-addendum.js?v=20261112-layout-presets-1` loads `admin-case-study.js?v=20261112-3`.
+7. Remaining optional acceptance: sign in to Preview CMS and perform one non-production save/reload round trip. Main remains untouched.
+
+## 2026-11-12 case-study media handoff
+
+1. Current branch: `codex/v2-preview-2026-11-01`.
+2. `project.js` classifies rendered images from natural dimensions and applies hero/gallery treatments without changing CMS records.
+3. `styles.css` gives tall covers an intentional editorial crop and keeps complete long boards centered at readable width.
+4. Focused validation passes 33/33 plus syntax, TypeScript and diff checks.
+5. Completed: Preview visual comparison passes for representative long and landscape projects; leave `main` untouched until separately authorized.
+6. First live measurement: frame 1120×630, complete board 780×2235, no overflow/logs; a follow-up bounds the cropped hero image itself to 1120×630 before final acceptance.
+7. Project CSS cache revision is `20261112-case-media-2`; do not verify the earlier revision.
+8. Final CSS cache revision is `20261112-case-media-3`; every hero reserves its responsive stage before image decode.
+9. Final evidence: 1120×630 hero stage/image, centered 780×2235 long board, no fallback, no overflow and no browser logs.
+
 ## 2026-11-12 release handoff
 
 1. The worktree contains ten additional Behance case studies plus fifteen verified local media assets.
@@ -7,8 +51,8 @@
 3. Production seeds are authorized, create-only and idempotent; existing slugs/settings/pages remain untouched.
 4. Local release gate passes completely: 251 tests, smoke, performance, Prisma validation/generation, build and diff check.
 5. Preview commit `22189d2` is deployed and accepted: 10/10 routes, source media, archive inclusion and homepage exclusion pass with zero browser log errors.
-6. Exact next action: squash the entire V2 branch into one `main` release commit and push `main` exactly once.
-7. After the `main` deployment, verify the production archive and ten routes. Code rollback is one commit revert; additive seeded records require CMS unpublish for data-level rollback.
+6. Completed: `main` was pushed exactly once at `91f752f`; production acceptance passed all ten routes/media, archive inclusion, homepage exclusion and browser logs. Code rollback is one commit revert; additive seeded records require CMS unpublish for data-level rollback.
+7. Preview is synchronized with the released application tree and retains the later production-acceptance audit records.
 
 ## Active Preview-experience checkpoint - 2026-11-11
 
@@ -708,3 +752,44 @@ Always reconcile these notes with the actual repository before resuming.
 3. Added the corresponding contract to `scripts/frontend-regressions.test.mjs`; it has not been executed yet by design.
 4. P4-005 and P4-006 are dependency-blocked by truthful P4-003 content, not unfinished code. P3-007 and P5-005 remain blocked for their documented external/data dependencies.
 5. Exact next action: run the single consolidated local validation gate, then perform the authorized Preview-only backup validation and `SKIP_EXISTING` restore drill, update recovery evidence, commit/push the Preview branch once, and inspect the resulting Vercel deployment. Never push main/production without separate authorization.
+
+## Current handoff — case-study presentation controls (2026-11-12)
+
+1. Current branch is `codex/v2-preview-2026-11-01`; main/production is not authorized.
+2. Implemented an additive nullable `Project.caseStudyStyle` JSON field and migration `0026_case_study_style`.
+3. CMS Project editor controls: hero aspect, hero fit, focal point, gallery columns, standard board max width, long board max width and gallery gap.
+4. Public renderer keeps `AUTO` backward-compatible and applies validated/clamped per-project values to both modular and legacy galleries.
+5. Verification passed: Prisma generate/validate, TypeScript typecheck/build, three JS syntax checks, `git diff --check`, and 38/38 focused frontend/commercial/Behance tests.
+6. Not yet visually verified: authenticated CMS save/round-trip and deployed desktop/mobile rendering.
+7. Next exact action: review the final diff, commit and push the authorized Preview branch, wait for Vercel deployment/migration, then browser-check default and customized presentation behavior. Do not push main.
+8. Deployment follow-up: `5815335` is on the remote Preview branch and the stable alias serves the new versioned project assets. Default desktop rendering is browser-verified at 1280×720 with a 1120×630 hero and no horizontal overflow.
+9. CMS authentication is absent. The sign-in shell loads, but no project mutation was attempted. Next exact runtime action is an authenticated edit/save/reload check plus mobile verification; main remains unauthorized.
+
+## Current handoff — gallery presets (2026-11-12)
+
+1. Implemented four validated gallery presets: Behance Story, Dribbble Shots, Pinterest Masonry and Editorial Bento; AUTO is backward-compatible.
+2. Added project-level image shape and masonry-column defaults, gallery-block overrides, individual block-image shape selectors, legacy gallery-image selectors and a live CMS schematic preview.
+3. Server validation now accepts the new case-study style keys and legacy gallery `displayShape`; no new database migration is required because `caseStudyStyle` is already JSON.
+4. Public rendering normalizes untrusted block data and scopes preset/shape behavior to each gallery.
+5. Verification passed: build, typecheck, Prisma generate/validate, three JS syntax checks, diff check and 43/43 focused tests.
+6. Current changes are uncommitted. Next exact action: commit/push only `codex/v2-preview-2026-11-01`, wait for stable alias propagation, browser-check default and preset rendering, then update the four records. Never push main without new authorization.
+## Current handoff — image presentation and authorized main promotion (2026-11-12)
+
+1. Owner now authorizes the accepted Preview work, Behance projects and this image-presentation feature to be promoted to `main`; future new/testing work returns to Preview first.
+2. Current branch remains `codex/v2-preview-2026-11-01`; working tree contains the image presentation implementation plus these recovery updates.
+3. CMS controls cover standalone and gallery width/max-width/fit/aspect/alignment/focal/frame/caption/mobile behavior. `AUTO` preserves existing projects; explicit `FULL` enables true bleed.
+4. Validation passed: 45/45 focused tests, TypeScript build, JS syntax and diff check.
+5. Next exact action: commit/push Preview, wait for the stable alias, browser-check default rendering/assets, fetch and inspect `origin/main...origin/codex/v2-preview-2026-11-01`, merge without force, rerun the gate, and push `main` once.
+6. Authenticated CMS save/reload remains `NOT VERIFIED` while the CMS session is signed out; do not claim that runtime mutation was exercised.
+## Preview QA completed before main promotion (2026-11-12)
+
+1. Preview `8ee1bb0` is deployed; public AUTO rendering remains professional and overflow-free on desktop.
+2. CMS shell asset propagation is verified, but authenticated mutation remains unverified because the session is signed out.
+3. Remote divergence after fetch is `1 43` for `origin/main...origin/codex/v2-preview-2026-11-01`; ordinary merge is required and force push is prohibited.
+4. Next exact action: commit/push these QA records to Preview, checkout main, merge Preview with `--no-ff`, resolve only evidence-backed conflicts, rerun focused tests/build/diff check, then push main once and return the working copy to Preview.
+## Main promotion gate passed locally (2026-11-12)
+
+1. A normal merge is in progress on local `main`; resolved tree is identical to `codex/v2-preview-2026-11-01` and retains both histories.
+2. Full Node regressions pass 256/256; typecheck/build, JS syntax and diff check pass.
+3. `prisma validate` is locally blocked only by absent `DATABASE_URL`; do not invent or use production credentials for this check.
+4. Next exact action: stage these final records, create the merge commit, push `main` once, wait for deployment propagation, browser-check main assets/layout, close QA tabs and checkout Preview again.

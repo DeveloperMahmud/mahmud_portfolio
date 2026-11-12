@@ -104,6 +104,7 @@ model Project {
   projectSubtitle   String?
   credits           Json          @default("[]")
   projectBlocks     Json          @default("[]")
+  caseStudyStyle    Json?
   showOnHomepage    Boolean       @default(true)
   homepageOrder     Int           @default(0)
   homepageLayout    String        @default("STANDARD")

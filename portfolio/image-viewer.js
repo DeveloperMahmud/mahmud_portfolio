@@ -56,8 +56,9 @@
   }
   function move(dir){if(items.length<2)return;current=(current+dir+items.length)%items.length;render()}
   document.addEventListener('click',e=>{
-    // Homepage featured-slider images are navigation targets, never lightbox targets.
-    if(e.target.closest?.('.featured-slide'))return;
+    // Homepage project cards and featured slides navigate to case studies.
+    // Image zoom remains available inside the destination project's gallery.
+    if(e.target.closest?.('.project-card,.featured-slide'))return;
     const img=e.target.closest?.(imageSelector);
     if(!img)return;
     e.preventDefault(); e.stopPropagation();

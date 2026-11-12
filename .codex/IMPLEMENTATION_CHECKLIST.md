@@ -1,12 +1,48 @@
 # V2 Implementation Checklist
 
+## Editorial case-study board width - 2026-11-12
+
+- Reproduced the color-changing lip-tint board at 1280px viewport width: the `FULL_BLEED_IMAGE` figure expanded to the full viewport instead of respecting the case-study reading column.
+- Full-bleed presentation boards now use the CMS gallery max width (900px default); extra-tall boards use the long-board max width (780px default).
+- Standalone images receive aspect-aware classes after loading, plus a restrained frame, caption and shadow treatment.
+- Focused suites pass 44/44; JS syntax, typecheck, build and diff check pass. Preview deployment/browser measurement is pending.
+- Preview commit `cd2000f` serves the editorial-board assets. Browser measurement confirms the 1464x3600 board receives `is-long has-long-media`, renders 780px wide and centered at a 1280px viewport, and causes no horizontal overflow. Acceptance is complete.
+
+## Homepage project-card navigation - 2026-11-12
+
+- Reproduced the defect on Preview: clicking a project thumbnail opened the global image viewer and left the homepage URL unchanged.
+- Converted homepage project cards from scripted article links to native `/work/:slug` anchors.
+- Excluded project cards from the image-viewer capture handler while retaining zoom inside project-detail galleries.
+- Added versioned homepage JS/CSS/viewer assets and a regression contract. Focused suites pass 44/44; typecheck, build and diff check pass.
+- Preview deployment and browser click-through acceptance are pending.
+- Preview commit `cc7503f` propagated with all three new asset keys. Browser click-through changed the URL to `/work/asf`, rendered `.project-detail`, and kept the image viewer closed. Acceptance is complete.
+
+## Gallery preset deployment acceptance - 2026-11-12
+
+- Preview commit `8e56754` serves `project.js?v=20261112-layout-presets-1` and `styles.css?v=20261112-layout-presets-1`.
+- The TMNT route exposes backward-compatible AUTO attributes at 1280x720 with no horizontal overflow.
+- Deployed inspection found the CMS shell could reuse an old `admin-addendum.js` URL; the shell loader is now cache-busted and protected by regression assertions.
+- Preview commit `d93c729` now serves `admin-addendum.js?v=20261112-layout-presets-1`, which loads `admin-case-study.js?v=20261112-3`; deployment propagation is browser-verified.
+- Focused tests pass 43/43, with typecheck, build and diff check also passing after the fix.
+- Authenticated CMS save/reload remains unverified because Preview is signed out.
+
+## Case-study media polish - 2026-11-12
+
+- Long Behance boards now receive aspect-aware hero crops instead of tiny letterboxed previews.
+- Single long boards use a centered readable width; multi-image galleries use a consistent two-column desktop and one-column mobile grid.
+- Frontend/Behance tests 33/33, JavaScript syntax, TypeScript and diff checks pass; deployed Preview visual acceptance is `VERIFIED`.
+- Live Preview confirms the corrected hero layer matches its 1120×630 stage and the complete long board centers at 780px with zero fallback, overflow or browser logs.
+- The project-page stylesheet cache key is advanced for the bounded-frame follow-up so Preview cannot retain the first crop implementation.
+- Hero frames now reserve a consistent responsive aspect ratio before media decode, preventing collapsed loading states on uncached landscape assets.
+
 ## Behance production-release checkpoint - 2026-11-12
 
 - Ten additional owner-published projects and verified local media are implemented with create-only, archive-first safeguards.
 - The complete 251-test suite, static smoke 5/5, performance budget, Prisma validation/generation, TypeScript build and diff check pass.
 - Stable Preview browser acceptance passes for all 10 routes: expected H1/title, real local image dimensions, zero media fallbacks and zero browser log entries.
 - The work archive exposes exactly all 10 new slugs; the homepage exposes none, confirming archive-first placement.
-- P8-003 is explicitly authorized for one rollback-friendly `main` push; production verification remains pending.
+- P8-003 production release `91f752f` is `VERIFIED`: `main` was pushed once, all ten routes/media passed, archive count is 10, homepage auto-feature count is 0, and browser logs are empty.
+- Preview branch is synchronized with the released application tree; only its later production-acceptance audit records differ from the squash commit on `main`.
 
 ## Behance commercial case-study checkpoint - 2026-11-11
 
@@ -172,3 +208,12 @@ Implementation-batch follow-up (2026-11-03): the CMS no longer starts the public
 Preview-experience activation checkpoint (2026-11-11): P4-003's four verified Behance records remove the data dependency for P4-005/P4-006/P5-005. A production-skipping, one-time Preview seed activates both presentations, enables public Page Studio, and create-once publishes the technical case study. Existing settings/pages are preserved after initial activation. Focused tests (4+5+5+9+4+4), typecheck, build and diff check pass; tasks remain `IN_PROGRESS` until the deployed routes are browser-verified.
 
 Preview-experience acceptance (2026-11-11): commit `e75ba51` reached the stable Preview alias. Recruiter and client presentations rendered at a 463x698 viewport, ArrowRight advanced the live progress state, and a published Behance case-study step exposed only its public evidence. The technical Page Studio case study rendered all ten sections with no placeholder, horizontal overflow or browser-console errors. P4-005, P4-006 and P5-005 are `VERIFIED`. P8-001/P8-003 remain `IN_PROGRESS`: the prior local backup file is absent and the current CMS session is signed out, so no restore mutation was attempted; Browser Use also blocks direct text/XML navigation to protected crawler endpoints.
+
+Case-study presentation controls (2026-11-12): `caseStudyStyle` is now an additive nullable Project JSON property with validated CMS controls for hero aspect/fit/focal point, gallery columns, standard/long-board widths and spacing. Existing records retain the current responsive `AUTO` defaults. Prisma generation/validation, TypeScript typecheck/build, JavaScript syntax, diff check and the focused Behance/commercial/frontend suites (38/38) pass. Status is `TESTED`; Preview deployment and authenticated CMS round-trip/visual verification remain pending.
+
+Preview propagation (2026-11-12): commit `5815335` reached the stable Preview alias with `project.js?v=20261112-case-media-2` and `styles.css?v=20261112-case-media-4`. The TMNT detail page exposes the expected AUTO data attributes/default CSS variables, renders a 1120×630 desktop hero and has no horizontal overflow. Public default behavior is browser-verified; authenticated editor controls and save round-trip remain unverified because the CMS session is signed out.
+
+Gallery preset module (2026-11-12): Project presentation now supports validated Behance Story, Dribbble Shots, Pinterest Masonry and Editorial Bento presets, a project-wide image shape default, 2–4 masonry columns, gallery-block overrides and individual image shape overrides. The CMS includes a live schematic preview and friendly controls while existing AUTO projects remain unchanged. Build, Prisma validation, JS syntax, diff check and focused case-study/frontend suites (43/43) pass; Preview deployment/browser QA is pending.
+Image module presentation controls (2026-11-12): Standalone and gallery images now accept validated width/container, max-width, fit, aspect, alignment, focal point, frame, caption and mobile overrides from the existing Project CMS. `AUTO` preserves all accepted Behance/default layouts, while explicit `FULL` restores intentional viewport bleed. Focused commercial/frontend/Behance/V2 suites pass 45/45, TypeScript build passes and `git diff --check` is clean. Status is `TESTED`; Preview deployment/browser regression and authenticated persistence remain pending before authorized main promotion.
+Preview image presentation acceptance (2026-11-12): Preview commit `8ee1bb0` reached the stable branch alias. The color-changing lip/cheek Behance board retained `AUTO`/`AUTO` presentation, rendered centered at 780px inside a 1265px page and produced no horizontal overflow. The CMS shell serves `admin-case-study.js?v=20261112-3` and `admin.js?v=20261112-image-presentation-1`. Public default rendering is `VISUALLY VERIFIED` on desktop; authenticated save/reload and mobile browser interaction remain `NOT VERIFIED` because the CMS session is signed out and browser viewport emulation is unavailable.
+Main promotion gate (2026-11-12): The normal merge result is tree-identical to Preview while retaining the unique `main` release commit. Full Node regressions pass 256/256; TypeScript typecheck/build, three JavaScript syntax checks and `git diff --check` pass. `prisma validate` is environment-blocked locally because `DATABASE_URL` is absent, not because of a schema diagnostic. Main push and deployment verification remain pending.

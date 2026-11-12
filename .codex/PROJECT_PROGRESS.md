@@ -1,5 +1,39 @@
 # Project Progress
 
+## 2026-11-12 - Professional case-study image containment
+
+- Diagnosed the unprofessional full-width board as the legacy `100vw` rule on `FULL_BLEED_IMAGE` blocks.
+- Standalone boards are now centered within CMS-controlled maximum widths: 900px for standard boards and 780px for extra-tall presentations.
+- Aspect classification, frame styling and caption treatment are responsive and preserve the existing image viewer.
+- Local verification passes 44/44 focused tests, JS syntax, typecheck, build and diff check. Preview browser verification is next.
+- Commit `cd2000f` is live. Browser QA confirms the affected 1464x3600 board is centered at 780px in a 1280px viewport after aspect classification, with no horizontal overflow.
+
+## 2026-11-12 - Project-card navigation correction
+
+- Root cause: the global lightbox capture listener treated homepage project thumbnails as standalone zoomable media and stopped card navigation.
+- Homepage cards are now real `/work/:slug` links, and the lightbox ignores card thumbnails while remaining enabled within case-study pages.
+- Versioned assets and a regression test prevent cached or future reintroduction of the conflict.
+- Local verification passes 44/44 focused tests, typecheck, build and diff check. Preview deployment/browser verification is next.
+- Commit `cc7503f` is live on Preview. A real thumbnail click navigated from the homepage to `/work/asf`, rendered the project detail and did not open the image viewer; this correction is browser-verified.
+
+## 2026-11-12 - Gallery preset deployment follow-up
+
+- Commit `8e56754` is live on the stable Preview alias; public project assets resolve to the new layout-preset versions.
+- The TMNT page retains AUTO presentation defaults and has no horizontal overflow at 1280x720.
+- A stale admin shell loader version was identified during deployed inspection and fixed by cache-busting `admin-addendum.js`; regression coverage now prevents the shell and case-study module versions from drifting silently.
+- Commit `d93c729` propagated to the stable alias and Browser QA confirms the new addendum and case-study editor asset versions load.
+- Post-fix verification passes 43/43 focused tests, typecheck, build and diff check. The CMS is signed out, so authenticated control rendering and persistence are not claimed as verified.
+
+## 2026-11-12 - Case-study visual refinement
+
+- Diagnosed the odd presentation as a layout issue: tall source boards were squeezed into a wide `object-fit: contain` hero and single-board galleries inherited a half-width grid cell.
+- Added natural-dimension media classification, editorial hero framing, centered readable long-board widths and consistent responsive galleries.
+- Local validation passes 33/33 focused tests, project JavaScript syntax, TypeScript and diff checks. Preview deployment/browser comparison is next.
+- First Preview measurement confirmed the intended 16:9 frame and 780px centered full board, then exposed an oversized internal image layer; the follow-up positions the crop to the frame bounds.
+- The stylesheet URL now uses the second case-media revision to make the corrected frame deterministic at the edge/browser cache.
+- Landscape QA exposed a pre-decode collapse; the final media stage now reserves 16:9 desktop and 4:3 mobile geometry for every project, with shape-aware focal positioning after load.
+- Final Preview acceptance: landscape and long heroes both measure 1120×630, the long source artwork remains 1464×4200, its complete gallery presentation centers at 780×2235, and fallback/overflow/log counts are zero.
+
 ## 2026-11-12 - Ten-project Behance release candidate
 
 - Collected ten additional owner-published Behance projects and bundled fifteen verified source images under `portfolio/assets/case-studies/behance/`.
@@ -7,7 +41,8 @@
 - Production activation is authorized and remains create-only/idempotent; no existing record or CMS setting is overwritten.
 - Local acceptance passes: 251/251 tests, 5/5 smoke checks, performance budget, Prisma validation/generation, TypeScript build and diff check.
 - Preview commit `22189d2` is deployed. Browser acceptance passes all ten routes with real source media, zero fallbacks/log errors, exact archive inclusion and no homepage auto-feature placement.
-- Next action: publish one squash release commit to `main` and verify production.
+- Released as single squash commit `91f752f` on `main`. Production browser acceptance passes 10/10 routes, source media, archive-first placement and empty browser logs.
+- The released application tree and whitespace cleanup are synchronized to `codex/v2-preview-2026-11-01`; Preview retains its additional acceptance audit history.
 
 ## Preview presentation and technical case-study implementation - 2026-11-11
 
@@ -476,3 +511,41 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Apply P2-001 migration to a populated database copy/target before promoting it to VERIFIED.
 - Run HTTP/browser verification for `/hire` and `/studio` when database connectivity is available.
 - Implement Phases 2–8 in dependency order, checkpointing after every meaningful task.
+
+## Case-study CMS presentation controls — 2026-11-12
+
+- Audited the Behance layout polish and confirmed that media sources were CMS-managed but the new crop/grid behavior was code-level only.
+- Added optional `Project.caseStudyStyle` JSON via additive migration `0026_case_study_style`; no existing record requires a backfill and `AUTO` preserves the accepted layout.
+- The Project editor now exposes hero aspect, fit, focal point, gallery columns, standard-board width, long-board width and gallery gap.
+- The public case-study renderer normalizes every value, clamps numeric ranges and applies scoped CSS variables/data attributes to modular and legacy galleries.
+- Local verification: Prisma generate/validate, typecheck, build, JS syntax, diff check and focused tests 38/38 passed.
+- Pending: commit/push only to `codex/v2-preview-2026-11-01`, wait for the Preview migration/deploy, then verify one default project and one CMS-customized project at desktop/mobile. Main remains untouched.
+- Commit `5815335` is pushed and the stable Preview alias serves the new JS/CSS. Browser evidence on the TMNT project confirms AUTO attributes, 900px/780px/16px variables, a 1120×630 hero and no desktop horizontal overflow. CMS is signed out, so a customized save/round-trip and mobile viewport remain pending; main is still untouched.
+
+## Gallery preset module — 2026-11-12
+
+- Researched first-party Behance project/photo-grid guidance, current Dribbble shot discovery, and Pinterest board/Pin organization before defining portfolio-native presets rather than cloning external interfaces.
+- Added project presets: `BEHANCE_STORY`, `DRIBBBLE_SHOTS`, `PINTEREST_MASONRY`, and `EDITORIAL_BENTO`, with `AUTO` preserving the current accepted layout.
+- Added default image shapes: Auto, Original, Square 1:1, Rectangle 4:3, Wide 16:9, Portrait 4:5 and Tall 2:3.
+- Added three control levels: project defaults, GALLERY/IMAGE_GRID block overrides, and individual image overrides. Legacy gallery thumbnails also expose an individual shape selector.
+- Added a CMS schematic preset preview and responsive public CSS; masonry uses 2–4 CMS columns, reduces on mobile and avoids splitting an image across columns.
+- Passed build/typecheck, Prisma validation/generation, JS syntax, diff check and 43/43 focused tests. Next: push Preview, confirm deployed assets, inspect default and preset rendering, and record remaining authenticated CMS limits.
+## Image module presentation controls — 2026-11-12
+
+- Added CMS-managed standalone/gallery image width (`AUTO`, narrow, container, wide, full, custom), max width, fit, aspect, alignment, focal point, frame, caption and mobile presentation overrides.
+- The contract is stored inside existing Project/block JSON and requires no schema migration. Server validation clamps ranges and rejects unsupported values.
+- Public rendering preserves accepted `AUTO` layouts; explicit `FULL` is the opt-in viewport-bleed mode. Responsive mobile overrides are scoped per image.
+- Local evidence: focused suites 45/45, TypeScript build, JS syntax and diff check pass.
+- Next: deploy to Preview, browser-check a default Behance case study and CMS shell assets, then reconcile Preview/main histories and promote the accepted Preview set to main under the owner's new authorization.
+## Image presentation Preview acceptance — 2026-11-12
+
+- Preview commit `8ee1bb0` is live on the stable branch alias with the new project/CMS assets.
+- Existing Behance AUTO behavior is visually accepted on desktop: a long board is centered at 780px and `scrollWidth === clientWidth === 1265`.
+- CMS asset propagation is verified while signed out; authenticated edit/save/reload and a real mobile viewport remain pending and are not represented as accepted.
+- The owner has authorized merging the accepted Preview history into `main`; fetch evidence shows main has one unique release commit and Preview has 43 unique commits. Promotion must use a normal merge, never force push.
+## Main integration gate — 2026-11-12
+
+- Accepted Preview content is merged locally into main without force and the resulting tree matches Preview exactly.
+- Full regression evidence: 256/256 Node tests; TypeScript typecheck/build; admin/project/case-study JavaScript syntax; clean diff check.
+- Local Prisma validation remains environment-blocked by missing `DATABASE_URL`; Preview deployment already completed migrations/build successfully for this content.
+- Next: complete the merge commit, push main once, verify the deployed main site/assets, then return the local working branch to Preview for future experiments.
