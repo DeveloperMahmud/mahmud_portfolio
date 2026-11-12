@@ -6,6 +6,7 @@
 - Homepage cards are now real `/work/:slug` links, and the lightbox ignores card thumbnails while remaining enabled within case-study pages.
 - Versioned assets and a regression test prevent cached or future reintroduction of the conflict.
 - Local verification passes 44/44 focused tests, typecheck, build and diff check. Preview deployment/browser verification is next.
+- Commit `cc7503f` is live on Preview. A real thumbnail click navigated from the homepage to `/work/asf`, rendered the project detail and did not open the image viewer; this correction is browser-verified.
 
 ## 2026-11-12 - Gallery preset deployment follow-up
 

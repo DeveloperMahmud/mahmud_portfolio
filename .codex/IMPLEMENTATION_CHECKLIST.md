@@ -7,6 +7,7 @@
 - Excluded project cards from the image-viewer capture handler while retaining zoom inside project-detail galleries.
 - Added versioned homepage JS/CSS/viewer assets and a regression contract. Focused suites pass 44/44; typecheck, build and diff check pass.
 - Preview deployment and browser click-through acceptance are pending.
+- Preview commit `cc7503f` propagated with all three new asset keys. Browser click-through changed the URL to `/work/asf`, rendered `.project-detail`, and kept the image viewer closed. Acceptance is complete.
 
 ## Gallery preset deployment acceptance - 2026-11-12
 

@@ -7,7 +7,9 @@
 3. `portfolio/image-viewer.js` ignores `.project-card` and `.featured-slide` navigation surfaces; case-study gallery images still open in the viewer.
 4. Homepage JS, viewer and stylesheet URLs use `20261112-project-links-1` cache keys.
 5. Verification passes: JS syntax, 44/44 focused tests, typecheck, build and diff check.
-6. Next exact action: commit/push only the Preview branch, wait for propagation, click a project thumbnail and confirm navigation to its case-study URL without opening the lightbox. Main remains untouched.
+6. Commit `cc7503f` is live on Preview; app, image viewer and stylesheet all serve the `20261112-project-links-1` cache key.
+7. Browser acceptance passed: clicking the first project thumbnail navigated to `/work/asf`, `.project-detail` rendered, and `.image-viewer` remained closed.
+8. No follow-up is required for this defect. Main remains untouched.
 
 ## 2026-11-12 gallery preset deployment handoff
 

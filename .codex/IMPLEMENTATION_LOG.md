@@ -7,6 +7,7 @@
 - Added an explicit `.project-card` exclusion to the image viewer; project detail galleries remain zoomable.
 - Corrected the homepage thumbnail cursor and cache-busted `app.js`, `image-viewer.js` and `styles.css`.
 - Added regression coverage and passed 44/44 focused tests, JS syntax, typecheck, build and diff check. Preview browser acceptance remains pending.
+- Pushed `cc7503f`. Stable-alias Browser QA confirmed the homepage serves the new app/viewer/style versions, cards render as anchors, and clicking the thumbnail navigates to `/work/asf` with the detail view visible and no lightbox.
 
 ## 2026-11-12 - Gallery preset deployment and cache follow-up
 
