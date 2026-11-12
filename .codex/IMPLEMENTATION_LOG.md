@@ -1122,3 +1122,10 @@
 - Performed a normal `--no-ff` merge, resolving duplicate snapshot conflicts in favor of the accepted Preview files. The resulting working tree has no content diff from Preview and preserves both histories.
 - Passed the complete Node regression set (256/256), TypeScript typecheck/build, JavaScript syntax checks and diff check.
 - `prisma validate` could not run in this local shell because `DATABASE_URL` is absent; no schema validation error beyond the missing environment variable was reported.
+## 2026-11-12 — CMS project drag ordering
+
+- Added drag-and-drop ordering to the existing Projects list, with up/down buttons as keyboard/mobile fallback.
+- Added a single validated `/admin/projects/reorder` endpoint that updates only `sortOrder` inside a Prisma transaction and records one activity entry.
+- Limited reorder writes to ADMIN/EDITOR and disabled reorder while search filtering is active.
+- No database migration, new dependency or unrelated UI change was introduced.
+- Passed 32/32 focused tests, TypeScript typecheck/build, admin JavaScript syntax and `git diff --check`. Owner authorized direct main deployment.

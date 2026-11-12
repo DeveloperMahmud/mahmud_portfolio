@@ -549,3 +549,9 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Full regression evidence: 256/256 Node tests; TypeScript typecheck/build; admin/project/case-study JavaScript syntax; clean diff check.
 - Local Prisma validation remains environment-blocked by missing `DATABASE_URL`; Preview deployment already completed migrations/build successfully for this content.
 - Next: complete the merge commit, push main once, verify the deployed main site/assets, then return the local working branch to Preview for future experiments.
+## CMS project ordering — 2026-11-12
+
+- Projects can now be reordered directly in the admin list by drag/drop or ↑/↓ controls; the visible order is persisted through canonical `sortOrder` values.
+- The save is atomic, validates duplicate/unavailable IDs and does not mutate project copy, media, publication status or timestamps beyond the order field.
+- Local gate passed: focused suites 32/32, typecheck/build, JS syntax and diff check.
+- Next: commit and push directly to main per owner instruction, confirm production serves the new versioned admin asset, and report authenticated drag persistence as unverified unless a signed-in controllable session is available.

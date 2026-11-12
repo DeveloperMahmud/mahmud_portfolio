@@ -90,5 +90,19 @@ test('CMS image presentation controls are validated and remain backward compatib
   assert.match(project,/data-media-width/);
   assert.match(styles,/data-media-width="FULL"/);
   assert.match(styles,/data-mobile-width="FULL"/);
-  assert.match(html,/admin\.js\?v=20261112-image-presentation-1/);
+  assert.match(html,/admin\.js\?v=20261112-project-order-1/);
+});
+
+test('project order is draggable, accessible and persisted atomically',async()=>{
+  const [routes,admin,styles,html]=await Promise.all([read('src/routes/admin.ts'),read('portfolio/admin.js'),read('portfolio/styles.css'),read('portfolio/admin.html')]);
+  assert.match(routes,/router\.post\('\/projects\/reorder'/);
+  assert.match(routes,/db\.\$transaction\(ids\.map/);
+  assert.match(routes,/duplicate IDs/);
+  assert.match(admin,/project-drag-handle/);
+  assert.match(admin,/dragstart/);
+  assert.match(admin,/js-project-up/);
+  assert.match(admin,/CLEAR SEARCH TO REORDER/);
+  assert.match(admin,/\/admin\/projects\/reorder/);
+  assert.match(styles,/\.project-sort-item\.is-drag-target/);
+  assert.match(html,/styles\.css\?v=20261112-project-order-1/);
 });

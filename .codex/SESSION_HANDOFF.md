@@ -793,3 +793,10 @@ Always reconcile these notes with the actual repository before resuming.
 2. Full Node regressions pass 256/256; typecheck/build, JS syntax and diff check pass.
 3. `prisma validate` is locally blocked only by absent `DATABASE_URL`; do not invent or use production credentials for this check.
 4. Next exact action: stage these final records, create the merge commit, push `main` once, wait for deployment propagation, browser-check main assets/layout, close QA tabs and checkout Preview again.
+## Direct-main project ordering handoff (2026-11-12)
+
+1. Current branch is `main`; owner explicitly requested this small feature bypass Preview and deploy directly to production.
+2. Implemented project drag/drop ordering, accessible up/down fallback and atomic server persistence; no migration or dependency change.
+3. Validation passed: 32/32 focused tests, typecheck/build, JS syntax and diff check.
+4. Next exact action: commit once, push main once, wait for `mahmudportfolio-azure.vercel.app/admin.html` to serve `admin.js?v=20261112-project-order-1`, then leave the worktree clean.
+5. Authenticated drag/save/reload remains `NOT VERIFIED` unless the production CMS session becomes controllable; do not claim it from static tests alone.
