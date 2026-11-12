@@ -1,5 +1,13 @@
 # Implementation Log
 
+## 2026-11-12 - Homepage project cards open case studies
+
+- Browser reproduction confirmed the global image viewer intercepted `.project-image` clicks before the project card navigation handler.
+- Replaced scripted `article[role=link]` cards with semantic anchors pointing directly to `/work/:slug`, restoring normal click, keyboard and new-tab behavior.
+- Added an explicit `.project-card` exclusion to the image viewer; project detail galleries remain zoomable.
+- Corrected the homepage thumbnail cursor and cache-busted `app.js`, `image-viewer.js` and `styles.css`.
+- Added regression coverage and passed 44/44 focused tests, JS syntax, typecheck, build and diff check. Preview browser acceptance remains pending.
+
 ## 2026-11-12 - Gallery preset deployment and cache follow-up
 
 - Pushed `8e56754` to the Preview branch; the stable alias now serves the versioned public layout-preset JS/CSS.

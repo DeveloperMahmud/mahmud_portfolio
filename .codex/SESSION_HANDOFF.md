@@ -1,5 +1,14 @@
 # Session Handoff
 
+## 2026-11-12 project-card navigation handoff
+
+1. Preview reproduction proved that thumbnail clicks opened `.image-viewer` and did not change the homepage URL.
+2. `portfolio/app.js` now renders native project-card anchors to `/work/:slug`.
+3. `portfolio/image-viewer.js` ignores `.project-card` and `.featured-slide` navigation surfaces; case-study gallery images still open in the viewer.
+4. Homepage JS, viewer and stylesheet URLs use `20261112-project-links-1` cache keys.
+5. Verification passes: JS syntax, 44/44 focused tests, typecheck, build and diff check.
+6. Next exact action: commit/push only the Preview branch, wait for propagation, click a project thumbnail and confirm navigation to its case-study URL without opening the lightbox. Main remains untouched.
+
 ## 2026-11-12 gallery preset deployment handoff
 
 1. Commit `8e56754` is pushed and the stable Preview alias serves `project.js?v=20261112-layout-presets-1` plus `styles.css?v=20261112-layout-presets-1`.

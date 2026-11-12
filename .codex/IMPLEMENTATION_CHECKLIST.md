@@ -1,5 +1,13 @@
 # V2 Implementation Checklist
 
+## Homepage project-card navigation - 2026-11-12
+
+- Reproduced the defect on Preview: clicking a project thumbnail opened the global image viewer and left the homepage URL unchanged.
+- Converted homepage project cards from scripted article links to native `/work/:slug` anchors.
+- Excluded project cards from the image-viewer capture handler while retaining zoom inside project-detail galleries.
+- Added versioned homepage JS/CSS/viewer assets and a regression contract. Focused suites pass 44/44; typecheck, build and diff check pass.
+- Preview deployment and browser click-through acceptance are pending.
+
 ## Gallery preset deployment acceptance - 2026-11-12
 
 - Preview commit `8e56754` serves `project.js?v=20261112-layout-presets-1` and `styles.css?v=20261112-layout-presets-1`.

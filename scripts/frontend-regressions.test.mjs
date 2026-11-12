@@ -243,7 +243,7 @@ test('homepage uses the native cursor without a perpetual cursor animation loop'
   const [source,index]=await Promise.all([read('portfolio/app.js'),read('portfolio/index.html')]);
   assert.doesNotMatch(source,/classList\.add\('home-custom-cursor'\)/);
   assert.doesNotMatch(index,/<div class="cursor"/);
-  assert.match(index,/app\.js\?v=20261028-1/);
+  assert.match(index,/app\.js\?v=20261112-project-links-1/);
 });
 
 test('homepage proof content is manageable and reusable across both studios',async()=>{
@@ -333,7 +333,23 @@ test('public loading frames remain intentional and multiline conversion headings
   const [styles,index]=await Promise.all([read('portfolio/styles.css'),read('portfolio/index.html')]);
   assert.match(styles,/\.project-media-wrap\{[^}]*radial-gradient\(circle at 78% 18%/);
   assert.match(styles,/\.contact-inner h2\{line-height:\.88\}/);
-  assert.match(index,/styles\.css\?v=20261028-2/);
+  assert.match(index,/styles\.css\?v=20261112-project-links-1/);
+});
+
+test('homepage project thumbnails are native case-study links, not lightbox targets',async()=>{
+  const [app,viewer,styles,index]=await Promise.all([
+    read('portfolio/app.js'),
+    read('portfolio/image-viewer.js'),
+    read('portfolio/styles.css'),
+    read('portfolio/index.html')
+  ]);
+  assert.match(app,/<a class="project-card"[^>]*href="\/work\/\$\{encodeURIComponent\(p\.slug\)\}/);
+  assert.doesNotMatch(app,/<article class="project-card"/);
+  assert.match(viewer,/closest\?\.\('\.project-card,\.featured-slide'\)/);
+  assert.match(styles,/\.project-card \.project-image\{cursor:pointer\}/);
+  assert.match(index,/app\.js\?v=20261112-project-links-1/);
+  assert.match(index,/image-viewer\.js\?v=20261112-project-links-1/);
+  assert.match(index,/styles\.css\?v=20261112-project-links-1/);
 });
 
 test('case-study media adapts long Behance boards without tiny letterboxed heroes',async()=>{

@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-12 - Project-card navigation correction
+
+- Root cause: the global lightbox capture listener treated homepage project thumbnails as standalone zoomable media and stopped card navigation.
+- Homepage cards are now real `/work/:slug` links, and the lightbox ignores card thumbnails while remaining enabled within case-study pages.
+- Versioned assets and a regression test prevent cached or future reintroduction of the conflict.
+- Local verification passes 44/44 focused tests, typecheck, build and diff check. Preview deployment/browser verification is next.
+
 ## 2026-11-12 - Gallery preset deployment follow-up
 
 - Commit `8e56754` is live on the stable Preview alias; public project assets resolve to the new layout-preset versions.
