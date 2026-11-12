@@ -497,3 +497,12 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Local verification: Prisma generate/validate, typecheck, build, JS syntax, diff check and focused tests 38/38 passed.
 - Pending: commit/push only to `codex/v2-preview-2026-11-01`, wait for the Preview migration/deploy, then verify one default project and one CMS-customized project at desktop/mobile. Main remains untouched.
 - Commit `5815335` is pushed and the stable Preview alias serves the new JS/CSS. Browser evidence on the TMNT project confirms AUTO attributes, 900px/780px/16px variables, a 1120×630 hero and no desktop horizontal overflow. CMS is signed out, so a customized save/round-trip and mobile viewport remain pending; main is still untouched.
+
+## Gallery preset module — 2026-11-12
+
+- Researched first-party Behance project/photo-grid guidance, current Dribbble shot discovery, and Pinterest board/Pin organization before defining portfolio-native presets rather than cloning external interfaces.
+- Added project presets: `BEHANCE_STORY`, `DRIBBBLE_SHOTS`, `PINTEREST_MASONRY`, and `EDITORIAL_BENTO`, with `AUTO` preserving the current accepted layout.
+- Added default image shapes: Auto, Original, Square 1:1, Rectangle 4:3, Wide 16:9, Portrait 4:5 and Tall 2:3.
+- Added three control levels: project defaults, GALLERY/IMAGE_GRID block overrides, and individual image overrides. Legacy gallery thumbnails also expose an individual shape selector.
+- Added a CMS schematic preset preview and responsive public CSS; masonry uses 2–4 CMS columns, reduces on mobile and avoids splitting an image across columns.
+- Passed build/typecheck, Prisma validation/generation, JS syntax, diff check and 43/43 focused tests. Next: push Preview, confirm deployed assets, inspect default and preset rendering, and record remaining authenticated CMS limits.

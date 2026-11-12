@@ -351,6 +351,6 @@ test('case-study media adapts long Behance boards without tiny letterboxed heroe
   assert.match(project,/data-gallery-columns/);
   assert.match(styles,/\.case-gallery\.is-single\.has-long-media img\{width:min\(100%,var\(--case-long-board-max,780px\)\)\}/);
   assert.match(styles,/data-hero-focal="CUSTOM"/);
-  assert.match(html,/project\.js\?v=20261112-case-media-2/);
-  assert.match(html,/styles\.css\?v=20261112-case-media-4/);
+  assert.match(html,/project\.js\?v=20261112-layout-presets-1/);
+  assert.match(html,/styles\.css\?v=20261112-layout-presets-1/);
 });

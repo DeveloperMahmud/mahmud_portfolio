@@ -74,10 +74,32 @@ async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fe
       heroFit: option(style.heroFit, ['AUTO', 'COVER', 'CONTAIN'], 'AUTO'),
       heroFocalPoint: focal,
       galleryColumns: option(style.galleryColumns, ['AUTO', 'ONE', 'TWO', 'THREE'], 'AUTO'),
+      galleryPreset: option(style.galleryPreset, ['AUTO', 'BEHANCE_STORY', 'DRIBBBLE_SHOTS', 'PINTEREST_MASONRY', 'EDITORIAL_BENTO'], 'AUTO'),
+      imageShape: option(style.imageShape, ['AUTO', 'ORIGINAL', 'SQUARE', 'LANDSCAPE', 'WIDE', 'PORTRAIT', 'TALL'], 'AUTO'),
+      masonryColumns: pixels(style.masonryColumns, 3, 2, 4),
       galleryMaxWidth: pixels(style.galleryMaxWidth, 900, 480, 1120),
       longBoardMaxWidth: pixels(style.longBoardMaxWidth, 780, 480, 1120),
       galleryGap: pixels(style.galleryGap, 16, 0, 48)
     };
+  }
+
+  function galleryPresentation(data = {}, projectStyle = normalizeCaseStudyStyle(project?.caseStudyStyle)) {
+    const presets = ['AUTO', 'BEHANCE_STORY', 'DRIBBBLE_SHOTS', 'PINTEREST_MASONRY', 'EDITORIAL_BENTO'];
+    const shapes = ['AUTO', 'ORIGINAL', 'SQUARE', 'LANDSCAPE', 'WIDE', 'PORTRAIT', 'TALL'];
+    const requestedColumns = data.masonryColumns === undefined ? Number.NaN : Number(data.masonryColumns);
+    return {
+      preset: presets.includes(data.layoutPreset) ? data.layoutPreset : projectStyle.galleryPreset,
+      shape: shapes.includes(data.imageShape) ? data.imageShape : projectStyle.imageShape,
+      masonryColumns: Number.isFinite(requestedColumns) ? Math.min(4, Math.max(2, Math.round(requestedColumns))) : projectStyle.masonryColumns
+    };
+  }
+
+  function galleryImage(item, fallbackAlt, defaultShape = 'AUTO') {
+    const media = typeof item === 'string' ? { url: item } : item || {};
+    const allowed = ['AUTO', 'ORIGINAL', 'SQUARE', 'LANDSCAPE', 'WIDE', 'PORTRAIT', 'TALL'];
+    const requested = media.displayShape || media.shape;
+    const shape = allowed.includes(requested) && requested !== 'AUTO' ? requested : defaultShape;
+    return media.url ? `<img data-display-shape="${allowed.includes(shape) ? shape : 'AUTO'}" src="${esc(media.url)}" alt="${esc(media.alt || fallbackAlt || '')}" loading="lazy" decoding="async">` : '';
   }
 
   function safeEmbed(url) {
@@ -99,7 +121,8 @@ async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fe
       case 'IMAGE_GRID':
       case 'GALLERY': {
         const items = data.items || data.images || [];
-        return `<section class="case-block case-gallery${items.length === 1 ? ' is-single' : ''}">${items.map(item => image(item.url || item, item.alt || project?.title)).join('')}</section>`;
+        const layout = galleryPresentation(data);
+        return `<section class="case-block case-gallery${items.length === 1 ? ' is-single' : ''}" data-gallery-preset="${layout.preset}" data-image-shape="${layout.shape}" style="--case-masonry-columns:${layout.masonryColumns}">${items.map(item => galleryImage(item, project?.title, layout.shape)).join('')}</section>`;
       }
       case 'VIDEO': {
         const embed = safeEmbed(data.embedUrl || data.url || '');
@@ -126,7 +149,8 @@ async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fe
 
   let project = null;
   function renderGallery(items, fallbackAlt) {
-    return items?.length ? `<section class="project-detail-gallery${items.length === 1 ? ' is-single' : ''}">${items.map(item => `<figure>${image(item.url || item, item.alt || fallbackAlt)}${item.alt ? `<figcaption>${esc(item.alt)}</figcaption>` : ''}</figure>`).join('')}</section>` : '';
+    const layout = galleryPresentation();
+    return items?.length ? `<section class="project-detail-gallery${items.length === 1 ? ' is-single' : ''}" data-gallery-preset="${layout.preset}" data-image-shape="${layout.shape}" style="--case-masonry-columns:${layout.masonryColumns}">${items.map(item => { const media=typeof item==='string'?{url:item}:item||{};return `<figure>${galleryImage(media, fallbackAlt, layout.shape)}${media.alt ? `<figcaption>${esc(media.alt)}</figcaption>` : ''}</figure>`}).join('')}</section>` : '';
   }
 
   function renderLegacy(project) {
@@ -143,7 +167,7 @@ async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fe
     const blocks = Array.isArray(project.projectBlocks) ? project.projectBlocks.filter(block => block.enabled !== false).sort((a, b) => a.sortOrder - b.sortOrder) : [];
     const style = normalizeCaseStudyStyle(project.caseStudyStyle);
     const focal = style.heroFocalPoint === 'AUTO' ? '50% 50%' : style.heroFocalPoint;
-    const presentation = `data-hero-aspect="${style.heroAspect}" data-hero-fit="${style.heroFit}" data-hero-focal="${style.heroFocalPoint === 'AUTO' ? 'AUTO' : 'CUSTOM'}" data-gallery-columns="${style.galleryColumns}" style="--case-hero-focal:${focal};--case-gallery-max:${style.galleryMaxWidth}px;--case-long-board-max:${style.longBoardMaxWidth}px;--case-gallery-gap:${style.galleryGap}px"`;
+    const presentation = `data-hero-aspect="${style.heroAspect}" data-hero-fit="${style.heroFit}" data-hero-focal="${style.heroFocalPoint === 'AUTO' ? 'AUTO' : 'CUSTOM'}" data-gallery-columns="${style.galleryColumns}" data-gallery-preset="${style.galleryPreset}" data-image-shape="${style.imageShape}" style="--case-hero-focal:${focal};--case-gallery-max:${style.galleryMaxWidth}px;--case-long-board-max:${style.longBoardMaxWidth}px;--case-gallery-gap:${style.galleryGap}px;--case-masonry-columns:${style.masonryColumns}"`;
     root.innerHTML = `<article class="project-detail" ${presentation}><a class="article-back" href="/${demoPreview?'?demo=1#work':'#work'}">← BACK TO WORK</a><div class="project-detail-kicker">${esc(project.category || 'PROJECT')} / ${esc(project.type || 'CASE STUDY')} / ${esc(project.year || '')}</div><h1>${esc(project.title)}</h1>${project.projectSubtitle ? `<p class="project-detail-subtitle">${esc(project.projectSubtitle)}</p>` : ''}${project.client ? `<p class="project-detail-client">${esc(project.client)}${project.role ? ` · ${esc(project.role)}` : ''}</p>` : ''}<figure class="project-detail-hero-frame">${image(project.coverImage, project.title, 'project-detail-hero')}<figcaption><span>PROJECT PREVIEW</span><small>Full presentation below</small></figcaption></figure>${blocks.length ? `<div class="case-blocks">${blocks.map(renderBlock).join('')}</div>` : `${renderGallery(project.gallery, project.title)}${renderLegacy(project)}`}${nextProject ? `<a class="next-project" href="/work/${encodeURIComponent(nextProject.slug)}${demoPreview?'?demo=1':''}"><span>NEXT PROJECT</span><strong>${esc(nextProject.title)} →</strong>${image(nextProject.coverImage, '')}</a>` : ''}</article>`;
     classifyProjectMedia(root);
   }

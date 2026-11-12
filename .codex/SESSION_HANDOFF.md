@@ -732,3 +732,12 @@ Always reconcile these notes with the actual repository before resuming.
 7. Next exact action: review the final diff, commit and push the authorized Preview branch, wait for Vercel deployment/migration, then browser-check default and customized presentation behavior. Do not push main.
 8. Deployment follow-up: `5815335` is on the remote Preview branch and the stable alias serves the new versioned project assets. Default desktop rendering is browser-verified at 1280×720 with a 1120×630 hero and no horizontal overflow.
 9. CMS authentication is absent. The sign-in shell loads, but no project mutation was attempted. Next exact runtime action is an authenticated edit/save/reload check plus mobile verification; main remains unauthorized.
+
+## Current handoff — gallery presets (2026-11-12)
+
+1. Implemented four validated gallery presets: Behance Story, Dribbble Shots, Pinterest Masonry and Editorial Bento; AUTO is backward-compatible.
+2. Added project-level image shape and masonry-column defaults, gallery-block overrides, individual block-image shape selectors, legacy gallery-image selectors and a live CMS schematic preview.
+3. Server validation now accepts the new case-study style keys and legacy gallery `displayShape`; no new database migration is required because `caseStudyStyle` is already JSON.
+4. Public rendering normalizes untrusted block data and scopes preset/shape behavior to each gallery.
+5. Verification passed: build, typecheck, Prisma generate/validate, three JS syntax checks, diff check and 43/43 focused tests.
+6. Current changes are uncommitted. Next exact action: commit/push only `codex/v2-preview-2026-11-01`, wait for stable alias propagation, browser-check default and preset rendering, then update the four records. Never push main without new authorization.

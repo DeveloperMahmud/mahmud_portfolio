@@ -48,11 +48,28 @@ test('case-study presentation is stored and editable through the CMS',async()=>{
   ]);
   assert.match(schema,/caseStudyStyle\s+Json\?/);
   assert.match(migration,/ADD COLUMN "caseStudyStyle" JSONB/);
-  for(const key of ['heroAspect','heroFit','heroFocalPoint','galleryColumns','galleryMaxWidth','longBoardMaxWidth','galleryGap']){
+  for(const key of ['heroAspect','heroFit','heroFocalPoint','galleryColumns','galleryPreset','imageShape','masonryColumns','galleryMaxWidth','longBoardMaxWidth','galleryGap']){
     assert.match(routes,new RegExp(key));
     assert.match(form,new RegExp(key));
     assert.match(project,new RegExp(key));
   }
   assert.match(admin,/caseStudyStyle:window\.getCaseStudyStyle/);
   assert.match(styles,/--case-gallery-max/);
+});
+
+test('gallery presets support narrative, shot, masonry and per-image shape workflows',async()=>{
+  const [routes,admin,form,project,styles]=await Promise.all([read('src/routes/admin.ts'),read('portfolio/admin.js'),read('portfolio/admin-case-study.js'),read('portfolio/project.js'),read('portfolio/styles.css')]);
+  for(const preset of ['BEHANCE_STORY','DRIBBBLE_SHOTS','PINTEREST_MASONRY','EDITORIAL_BENTO']){
+    assert.match(routes,new RegExp(preset));
+    assert.match(form,new RegExp(preset));
+    assert.match(styles,new RegExp(`data-gallery-preset="${preset}"`));
+  }
+  for(const shape of ['SQUARE','LANDSCAPE','WIDE','PORTRAIT','TALL'])assert.match(project,new RegExp(`'${shape}'`));
+  assert.match(admin,/GALLERY LAYOUT MODULE/);
+  assert.match(admin,/data-block-item-shape/);
+  assert.match(admin,/data-gallery-shape/);
+  assert.match(form,/casePresetPreview/);
+  assert.match(form,/refreshLayoutPreview/);
+  assert.match(project,/galleryPresentation/);
+  assert.match(project,/galleryImage/);
 });

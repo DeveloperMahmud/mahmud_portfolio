@@ -1066,3 +1066,13 @@
 - Pushed commit `5815335` to `codex/v2-preview-2026-11-01`. The stable alias changed from the old `case-media-1/3` assets to `case-media-2/4`.
 - Browser inspection of the TMNT project confirmed AUTO hero/gallery attributes, default 900px/780px/16px CSS variables, a 1120×630 desktop hero and no horizontal overflow.
 - The Preview CMS shows its sign-in shell, so presentation-control UI and save persistence were not authenticated or mutated. Extra verification tabs were closed, preserving the owner's existing Behance tab.
+
+## 2026-11-12 — Behance/Dribbble/Pinterest-inspired gallery presets
+
+- Reviewed first-party Behance project/photo-grid documentation, Dribbble's current shot discovery surface, and Pinterest board/Pin organization to identify narrative, uniform-card and variable-height collection patterns.
+- Extended the existing `caseStudyStyle` JSON contract with gallery preset, image shape and masonry column controls; existing AUTO records require no migration or backfill.
+- Added a project-wide Gallery Layout Module with a schematic live preview.
+- Extended GALLERY and IMAGE_GRID block editing with preset/default-shape/masonry overrides and individual item shape selectors while retaining raw JSON portability.
+- Extended legacy gallery thumbnails with per-image display-shape selection.
+- Added safe public normalization and responsive renderers for Behance Story, Dribbble Shots, Pinterest Masonry and Editorial Bento.
+- Added regression contracts and passed build/typecheck, Prisma generate/validate, JS syntax, diff check and 43/43 focused tests. Preview deployment and visual QA remain pending.
