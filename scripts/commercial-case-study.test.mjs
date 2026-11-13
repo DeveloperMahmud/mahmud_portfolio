@@ -98,7 +98,7 @@ test('CMS image presentation controls are validated and remain backward compatib
   assert.match(project,/data-media-width/);
   assert.match(styles,/data-media-width="FULL"/);
   assert.match(styles,/data-mobile-width="FULL"/);
-  assert.match(html,/admin\.js\?v=20261113-gallery-ui-1/);
+  assert.match(html,/admin\.js\?v=20261113-collection-library-1/);
 });
 
 test('project order is draggable, accessible and persisted atomically',async()=>{
@@ -112,5 +112,5 @@ test('project order is draggable, accessible and persisted atomically',async()=>
   assert.match(admin,/CLEAR SEARCH TO REORDER/);
   assert.match(admin,/\/admin\/projects\/reorder/);
   assert.match(styles,/\.project-sort-item\.is-drag-target/);
-  assert.match(html,/styles\.css\?v=20261112-project-order-1/);
+  assert.match(html,/styles\.css\?v=20261113-collection-library-1/);
 });

@@ -143,7 +143,7 @@ test('admin navigation remains discoverable and keyboard accessible on mobile',a
   assert.match(runtime,/id=\"adminMenuToggle\"/);
   assert.match(runtime,/aria-controls=\"adminSidebar\"/);
   assert.match(runtime,/admin-mobile-nav\.css/);
-  assert.match(html,/admin\.js\?v=20261113-gallery-ui-1/);
+  assert.match(html,/admin\.js\?v=20261113-collection-library-1/);
   assert.match(runtime,/admin-mobile-nav\.css\?v=20261102-1/);
   assert.match(css,/@media\(max-width:1050px\)/);
   assert.match(css,/body\.admin-menu-open \.admin-sidebar\{transform:translateX\(0\)/);
@@ -169,7 +169,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/#admin-/);
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
-  assert.match(html,/admin\.js\?v=20261113-gallery-ui-1/);
+  assert.match(html,/admin\.js\?v=20261113-collection-library-1/);
   assert.match(html,/admin-page-studio\.js\?v=20261102-11/);
   assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
@@ -380,4 +380,25 @@ test('case-study media adapts long Behance boards without tiny letterboxed heroe
   assert.match(styles,/data-mobile-aspect="PORTRAIT"/);
   assert.match(html,/project\.js\?v=20261112-image-presentation-1/);
   assert.match(html,/styles\.css\?v=20261112-image-presentation-1/);
+});
+
+test('project and journal workspaces open on their libraries and reveal editors on demand',async()=>{
+  const [admin,styles,html]=await Promise.all([
+    read('portfolio/admin.js'),
+    read('portfolio/styles.css'),
+    read('portfolio/admin.html')
+  ]);
+  assert.match(admin,/collectionEditorConfig/);
+  assert.match(admin,/data-collection-new/);
+  assert.match(admin,/\+ NEW PROJECT/);
+  assert.match(admin,/\+ NEW JOURNAL \/ BLOG/);
+  assert.match(admin,/showCollectionEditor\('project'\)/);
+  assert.match(admin,/showCollectionEditor\('content'\)/);
+  assert.match(admin,/setCollectionEditor\('project',false\)/);
+  assert.match(admin,/setCollectionEditor\('content',false\)/);
+  assert.match(styles,/#projectsTab>section:first-child,#contentTab>section:first-child\{display:none\}/);
+  assert.match(styles,/\.is-editor-open>section:first-child/);
+  assert.match(styles,/\.is-editor-open>section:nth-child\(2\)/);
+  assert.match(html,/admin\.js\?v=20261113-collection-library-1/);
+  assert.match(html,/styles\.css\?v=20261113-collection-library-1/);
 });

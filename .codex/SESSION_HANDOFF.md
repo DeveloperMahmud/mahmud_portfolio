@@ -807,3 +807,10 @@ Always reconcile these notes with the actual repository before resuming.
 2. The preview is schematic-only and updates preset/shape/column labels; legacy image settings use responsive cards without changing stored payloads.
 3. Validation passed: 32/32 focused tests, typecheck/build, JS syntax and diff check.
 4. Next exact action: commit once, push main once, and verify production serves version `20261113-gallery-ui-1`; authenticated edit/save interaction remains `NOT VERIFIED` unless a controllable signed-in session is available.
+
+## Direct-main library-first workspace handoff (2026-11-13)
+
+1. Current branch is `main`; owner requested the Projects and Journal/Content create forms move behind explicit New buttons.
+2. Library is the default state; New/Edit opens the editor, while Back/Clear/save returns to the library.
+3. Validation passed: 33/33 focused tests, typecheck/build, JS syntax, diff check and local browser interaction/overflow QA.
+4. Next exact action: commit once, push main once, and confirm production serves `admin.js` and `styles.css` version `20261113-collection-library-1`.

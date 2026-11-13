@@ -1130,6 +1130,13 @@
 - No database migration, new dependency or unrelated UI change was introduced.
 - Passed 32/32 focused tests, TypeScript typecheck/build, admin JavaScript syntax and `git diff --check`. Owner authorized direct main deployment.
 
+## 2026-11-13 — Library-first Projects and Journal workspaces
+
+- Changed Projects and Journal/Content to show existing records by default instead of opening the create form immediately.
+- Added role-aware New Project and New Journal/Blog actions, plus Back navigation from each editor.
+- Routed Edit and dashboard quick actions through the same explicit editor state; successful save and Clear return to the library.
+- Passed 33/33 focused tests, TypeScript typecheck/build, JavaScript syntax and local browser QA for library → editor → library transitions with no horizontal overflow.
+
 ## 2026-11-13 — Gallery editor preview and control-card polish
 
 - Reworked the gallery preset preview into a labelled schematic that immediately reflects preset, default shape and Pinterest column changes while explicitly excluding embedded project content.

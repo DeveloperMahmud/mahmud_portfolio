@@ -562,3 +562,10 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Legacy gallery image settings now render as responsive professional cards rather than narrow vertical control strips.
 - Local gate passed: focused suites 32/32, typecheck/build, JS syntax and diff check; saved data/public rendering remain backward-compatible.
 - Next: commit and push directly to main, then confirm production serves `admin.js`, `admin-addendum.js` and `admin-case-study.css` version `20261113-gallery-ui-1`.
+
+## Library-first collection navigation — 2026-11-13
+
+- Projects and Journal/Content now default to their searchable existing-item libraries; create forms appear only after the matching New action.
+- Edit, dashboard quick-create, Back, Clear and post-save behavior all resolve to an explicit library/editor state.
+- Create actions remain limited to ADMIN, EDITOR and WRITER; the change is frontend-only with no data or API migration.
+- Local gate passed: focused suites 33/33, typecheck/build, JS syntax, clean diff and browser-verified transitions without horizontal overflow.
