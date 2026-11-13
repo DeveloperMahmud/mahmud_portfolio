@@ -432,3 +432,19 @@ test('shared typography roles keep admin, login and public forms readable',async
   assert.match(adminHtml,/typography-system\.css\?v=20261113-typography-1/);
   assert.match(indexHtml,/typography-system\.css\?v=20261113-typography-1/);
 });
+
+test('preview homepage uses a capsule navigation and CMS-compatible full-bleed hero',async()=>{
+  const [html,styles,app]=await Promise.all([
+    read('portfolio/index.html'),
+    read('portfolio/homepage-cinematic-preview.css'),
+    read('portfolio/app.js')
+  ]);
+  assert.match(html,/class="hero hero-cinematic-preview"/);
+  assert.match(html,/assets\/hero-portrait\.png/);
+  assert.match(html,/homepage-cinematic-preview\.css\?v=20261113-1/);
+  assert.match(styles,/border-radius:\s*999px/);
+  assert.match(styles,/\.hero-cinematic-preview \.hero-visual\s*\{[\s\S]*?position:\s*absolute/);
+  assert.match(styles,/\.hero-cinematic-preview \.hero-visual img[\s\S]*?object-fit:\s*cover/);
+  assert.match(styles,/@media \(max-width: 800px\)/);
+  assert.match(app,/document\.querySelector\('\.hero-visual img'\)/);
+});

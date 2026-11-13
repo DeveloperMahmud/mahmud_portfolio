@@ -590,3 +590,10 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - The system is loaded by all 13 primary HTML pages and documented for future components; fluid display headings remain unchanged.
 - Local gate passed: focused suites 35/35, typecheck/build, JavaScript syntax, clean diff and desktop/mobile browser QA without horizontal overflow.
 - Next: commit and push directly to main, then confirm production serves `typography-system.css?v=20261113-typography-1` from admin and public pages.
+
+## Preview capsule navigation and cinematic hero — 2026-11-13
+
+- Preview homepage now uses a floating capsule navigation and full-viewport hero with the portrait integrated into the background rather than confined to a card.
+- Hero copy, typewriter, CTAs and image replacement remain connected to the current CMS selectors; mobile uses the established menu and full-width actions.
+- Local gate passed: 261/261 Node tests, typecheck/build, JavaScript syntax, clean diff and browser visual QA at desktop, intermediate and mobile widths.
+- This experiment belongs only to `codex/v2-preview-2026-11-01`; do not merge or push it to main until the owner accepts the Preview deployment.

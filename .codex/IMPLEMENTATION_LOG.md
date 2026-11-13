@@ -1153,6 +1153,14 @@
 - Documented the rules in `.codex/TYPOGRAPHY_GUIDELINES.md` and added regression coverage for tokens, login sizing, mobile sizing and page inclusion.
 - Passed 35/35 focused tests, TypeScript typecheck/build, JavaScript syntax and diff check; local browser QA verified admin/public/mobile computed sizes without horizontal overflow.
 
+## 2026-11-13 — Preview capsule navigation and cinematic hero
+
+- Synced the current main baseline into `codex/v2-preview-2026-11-01` without changing main.
+- Added a preview-only floating glass capsule header that preserves dynamic CMS navigation and the existing accessible mobile menu.
+- Reframed the existing CMS-controlled hero image as a full-bleed background, selected the bundled portrait as the fallback and retained live semantic copy, typewriter text and CTAs.
+- Added responsive gradients, focal positioning, mobile CTA stacking and reduced-motion behavior without introducing a dependency or schema change.
+- Passed 261/261 Node tests, typecheck/build, JS syntax and diff check; browser QA at 1280px, 1024px and 480px found no overlap or horizontal overflow.
+
 ## 2026-11-13 — Library-first Projects and Journal workspaces
 
 - Changed Projects and Journal/Content to show existing records by default instead of opening the create form immediately.

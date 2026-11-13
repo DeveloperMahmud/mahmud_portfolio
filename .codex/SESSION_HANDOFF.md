@@ -835,3 +835,10 @@ Always reconcile these notes with the actual repository before resuming.
 2. `typography-system.css` is linked from all 13 primary HTML pages and defines reusable caption, label, helper, body, control and button roles; guidance is recorded in `.codex/TYPOGRAPHY_GUIDELINES.md`.
 3. Validation passed: 35/35 focused tests, typecheck/build, JS syntax, diff check and browser-computed desktop/mobile typography with no horizontal overflow.
 4. Next exact action: commit once, push main once, and confirm production admin/index serve `typography-system.css?v=20261113-typography-1`.
+
+## Preview cinematic homepage handoff (2026-11-13)
+
+1. Active branch is `codex/v2-preview-2026-11-01`; main remains at `7e7b2b8` and must stay untouched for this experiment.
+2. `homepage-cinematic-preview.css` provides the floating capsule nav and full-bleed hero while the existing CMS selectors still own navigation, image, text and CTA content.
+3. Validation passed: 261/261 tests, typecheck/build, JS syntax, diff check and 1280/1024/480 browser QA without overlap or horizontal overflow.
+4. Next exact action: commit and push only the Preview branch, then verify the Preview deployment serves `homepage-cinematic-preview.css?v=20261113-1` and leaves origin/main unchanged.
