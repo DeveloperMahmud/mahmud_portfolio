@@ -1130,6 +1130,13 @@
 - No database migration, new dependency or unrelated UI change was introduced.
 - Passed 32/32 focused tests, TypeScript typecheck/build, admin JavaScript syntax and `git diff --check`. Owner authorized direct main deployment.
 
+## 2026-11-13 — Modular Project Builder layout isolation
+
+- Identified a CSS collision where the generic compact `.project-item` grid was applied to modular block editor cards.
+- Added a dedicated `project-block-editor` hook to both block render paths and a narrowly scoped responsive stylesheet for editor content, JSON fields and actions.
+- Added a regression contract that checks the dedicated hook, stylesheet loading, full-width JSON editor and mobile single-column fallback.
+- Passed 34/34 focused tests, TypeScript typecheck/build, JavaScript syntax and `git diff --check`; local browser geometry QA found no horizontal overflow at 1280px or 480px.
+
 ## 2026-11-13 — Library-first Projects and Journal workspaces
 
 - Changed Projects and Journal/Content to show existing records by default instead of opening the create form immediately.

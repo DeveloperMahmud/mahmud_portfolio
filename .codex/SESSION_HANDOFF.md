@@ -814,3 +814,10 @@ Always reconcile these notes with the actual repository before resuming.
 2. Library is the default state; New/Edit opens the editor, while Back/Clear/save returns to the library.
 3. Validation passed: 33/33 focused tests, typecheck/build, JS syntax, diff check and local browser interaction/overflow QA.
 4. Next exact action: commit once, push main once, and confirm production serves `admin.js` and `styles.css` version `20261113-collection-library-1`.
+
+## Direct-main Modular Builder layout handoff (2026-11-13)
+
+1. Current branch is `main`; owner requested this regression repair and related safeguards go directly to production.
+2. Generic collection-row CSS no longer controls Modular Project Builder cards; both legacy and active render paths use `project-block-editor` with a dedicated responsive stylesheet.
+3. Validation passed: 34/34 focused tests, typecheck/build, JS syntax, diff check and desktop/mobile browser geometry QA without horizontal overflow.
+4. Next exact action: commit once, push main once, and confirm production serves `admin.js` and `admin-project-block-editor.css` version `20261113-project-block-layout-1`.

@@ -1,0 +1,93 @@
+/* Modular project builder: isolate editing cards from compact collection rows. */
+#projectBlocksEditor {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.admin-page #projectBlocksEditor > .project-block-editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 18px;
+  align-items: start;
+  min-width: 0;
+  padding: 16px;
+}
+
+.admin-page #projectBlocksEditor > .project-block-editor > div:first-child {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+}
+
+.admin-page #projectBlocksEditor > .project-block-editor > div:first-child > strong {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  font-size: 16px;
+}
+
+.admin-page #projectBlocksEditor > .project-block-editor label {
+  min-width: 0;
+}
+
+.admin-page #projectBlocksEditor > .project-block-editor textarea[data-block-data] {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 180px;
+  margin-top: 7px;
+  box-sizing: border-box;
+  resize: vertical;
+  font: 12px/1.55 ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+}
+
+.admin-page #projectBlocksEditor > .project-block-editor > .item-actions {
+  display: flex !important;
+  grid-column: auto !important;
+  align-self: start;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  width: auto;
+  max-width: 360px;
+}
+
+.admin-page #projectBlocksEditor > .project-block-editor > .item-actions label {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .admin-page #projectBlocksEditor > .project-block-editor {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .admin-page #projectBlocksEditor > .project-block-editor > .item-actions {
+    grid-column: 1 !important;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .admin-page #projectBlocksEditor > .project-block-editor {
+    padding: 13px;
+  }
+
+  .admin-page #projectBlocksEditor > .project-block-editor > .item-actions {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .admin-page #projectBlocksEditor > .project-block-editor > .item-actions label,
+  .admin-page #projectBlocksEditor > .project-block-editor > .item-actions .admin-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

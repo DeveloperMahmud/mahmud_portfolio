@@ -569,3 +569,10 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Edit, dashboard quick-create, Back, Clear and post-save behavior all resolve to an explicit library/editor state.
 - Create actions remain limited to ADMIN, EDITOR and WRITER; the change is frontend-only with no data or API migration.
 - Local gate passed: focused suites 33/33, typecheck/build, JS syntax, clean diff and browser-verified transitions without horizontal overflow.
+
+## Modular Project Builder layout repair — 2026-11-13
+
+- Modular block editing cards are now isolated from the compact Projects collection-row grid, so block names, JSON data and controls retain usable width.
+- Desktop keeps content and actions aligned; tablet/mobile collapse to one content column and mobile actions use a two-column control grid.
+- Local gate passed: focused suites 34/34, typecheck/build, JavaScript syntax and clean diff; browser QA verified 849px/343px editor widths with no horizontal overflow.
+- Next: commit and push directly to main, then confirm production serves `admin.js` and `admin-project-block-editor.css` version `20261113-project-block-layout-1`.
