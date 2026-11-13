@@ -143,7 +143,7 @@ test('admin navigation remains discoverable and keyboard accessible on mobile',a
   assert.match(runtime,/id=\"adminMenuToggle\"/);
   assert.match(runtime,/aria-controls=\"adminSidebar\"/);
   assert.match(runtime,/admin-mobile-nav\.css/);
-  assert.match(html,/admin\.js\?v=20261112-image-presentation-1/);
+  assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
   assert.match(runtime,/admin-mobile-nav\.css\?v=20261102-1/);
   assert.match(css,/@media\(max-width:1050px\)/);
   assert.match(css,/body\.admin-menu-open \.admin-sidebar\{transform:translateX\(0\)/);
@@ -169,7 +169,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/#admin-/);
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
-  assert.match(html,/admin\.js\?v=20261112-image-presentation-1/);
+  assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
   assert.match(html,/admin-page-studio\.js\?v=20261102-11/);
   assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
@@ -380,4 +380,55 @@ test('case-study media adapts long Behance boards without tiny letterboxed heroe
   assert.match(styles,/data-mobile-aspect="PORTRAIT"/);
   assert.match(html,/project\.js\?v=20261112-image-presentation-1/);
   assert.match(html,/styles\.css\?v=20261112-image-presentation-1/);
+});
+
+test('project and journal workspaces open on their libraries and reveal editors on demand',async()=>{
+  const [admin,styles,html]=await Promise.all([
+    read('portfolio/admin.js'),
+    read('portfolio/styles.css'),
+    read('portfolio/admin.html')
+  ]);
+  assert.match(admin,/collectionEditorConfig/);
+  assert.match(admin,/data-collection-new/);
+  assert.match(admin,/\+ NEW PROJECT/);
+  assert.match(admin,/\+ NEW JOURNAL \/ BLOG/);
+  assert.match(admin,/showCollectionEditor\('project'\)/);
+  assert.match(admin,/showCollectionEditor\('content'\)/);
+  assert.match(admin,/setCollectionEditor\('project',false\)/);
+  assert.match(admin,/setCollectionEditor\('content',false\)/);
+  assert.match(styles,/#projectsTab>section:first-child,#contentTab>section:first-child\{display:none\}/);
+  assert.match(styles,/\.is-editor-open>section:first-child/);
+  assert.match(styles,/\.is-editor-open>section:nth-child\(2\)/);
+  assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
+  assert.match(html,/styles\.css\?v=20261113-collection-library-1/);
+});
+
+test('modular project blocks keep full editor geometry instead of collection-row columns',async()=>{
+  const [admin,styles,html]=await Promise.all([
+    read('portfolio/admin.js'),
+    read('portfolio/admin-project-block-editor.css'),
+    read('portfolio/admin.html')
+  ]);
+  assert.equal((admin.match(/class="project-item project-block-editor"/g)||[]).length,2);
+  assert.match(styles,/grid-template-columns:\s*minmax\(0, 1fr\) auto !important/);
+  assert.match(styles,/textarea\[data-block-data\][\s\S]*?width:\s*100%;[\s\S]*?min-height:\s*180px/);
+  assert.match(styles,/> div:first-child > strong[\s\S]*?white-space:\s*normal/);
+  assert.match(styles,/@media \(max-width: 900px\)[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\) !important/);
+  assert.match(html,/admin-project-block-editor\.css\?v=20261113-project-block-layout-1/);
+});
+
+test('shared typography roles keep admin, login and public forms readable',async()=>{
+  const [styles,adminHtml,indexHtml]=await Promise.all([
+    read('portfolio/typography-system.css'),
+    read('portfolio/admin.html'),
+    read('portfolio/index.html')
+  ]);
+  assert.match(styles,/--type-caption:\s*10px/);
+  assert.match(styles,/--type-helper:\s*12px/);
+  assert.match(styles,/--type-control:\s*15px/);
+  assert.match(styles,/body\.admin-page[\s\S]*?--type-control:\s*14px/);
+  assert.match(styles,/#loginForm[\s\S]*?font-size:\s*15px !important/);
+  assert.match(styles,/@media \(max-width: 700px\)[\s\S]*?font-size:\s*16px !important/);
+  assert.match(adminHtml,/typography-system\.css\?v=20261113-typography-1/);
+  assert.match(indexHtml,/typography-system\.css\?v=20261113-typography-1/);
 });

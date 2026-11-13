@@ -1130,3 +1130,39 @@
 - The CMS remains signed out, so authenticated save/reload is still not claimed.
 - The documented custom URL `mahmudportfolio-azure.vercel.app` continued to serve an older versionless build; this appears to be alias/project routing rather than the pushed main branch content.
 - Closed all QA tabs and fast-forwarded the local Preview branch to the main merge so future experiments begin Preview-first.
+## 2026-11-12 — CMS project drag ordering
+
+- Added drag-and-drop ordering to the existing Projects list, with up/down buttons as keyboard/mobile fallback.
+- Added a single validated `/admin/projects/reorder` endpoint that updates only `sortOrder` inside a Prisma transaction and records one activity entry.
+- Limited reorder writes to ADMIN/EDITOR and disabled reorder while search filtering is active.
+- No database migration, new dependency or unrelated UI change was introduced.
+- Passed 32/32 focused tests, TypeScript typecheck/build, admin JavaScript syntax and `git diff --check`. Owner authorized direct main deployment.
+
+## 2026-11-13 — Modular Project Builder layout isolation
+
+- Identified a CSS collision where the generic compact `.project-item` grid was applied to modular block editor cards.
+- Added a dedicated `project-block-editor` hook to both block render paths and a narrowly scoped responsive stylesheet for editor content, JSON fields and actions.
+- Added a regression contract that checks the dedicated hook, stylesheet loading, full-width JSON editor and mobile single-column fallback.
+- Passed 34/34 focused tests, TypeScript typecheck/build, JavaScript syntax and `git diff --check`; local browser geometry QA found no horizontal overflow at 1280px or 480px.
+
+## 2026-11-13 — Shared admin and public typography system
+
+- Audited the UI and found widespread 7–9px interface labels plus inconsistent 13–16px control values.
+- Added a shared, versioned typography stylesheet with semantic caption, label, helper, body, control and button roles across all 13 primary HTML pages.
+- Raised admin form labels, helper text, action labels and metadata to consistent readable sizes; gave the login form a clearer hierarchy and set mobile controls to 16px.
+- Documented the rules in `.codex/TYPOGRAPHY_GUIDELINES.md` and added regression coverage for tokens, login sizing, mobile sizing and page inclusion.
+- Passed 35/35 focused tests, TypeScript typecheck/build, JavaScript syntax and diff check; local browser QA verified admin/public/mobile computed sizes without horizontal overflow.
+
+## 2026-11-13 — Library-first Projects and Journal workspaces
+
+- Changed Projects and Journal/Content to show existing records by default instead of opening the create form immediately.
+- Added role-aware New Project and New Journal/Blog actions, plus Back navigation from each editor.
+- Routed Edit and dashboard quick actions through the same explicit editor state; successful save and Clear return to the library.
+- Passed 33/33 focused tests, TypeScript typecheck/build, JavaScript syntax and local browser QA for library → editor → library transitions with no horizontal overflow.
+
+## 2026-11-13 — Gallery editor preview and control-card polish
+
+- Reworked the gallery preset preview into a labelled schematic that immediately reflects preset, default shape and Pinterest column changes while explicitly excluding embedded project content.
+- Replaced legacy fixed-width image control stacks with responsive cards, contained thumbnails, a two-column field grid and a single-column mobile fallback.
+- Preserved the existing CMS payload and public gallery behavior; no schema, API or dependency change was introduced.
+- Passed 32/32 focused tests, TypeScript typecheck/build, admin JavaScript syntax and `git diff --check`. Owner authorized direct main deployment.

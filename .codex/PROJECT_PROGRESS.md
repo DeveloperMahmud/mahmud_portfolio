@@ -555,3 +555,38 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Main branch alias browser QA passed for assets, long-board containment and horizontal overflow. Authenticated CMS mutation and a real mobile viewport remain unverified.
 - Custom URL follow-up: `mahmudportfolio-azure.vercel.app` still returned an older versionless asset set during the same check; investigate Vercel alias/project assignment separately if that URL is intended as the canonical production domain.
 - Workflow reset: local branch is `codex/v2-preview-2026-11-01`; future new features are implemented and tested here before any later main promotion.
+## CMS project ordering — 2026-11-12
+
+- Projects can now be reordered directly in the admin list by drag/drop or ↑/↓ controls; the visible order is persisted through canonical `sortOrder` values.
+- The save is atomic, validates duplicate/unavailable IDs and does not mutate project copy, media, publication status or timestamps beyond the order field.
+- Local gate passed: focused suites 32/32, typecheck/build, JS syntax and diff check.
+- Next: commit and push directly to main per owner instruction, confirm production serves the new versioned admin asset, and report authenticated drag persistence as unverified unless a signed-in controllable session is available.
+
+## Gallery editor UI polish — 2026-11-13
+
+- Project-wide preset controls now have a direct schematic preview for preset, shape and masonry-column choices; it is intentionally a layout simulation, not an embedded content preview.
+- Legacy gallery image settings now render as responsive professional cards rather than narrow vertical control strips.
+- Local gate passed: focused suites 32/32, typecheck/build, JS syntax and diff check; saved data/public rendering remain backward-compatible.
+- Next: commit and push directly to main, then confirm production serves `admin.js`, `admin-addendum.js` and `admin-case-study.css` version `20261113-gallery-ui-1`.
+
+## Library-first collection navigation — 2026-11-13
+
+- Projects and Journal/Content now default to their searchable existing-item libraries; create forms appear only after the matching New action.
+- Edit, dashboard quick-create, Back, Clear and post-save behavior all resolve to an explicit library/editor state.
+- Create actions remain limited to ADMIN, EDITOR and WRITER; the change is frontend-only with no data or API migration.
+- Local gate passed: focused suites 33/33, typecheck/build, JS syntax, clean diff and browser-verified transitions without horizontal overflow.
+
+## Modular Project Builder layout repair — 2026-11-13
+
+- Modular block editing cards are now isolated from the compact Projects collection-row grid, so block names, JSON data and controls retain usable width.
+- Desktop keeps content and actions aligned; tablet/mobile collapse to one content column and mobile actions use a two-column control grid.
+- Local gate passed: focused suites 34/34, typecheck/build, JavaScript syntax and clean diff; browser QA verified 849px/343px editor widths with no horizontal overflow.
+- Next: commit and push directly to main, then confirm production serves `admin.js` and `admin-project-block-editor.css` version `20261113-project-block-layout-1`.
+
+## Shared typography system — 2026-11-13
+
+- Admin, login and public pages now share semantic typography roles instead of relying on unrelated component sizes.
+- Form controls are 15px public, 14px admin and 16px on mobile; login uses a clearer 10px label, 13px helper, 15px input and 11px action hierarchy.
+- The system is loaded by all 13 primary HTML pages and documented for future components; fluid display headings remain unchanged.
+- Local gate passed: focused suites 35/35, typecheck/build, JavaScript syntax, clean diff and desktop/mobile browser QA without horizontal overflow.
+- Next: commit and push directly to main, then confirm production serves `typography-system.css?v=20261113-typography-1` from admin and public pages.

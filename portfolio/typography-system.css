@@ -1,0 +1,119 @@
+/*
+  Shared typography roles
+  Caption 10px · Label 11px · Helper 12px · Body 14px · Control 15px.
+  Display headings remain fluid in their component styles.
+*/
+:root {
+  --type-caption: 10px;
+  --type-label: 11px;
+  --type-helper: 12px;
+  --type-body: 14px;
+  --type-control: 15px;
+  --type-button: 10px;
+  --type-leading-compact: 1.4;
+  --type-leading-body: 1.65;
+}
+
+body {
+  font-size: var(--type-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body:not(.admin-page) :where(.kicker, .eyebrow) {
+  font-size: var(--type-caption);
+  line-height: var(--type-leading-compact);
+}
+
+body:not(.admin-page) :where(.button, .filter, .shuffle-btn, .nav-cta) {
+  font-size: var(--type-button);
+  line-height: 1.2;
+}
+
+body:not(.admin-page) :where(.project-info p, .project-info .tag, .article-meta, .blog-card-copy small) {
+  font-size: var(--type-caption);
+  line-height: var(--type-leading-compact);
+}
+
+body:not(.admin-page) :where(form label, .inquiry-form label) {
+  font-size: var(--type-label);
+  line-height: var(--type-leading-compact);
+}
+
+body:not(.admin-page) :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]), select, textarea) {
+  font-size: var(--type-control);
+  line-height: 1.45;
+}
+
+body.admin-page {
+  --type-label: 10px;
+  --type-control: 14px;
+}
+
+body.admin-page :where(label, .form-label) {
+  font-size: var(--type-label) !important;
+  line-height: var(--type-leading-compact);
+}
+
+body.admin-page :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="hidden"]), select, textarea) {
+  font-size: var(--type-control) !important;
+  line-height: 1.45;
+}
+
+body.admin-page :where(.notice, .error, .success, label small, .form-label small) {
+  font-size: var(--type-helper) !important;
+  line-height: 1.55;
+}
+
+body.admin-page :where(.kicker, legend, .settings-badge) {
+  font-size: var(--type-caption) !important;
+  line-height: var(--type-leading-compact);
+}
+
+body.admin-page :where(.admin-btn, .tab, .side-btn) {
+  font-size: var(--type-button) !important;
+  line-height: 1.2;
+}
+
+body.admin-page :where(.project-item small, .dash-row small, .media-meta small) {
+  font-size: var(--type-caption) !important;
+  line-height: 1.45;
+}
+
+body.admin-page #loginPanel .notice {
+  max-width: 46ch;
+  font-size: 13px !important;
+  line-height: 1.65;
+}
+
+body.admin-page #loginForm {
+  gap: 16px;
+  margin-top: 22px;
+}
+
+body.admin-page #loginForm label {
+  font-size: var(--type-label) !important;
+}
+
+body.admin-page #loginForm :where(input, select, textarea) {
+  min-height: 48px;
+  padding: 12px 13px;
+  font-size: 15px !important;
+}
+
+body.admin-page #loginForm .admin-btn {
+  min-height: 46px;
+  font-size: 11px !important;
+}
+
+body.admin-page #loginMsg {
+  min-height: 18px;
+  font-size: var(--type-helper);
+  line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+  body :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="hidden"]), select, textarea) {
+    font-size: 16px !important;
+  }
+}

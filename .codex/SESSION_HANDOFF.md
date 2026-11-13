@@ -800,3 +800,38 @@ Always reconcile these notes with the actual repository before resuming.
 3. `mahmudportfolio-azure.vercel.app` still served an older build and may be attached to a different Vercel project/alias. Do not confuse that with Git main push failure.
 4. Current local branch is `codex/v2-preview-2026-11-01`, fast-forwarded to the merge. This final evidence commit belongs only on Preview so main remains a single rollback-friendly promotion commit.
 5. Remaining unverified scope: authenticated image-setting save/reload and real mobile viewport QA.
+## Direct-main project ordering handoff (2026-11-12)
+
+1. Current branch is `main`; owner explicitly requested this small feature bypass Preview and deploy directly to production.
+2. Implemented project drag/drop ordering, accessible up/down fallback and atomic server persistence; no migration or dependency change.
+3. Validation passed: 32/32 focused tests, typecheck/build, JS syntax and diff check.
+4. Next exact action: commit once, push main once, wait for `mahmudportfolio-azure.vercel.app/admin.html` to serve `admin.js?v=20261112-project-order-1`, then leave the worktree clean.
+5. Authenticated drag/save/reload remains `NOT VERIFIED` unless the production CMS session becomes controllable; do not claim it from static tests alone.
+
+## Direct-main gallery UI handoff (2026-11-13)
+
+1. Current branch is `main`; owner explicitly requested the preset-preview and legacy image-control UI changes be deployed directly to production.
+2. The preview is schematic-only and updates preset/shape/column labels; legacy image settings use responsive cards without changing stored payloads.
+3. Validation passed: 32/32 focused tests, typecheck/build, JS syntax and diff check.
+4. Next exact action: commit once, push main once, and verify production serves version `20261113-gallery-ui-1`; authenticated edit/save interaction remains `NOT VERIFIED` unless a controllable signed-in session is available.
+
+## Direct-main library-first workspace handoff (2026-11-13)
+
+1. Current branch is `main`; owner requested the Projects and Journal/Content create forms move behind explicit New buttons.
+2. Library is the default state; New/Edit opens the editor, while Back/Clear/save returns to the library.
+3. Validation passed: 33/33 focused tests, typecheck/build, JS syntax, diff check and local browser interaction/overflow QA.
+4. Next exact action: commit once, push main once, and confirm production serves `admin.js` and `styles.css` version `20261113-collection-library-1`.
+
+## Direct-main Modular Builder layout handoff (2026-11-13)
+
+1. Current branch is `main`; owner requested this regression repair and related safeguards go directly to production.
+2. Generic collection-row CSS no longer controls Modular Project Builder cards; both legacy and active render paths use `project-block-editor` with a dedicated responsive stylesheet.
+3. Validation passed: 34/34 focused tests, typecheck/build, JS syntax, diff check and desktop/mobile browser geometry QA without horizontal overflow.
+4. Next exact action: commit once, push main once, and confirm production serves `admin.js` and `admin-project-block-editor.css` version `20261113-project-block-layout-1`.
+
+## Direct-main typography-system handoff (2026-11-13)
+
+1. Current branch is `main`; owner requested a professional text hierarchy for admin, login and public frontend pages.
+2. `typography-system.css` is linked from all 13 primary HTML pages and defines reusable caption, label, helper, body, control and button roles; guidance is recorded in `.codex/TYPOGRAPHY_GUIDELINES.md`.
+3. Validation passed: 35/35 focused tests, typecheck/build, JS syntax, diff check and browser-computed desktop/mobile typography with no horizontal overflow.
+4. Next exact action: commit once, push main once, and confirm production admin/index serve `typography-system.css?v=20261113-typography-1`.
