@@ -842,3 +842,10 @@ Always reconcile these notes with the actual repository before resuming.
 2. `homepage-cinematic-preview.css` provides the floating capsule nav and full-bleed hero while the existing CMS selectors still own navigation, image, text and CTA content.
 3. Validation passed: 261/261 tests, typecheck/build, JS syntax, diff check and 1280/1024/480 browser QA without overlap or horizontal overflow.
 4. Next exact action: commit and push only the Preview branch, then verify the Preview deployment serves `homepage-cinematic-preview.css?v=20261113-1` and leaves origin/main unchanged.
+
+## Preview homepage themes/modules handoff (2026-11-13)
+
+1. Active branch remains `codex/v2-preview-2026-11-01`; main must remain untouched.
+2. New assets provide the service accordion, two-theme hero runtime/admin manager, compact Skills treatment and dynamic My Process module using existing JSON columns.
+3. The Site Modules save path includes the new `statementConfig` draft while keeping Advanced JSON fallbacks for power users.
+4. Focused tests, typecheck/build, JavaScript syntax and diff check pass. Next: full regression, commit/push Preview only, inspect the deployed Preview URL and verify `origin/main` is unchanged.

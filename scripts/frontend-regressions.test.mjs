@@ -448,3 +448,66 @@ test('preview homepage uses a capsule navigation and CMS-compatible full-bleed h
   assert.match(styles,/@media \(max-width: 800px\)/);
   assert.match(app,/document\.querySelector\('\.hero-visual img'\)/);
 });
+
+test('preview homepage services use a CMS-managed accessible accordion',async()=>{
+  const [html,styles,runtime,manager,managerStyles,pageStudio,moduleLibrary]=await Promise.all([
+    read('portfolio/index.html'),
+    read('portfolio/services-accordion-preview.css'),
+    read('portfolio/services-accordion-preview.js'),
+    read('portfolio/admin-services-manager.js'),
+    read('portfolio/admin-services-manager.css'),
+    read('portfolio/admin-page-studio.js'),
+    read('portfolio/admin-module-library.js')
+  ]);
+  assert.match(html,/services-accordion-preview\.css\?v=20261113-1/);
+  assert.match(html,/services-accordion-preview\.js\?v=20261113-1/);
+  assert.match(runtime,/aria-expanded/);
+  assert.match(runtime,/role="region"/);
+  assert.match(runtime,/MutationObserver/);
+  assert.match(runtime,/window\.renderServiceAccordion/);
+  assert.match(styles,/clip-path:polygon/);
+  assert.match(styles,/\.service-accordion-item\.is-open/);
+  assert.match(styles,/@media\(max-width:760px\)/);
+  assert.match(manager,/\+ ADD SERVICE/);
+  assert.match(manager,/data-service-remove/);
+  assert.match(manager,/data-service-up/);
+  assert.match(manager,/data-service-primary/);
+  assert.match(manager,/capabilitiesConfig/);
+  assert.match(manager,/admin:siteconfigloaded/);
+  assert.match(managerStyles,/\.services-manager-layout/);
+  assert.match(pageStudio,/admin-services-manager\.js/);
+  assert.match(pageStudio,/admin-services-manager\.css/);
+  assert.match(moduleLibrary,/title, description, tags, url, label, primary, enabled, sortOrder/);
+});
+
+test('preview homepage exposes two CMS hero themes plus dynamic skills and process modules',async()=>{
+  const [html,runtime,styles,manager,managerStyles,pageStudio,admin]=await Promise.all([
+    read('portfolio/index.html'),
+    read('portfolio/homepage-theme-modules.js'),
+    read('portfolio/homepage-theme-modules.css'),
+    read('portfolio/admin-homepage-theme-manager.js'),
+    read('portfolio/admin-homepage-theme-manager.css'),
+    read('portfolio/admin-page-studio.js'),
+    read('portfolio/admin.js')
+  ]);
+  assert.match(html,/id="process"/);
+  assert.match(html,/homepage-theme-modules\.js\?v=20261113-1/);
+  assert.match(html,/homepage-theme-modules\.css\?v=20261113-1/);
+  assert.match(runtime,/hero-profile-preview/);
+  assert.match(runtime,/hero-cinematic-preview/);
+  assert.match(runtime,/settings\.statementConfig/);
+  assert.match(runtime,/processTrack/);
+  assert.match(styles,/\.hero-profile-preview/);
+  assert.match(styles,/\.process-track/);
+  assert.match(styles,/\.skills-section \.skill-card/);
+  assert.match(manager,/data-hero-theme="CINEMATIC"/);
+  assert.match(manager,/data-hero-theme="PROFILE"/);
+  assert.match(manager,/heroThemeImageUpload/);
+  assert.match(manager,/statementConfig/);
+  assert.match(manager,/data-process-remove/);
+  assert.match(manager,/stopImmediatePropagation/);
+  assert.match(managerStyles,/\.hero-theme-options/);
+  assert.match(pageStudio,/admin-homepage-theme-manager\.js/);
+  assert.match(pageStudio,/admin-homepage-theme-manager\.css/);
+  assert.match(admin,/skillsConfig/);
+});

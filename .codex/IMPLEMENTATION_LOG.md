@@ -1174,3 +1174,10 @@
 - Replaced legacy fixed-width image control stacks with responsive cards, contained thumbnails, a two-column field grid and a single-column mobile fallback.
 - Preserved the existing CMS payload and public gallery behavior; no schema, API or dependency change was introduced.
 - Passed 32/32 focused tests, TypeScript typecheck/build, admin JavaScript syntax and `git diff --check`. Owner authorized direct main deployment.
+
+## 2026-11-13 — Preview CMS homepage themes and modules
+
+- Added a dark themed service accordion with one-open-at-a-time ARIA behavior and a friendly CMS manager for add, remove, reorder, visibility, tags, links and default-open state.
+- Added mutually exclusive Cinematic Dark and Profile Showcase hero themes using the existing `heroConfig`, including image upload, copy, CTAs, proof, quote, tags and ticker fields.
+- Restyled existing dynamic Skills records as compact tool cards and added an editable My Process module stored in existing `statementConfig`, avoiding a migration.
+- Focused tests pass 30/30; typecheck/build, JavaScript syntax and diff check pass. Deployed Preview visual verification remains the next gate because local file navigation is blocked by browser policy.

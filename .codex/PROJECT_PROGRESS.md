@@ -597,3 +597,10 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Hero copy, typewriter, CTAs and image replacement remain connected to the current CMS selectors; mobile uses the established menu and full-width actions.
 - Local gate passed: 261/261 Node tests, typecheck/build, JavaScript syntax, clean diff and browser visual QA at desktop, intermediate and mobile widths.
 - This experiment belongs only to `codex/v2-preview-2026-11-01`; do not merge or push it to main until the owner accepts the Preview deployment.
+
+## Preview homepage theme selector, services and process — 2026-11-13
+
+- Two CMS-selectable hero themes now share managed content; only one theme can be selected and the whole hero can be hidden.
+- Services render as an accessible shaped accordion with add/remove/reorder/visibility/default-open/tag/link controls in Admin.
+- Skills keep their current CMS library but use compact themed cards. My Process adds editable section copy plus add/remove/reorder/visibility controls for every step.
+- Data stays in existing JSON columns and requires no Prisma migration. Focused tests pass 30/30; typecheck/build and source gates pass. Preview deployment visual verification is pending.
