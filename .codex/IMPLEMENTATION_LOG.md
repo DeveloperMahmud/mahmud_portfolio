@@ -1129,3 +1129,10 @@
 - Limited reorder writes to ADMIN/EDITOR and disabled reorder while search filtering is active.
 - No database migration, new dependency or unrelated UI change was introduced.
 - Passed 32/32 focused tests, TypeScript typecheck/build, admin JavaScript syntax and `git diff --check`. Owner authorized direct main deployment.
+
+## 2026-11-13 — Gallery editor preview and control-card polish
+
+- Reworked the gallery preset preview into a labelled schematic that immediately reflects preset, default shape and Pinterest column changes while explicitly excluding embedded project content.
+- Replaced legacy fixed-width image control stacks with responsive cards, contained thumbnails, a two-column field grid and a single-column mobile fallback.
+- Preserved the existing CMS payload and public gallery behavior; no schema, API or dependency change was introduced.
+- Passed 32/32 focused tests, TypeScript typecheck/build, admin JavaScript syntax and `git diff --check`. Owner authorized direct main deployment.

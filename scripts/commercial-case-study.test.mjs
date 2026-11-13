@@ -35,9 +35,9 @@ test('featured case studies have an evidence-led publish gate',async()=>{
 
 test('project CMS exposes a matching flagship readiness workflow',async()=>{
   const [html,loader,js,css]=await Promise.all([read('portfolio/admin.html'),read('portfolio/admin-addendum.js'),read('portfolio/admin-case-study.js'),read('portfolio/admin-case-study.css')]);
-  assert.match(html,/admin-addendum\.js\?v=20261112-layout-presets-1/);
+  assert.match(html,/admin-addendum\.js\?v=20261113-gallery-ui-1/);
   assert.match(loader,/admin-case-study\.js/);
-  assert.match(loader,/admin-case-study\.js\?v=20261112-3/);
+  assert.match(loader,/admin-case-study\.js\?v=20261113-gallery-ui-1/);
   for(const key of ['role','context','process','deliverables','evidence','outcome'])assert.match(js,new RegExp(`key:'${key}'`));
   assert.match(js,/FEATURED \/ SPECIAL WORK/);
   assert.match(css,/\.case-readiness__grid/);
@@ -60,7 +60,7 @@ test('case-study presentation is stored and editable through the CMS',async()=>{
 });
 
 test('gallery presets support narrative, shot, masonry and per-image shape workflows',async()=>{
-  const [routes,admin,form,project,styles]=await Promise.all([read('src/routes/admin.ts'),read('portfolio/admin.js'),read('portfolio/admin-case-study.js'),read('portfolio/project.js'),read('portfolio/styles.css')]);
+  const [routes,admin,form,project,styles,caseCss]=await Promise.all([read('src/routes/admin.ts'),read('portfolio/admin.js'),read('portfolio/admin-case-study.js'),read('portfolio/project.js'),read('portfolio/styles.css'),read('portfolio/admin-case-study.css')]);
   for(const preset of ['BEHANCE_STORY','DRIBBBLE_SHOTS','PINTEREST_MASONRY','EDITORIAL_BENTO']){
     assert.match(routes,new RegExp(preset));
     assert.match(form,new RegExp(preset));
@@ -71,7 +71,15 @@ test('gallery presets support narrative, shot, masonry and per-image shape workf
   assert.match(admin,/data-block-item-shape/);
   assert.match(admin,/data-gallery-shape/);
   assert.match(form,/casePresetPreview/);
+  assert.match(form,/LIVE LAYOUT PREVIEW/);
+  assert.match(form,/project content is not embedded here/);
+  assert.match(form,/casePresetMeta/);
   assert.match(form,/refreshLayoutPreview/);
+  assert.match(admin,/gallery-control-card/);
+  assert.match(admin,/gallery-card-fields/);
+  assert.match(caseCss,/#galleryPreview\.upload-preview/);
+  assert.match(caseCss,/minmax\(280px,1fr\)/);
+  assert.match(caseCss,/data-shape="WIDE"/);
   assert.match(project,/galleryPresentation/);
   assert.match(project,/galleryImage/);
 });
@@ -85,12 +93,12 @@ test('CMS image presentation controls are validated and remain backward compatib
   assert.match(admin,/data-presentation-field="width"/);
   assert.match(admin,/data-block-item-presentation="fit"/);
   assert.match(admin,/data-gallery-presentation="frame"/);
-  assert.match(form,/admin-case-study\.css\?v=20261112-3/);
+  assert.match(form,/admin-case-study\.css\?v=20261113-gallery-ui-1/);
   assert.match(project,/normalizeImagePresentation/);
   assert.match(project,/data-media-width/);
   assert.match(styles,/data-media-width="FULL"/);
   assert.match(styles,/data-mobile-width="FULL"/);
-  assert.match(html,/admin\.js\?v=20261112-project-order-1/);
+  assert.match(html,/admin\.js\?v=20261113-gallery-ui-1/);
 });
 
 test('project order is draggable, accessible and persisted atomically',async()=>{

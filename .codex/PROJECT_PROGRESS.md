@@ -555,3 +555,10 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - The save is atomic, validates duplicate/unavailable IDs and does not mutate project copy, media, publication status or timestamps beyond the order field.
 - Local gate passed: focused suites 32/32, typecheck/build, JS syntax and diff check.
 - Next: commit and push directly to main per owner instruction, confirm production serves the new versioned admin asset, and report authenticated drag persistence as unverified unless a signed-in controllable session is available.
+
+## Gallery editor UI polish — 2026-11-13
+
+- Project-wide preset controls now have a direct schematic preview for preset, shape and masonry-column choices; it is intentionally a layout simulation, not an embedded content preview.
+- Legacy gallery image settings now render as responsive professional cards rather than narrow vertical control strips.
+- Local gate passed: focused suites 32/32, typecheck/build, JS syntax and diff check; saved data/public rendering remain backward-compatible.
+- Next: commit and push directly to main, then confirm production serves `admin.js`, `admin-addendum.js` and `admin-case-study.css` version `20261113-gallery-ui-1`.

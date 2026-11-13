@@ -143,7 +143,7 @@ test('admin navigation remains discoverable and keyboard accessible on mobile',a
   assert.match(runtime,/id=\"adminMenuToggle\"/);
   assert.match(runtime,/aria-controls=\"adminSidebar\"/);
   assert.match(runtime,/admin-mobile-nav\.css/);
-  assert.match(html,/admin\.js\?v=20261112-project-order-1/);
+  assert.match(html,/admin\.js\?v=20261113-gallery-ui-1/);
   assert.match(runtime,/admin-mobile-nav\.css\?v=20261102-1/);
   assert.match(css,/@media\(max-width:1050px\)/);
   assert.match(css,/body\.admin-menu-open \.admin-sidebar\{transform:translateX\(0\)/);
@@ -169,7 +169,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/#admin-/);
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
-  assert.match(html,/admin\.js\?v=20261112-project-order-1/);
+  assert.match(html,/admin\.js\?v=20261113-gallery-ui-1/);
   assert.match(html,/admin-page-studio\.js\?v=20261102-11/);
   assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);

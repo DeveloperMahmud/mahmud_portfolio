@@ -800,3 +800,10 @@ Always reconcile these notes with the actual repository before resuming.
 3. Validation passed: 32/32 focused tests, typecheck/build, JS syntax and diff check.
 4. Next exact action: commit once, push main once, wait for `mahmudportfolio-azure.vercel.app/admin.html` to serve `admin.js?v=20261112-project-order-1`, then leave the worktree clean.
 5. Authenticated drag/save/reload remains `NOT VERIFIED` unless the production CMS session becomes controllable; do not claim it from static tests alone.
+
+## Direct-main gallery UI handoff (2026-11-13)
+
+1. Current branch is `main`; owner explicitly requested the preset-preview and legacy image-control UI changes be deployed directly to production.
+2. The preview is schematic-only and updates preset/shape/column labels; legacy image settings use responsive cards without changing stored payloads.
+3. Validation passed: 32/32 focused tests, typecheck/build, JS syntax and diff check.
+4. Next exact action: commit once, push main once, and verify production serves version `20261113-gallery-ui-1`; authenticated edit/save interaction remains `NOT VERIFIED` unless a controllable signed-in session is available.
