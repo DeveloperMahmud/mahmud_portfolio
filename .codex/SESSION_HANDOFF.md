@@ -821,3 +821,10 @@ Always reconcile these notes with the actual repository before resuming.
 2. Generic collection-row CSS no longer controls Modular Project Builder cards; both legacy and active render paths use `project-block-editor` with a dedicated responsive stylesheet.
 3. Validation passed: 34/34 focused tests, typecheck/build, JS syntax, diff check and desktop/mobile browser geometry QA without horizontal overflow.
 4. Next exact action: commit once, push main once, and confirm production serves `admin.js` and `admin-project-block-editor.css` version `20261113-project-block-layout-1`.
+
+## Direct-main typography-system handoff (2026-11-13)
+
+1. Current branch is `main`; owner requested a professional text hierarchy for admin, login and public frontend pages.
+2. `typography-system.css` is linked from all 13 primary HTML pages and defines reusable caption, label, helper, body, control and button roles; guidance is recorded in `.codex/TYPOGRAPHY_GUIDELINES.md`.
+3. Validation passed: 35/35 focused tests, typecheck/build, JS syntax, diff check and browser-computed desktop/mobile typography with no horizontal overflow.
+4. Next exact action: commit once, push main once, and confirm production admin/index serve `typography-system.css?v=20261113-typography-1`.

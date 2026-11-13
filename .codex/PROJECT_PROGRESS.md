@@ -576,3 +576,11 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Desktop keeps content and actions aligned; tablet/mobile collapse to one content column and mobile actions use a two-column control grid.
 - Local gate passed: focused suites 34/34, typecheck/build, JavaScript syntax and clean diff; browser QA verified 849px/343px editor widths with no horizontal overflow.
 - Next: commit and push directly to main, then confirm production serves `admin.js` and `admin-project-block-editor.css` version `20261113-project-block-layout-1`.
+
+## Shared typography system — 2026-11-13
+
+- Admin, login and public pages now share semantic typography roles instead of relying on unrelated component sizes.
+- Form controls are 15px public, 14px admin and 16px on mobile; login uses a clearer 10px label, 13px helper, 15px input and 11px action hierarchy.
+- The system is loaded by all 13 primary HTML pages and documented for future components; fluid display headings remain unchanged.
+- Local gate passed: focused suites 35/35, typecheck/build, JavaScript syntax, clean diff and desktop/mobile browser QA without horizontal overflow.
+- Next: commit and push directly to main, then confirm production serves `typography-system.css?v=20261113-typography-1` from admin and public pages.

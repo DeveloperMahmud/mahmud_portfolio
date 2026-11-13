@@ -1137,6 +1137,14 @@
 - Added a regression contract that checks the dedicated hook, stylesheet loading, full-width JSON editor and mobile single-column fallback.
 - Passed 34/34 focused tests, TypeScript typecheck/build, JavaScript syntax and `git diff --check`; local browser geometry QA found no horizontal overflow at 1280px or 480px.
 
+## 2026-11-13 — Shared admin and public typography system
+
+- Audited the UI and found widespread 7–9px interface labels plus inconsistent 13–16px control values.
+- Added a shared, versioned typography stylesheet with semantic caption, label, helper, body, control and button roles across all 13 primary HTML pages.
+- Raised admin form labels, helper text, action labels and metadata to consistent readable sizes; gave the login form a clearer hierarchy and set mobile controls to 16px.
+- Documented the rules in `.codex/TYPOGRAPHY_GUIDELINES.md` and added regression coverage for tokens, login sizing, mobile sizing and page inclusion.
+- Passed 35/35 focused tests, TypeScript typecheck/build, JavaScript syntax and diff check; local browser QA verified admin/public/mobile computed sizes without horizontal overflow.
+
 ## 2026-11-13 — Library-first Projects and Journal workspaces
 
 - Changed Projects and Journal/Content to show existing records by default instead of opening the create form immediately.

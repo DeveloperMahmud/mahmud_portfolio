@@ -416,3 +416,19 @@ test('modular project blocks keep full editor geometry instead of collection-row
   assert.match(styles,/@media \(max-width: 900px\)[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\) !important/);
   assert.match(html,/admin-project-block-editor\.css\?v=20261113-project-block-layout-1/);
 });
+
+test('shared typography roles keep admin, login and public forms readable',async()=>{
+  const [styles,adminHtml,indexHtml]=await Promise.all([
+    read('portfolio/typography-system.css'),
+    read('portfolio/admin.html'),
+    read('portfolio/index.html')
+  ]);
+  assert.match(styles,/--type-caption:\s*10px/);
+  assert.match(styles,/--type-helper:\s*12px/);
+  assert.match(styles,/--type-control:\s*15px/);
+  assert.match(styles,/body\.admin-page[\s\S]*?--type-control:\s*14px/);
+  assert.match(styles,/#loginForm[\s\S]*?font-size:\s*15px !important/);
+  assert.match(styles,/@media \(max-width: 700px\)[\s\S]*?font-size:\s*16px !important/);
+  assert.match(adminHtml,/typography-system\.css\?v=20261113-typography-1/);
+  assert.match(indexHtml,/typography-system\.css\?v=20261113-typography-1/);
+});
