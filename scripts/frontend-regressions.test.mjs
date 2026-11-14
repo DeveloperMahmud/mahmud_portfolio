@@ -170,7 +170,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
-  assert.match(html,/admin-page-studio\.js\?v=20261114-controls-4/);
+  assert.match(html,/admin-page-studio\.js\?v=20261115-context-preview-1/);
   assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
@@ -563,6 +563,29 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   assert.match(managerStyles,/\.preview-spotlight/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.js/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.css/);
-  assert.match(pageStudio,/20261114-controls-4/);
+  assert.match(pageStudio,/20261115-context-preview-1/);
   assert.match(admin,/skillsConfig/);
+});
+
+test('admin homepage previews stay live and long workspaces expose contextual navigation',async()=>{
+  const [manager,managerStyles,index,indexStyles,loader,html]=await Promise.all([
+    read('portfolio/admin-homepage-theme-manager.js'),
+    read('portfolio/admin-homepage-theme-manager.css'),
+    read('portfolio/admin-context-index.js'),
+    read('portfolio/admin-context-index.css'),
+    read('portfolio/admin-page-studio.js'),
+    read('portfolio/admin.html')
+  ]);
+  assert.match(manager,/LIVE HERO PREVIEW/);
+  assert.match(manager,/animateHeroPreview/);
+  assert.match(manager,/processIconPaths/);
+  assert.match(manager,/process-preview-step/);
+  assert.match(managerStyles,/adminHeroPreviewDrift/);
+  assert.match(managerStyles,/#processManagerPreview \.process-preview-step b svg/);
+  assert.match(index,/adminContextRail/);
+  assert.match(index,/scrollIntoView\(\{behavior:'smooth',block:'start'\}\)/);
+  assert.match(index,/candidateHeadings/);
+  assert.match(indexStyles,/grid-template-columns:248px minmax\(0,1fr\) 210px/);
+  assert.match(loader,/admin-context-index\.js/);
+  assert.match(html,/admin-page-studio\.js\?v=20261115-context-preview-1/);
 });
