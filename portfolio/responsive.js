@@ -6,7 +6,7 @@
     if (!document.querySelector('link[data-public-capsule-nav]')) {
       const navStyle = document.createElement('link');
       navStyle.rel = 'stylesheet';
-      navStyle.href = '/public-capsule-nav.css?v=20261114-1';
+      navStyle.href = '/public-capsule-nav.css?v=20261114-2';
       navStyle.dataset.publicCapsuleNav = 'true';
       document.head.appendChild(navStyle);
     }
