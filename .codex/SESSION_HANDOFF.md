@@ -848,4 +848,4 @@ Always reconcile these notes with the actual repository before resuming.
 1. Active branch remains `codex/v2-preview-2026-11-01`; main must remain untouched.
 2. New assets provide the service accordion, two-theme hero runtime/admin manager, compact Skills treatment and dynamic My Process module using existing JSON columns.
 3. The Site Modules save path includes the new `statementConfig` draft while keeping Advanced JSON fallbacks for power users.
-4. Focused tests, typecheck/build, JavaScript syntax and diff check pass. Next: full regression, commit/push Preview only, inspect the deployed Preview URL and verify `origin/main` is unchanged.
+4. Full regressions pass 263/263 and deployed desktop/mobile QA passes. Preview commit `2d59576` is live; both admin managers load, and `origin/main` remains unchanged at `7e7b2b8`.

@@ -603,4 +603,4 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Two CMS-selectable hero themes now share managed content; only one theme can be selected and the whole hero can be hidden.
 - Services render as an accessible shaped accordion with add/remove/reorder/visibility/default-open/tag/link controls in Admin.
 - Skills keep their current CMS library but use compact themed cards. My Process adds editable section copy plus add/remove/reorder/visibility controls for every step.
-- Data stays in existing JSON columns and requires no Prisma migration. Focused tests pass 30/30; typecheck/build and source gates pass. Preview deployment visual verification is pending.
+- Data stays in existing JSON columns and requires no Prisma migration. Full regressions pass 263/263; typecheck/build and source gates pass. The deployed Preview is verified on desktop/mobile with no horizontal overflow, working accordion interaction, five process steps and both admin managers loaded.
