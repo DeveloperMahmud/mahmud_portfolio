@@ -13,6 +13,8 @@
     const publicHeader = document.querySelector('.header');
     const publicNav = publicHeader?.querySelector('.desktop-nav');
     if (publicHeader && !publicHeader.querySelector('.menu-toggle')) publicHeader.insertAdjacentHTML('beforeend','<button class="menu-toggle" type="button" aria-expanded="false" aria-label="Open menu"><span></span><span></span><span></span></button>');
+    const publicToggle = publicHeader?.querySelector('.menu-toggle');
+    if (publicToggle && publicToggle.querySelectorAll('span').length !== 3) publicToggle.innerHTML='<span></span><span></span><span></span>';
     if (publicHeader && !document.querySelector('.mobile-menu')) {
       const mobileMenu = document.createElement('div');
       mobileMenu.className = 'mobile-menu';
