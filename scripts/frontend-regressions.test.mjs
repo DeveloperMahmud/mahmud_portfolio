@@ -337,14 +337,18 @@ test('analytics bars expose animated date detail and a readable traffic summary'
 });
 
 test('admin collection controls keep consistent spacing and Brand field geometry',async()=>{
-  const [admin,polish]=await Promise.all([
+  const [admin,polish,html]=await Promise.all([
     read('portfolio/admin.js'),
-    read('portfolio/admin-ui-polish.css')
+    read('portfolio/admin-ui-polish.css'),
+    read('portfolio/admin.html')
   ]);
   assert.match(admin,/renderBrands\(\).*class="item-actions"/s);
   assert.match(polish,/\.admin-page \.bulkbar>label\{[^}]*min-height:44px[^}]*padding:0 11px/);
   assert.match(polish,/\.admin-page \.project-item>\.item-actions\{[^}]*gap:8px/);
   assert.match(polish,/#brandForm>label:has\(#brandActive\)\{[^}]*min-height:48px/);
+  assert.match(html,/#projectList \.project-item:has\(>\.project-drag-handle\)[^{]*\{grid-template-columns:22px 24px 72px minmax\(180px,1fr\) minmax\(230px,auto\)/);
+  assert.match(html,/#contentList \.project-item>div:last-child\{grid-column:5;display:flex/);
+  assert.match(html,/@media\(max-width:767px\)[\s\S]*?#contentList \.project-item>div:last-child\{grid-column:1\/-1!important;display:grid!important/);
 });
 
 test('public loading frames remain intentional and multiline conversion headings breathe',async()=>{
