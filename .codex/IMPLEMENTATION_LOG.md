@@ -1201,4 +1201,4 @@
 - Added friendly Admin controls for every content group, accent color and independent visibility without replacing the existing `heroConfig` contract.
 - Added a detailed Admin layout schematic and direct forced-style preview links; the query override changes presentation only and never mutates the saved active theme.
 - Added backward-compatible Profile tags and ribbon defaults so older published hero records show the complete composition before their first re-save.
-- Focused frontend tests pass 31/31 with JavaScript syntax, typecheck/build and diff check. Deployment visual QA remains pending.
+- Focused frontend tests pass 31/31 with JavaScript syntax, typecheck/build and diff check. Deployed desktop QA verifies all Profile zones and zero overflow; Admin controls are present. Explicit mobile emulation was unavailable in the connected browser, so that viewport remains source-tested rather than visually verified.
