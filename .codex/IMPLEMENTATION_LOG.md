@@ -1181,3 +1181,9 @@
 - Added mutually exclusive Cinematic Dark and Profile Showcase hero themes using the existing `heroConfig`, including image upload, copy, CTAs, proof, quote, tags and ticker fields.
 - Restyled existing dynamic Skills records as compact tool cards and added an editable My Process module stored in existing `statementConfig`, avoiding a migration.
 - Focused tests pass 30/30; typecheck/build, JavaScript syntax and diff check pass. Deployed Preview visual verification remains the next gate because local file navigation is blocked by browser policy.
+
+## 2026-11-14 — Preview featured navigation scrollbar
+
+- Replaced the native white Featured Project selector scrollbar with a scoped slim dark/lime treatment, rounded thumb, hover state and hidden browser arrow buttons.
+- The rule affects only `.featured-project-nav`; global page and admin scrolling remain unchanged.
+- Focused frontend tests pass 31/31 with typecheck/build and diff check.

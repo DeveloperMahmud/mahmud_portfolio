@@ -441,12 +441,21 @@ test('preview homepage uses a capsule navigation and CMS-compatible full-bleed h
   ]);
   assert.match(html,/class="hero hero-cinematic-preview"/);
   assert.match(html,/assets\/hero-portrait\.png/);
-  assert.match(html,/homepage-cinematic-preview\.css\?v=20261113-1/);
+  assert.match(html,/homepage-cinematic-preview\.css\?v=20261114-scrollbar-1/);
   assert.match(styles,/border-radius:\s*999px/);
   assert.match(styles,/\.hero-cinematic-preview \.hero-visual\s*\{[\s\S]*?position:\s*absolute/);
   assert.match(styles,/\.hero-cinematic-preview \.hero-visual img[\s\S]*?object-fit:\s*cover/);
   assert.match(styles,/@media \(max-width: 800px\)/);
   assert.match(app,/document\.querySelector\('\.hero-visual img'\)/);
+});
+
+test('preview featured-project navigation uses the themed compact scrollbar',async()=>{
+  const styles=await read('portfolio/homepage-cinematic-preview.css');
+  assert.match(styles,/\.featured-project-nav\s*\{[\s\S]*?scrollbar-color:/);
+  assert.match(styles,/\.featured-project-nav::\-webkit-scrollbar\s*\{[\s\S]*?width:\s*8px/);
+  assert.match(styles,/\.featured-project-nav::\-webkit-scrollbar-thumb/);
+  assert.match(styles,/background:\s*linear-gradient\(180deg,\s*rgba\(198,\s*255,\s*76/);
+  assert.match(styles,/::-webkit-scrollbar-button\s*\{\s*display:\s*none/);
 });
 
 test('preview homepage services use a CMS-managed accessible accordion',async()=>{

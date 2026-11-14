@@ -256,3 +256,27 @@ body.nav-always-visible .desktop-nav .nav-managed-cta {
   body.nav-always-visible .desktop-nav a {transition:none}
   .hero-cinematic-preview .hero-visual img {transform:none}
 }
+
+/* Preview theme scrollbar: featured-project navigation only. */
+.featured-project-nav {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(198, 255, 76, .62) rgba(198, 255, 76, .06);
+  scrollbar-gutter: stable;
+}
+.featured-project-nav::-webkit-scrollbar { width: 8px; height: 8px; }
+.featured-project-nav::-webkit-scrollbar-track {
+  border: 1px solid rgba(198, 255, 76, .08);
+  border-radius: 999px;
+  background: rgba(3, 6, 3, .72);
+}
+.featured-project-nav::-webkit-scrollbar-thumb {
+  min-height: 52px;
+  border: 2px solid rgba(3, 6, 3, .86);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(198, 255, 76, .82), rgba(125, 178, 48, .55));
+}
+.featured-project-nav::-webkit-scrollbar-thumb:hover {
+  background: var(--lime);
+}
+.featured-project-nav::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+.featured-project-nav::-webkit-scrollbar-corner { background: transparent; }
