@@ -17,7 +17,8 @@
     hero.querySelector('.profile-hero-extras')?.remove();
     if(theme!=='profile')return;
     const extras=document.createElement('div');extras.className='profile-hero-extras';
-    const tags=Array.isArray(config.tags)?config.tags:[],ticker=Array.isArray(config.ticker)?config.ticker:tags;
+    const tags=Array.isArray(config.tags)?config.tags:['Amazon A+','Brand Design','Web Design','Motion'];
+    const ticker=Array.isArray(config.ticker)?config.ticker:['Amazon Design','Brand Systems','Website Design','Creative Direction'];
     const socialItems=Array.isArray(config.socialItems)&&config.socialItems.length?config.socialItems:['BE','IN','DR'];
     extras.innerHTML=`${config.showAward===false?'':`<div class="profile-award">${esc(config.badge||'MULTIDISCIPLINARY CREATIVE DESIGNER')}</div>`}<p class="profile-role">${esc(config.role||'Creative designer based in Bangladesh')}</p>${config.showSpotlight===false?'':`<div class="profile-spotlight"><span>${esc(config.spotlightLabel||'AVAILABLE FOR SELECT PROJECTS')}</span><b>↘</b></div>`}${config.showSocial===false?'':`<div class="profile-social"><span>${esc(config.socialLabel||'FOLLOW MY WORK')}</span><b>${socialItems.map(esc).join(' · ')}</b></div>`}${config.showQuote===false?'':`<blockquote><span>“</span>${esc(config.quote||'Creative thinking with technical precision and commercial clarity.')}</blockquote>`}${config.showProof===false?'':`<div class="profile-proof"><strong>${esc(config.reviewCount||'50+')} ${esc(config.proofSuffix||'PROJECTS')}</strong><span>${esc(config.rating||'FOCUSED CREATIVE PARTNERSHIPS')}</span></div>`}${config.showTags===false||!tags.length?'':`<div class="profile-tags">${tags.map(tag=>`<span>${esc(tag)}</span>`).join('')}</div>`}${config.showTicker===false||!ticker.length?'':`<div class="profile-ticker">${[...ticker,...ticker].map(tag=>`<span>${esc(tag)}</span>`).join('')}</div>`}`;
     hero.append(extras);

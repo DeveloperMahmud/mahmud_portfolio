@@ -500,8 +500,8 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
     read('portfolio/admin.js')
   ]);
   assert.match(html,/id="process"/);
-  assert.match(html,/homepage-theme-modules\.js\?v=20261114-profile-2/);
-  assert.match(html,/homepage-theme-modules\.css\?v=20261114-profile-2/);
+  assert.match(html,/homepage-theme-modules\.js\?v=20261114-profile-3/);
+  assert.match(html,/homepage-theme-modules\.css\?v=20261114-profile-3/);
   assert.match(runtime,/hero-profile-preview/);
   assert.match(runtime,/hero-cinematic-preview/);
   assert.match(runtime,/hero-theme/);

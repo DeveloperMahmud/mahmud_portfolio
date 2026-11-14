@@ -855,4 +855,4 @@ Always reconcile these notes with the actual repository before resuming.
 1. Active branch is `codex/v2-preview-2026-11-01`; Main must remain unchanged at `7e7b2b8`.
 2. Profile Showcase now has CMS fields/toggles for every reference zone, a detailed Admin schematic, accent control and `?hero-theme=PROFILE` non-persistent visual override.
 3. Local validation passes: 31/31 focused tests, both JavaScript syntax checks, typecheck/build and `git diff --check`.
-4. Next exact action: commit/push Preview only, verify Profile mode and Admin manager on desktop/mobile, then record the Preview commit and deployed asset versions.
+4. The first deployment exposed missing tags/ribbon on legacy hero records; runtime defaults were added and assets bumped to `20261114-profile-3`. Next exact action: push Preview, verify desktop/mobile Profile mode and Admin assets, then record the deployed commit.
