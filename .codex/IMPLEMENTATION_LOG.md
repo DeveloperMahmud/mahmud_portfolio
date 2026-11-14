@@ -1194,3 +1194,10 @@
 - Tablet retains a horizontally scrollable five-step journey; mobile becomes a vertical animated timeline. Reduced-motion visitors receive the complete static state without looping movement.
 - All content and step visibility remain controlled by the existing Process manager and `statementConfig`; no schema or API change was introduced.
 - Focused frontend tests pass 31/31 with JavaScript syntax, typecheck/build and diff check.
+
+## 2026-11-14 — Profile Showcase hero v2
+
+- Expanded the existing second hero theme to match the supplied composition: centered portrait, top badge, circular upper-right spotlight, left social/proof content, right quote/tags and a bottom ribbon.
+- Added friendly Admin controls for every content group, accent color and independent visibility without replacing the existing `heroConfig` contract.
+- Added a detailed Admin layout schematic and direct forced-style preview links; the query override changes presentation only and never mutates the saved active theme.
+- Focused frontend tests pass 31/31 with JavaScript syntax, typecheck/build and diff check. Deployment visual QA remains pending.

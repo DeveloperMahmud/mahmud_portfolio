@@ -849,3 +849,10 @@ Always reconcile these notes with the actual repository before resuming.
 2. New assets provide the service accordion, two-theme hero runtime/admin manager, compact Skills treatment and dynamic My Process module using existing JSON columns.
 3. The Site Modules save path includes the new `statementConfig` draft while keeping Advanced JSON fallbacks for power users.
 4. Full regressions pass 263/263 and deployed desktop/mobile QA passes. Preview commit `2d59576` is live; both admin managers load, and `origin/main` remains unchanged at `7e7b2b8`.
+
+## Preview Profile Showcase v2 handoff (2026-11-14)
+
+1. Active branch is `codex/v2-preview-2026-11-01`; Main must remain unchanged at `7e7b2b8`.
+2. Profile Showcase now has CMS fields/toggles for every reference zone, a detailed Admin schematic, accent control and `?hero-theme=PROFILE` non-persistent visual override.
+3. Local validation passes: 31/31 focused tests, both JavaScript syntax checks, typecheck/build and `git diff --check`.
+4. Next exact action: commit/push Preview only, verify Profile mode and Admin manager on desktop/mobile, then record the Preview commit and deployed asset versions.

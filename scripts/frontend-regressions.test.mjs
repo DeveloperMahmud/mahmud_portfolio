@@ -500,10 +500,13 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
     read('portfolio/admin.js')
   ]);
   assert.match(html,/id="process"/);
-  assert.match(html,/homepage-theme-modules\.js\?v=20261114-process-2/);
-  assert.match(html,/homepage-theme-modules\.css\?v=20261114-process-2/);
+  assert.match(html,/homepage-theme-modules\.js\?v=20261114-profile-2/);
+  assert.match(html,/homepage-theme-modules\.css\?v=20261114-profile-2/);
   assert.match(runtime,/hero-profile-preview/);
   assert.match(runtime,/hero-cinematic-preview/);
+  assert.match(runtime,/hero-theme/);
+  assert.match(runtime,/profile-spotlight/);
+  assert.match(runtime,/showTicker/);
   assert.match(runtime,/settings\.statementConfig/);
   assert.match(runtime,/processTrack/);
   assert.match(runtime,/IntersectionObserver/);
@@ -518,10 +521,14 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   assert.match(manager,/data-hero-theme="CINEMATIC"/);
   assert.match(manager,/data-hero-theme="PROFILE"/);
   assert.match(manager,/heroThemeImageUpload/);
+  assert.match(manager,/VIEW PROFILE SHOWCASE/);
+  assert.match(manager,/data-hero-toggle/);
+  assert.match(manager,/spotlightLabel/);
   assert.match(manager,/statementConfig/);
   assert.match(manager,/data-process-remove/);
   assert.match(manager,/stopImmediatePropagation/);
   assert.match(managerStyles,/\.hero-theme-options/);
+  assert.match(managerStyles,/\.preview-spotlight/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.js/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.css/);
   assert.match(admin,/skillsConfig/);

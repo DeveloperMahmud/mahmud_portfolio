@@ -610,3 +610,10 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - The dynamic process module now uses a scroll-triggered connector/tracer animation, staggered node entrances, orbit detail, hover emphasis and a completion pulse while keeping the same CMS data contract.
 - Mobile uses a dedicated vertical timeline and reduced-motion resolves immediately to a stable fully visible state.
 - Focused tests, typecheck/build, JavaScript syntax and diff check pass; Preview deployment visual QA is the remaining gate.
+
+## Profile Showcase hero v2 — 2026-11-14
+
+- The reference-inspired hero is a selectable Profile Showcase theme, separate from Cinematic Dark.
+- Badge, role, portrait, upper-right spotlight, left social labels, right quote, proof, tags, CTAs, accent and ribbon are editable; seven surrounding zones can be independently hidden.
+- Admin includes a more faithful live schematic plus direct forced-style preview links. No database or API change is required because the additive fields remain inside `heroConfig`.
+- Focused tests pass 31/31; JavaScript syntax, typecheck/build and diff check pass. Preview deployment/browser QA is the next gate; Main remains untouched.

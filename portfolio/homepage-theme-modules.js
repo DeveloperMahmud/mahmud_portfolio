@@ -6,7 +6,9 @@
   let processObserver;
   function applyHero(config={}){
     const hero=document.querySelector('.hero');if(!hero)return;
-    const theme=String(config.theme||'CINEMATIC').toUpperCase()==='PROFILE'?'profile':'cinematic';
+    const requestedTheme=new URLSearchParams(location.search).get('hero-theme');
+    const theme=String(requestedTheme||config.theme||'CINEMATIC').toUpperCase()==='PROFILE'?'profile':'cinematic';
+    hero.style.setProperty('--profile-accent',/^#[0-9a-f]{6}$/i.test(config.accentColor||'')?config.accentColor:'#c6ff4c');
     hero.classList.toggle('hero-profile-preview',theme==='profile');hero.classList.toggle('hero-cinematic-preview',theme!=='profile');hero.hidden=config.enabled===false;
     const lead=config.leadText||config.namePrefix,phrase=config.phrases?.[0]||config.name;
     if(lead)hero.querySelector('.hero-title>span')?.replaceChildren(document.createTextNode(lead));
@@ -16,7 +18,8 @@
     if(theme!=='profile')return;
     const extras=document.createElement('div');extras.className='profile-hero-extras';
     const tags=Array.isArray(config.tags)?config.tags:[],ticker=Array.isArray(config.ticker)?config.ticker:tags;
-    extras.innerHTML=`<div class="profile-award">${esc(config.badge||'MULTIDISCIPLINARY CREATIVE DESIGNER')}</div><p class="profile-role">${esc(config.role||'Creative designer based in Bangladesh')}</p><div class="profile-social"><span>${esc(config.socialLabel||'FOLLOW MY WORK')}</span><b>BE · IN · DR</b></div><blockquote><span>“</span>${esc(config.quote||'Creative thinking with technical precision and commercial clarity.')}</blockquote><div class="profile-proof"><strong>${esc(config.reviewCount||'50+')} PROJECTS</strong><span>${esc(config.rating||'FOCUSED CREATIVE PARTNERSHIPS')}</span></div>${tags.length?`<div class="profile-tags">${tags.map(tag=>`<span>${esc(tag)}</span>`).join('')}</div>`:''}${ticker.length?`<div class="profile-ticker">${[...ticker,...ticker].map(tag=>`<span>${esc(tag)}</span>`).join('')}</div>`:''}`;
+    const socialItems=Array.isArray(config.socialItems)&&config.socialItems.length?config.socialItems:['BE','IN','DR'];
+    extras.innerHTML=`${config.showAward===false?'':`<div class="profile-award">${esc(config.badge||'MULTIDISCIPLINARY CREATIVE DESIGNER')}</div>`}<p class="profile-role">${esc(config.role||'Creative designer based in Bangladesh')}</p>${config.showSpotlight===false?'':`<div class="profile-spotlight"><span>${esc(config.spotlightLabel||'AVAILABLE FOR SELECT PROJECTS')}</span><b>↘</b></div>`}${config.showSocial===false?'':`<div class="profile-social"><span>${esc(config.socialLabel||'FOLLOW MY WORK')}</span><b>${socialItems.map(esc).join(' · ')}</b></div>`}${config.showQuote===false?'':`<blockquote><span>“</span>${esc(config.quote||'Creative thinking with technical precision and commercial clarity.')}</blockquote>`}${config.showProof===false?'':`<div class="profile-proof"><strong>${esc(config.reviewCount||'50+')} ${esc(config.proofSuffix||'PROJECTS')}</strong><span>${esc(config.rating||'FOCUSED CREATIVE PARTNERSHIPS')}</span></div>`}${config.showTags===false||!tags.length?'':`<div class="profile-tags">${tags.map(tag=>`<span>${esc(tag)}</span>`).join('')}</div>`}${config.showTicker===false||!ticker.length?'':`<div class="profile-ticker">${[...ticker,...ticker].map(tag=>`<span>${esc(tag)}</span>`).join('')}</div>`}`;
     hero.append(extras);
     const actions=hero.querySelectorAll('.actions a');if(actions[0]&&config.primaryCta){actions[0].textContent=config.primaryCta.label||'VIEW PORTFOLIO';actions[0].href=safe(config.primaryCta.url)}if(actions[1]&&config.secondaryCta){actions[1].textContent=config.secondaryCta.label||'HIRE ME';actions[1].href=safe(config.secondaryCta.url)}
   }
