@@ -17,6 +17,7 @@
 .process-section.is-process-visible .process-progress i{animation:processTracer 1.65s cubic-bezier(.22,1,.36,1) .05s both}
 .process-step{position:relative;display:grid;justify-items:center;align-content:start;opacity:0;transform:translateY(30px);text-align:center;transition:opacity .65s ease calc(.16s + var(--step-index) * .13s),transform .75s cubic-bezier(.22,1,.36,1) calc(.16s + var(--step-index) * .13s)}
 .process-section.is-process-visible .process-step{opacity:1;transform:none}
+.process-section.is-process-visible .process-step{animation:processStepIn .75s cubic-bezier(.22,1,.36,1) calc(.12s + var(--step-index) * .12s) both}
 .process-icon{position:relative;z-index:2;display:grid;width:112px;height:112px;margin:0 0 25px;place-items:center;border:1px solid rgba(198,255,76,.34);border-radius:50%;background:radial-gradient(circle at 50% 42%,rgba(198,255,76,.17),rgba(13,16,14,.98) 65%);box-shadow:inset 0 0 24px rgba(198,255,76,.04),0 14px 40px rgba(0,0,0,.22);color:var(--lime);font:500 31px/1 "Space Grotesk";transition:transform .45s cubic-bezier(.22,1,.36,1),border-color .35s,box-shadow .35s}
 .process-icon::before,.process-icon::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
 .process-icon::before{inset:-9px;border:1px dashed rgba(198,255,76,.18);animation:processOrbit 15s linear infinite}
@@ -31,6 +32,7 @@
 .process-step:hover .process-copy p{color:#b4bbb1}
 .process-section.is-process-visible .process-step:last-child .process-icon{animation:processFinishPulse 2.8s ease-in-out 1.8s infinite}
 @keyframes processTracer{0%{left:0;opacity:0}8%,90%{opacity:1}100%{left:100%;opacity:0}}
+@keyframes processStepIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
 @keyframes processOrbit{to{transform:rotate(360deg)}}
 @keyframes processFinishPulse{0%,100%{box-shadow:inset 0 0 24px rgba(198,255,76,.04),0 14px 40px rgba(0,0,0,.22)}50%{box-shadow:inset 0 0 30px rgba(198,255,76,.1),0 0 0 9px rgba(198,255,76,.035),0 14px 45px rgba(0,0,0,.28)}}
 

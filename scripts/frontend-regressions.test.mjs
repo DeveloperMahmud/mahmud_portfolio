@@ -519,7 +519,7 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   ]);
   assert.match(html,/id="process"/);
   assert.match(html,/homepage-theme-modules\.js\?v=20261114-process-icons-1/);
-  assert.match(html,/homepage-theme-modules\.css\?v=20261114-process-icons-1/);
+  assert.match(html,/homepage-theme-modules\.css\?v=20261114-process-icons-2/);
   assert.match(runtime,/hero-profile-preview/);
   assert.match(runtime,/hero-cinematic-preview/);
   assert.match(runtime,/hero-theme/);
@@ -536,6 +536,7 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   assert.match(styles,/\.process-icon::before/);
   assert.match(styles,/\.process-connector-base/);
   assert.match(styles,/stroke-dasharray:4 9/);
+  assert.match(styles,/@keyframes processStepIn/);
   assert.match(runtime,/class="process-connector"/);
   assert.match(runtime,/processIcons=\{search:/);
   assert.match(manager,/processIconOptions/);
