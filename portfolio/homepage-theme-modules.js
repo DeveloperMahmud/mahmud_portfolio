@@ -3,6 +3,7 @@
   const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const safe=value=>{const url=String(value||'').trim();return /^(?:https:\/\/|\/|#)/i.test(url)?url:'#'};
   const defaults=[{title:'Discover',description:'Understand the problem, audience and opportunity.',icon:'⌕'},{title:'Define',description:'Shape the brief, structure and creative direction.',icon:'✎'},{title:'Design',description:'Build the visual system and key experiences.',icon:'◇'},{title:'Refine',description:'Test, review and improve every important detail.',icon:'↗'},{title:'Deliver',description:'Prepare clear files, guidance and a useful handoff.',icon:'✓'}];
+  let processObserver;
   function applyHero(config={}){
     const hero=document.querySelector('.hero');if(!hero)return;
     const theme=String(config.theme||'CINEMATIC').toUpperCase()==='PROFILE'?'profile':'cinematic';
@@ -23,7 +24,11 @@
     const config=statement.process&&typeof statement.process==='object'?statement.process:statement,section=document.querySelector('#process');if(!section)return;
     section.hidden=config.enabled===false;document.querySelector('#processEyebrow').textContent=config.eyebrow||'04 / MY PROCESS';document.querySelector('#processTitle').innerHTML=esc(config.heading||'From first question to final delivery.');document.querySelector('#processIntro').textContent=config.intro||'A clear, collaborative process that keeps every stage focused and easy to follow.';
     const items=(Array.isArray(config.items)&&config.items.length?config.items:defaults).filter(item=>item.enabled!==false).sort((a,b)=>(a.sortOrder||0)-(b.sortOrder||0));
-    document.querySelector('#processTrack').innerHTML=items.map((item,index)=>`<article class="process-step reveal"><div class="process-icon">${esc(item.icon||String(index+1).padStart(2,'0'))}</div><span>${String(index+1).padStart(2,'0')}</span><h3>${esc(item.title||'Process step')}</h3><p>${esc(item.description||'')}</p></article>`).join('');
+    const track=document.querySelector('#processTrack');
+    track.innerHTML=`<span class="process-progress" aria-hidden="true"><i></i></span>${items.map((item,index)=>`<article class="process-step" style="--step-index:${index}"><div class="process-icon"><span>${esc(item.icon||String(index+1).padStart(2,'0'))}</span></div><div class="process-copy"><b>${String(index+1).padStart(2,'0')}</b><h3>${esc(item.title||'Process step')}</h3><p>${esc(item.description||'')}</p></div></article>`).join('')}`;
+    section.classList.remove('is-process-visible');processObserver?.disconnect();
+    if(!('IntersectionObserver' in window)){section.classList.add('is-process-visible');return}
+    processObserver=new IntersectionObserver(entries=>{if(!entries.some(entry=>entry.isIntersecting))return;section.classList.add('is-process-visible');processObserver.disconnect()},{threshold:.28});processObserver.observe(section);
   }
   async function load(){try{const response=await fetch('/api/public/settings',{cache:'no-store'});if(!response.ok){applyProcess({});return}const {settings={}}=await response.json();applyHero(settings.heroConfig||{});applyProcess(settings.statementConfig||{})}catch{applyProcess({})}}
   const start=()=>{load();window.setTimeout(load,500)};

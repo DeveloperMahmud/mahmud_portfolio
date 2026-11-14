@@ -604,3 +604,9 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Services render as an accessible shaped accordion with add/remove/reorder/visibility/default-open/tag/link controls in Admin.
 - Skills keep their current CMS library but use compact themed cards. My Process adds editable section copy plus add/remove/reorder/visibility controls for every step.
 - Data stays in existing JSON columns and requires no Prisma migration. Full regressions pass 263/263; typecheck/build and source gates pass. The deployed Preview is verified on desktop/mobile with no horizontal overflow, working accordion interaction, five process steps and both admin managers loaded.
+
+## Animated process journey v2 — 2026-11-14
+
+- The dynamic process module now uses a scroll-triggered connector/tracer animation, staggered node entrances, orbit detail, hover emphasis and a completion pulse while keeping the same CMS data contract.
+- Mobile uses a dedicated vertical timeline and reduced-motion resolves immediately to a stable fully visible state.
+- Focused tests, typecheck/build, JavaScript syntax and diff check pass; Preview deployment visual QA is the remaining gate.

@@ -1187,3 +1187,10 @@
 - Replaced the native white Featured Project selector scrollbar with a scoped slim dark/lime treatment, rounded thumb, hover state and hidden browser arrow buttons.
 - The rule affects only `.featured-project-nav`; global page and admin scrolling remain unchanged.
 - Focused frontend tests pass 31/31 with typecheck/build and diff check.
+
+## 2026-11-14 — Animated process journey v2
+
+- Upgraded the CMS-driven My Process section from a static row into an intersection-triggered journey with a drawn connector, traveling lime tracer, staggered step reveals, rotating orbit rings, hover lift and a restrained completion pulse.
+- Tablet retains a horizontally scrollable five-step journey; mobile becomes a vertical animated timeline. Reduced-motion visitors receive the complete static state without looping movement.
+- All content and step visibility remain controlled by the existing Process manager and `statementConfig`; no schema or API change was introduced.
+- Focused frontend tests pass 31/31 with JavaScript syntax, typecheck/build and diff check.
