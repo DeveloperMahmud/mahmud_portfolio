@@ -170,7 +170,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
-  assert.match(html,/admin-page-studio\.js\?v=20261102-11/);
+  assert.match(html,/admin-page-studio\.js\?v=20261114-controls-3/);
   assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
@@ -318,6 +318,23 @@ test('lead and analytics workspaces expose authenticated spreadsheet exports',as
   assert.match(analyticsRoute,/adminAnalytics\.get\('\/export\.xlsx'/);
 });
 
+test('analytics bars expose animated date detail and a readable traffic summary',async()=>{
+  const [analytics,styles,admin]=await Promise.all([
+    read('portfolio/admin-addendum.js'),
+    read('portfolio/styles.css'),
+    read('portfolio/admin.html')
+  ]);
+  assert.match(analytics,/class="analytics-tooltip"/);
+  assert.match(analytics,/aria-label="\$\{esc\(x\.date\)\}: \$\{x\.pageViews\} page views/);
+  assert.match(analytics,/analyticsChartSummary/);
+  assert.match(analytics,/DAILY AVERAGE/);
+  assert.match(styles,/\.analytics-bar:hover \.analytics-tooltip/);
+  assert.match(styles,/@keyframes analyticsBarRise/);
+  assert.match(styles,/\.analytics-chart-summary/);
+  assert.match(admin,/admin-addendum\.js\?v=20261114-analytics-hero-1/);
+  assert.match(admin,/styles\.css\?v=20261114-analytics-hero-1/);
+});
+
 test('admin collection controls keep consistent spacing and Brand field geometry',async()=>{
   const [admin,polish]=await Promise.all([
     read('portfolio/admin.js'),
@@ -400,7 +417,7 @@ test('project and journal workspaces open on their libraries and reveal editors 
   assert.match(styles,/\.is-editor-open>section:first-child/);
   assert.match(styles,/\.is-editor-open>section:nth-child\(2\)/);
   assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
-  assert.match(html,/styles\.css\?v=20261113-collection-library-1/);
+  assert.match(html,/styles\.css\?v=20261114-analytics-hero-1/);
 });
 
 test('modular project blocks keep full editor geometry instead of collection-row columns',async()=>{
@@ -524,6 +541,9 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   assert.match(manager,/VIEW PROFILE SHOWCASE/);
   assert.match(manager,/data-hero-toggle/);
   assert.match(manager,/spotlightLabel/);
+  assert.match(manager,/heroTypewriterPreset/);
+  assert.match(manager,/heroTypewriterPhrases/);
+  assert.match(manager,/settings\?[^\n]*heroImage/s);
   assert.match(manager,/statementConfig/);
   assert.match(manager,/data-process-remove/);
   assert.match(manager,/stopImmediatePropagation/);
@@ -531,5 +551,6 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   assert.match(managerStyles,/\.preview-spotlight/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.js/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.css/);
+  assert.match(pageStudio,/20261114-controls-3/);
   assert.match(admin,/skillsConfig/);
 });

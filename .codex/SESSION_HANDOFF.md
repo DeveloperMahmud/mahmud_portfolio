@@ -856,3 +856,10 @@ Always reconcile these notes with the actual repository before resuming.
 2. Profile Showcase now has CMS fields/toggles for every reference zone, a detailed Admin schematic, accent control and `?hero-theme=PROFILE` non-persistent visual override.
 3. Local validation passes: 31/31 focused tests, both JavaScript syntax checks, typecheck/build and `git diff --check`.
 4. Preview commit `33463d6` is deployed with `20261114-profile-3`. Browser QA confirms Profile mode, spotlight, social/proof/quote zones, four tags, ribbon and no desktop overflow; Admin loads the Profile radio, forced-preview link, schematic, spotlight field and seven toggles. Main remains untouched. Explicit mobile viewport emulation was unavailable in the connected browser; responsive source checks pass.
+
+## Preview analytics/hero-control handoff (2026-11-14)
+
+1. Active branch remains `codex/v2-preview-2026-11-01`; Main stays untouched.
+2. Analytics has themed accessible bar detail, summaries and a more readable scrollable table. Homepage Hero Manager is now the single normal control surface for hero image, copy, theme and typewriter motion.
+3. Missing structured hero data hydrates from live legacy values, and Save Site Modules synchronizes both endpoints to prevent old images or phrases from overriding the selected homepage state.
+4. Local validation passes 40/40 focused tests plus JavaScript syntax, typecheck/build and diff checks. Next action: commit/push Preview, verify deployed asset versions, authenticated Analytics interaction and the live hero image shown in the manager.

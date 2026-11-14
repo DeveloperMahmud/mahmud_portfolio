@@ -1202,3 +1202,12 @@
 - Added a detailed Admin layout schematic and direct forced-style preview links; the query override changes presentation only and never mutates the saved active theme.
 - Added backward-compatible Profile tags and ribbon defaults so older published hero records show the complete composition before their first re-save.
 - Focused frontend tests pass 31/31 with JavaScript syntax, typecheck/build and diff check. Deployed desktop QA verifies all Profile zones and zero overflow; Admin controls are present. Explicit mobile emulation was unavailable in the connected browser, so that viewport remains source-tested rather than visually verified.
+
+## 2026-11-14 - Analytics detail and unified hero controls
+
+- Rebuilt Traffic over time bars as accessible buttons with animated dark/lime tooltips containing date, page views, visitors, sessions and optional inquiries.
+- Added total-view, daily-average and peak-day summaries plus sticky table headers and clearer row/view emphasis without introducing a new color system.
+- Added typewriter motion presets and a real-image schematic to Homepage Hero Manager.
+- Removed the duplicate normal Settings editing path: Settings now links to the Hero Manager and keeps legacy inputs in a collapsed fallback panel.
+- Added backward-compatible hydration and dual-save synchronization so the public live hero image/copy cannot silently diverge from the structured Hero Manager state after saving.
+- Focused tests pass 40/40; JavaScript syntax, TypeScript typecheck/build and diff validation pass.

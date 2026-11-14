@@ -617,3 +617,11 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Badge, role, portrait, upper-right spotlight, left social labels, right quote, proof, tags, CTAs, accent and ribbon are editable; seven surrounding zones can be independently hidden.
 - Admin includes a more faithful live schematic plus direct forced-style preview links. No database or API change is required because the additive fields remain inside `heroConfig`.
 - Focused tests pass 31/31; JavaScript syntax, typecheck/build and diff check pass. Preview serves `homepage-theme-modules.*?v=20261114-profile-3`; Profile mode shows spotlight, socials, proof, quote, four tags and ribbon without desktop overflow. Admin serves `admin-homepage-theme-manager.js?v=20261114-profile-2` with Profile selection, schematic, preview link and seven toggles. Main remains untouched. Explicit mobile viewport emulation was unavailable in the connected browser.
+
+## Analytics detail and unified hero controls - 2026-11-14
+
+- Traffic bars now provide animated hover, focus and tap details for date, views, visitors, sessions and inquiries, with total views, daily average and peak-day summaries beneath the chart.
+- The implementation reuses the existing dark backgrounds, lime accent, borders, typography and spacing; no unrelated theme or color was introduced.
+- Homepage Hero Manager now adopts the currently live legacy hero image/copy/typewriter values when structured values are absent, and one save synchronizes both data paths.
+- Settings keeps legacy values as a collapsed fallback and directs normal editing to Homepage > Site Modules > Homepage Hero Themes.
+- Local validation passes 40/40 focused regressions, JavaScript syntax, TypeScript typecheck/build and `git diff --check`. Preview deployment and authenticated browser acceptance remain next.
