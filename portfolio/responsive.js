@@ -2,6 +2,24 @@
 (() => {
   const isBuilder = location.pathname.endsWith('/admin.html') || location.pathname.includes('page-studio');
   if (!isBuilder) {
+    document.body.classList.add('nav-always-visible');
+    if (!document.querySelector('link[data-public-capsule-nav]')) {
+      const navStyle = document.createElement('link');
+      navStyle.rel = 'stylesheet';
+      navStyle.href = '/public-capsule-nav.css?v=20261114-1';
+      navStyle.dataset.publicCapsuleNav = 'true';
+      document.head.appendChild(navStyle);
+    }
+    const publicHeader = document.querySelector('.header');
+    const publicNav = publicHeader?.querySelector('.desktop-nav');
+    if (publicHeader && !publicHeader.querySelector('.menu-toggle')) publicHeader.insertAdjacentHTML('beforeend','<button class="menu-toggle" type="button" aria-expanded="false" aria-label="Open menu"><span></span><span></span><span></span></button>');
+    if (publicHeader && !document.querySelector('.mobile-menu')) {
+      const mobileMenu = document.createElement('div');
+      mobileMenu.className = 'mobile-menu';
+      mobileMenu.setAttribute('aria-hidden','true');
+      mobileMenu.innerHTML = `<div class="mobile-menu-inner"><span class="mobile-menu-label">NAVIGATION / MENU</span><nav>${publicNav?.innerHTML||''}</nav><div class="mobile-menu-foot"><span>MAHMUDUL HASSAN</span><small>CREATIVE DESIGNER</small></div></div>`;
+      document.body.appendChild(mobileMenu);
+    }
     const runtime = document.createElement('script');
     runtime.src = '/production-navigation.js';
     runtime.defer = true;

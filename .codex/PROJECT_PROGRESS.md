@@ -632,3 +632,11 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Replaced text glyph defaults with consistent outline search, pencil, code, rocket and chart icons; old saved symbols map automatically and custom symbols remain supported.
 - Admin Process steps now expose named icon-style suggestions through the existing editable field. Mobile keeps the vertical dashed layout.
 - Focused regressions pass 32/32 with JavaScript syntax, TypeScript typecheck/build and clean diff validation. Preview deployment and browser QA are next.
+
+## Shared navigation, ordering and homepage control completion - 2026-11-14
+
+- Unified the capsule header across public templates and replaced the mobile minus control with an accessible three-line menu / close transition and themed drawer.
+- Added working project and journal drag ordering, keyboard-friendly move buttons, and an atomic Journal reorder route.
+- Added Media Library selection for Hero images, editable starter capabilities, five Process connector presets, compact fallback UI and dark full-image Profile Hero rendering.
+- Reduced the mobile hero dead space and changed the mobile Process spine to a dashed treatment.
+- Local validation passes JavaScript syntax, TypeScript build, frontend regressions 32/32, static smoke and diff checks. Preview deployment and authenticated browser persistence checks are next; Main is untouched.

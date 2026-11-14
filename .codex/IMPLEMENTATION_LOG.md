@@ -1220,3 +1220,12 @@
 - Added Admin icon-style suggestions for search, pencil, code, rocket, chart and check.
 - Preserved the mobile vertical dashed timeline and reduced-motion behavior.
 - Focused regressions pass 32/32; JavaScript syntax, TypeScript typecheck/build and diff validation pass.
+
+## 2026-11-14 - Shared capsule navigation and CMS control completion
+
+- Applied the capsule navigation contract to every public page through the shared responsive runtime and added missing toggle/menu markup where older templates had none.
+- Rebuilt the mobile navigation as a themed drawer with a real hamburger/close control and reduced homepage mobile hero whitespace.
+- Restored Project ordering that had been shadowed by a duplicate renderer, and added Journal drag/up/down ordering with an atomic validated API endpoint.
+- Removed the obstructive sticky Admin save bar, compacted the legacy hero preview, and changed Profile Hero preview/public output to a dark full-image composition.
+- Added Hero Media Library selection, editable default capability cards, and five Process SVG connector presets while retaining the vertical dashed mobile timeline.
+- JavaScript syntax, TypeScript build, frontend regressions 32/32, static smoke and diff checks pass.

@@ -236,7 +236,7 @@ body.nav-always-visible .desktop-nav .nav-managed-cta {
       linear-gradient(180deg,rgba(5,7,6,.34) 0%,rgba(5,7,6,.25) 30%,rgba(5,7,6,.92) 72%,#050706 100%),
       linear-gradient(90deg,rgba(5,7,6,.72),rgba(5,7,6,.06));
   }
-  .hero-cinematic-preview .hero-copy {width:100%;padding:32vh 0 2vh}
+  .hero-cinematic-preview .hero-copy {width:100%;padding:18vh 0 2vh}
   .hero-cinematic-preview .hero-title {max-width:680px;margin:20px 0 24px;font-size:clamp(46px,13vw,78px)}
   .hero-cinematic-preview .hero-title .hero-typewriter {font-size:.58em;white-space:normal}
   .hero-cinematic-preview .hero-bottom {gap:18px}
@@ -246,7 +246,7 @@ body.nav-always-visible .desktop-nav .nav-managed-cta {
 }
 
 @media (max-width: 480px) {
-  .hero-cinematic-preview .hero-copy {padding-top:29vh}
+  .hero-cinematic-preview .hero-copy {padding-top:15vh}
   .hero-cinematic-preview .hero-bottom .actions {display:grid;width:100%;grid-template-columns:1fr}
   .hero-cinematic-preview .hero-bottom .button {width:100%;text-align:center}
 }
