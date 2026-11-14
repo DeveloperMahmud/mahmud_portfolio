@@ -625,3 +625,10 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Homepage Hero Manager now adopts the currently live legacy hero image/copy/typewriter values when structured values are absent, and one save synchronizes both data paths.
 - Settings keeps legacy values as a collapsed fallback and directs normal editing to Homepage > Site Modules > Homepage Hero Themes.
 - Local validation passes 40/40 focused regressions, JavaScript syntax, TypeScript typecheck/build and `git diff --check`. Preview deployment and authenticated browser acceptance remain next.
+
+## Process connector and icon refinement - 2026-11-14
+
+- Replaced the straight process connector with a subtle responsive SVG wave, dashed base path and scroll-triggered lime trace using the existing theme tokens.
+- Replaced text glyph defaults with consistent outline search, pencil, code, rocket and chart icons; old saved symbols map automatically and custom symbols remain supported.
+- Admin Process steps now expose named icon-style suggestions through the existing editable field. Mobile keeps the vertical dashed layout.
+- Focused regressions pass 32/32 with JavaScript syntax, TypeScript typecheck/build and clean diff validation. Preview deployment and browser QA are next.

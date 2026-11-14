@@ -1211,3 +1211,12 @@
 - Removed the duplicate normal Settings editing path: Settings now links to the Hero Manager and keeps legacy inputs in a collapsed fallback panel.
 - Added backward-compatible hydration and dual-save synchronization so the public live hero image/copy cannot silently diverge from the structured Hero Manager state after saving.
 - Focused tests pass 40/40; JavaScript syntax, TypeScript typecheck/build and diff validation pass.
+
+## 2026-11-14 - Process connector and icon refinement
+
+- Added a theme-consistent SVG wave with a dashed base and animated lime trace between process steps.
+- Added lightweight inline outline icons for Discover, Define, Design, Refine and Deliver without external icon dependencies.
+- Mapped legacy saved glyphs to the new icon set and preserved arbitrary custom-symbol rendering.
+- Added Admin icon-style suggestions for search, pencil, code, rocket, chart and check.
+- Preserved the mobile vertical dashed timeline and reduced-motion behavior.
+- Focused regressions pass 32/32; JavaScript syntax, TypeScript typecheck/build and diff validation pass.

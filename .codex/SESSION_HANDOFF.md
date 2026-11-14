@@ -863,3 +863,10 @@ Always reconcile these notes with the actual repository before resuming.
 2. Analytics has themed accessible bar detail, summaries and a more readable scrollable table. Homepage Hero Manager is now the single normal control surface for hero image, copy, theme and typewriter motion.
 3. Missing structured hero data hydrates from live legacy values, and Save Site Modules synchronizes both endpoints to prevent old images or phrases from overriding the selected homepage state.
 4. Local validation passes 40/40 focused tests plus JavaScript syntax, typecheck/build and diff checks. Next action: commit/push Preview, verify deployed asset versions, authenticated Analytics interaction and the live hero image shown in the manager.
+
+## Preview process connector/icon handoff (2026-11-14)
+
+1. Active branch remains `codex/v2-preview-2026-11-01`; Main stays untouched.
+2. Homepage My Process uses a responsive wavy dashed SVG path and five consistent editable outline icon styles while preserving custom symbols and legacy saved values.
+3. Public assets use `20261114-process-icons-1`; Admin manager assets use `20261114-controls-4`.
+4. Local validation passes 32/32 focused tests plus syntax, typecheck/build and diff checks. Next: commit/push Preview and visually verify desktop/mobile behavior.

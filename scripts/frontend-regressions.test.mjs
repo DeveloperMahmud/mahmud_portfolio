@@ -170,7 +170,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
-  assert.match(html,/admin-page-studio\.js\?v=20261114-controls-3/);
+  assert.match(html,/admin-page-studio\.js\?v=20261114-controls-4/);
   assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
@@ -518,8 +518,8 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
     read('portfolio/admin.js')
   ]);
   assert.match(html,/id="process"/);
-  assert.match(html,/homepage-theme-modules\.js\?v=20261114-profile-3/);
-  assert.match(html,/homepage-theme-modules\.css\?v=20261114-profile-3/);
+  assert.match(html,/homepage-theme-modules\.js\?v=20261114-process-icons-1/);
+  assert.match(html,/homepage-theme-modules\.css\?v=20261114-process-icons-1/);
   assert.match(runtime,/hero-profile-preview/);
   assert.match(runtime,/hero-cinematic-preview/);
   assert.match(runtime,/hero-theme/);
@@ -528,13 +528,17 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   assert.match(runtime,/settings\.statementConfig/);
   assert.match(runtime,/processTrack/);
   assert.match(runtime,/IntersectionObserver/);
-  assert.match(runtime,/process-progress/);
   assert.match(runtime,/--step-index/);
   assert.match(styles,/\.hero-profile-preview/);
   assert.match(styles,/\.process-track/);
   assert.match(styles,/\.process-section\.is-process-visible \.process-progress/);
   assert.match(styles,/@keyframes processTracer/);
   assert.match(styles,/\.process-icon::before/);
+  assert.match(styles,/\.process-connector-base/);
+  assert.match(styles,/stroke-dasharray:4 9/);
+  assert.match(runtime,/class="process-connector"/);
+  assert.match(runtime,/processIcons=\{search:/);
+  assert.match(manager,/processIconOptions/);
   assert.match(styles,/\.skills-section \.skill-card/);
   assert.match(manager,/data-hero-theme="CINEMATIC"/);
   assert.match(manager,/data-hero-theme="PROFILE"/);
@@ -552,6 +556,6 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   assert.match(managerStyles,/\.preview-spotlight/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.js/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.css/);
-  assert.match(pageStudio,/20261114-controls-3/);
+  assert.match(pageStudio,/20261114-controls-4/);
   assert.match(admin,/skillsConfig/);
 });
