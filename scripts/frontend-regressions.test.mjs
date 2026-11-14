@@ -329,10 +329,11 @@ test('analytics bars expose animated date detail and a readable traffic summary'
   assert.match(analytics,/analyticsChartSummary/);
   assert.match(analytics,/DAILY AVERAGE/);
   assert.match(styles,/\.analytics-bar:hover \.analytics-tooltip/);
+  assert.match(styles,/\.analytics-bar:focus-within \.analytics-tooltip/);
   assert.match(styles,/@keyframes analyticsBarRise/);
   assert.match(styles,/\.analytics-chart-summary/);
   assert.match(admin,/admin-addendum\.js\?v=20261114-analytics-hero-1/);
-  assert.match(admin,/styles\.css\?v=20261114-analytics-hero-1/);
+  assert.match(admin,/styles\.css\?v=20261114-analytics-hero-2/);
 });
 
 test('admin collection controls keep consistent spacing and Brand field geometry',async()=>{
@@ -417,7 +418,7 @@ test('project and journal workspaces open on their libraries and reveal editors 
   assert.match(styles,/\.is-editor-open>section:first-child/);
   assert.match(styles,/\.is-editor-open>section:nth-child\(2\)/);
   assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
-  assert.match(html,/styles\.css\?v=20261114-analytics-hero-1/);
+  assert.match(html,/styles\.css\?v=20261114-analytics-hero-2/);
 });
 
 test('modular project blocks keep full editor geometry instead of collection-row columns',async()=>{

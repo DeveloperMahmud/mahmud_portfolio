@@ -112,5 +112,5 @@ test('project order is draggable, accessible and persisted atomically',async()=>
   assert.match(admin,/CLEAR SEARCH TO REORDER/);
   assert.match(admin,/\/admin\/projects\/reorder/);
   assert.match(styles,/\.project-sort-item\.is-drag-target/);
-  assert.match(html,/styles\.css\?v=20261114-analytics-hero-1/);
+  assert.match(html,/styles\.css\?v=20261114-analytics-hero-2/);
 });
