@@ -170,7 +170,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
-  assert.match(html,/admin-page-studio\.js\?v=20261115-context-preview-1/);
+  assert.match(html,/admin-page-studio\.js\?v=20261115-preview-dock-2/);
   assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
@@ -563,16 +563,18 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   assert.match(managerStyles,/\.preview-spotlight/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.js/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.css/);
-  assert.match(pageStudio,/20261115-context-preview-1/);
+  assert.match(pageStudio,/20261115-preview-dock-2/);
   assert.match(admin,/skillsConfig/);
 });
 
 test('admin homepage previews stay live and long workspaces expose contextual navigation',async()=>{
-  const [manager,managerStyles,index,indexStyles,loader,html]=await Promise.all([
+  const [manager,managerStyles,index,indexStyles,dock,dockStyles,loader,html]=await Promise.all([
     read('portfolio/admin-homepage-theme-manager.js'),
     read('portfolio/admin-homepage-theme-manager.css'),
     read('portfolio/admin-context-index.js'),
     read('portfolio/admin-context-index.css'),
+    read('portfolio/admin-preview-dock.js'),
+    read('portfolio/admin-preview-dock.css'),
     read('portfolio/admin-page-studio.js'),
     read('portfolio/admin.html')
   ]);
@@ -585,7 +587,16 @@ test('admin homepage previews stay live and long workspaces expose contextual na
   assert.match(index,/adminContextRail/);
   assert.match(index,/scrollIntoView\(\{behavior:'smooth',block:'start'\}\)/);
   assert.match(index,/candidateHeadings/);
+  assert.match(index,/lastSignature/);
+  assert.match(index,/lockedId/);
+  assert.match(index,/admin:contexttarget/);
   assert.match(indexStyles,/grid-template-columns:248px minmax\(0,1fr\) 210px/);
+  assert.match(dock,/siteModulePreviewCanvas/);
+  assert.match(dock,/data-preview-dock/);
+  assert.match(dock,/admin:contexttarget/);
+  assert.match(dockStyles,/\.hero-theme-layout,\.admin-page \.process-manager-layout,\.admin-page \.services-manager-layout/);
+  assert.match(dockStyles,/display:none!important/);
   assert.match(loader,/admin-context-index\.js/);
-  assert.match(html,/admin-page-studio\.js\?v=20261115-context-preview-1/);
+  assert.match(loader,/admin-preview-dock\.js/);
+  assert.match(html,/admin-page-studio\.js\?v=20261115-preview-dock-2/);
 });

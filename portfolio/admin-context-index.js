@@ -4,7 +4,7 @@
   const visible=node=>Boolean(node&&node.offsetParent!==null&&!node.closest('.hidden'));
   const slug=value=>String(value||'section').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,56)||'section';
   const clean=value=>String(value||'').replace(/\s+/g,' ').replace(/[.]+$/,'').trim();
-  let activeRoot=null,targets=[],scrollFrame=0,refreshTimer=0;
+  let activeRoot=null,targets=[],scrollFrame=0,refreshTimer=0,activeId='',lockedId='',unlockTimer=0,lastSignature='';
 
   function ensureRail(){
     const shell=$('.admin-shell');if(!shell)return null;
@@ -42,14 +42,17 @@
   }
 
   function setActive(id){
+    if(!id||id===activeId)return;
+    activeId=id;
     document.querySelectorAll('#adminContextNav button').forEach(button=>button.classList.toggle('active',button.dataset.target===id));
   }
 
   function updateActive(){
     scrollFrame=0;if(!targets.length)return;
+    if(lockedId){setActive(lockedId);return}
     const main=$('.admin-main'),mainTop=main?.getBoundingClientRect().top||0;
     let current=targets[0];
-    for(const item of targets){if(item.node.getBoundingClientRect().top-mainTop<=115)current=item;else break}
+    for(const item of targets){if(item.node.getBoundingClientRect().top-mainTop<=128)current=item;else break}
     setActive(current.id);
   }
 
@@ -57,27 +60,41 @@
     const rail=ensureRail(),root=currentRoot(),nav=$('#adminContextNav');if(!rail||!root||!nav)return;
     activeRoot=root;
     const headings=candidateHeadings(root);
-    targets=headings.map((node,index)=>{
+    const nextTargets=headings.map((node,index)=>{
       if(!node.id)node.id=`admin-section-${slug(node.textContent)}-${index+1}`;
       node.classList.add('admin-context-anchor');
       return {node,id:node.id,label:clean(node.textContent),index};
     });
+    const signature=`${root.id}|${nextTargets.map(item=>`${item.id}:${item.label}`).join('|')}`;
+    targets=nextTargets;
     $('#adminContextTitle').textContent=pageTitle(root).toUpperCase();
+    if(signature===lastSignature){updateActive();return}
+    lastSignature=signature;activeId='';
     nav.innerHTML=targets.map(item=>`<button type="button" data-target="${item.id}"><span>${String(item.index+1).padStart(2,'0')}</span><strong>${item.label}</strong></button>`).join('');
     nav.querySelectorAll('button').forEach(button=>button.addEventListener('click',()=>{
       const target=document.getElementById(button.dataset.target);if(!target)return;
-      target.scrollIntoView({behavior:'smooth',block:'start'});setActive(button.dataset.target);
+      lockedId=button.dataset.target;setActive(lockedId);
+      clearTimeout(unlockTimer);unlockTimer=setTimeout(()=>{lockedId='';updateActive()},850);
+      document.dispatchEvent(new CustomEvent('admin:contexttarget',{detail:{target}}));
+      target.scrollIntoView({behavior:'smooth',block:'start'});
     }));
     rail.classList.toggle('is-empty',targets.length<2);updateActive();
   }
 
   function schedule(delay=60){clearTimeout(refreshTimer);refreshTimer=setTimeout(build,delay)}
-  document.addEventListener('click',event=>{if(event.target.closest('.side-btn,.maintenance-subtab,[data-home-editor],[data-quick]'))schedule(140)});
+  document.addEventListener('click',event=>{if(event.target.closest('.side-btn,.maintenance-subtab,[data-home-editor],[data-quick]')){lastSignature='';schedule(140)}});
   document.addEventListener('admin:siteconfigloaded',()=>schedule(180));
   function init(){
     ensureRail();schedule(250);
     const main=$('.admin-main');main?.addEventListener('scroll',()=>{if(!scrollFrame)scrollFrame=requestAnimationFrame(updateActive)},{passive:true});
-    const observer=new MutationObserver(records=>{if(records.some(record=>!record.target.closest?.('#adminContextRail')&&(record.type==='childList'||record.attributeName==='class')))schedule(120)});
+    const observer=new MutationObserver(records=>{
+      const needsRefresh=records.some(record=>{
+        if(record.target.closest?.('#adminContextRail'))return false;
+        if(record.type==='attributes')return record.target.matches?.('.admin-main > [id$="Tab"],.maintenance-panel');
+        return [...record.addedNodes,...record.removedNodes].some(node=>node.nodeType===1&&(node.matches?.('.panel,.hero-theme-manager,.process-manager,.services-manager,.settings-card')||node.querySelector?.('h2,h3,legend')));
+      });
+      if(needsRefresh)schedule(120);
+    });
     observer.observe($('#cms')||document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
