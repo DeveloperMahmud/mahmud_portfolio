@@ -254,3 +254,4 @@ Preview navigation and CMS control pass (2026-11-14): Shared public pages now re
 - Preview commit `1315c11` and normal merge commit `ad2f880` were pushed successfully; `origin/main` exactly matched `ad2f880` after push and no force operation was used.
 - The merged tree is content-identical to Preview and passed 267/267 Node tests, TypeScript typecheck/build, JavaScript syntax, and diff validation again on `main`.
 - `P8-003` remains `IN_PROGRESS`, not `VERIFIED`: the stable Preview alias still served `responsive.js?v=20261114-nav-2` and the documented custom domain served older `20261027-studio-v3` after the Git push. This is deployment/alias propagation evidence, not a Git failure.
+- Follow-up propagation check: the stable Preview alias advanced to `responsive.js?v=20261122-nav-1` with no horizontal overflow. The documented custom domain mismatch remains unresolved, so full production acceptance is still not claimed.

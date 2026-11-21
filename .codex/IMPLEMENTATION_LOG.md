@@ -1249,3 +1249,4 @@
 - Pushed Preview `2cb9ed8..1315c11` and main `7e7b2b8..ad2f880` successfully. No force push or destructive Git operation occurred.
 - Re-ran the main merge gate: 267/267 tests, typecheck/build, JavaScript syntax and diff checks passed.
 - Remote browser observation immediately after push found Vercel propagation incomplete: Preview served `20261114-nav-2` and the documented custom domain served `20261027-studio-v3`. Deployment acceptance is therefore pending rather than fabricated.
+- A later stable-Preview recheck served `responsive.js?v=20261122-nav-1` and retained equal client/scroll widths, proving the new Preview build propagated. The documented custom domain remains on the older build and is not represented as accepted.

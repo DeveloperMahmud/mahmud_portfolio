@@ -893,3 +893,4 @@ Always reconcile these notes with the actual repository before resuming.
 - Deployment is not yet claimed. Preview stable alias remains on `20261114-nav-2`; the documented custom domain remains on `20261027-studio-v3` and appears attached to an older build/project alias.
 - Keep P8-003 `IN_PROGRESS` until a deployed URL serves the `20261122` asset keys and passes desktop/mobile checks. Do not repeat implementation work.
 - Authenticated CMS save/reload and database-derived content are still `NOT VERIFIED` in the local environment.
+- Final Preview recheck: the stable branch alias now serves `responsive.js?v=20261122-nav-1` without horizontal overflow. The custom domain is still stale; do not repeat the code fixes when resuming—investigate Vercel project/alias routing instead.
