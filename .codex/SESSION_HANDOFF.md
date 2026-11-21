@@ -877,3 +877,12 @@ Always reconcile these notes with the actual repository before resuming.
 2. Shared capsule navigation/mobile drawer, mobile spacing, Project/Journal ordering, Hero Media Library selection, capabilities manager, Process connector presets and dark full-image Profile layout are implemented locally.
 3. Local checks pass: JavaScript syntax, TypeScript build, frontend 32/32, static smoke and clean diff validation.
 4. Next: commit and push Preview, wait for deployment, then verify public desktop/mobile navigation plus authenticated Admin reorder/media/capability controls.
+
+## 2026-11-22 release handoff checkpoint
+
+- Active branch: `codex/v2-preview-2026-11-01`; working tree contains the reconciled Admin preview fix plus release-hardening fixes and tracking updates. Do not discard them.
+- `updated portfolio` is intentionally out of scope and untouched.
+- Completed locally: all 267 Node tests, typecheck, build, Prisma validation, static smoke, performance budget, syntax, and diff check pass.
+- Visual QA: loopback-only static preview `http://127.0.0.1:8799/` (server PID 12356) passed desktop 1280x800 and mobile 390x844 checks. Homepage/mobile drawer, Work, Creative Lab, Hire, Studio, and Admin login are overflow-free; inner-page H1/header overlap is fixed; mobile login inputs compute to 16px.
+- Expected limitation: static preview cannot verify PostgreSQL content, authentication, CMS saves, publishing, or API persistence. It reports truthful empty/fallback public states.
+- Next exact action: review `git diff`, commit on Preview, switch to `main`, normal `--no-ff` merge Preview, verify tree/tests, push both authorized branches, and verify remote/deployment. Never force push.

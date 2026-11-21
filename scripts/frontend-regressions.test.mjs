@@ -170,7 +170,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
-  assert.match(html,/admin-page-studio\.js\?v=20261115-preview-dock-2/);
+  assert.match(html,/admin-page-studio\.js\?v=20261115-preview-dock-3/);
   assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
@@ -451,7 +451,8 @@ test('shared typography roles keep admin, login and public forms readable',async
   assert.match(styles,/body\.admin-page[\s\S]*?--type-control:\s*14px/);
   assert.match(styles,/#loginForm[\s\S]*?font-size:\s*15px !important/);
   assert.match(styles,/@media \(max-width: 700px\)[\s\S]*?font-size:\s*16px !important/);
-  assert.match(adminHtml,/typography-system\.css\?v=20261113-typography-1/);
+  assert.match(styles,/@media \(max-width: 700px\)[\s\S]*?body\.admin-page #loginForm :where\(input, select, textarea\)[\s\S]*?font-size:\s*16px !important/);
+  assert.match(adminHtml,/typography-system\.css\?v=20261122-login-mobile-1/);
   assert.match(indexHtml,/typography-system\.css\?v=20261113-typography-1/);
 });
 
@@ -563,12 +564,12 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   assert.match(managerStyles,/\.preview-spotlight/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.js/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.css/);
-  assert.match(pageStudio,/20261115-preview-dock-2/);
+  assert.match(pageStudio,/20261115-preview-dock-3/);
   assert.match(admin,/skillsConfig/);
 });
 
 test('admin homepage previews stay live and long workspaces expose contextual navigation',async()=>{
-  const [manager,managerStyles,index,indexStyles,dock,dockStyles,loader,html]=await Promise.all([
+  const [manager,managerStyles,index,indexStyles,dock,dockStyles,loader,html,capsuleStyles]=await Promise.all([
     read('portfolio/admin-homepage-theme-manager.js'),
     read('portfolio/admin-homepage-theme-manager.css'),
     read('portfolio/admin-context-index.js'),
@@ -576,10 +577,13 @@ test('admin homepage previews stay live and long workspaces expose contextual na
     read('portfolio/admin-preview-dock.js'),
     read('portfolio/admin-preview-dock.css'),
     read('portfolio/admin-page-studio.js'),
-    read('portfolio/admin.html')
+    read('portfolio/admin.html'),
+    read('portfolio/public-capsule-nav.css')
   ]);
   assert.match(manager,/LIVE HERO PREVIEW/);
   assert.match(manager,/animateHeroPreview/);
+  assert.match(manager,/prefers-reduced-motion: reduce/);
+  assert.match(manager,/reducedMotionQuery\?\.matches/);
   assert.match(manager,/processIconPaths/);
   assert.match(manager,/process-preview-step/);
   assert.match(managerStyles,/adminHeroPreviewDrift/);
@@ -598,5 +602,15 @@ test('admin homepage previews stay live and long workspaces expose contextual na
   assert.match(dockStyles,/display:none!important/);
   assert.match(loader,/admin-context-index\.js/);
   assert.match(loader,/admin-preview-dock\.js/);
-  assert.match(html,/admin-page-studio\.js\?v=20261115-preview-dock-2/);
+  assert.match(html,/admin-page-studio\.js\?v=20261115-preview-dock-3/);
+  assert.match(capsuleStyles,/@media\(prefers-reduced-motion:reduce\)/);
+  assert.match(capsuleStyles,/transition:none!important/);
+  assert.match(capsuleStyles,/main:not\(#top\)\{padding-top:96px\}/);
+  assert.match(await read('portfolio/responsive.js'),/public-capsule-nav\.css\?v=20261122-1/);
+});
+
+test('all public shells version the shared responsive navigation runtime',async()=>{
+  const publicShells=['404.html','blog.html','creative-lab.html','creative-tool.html','hire.html','index.html','preview.html','project.html','service.html','share.html','studio.html','work.html'];
+  const shells=await Promise.all(publicShells.map(file=>read(`portfolio/${file}`)));
+  shells.forEach((shell,index)=>assert.match(shell,/responsive\.js\?v=20261122-nav-1/,`${publicShells[index]} must use the current shared navigation cache key`));
 });

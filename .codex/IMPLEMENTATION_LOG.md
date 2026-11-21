@@ -1229,3 +1229,15 @@
 - Removed the obstructive sticky Admin save bar, compacted the legacy hero preview, and changed Profile Hero preview/public output to a dark full-image composition.
 - Added Hero Media Library selection, editable default capability cards, and five Process SVG connector presets while retaining the vertical dashed mobile timeline.
 - JavaScript syntax, TypeScript build, frontend regressions 32/32, static smoke and diff checks pass.
+
+## 2026-11-22 — Release audit and UI consistency repair
+
+- Reconciled four uncommitted Admin preview changes: `admin-homepage-controls.js`, `admin-page-studio.js`, `admin.html`, and `frontend-regressions.test.mjs`.
+- Added resilient Site Modules preview mounting after `admin:siteconfigloaded` and on the next task, with cache-key `20261115-preview-dock-3`.
+- Added shared navigation cache versioning to 12 public HTML shells and bumped the responsive runtime/CSS keys to `20261122-nav-1` / `20261122-1`.
+- Added reduced-motion behavior to the Admin hero typewriter preview and the shared capsule drawer transitions.
+- Fixed mobile inner-page header overlap using scoped `main:not(#top)` clearance while preserving the homepage hero composition.
+- Fixed the login-specific selector so Admin email/password controls compute to 16px under 700px; bumped the Admin typography asset key to `20261122-login-mobile-1`.
+- Automated evidence: 267/267 Node tests; typecheck/build; Prisma validate; static smoke 5/5; performance budgets; JS syntax; diff check.
+- Browser evidence: 1280x800 homepage and Admin; 390x844 homepage drawer, Work, Creative Lab, Hire, Studio, and Admin sign-in. All measured `scrollWidth === clientWidth`; mobile inner-page headings clear the fixed header; Admin input is 16px.
+- Database/authenticated CMS mutation remains explicitly unverified because only a loopback static server was used.

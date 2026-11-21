@@ -640,3 +640,13 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Added Media Library selection for Hero images, editable starter capabilities, five Process connector presets, compact fallback UI and dark full-image Profile Hero rendering.
 - Reduced the mobile hero dead space and changed the mobile Process spine to a dashed treatment.
 - Local validation passes JavaScript syntax, TypeScript build, frontend regressions 32/32, static smoke and diff checks. Preview deployment and authenticated browser persistence checks are next; Main is untouched.
+
+## 2026-11-22 — Preview-to-main release hardening
+
+- Resumed from `codex/v2-preview-2026-11-01`; `main` is an ancestor and Preview is 23 commits ahead before this release commit.
+- Preserved the pending Admin visual-preview mount fix and completed a release audit. Full backend/security contracts remain green through the 267-test suite and Prisma schema validation; no new schema or backend mutation was required.
+- Fixed three cache/motion inconsistencies: every public shell now versions `responsive.js`, the Admin live hero preview stops its typewriter loop for reduced-motion visitors, and the capsule mobile drawer removes transitions for reduced motion.
+- Browser QA found and fixed two additional real mobile defects: inner-page headings were obscured by the fixed capsule header, and the CMS login's higher-specificity 15px rule defeated the intended 16px mobile control size.
+- Local verification passed: `node --test scripts/*.test.mjs` (267/267), `npm.cmd run typecheck`, elevated `npm.cmd run build`, static smoke 5/5, performance budget, Prisma validate with loopback dummy URL, JavaScript syntax, and diff check.
+- Local visual QA passed at `http://127.0.0.1:8799/` for homepage, Work, Creative Lab, Hire, Studio and Admin sign-in at 1280x800 and 390x844 with no horizontal overflow. Authenticated CMS/database behavior remains not verified locally.
+- Exact next action: commit this verified Preview tree, merge it normally into `main` without force, rerun the merge-tree gate, push Preview and `main`, then verify remote refs/deployment assets.

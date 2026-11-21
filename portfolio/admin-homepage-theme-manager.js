@@ -1,6 +1,7 @@
 (()=>{
   'use strict';
   let hero={},process={},syncing=false,installed=false,heroPreviewTimer=0;
+  const reducedMotionQuery=window.matchMedia?.('(prefers-reduced-motion: reduce)');
   const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const json=(id,fallback)=>{try{return JSON.parse(document.querySelector('#'+id)?.value||JSON.stringify(fallback))}catch{return fallback}};
   const TYPEWRITER_PRESETS={EDITORIAL:{typeSpeed:42,typeRandom:35,pause:2400,eraseSpeed:25,nextDelay:650,startDelay:220,loop:true},QUICK_CUT:{typeSpeed:22,typeRandom:12,pause:1650,eraseSpeed:14,nextDelay:280,startDelay:120,loop:true},CINEMATIC:{typeSpeed:68,typeRandom:38,pause:3600,eraseSpeed:34,nextDelay:900,startDelay:420,loop:true},TERMINAL:{typeSpeed:30,typeRandom:5,pause:2050,eraseSpeed:18,nextDelay:420,startDelay:160,loop:true},QUIET:{typeSpeed:50,typeRandom:18,pause:4200,eraseSpeed:30,nextDelay:1100,startDelay:300,loop:true}};
@@ -15,9 +16,8 @@
   const iconMarkup=(name,index)=>{const key=String(name||'').toLowerCase(),path=processIconPaths[key]||processIconPaths[['search','pencil','code','rocket','chart'][index]||'check'];return `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`};
   function animateHeroPreview(){
     clearTimeout(heroPreviewTimer);const preview=document.querySelector('#heroThemePreview'),stage=preview?.firstElementChild;if(!stage)return;
-    stage.classList.add('is-live-preview');stage.insertAdjacentHTML('afterbegin','<i class="hero-preview-live-dot" aria-hidden="true"></i>');
     const phrases=(hero.phrases||[]).filter(Boolean),target=hero.theme==='PROFILE'?stage.querySelector('mark'):stage.querySelector('em');
-    if(!target||!phrases.length)return;const preset=TYPEWRITER_PRESETS[hero.typewriterPreset]||TYPEWRITER_PRESETS.EDITORIAL;let phraseIndex=0,letter=0,removing=false;
+    if(!target||!phrases.length)return;if(reducedMotionQuery?.matches){target.textContent=phrases[0];stage.classList.add('is-reduced-motion');return}stage.classList.add('is-live-preview');stage.insertAdjacentHTML('afterbegin','<i class="hero-preview-live-dot" aria-hidden="true"></i>');const preset=TYPEWRITER_PRESETS[hero.typewriterPreset]||TYPEWRITER_PRESETS.EDITORIAL;let phraseIndex=0,letter=0,removing=false;
     const tick=()=>{const text=phrases[phraseIndex%phrases.length];target.textContent=text.slice(0,letter);if(!removing&&letter<text.length){letter++;heroPreviewTimer=setTimeout(tick,preset.typeSpeed)}else if(!removing){removing=true;heroPreviewTimer=setTimeout(tick,Math.min(preset.pause,1500))}else if(letter>0){letter--;heroPreviewTimer=setTimeout(tick,preset.eraseSpeed)}else{removing=false;phraseIndex++;heroPreviewTimer=setTimeout(tick,preset.nextDelay)}};
     tick();
   }
@@ -28,6 +28,7 @@
     preview.dataset.connector=process.connectorStyle||'WAVE_DASHED';
     preview.innerHTML=process.items.filter(item=>item.enabled!==false).map((item,index)=>`<div class="process-preview-step"><b>${iconMarkup(item.icon,index)}</b><span>${String(index+1).padStart(2,'0')}</span><strong>${esc(item.title)}</strong></div>`).join('');
   };
+  reducedMotionQuery?.addEventListener?.('change',()=>renderPreviews());
   function renderProcess(){
     const root=document.querySelector('#processManagerList');if(!root)return;
     const connector=document.querySelector('#processConnectorStyle');if(connector)connector.value=process.connectorStyle||'WAVE_DASHED';
