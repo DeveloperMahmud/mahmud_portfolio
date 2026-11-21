@@ -170,7 +170,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
-  assert.match(html,/admin-page-studio\.js\?v=20261102-11/);
+  assert.match(html,/admin-page-studio\.js\?v=20261115-preview-dock-3/);
   assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
@@ -318,15 +318,37 @@ test('lead and analytics workspaces expose authenticated spreadsheet exports',as
   assert.match(analyticsRoute,/adminAnalytics\.get\('\/export\.xlsx'/);
 });
 
+test('analytics bars expose animated date detail and a readable traffic summary',async()=>{
+  const [analytics,styles,admin]=await Promise.all([
+    read('portfolio/admin-addendum.js'),
+    read('portfolio/styles.css'),
+    read('portfolio/admin.html')
+  ]);
+  assert.match(analytics,/class="analytics-tooltip"/);
+  assert.match(analytics,/aria-label="\$\{esc\(x\.date\)\}: \$\{x\.pageViews\} page views/);
+  assert.match(analytics,/analyticsChartSummary/);
+  assert.match(analytics,/DAILY AVERAGE/);
+  assert.match(styles,/\.analytics-bar:hover \.analytics-tooltip/);
+  assert.match(styles,/\.analytics-bar:focus-within \.analytics-tooltip/);
+  assert.match(styles,/@keyframes analyticsBarRise/);
+  assert.match(styles,/\.analytics-chart-summary/);
+  assert.match(admin,/admin-addendum\.js\?v=20261114-analytics-hero-1/);
+  assert.match(admin,/styles\.css\?v=20261114-analytics-hero-2/);
+});
+
 test('admin collection controls keep consistent spacing and Brand field geometry',async()=>{
-  const [admin,polish]=await Promise.all([
+  const [admin,polish,html]=await Promise.all([
     read('portfolio/admin.js'),
-    read('portfolio/admin-ui-polish.css')
+    read('portfolio/admin-ui-polish.css'),
+    read('portfolio/admin.html')
   ]);
   assert.match(admin,/renderBrands\(\).*class="item-actions"/s);
   assert.match(polish,/\.admin-page \.bulkbar>label\{[^}]*min-height:44px[^}]*padding:0 11px/);
   assert.match(polish,/\.admin-page \.project-item>\.item-actions\{[^}]*gap:8px/);
   assert.match(polish,/#brandForm>label:has\(#brandActive\)\{[^}]*min-height:48px/);
+  assert.match(html,/#projectList \.project-item:has\(>\.project-drag-handle\)[^{]*\{grid-template-columns:22px 24px 72px minmax\(180px,1fr\) minmax\(230px,auto\)/);
+  assert.match(html,/#contentList \.project-item>div:last-child\{grid-column:5;display:flex/);
+  assert.match(html,/@media\(max-width:767px\)[\s\S]*?#contentList \.project-item>div:last-child\{grid-column:1\/-1!important;display:grid!important/);
 });
 
 test('public loading frames remain intentional and multiline conversion headings breathe',async()=>{
@@ -400,7 +422,7 @@ test('project and journal workspaces open on their libraries and reveal editors 
   assert.match(styles,/\.is-editor-open>section:first-child/);
   assert.match(styles,/\.is-editor-open>section:nth-child\(2\)/);
   assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
-  assert.match(html,/styles\.css\?v=20261113-collection-library-1/);
+  assert.match(html,/styles\.css\?v=20261114-analytics-hero-2/);
 });
 
 test('modular project blocks keep full editor geometry instead of collection-row columns',async()=>{
@@ -429,6 +451,166 @@ test('shared typography roles keep admin, login and public forms readable',async
   assert.match(styles,/body\.admin-page[\s\S]*?--type-control:\s*14px/);
   assert.match(styles,/#loginForm[\s\S]*?font-size:\s*15px !important/);
   assert.match(styles,/@media \(max-width: 700px\)[\s\S]*?font-size:\s*16px !important/);
-  assert.match(adminHtml,/typography-system\.css\?v=20261113-typography-1/);
+  assert.match(styles,/@media \(max-width: 700px\)[\s\S]*?body\.admin-page #loginForm :where\(input, select, textarea\)[\s\S]*?font-size:\s*16px !important/);
+  assert.match(adminHtml,/typography-system\.css\?v=20261122-login-mobile-1/);
   assert.match(indexHtml,/typography-system\.css\?v=20261113-typography-1/);
+});
+
+test('preview homepage uses a capsule navigation and CMS-compatible full-bleed hero',async()=>{
+  const [html,styles,app]=await Promise.all([
+    read('portfolio/index.html'),
+    read('portfolio/homepage-cinematic-preview.css'),
+    read('portfolio/app.js')
+  ]);
+  assert.match(html,/class="hero hero-cinematic-preview"/);
+  assert.match(html,/assets\/hero-portrait\.png/);
+  assert.match(html,/homepage-cinematic-preview\.css\?v=20261114-scrollbar-1/);
+  assert.match(styles,/border-radius:\s*999px/);
+  assert.match(styles,/\.hero-cinematic-preview \.hero-visual\s*\{[\s\S]*?position:\s*absolute/);
+  assert.match(styles,/\.hero-cinematic-preview \.hero-visual img[\s\S]*?object-fit:\s*cover/);
+  assert.match(styles,/@media \(max-width: 800px\)/);
+  assert.match(app,/document\.querySelector\('\.hero-visual img'\)/);
+});
+
+test('preview featured-project navigation uses the themed compact scrollbar',async()=>{
+  const styles=await read('portfolio/homepage-cinematic-preview.css');
+  assert.match(styles,/\.featured-project-nav\s*\{[\s\S]*?scrollbar-color:/);
+  assert.match(styles,/\.featured-project-nav::\-webkit-scrollbar\s*\{[\s\S]*?width:\s*8px/);
+  assert.match(styles,/\.featured-project-nav::\-webkit-scrollbar-thumb/);
+  assert.match(styles,/background:\s*linear-gradient\(180deg,\s*rgba\(198,\s*255,\s*76/);
+  assert.match(styles,/::-webkit-scrollbar-button\s*\{\s*display:\s*none/);
+});
+
+test('preview homepage services use a CMS-managed accessible accordion',async()=>{
+  const [html,styles,runtime,manager,managerStyles,pageStudio,moduleLibrary]=await Promise.all([
+    read('portfolio/index.html'),
+    read('portfolio/services-accordion-preview.css'),
+    read('portfolio/services-accordion-preview.js'),
+    read('portfolio/admin-services-manager.js'),
+    read('portfolio/admin-services-manager.css'),
+    read('portfolio/admin-page-studio.js'),
+    read('portfolio/admin-module-library.js')
+  ]);
+  assert.match(html,/services-accordion-preview\.css\?v=20261113-1/);
+  assert.match(html,/services-accordion-preview\.js\?v=20261113-1/);
+  assert.match(runtime,/aria-expanded/);
+  assert.match(runtime,/role="region"/);
+  assert.match(runtime,/MutationObserver/);
+  assert.match(runtime,/window\.renderServiceAccordion/);
+  assert.match(styles,/clip-path:polygon/);
+  assert.match(styles,/\.service-accordion-item\.is-open/);
+  assert.match(styles,/@media\(max-width:760px\)/);
+  assert.match(manager,/\+ ADD SERVICE/);
+  assert.match(manager,/data-service-remove/);
+  assert.match(manager,/data-service-up/);
+  assert.match(manager,/data-service-primary/);
+  assert.match(manager,/capabilitiesConfig/);
+  assert.match(manager,/admin:siteconfigloaded/);
+  assert.match(managerStyles,/\.services-manager-layout/);
+  assert.match(pageStudio,/admin-services-manager\.js/);
+  assert.match(pageStudio,/admin-services-manager\.css/);
+  assert.match(moduleLibrary,/title, description, tags, url, label, primary, enabled, sortOrder/);
+});
+
+test('preview homepage exposes two CMS hero themes plus dynamic skills and process modules',async()=>{
+  const [html,runtime,styles,manager,managerStyles,pageStudio,admin]=await Promise.all([
+    read('portfolio/index.html'),
+    read('portfolio/homepage-theme-modules.js'),
+    read('portfolio/homepage-theme-modules.css'),
+    read('portfolio/admin-homepage-theme-manager.js'),
+    read('portfolio/admin-homepage-theme-manager.css'),
+    read('portfolio/admin-page-studio.js'),
+    read('portfolio/admin.js')
+  ]);
+  assert.match(html,/id="process"/);
+  assert.match(html,/homepage-theme-modules\.js\?v=20261114-process-icons-2/);
+  assert.match(html,/homepage-theme-modules\.css\?v=20261114-process-icons-5/);
+  assert.match(runtime,/hero-profile-preview/);
+  assert.match(runtime,/hero-cinematic-preview/);
+  assert.match(runtime,/hero-theme/);
+  assert.match(runtime,/profile-spotlight/);
+  assert.match(runtime,/showTicker/);
+  assert.match(runtime,/settings\.statementConfig/);
+  assert.match(runtime,/processTrack/);
+  assert.match(runtime,/IntersectionObserver/);
+  assert.match(runtime,/--step-index/);
+  assert.match(styles,/\.hero-profile-preview/);
+  assert.match(styles,/\.process-track/);
+  assert.match(styles,/\.process-section\.is-process-visible \.process-progress/);
+  assert.match(styles,/@keyframes processTracer/);
+  assert.match(styles,/\.process-icon::before/);
+  assert.match(styles,/\.process-connector-base/);
+  assert.match(styles,/stroke-dasharray:4 9/);
+  assert.match(styles,/@keyframes processContentIn/);
+  assert.match(styles,/\.process-step\{opacity:1\}/);
+  assert.match(runtime,/class="process-connector"/);
+  assert.match(runtime,/--step-delay:/);
+  assert.match(runtime,/processIcons=\{search:/);
+  assert.match(manager,/processIconOptions/);
+  assert.match(styles,/\.skills-section \.skill-card/);
+  assert.match(manager,/data-hero-theme="CINEMATIC"/);
+  assert.match(manager,/data-hero-theme="PROFILE"/);
+  assert.match(manager,/heroThemeImageUpload/);
+  assert.match(manager,/VIEW PROFILE SHOWCASE/);
+  assert.match(manager,/data-hero-toggle/);
+  assert.match(manager,/spotlightLabel/);
+  assert.match(manager,/heroTypewriterPreset/);
+  assert.match(manager,/heroTypewriterPhrases/);
+  assert.match(manager,/settings\?[^\n]*heroImage/s);
+  assert.match(manager,/statementConfig/);
+  assert.match(manager,/data-process-remove/);
+  assert.match(manager,/stopImmediatePropagation/);
+  assert.match(managerStyles,/\.hero-theme-options/);
+  assert.match(managerStyles,/\.preview-spotlight/);
+  assert.match(pageStudio,/admin-homepage-theme-manager\.js/);
+  assert.match(pageStudio,/admin-homepage-theme-manager\.css/);
+  assert.match(pageStudio,/20261115-preview-dock-3/);
+  assert.match(admin,/skillsConfig/);
+});
+
+test('admin homepage previews stay live and long workspaces expose contextual navigation',async()=>{
+  const [manager,managerStyles,index,indexStyles,dock,dockStyles,loader,html,capsuleStyles]=await Promise.all([
+    read('portfolio/admin-homepage-theme-manager.js'),
+    read('portfolio/admin-homepage-theme-manager.css'),
+    read('portfolio/admin-context-index.js'),
+    read('portfolio/admin-context-index.css'),
+    read('portfolio/admin-preview-dock.js'),
+    read('portfolio/admin-preview-dock.css'),
+    read('portfolio/admin-page-studio.js'),
+    read('portfolio/admin.html'),
+    read('portfolio/public-capsule-nav.css')
+  ]);
+  assert.match(manager,/LIVE HERO PREVIEW/);
+  assert.match(manager,/animateHeroPreview/);
+  assert.match(manager,/prefers-reduced-motion: reduce/);
+  assert.match(manager,/reducedMotionQuery\?\.matches/);
+  assert.match(manager,/processIconPaths/);
+  assert.match(manager,/process-preview-step/);
+  assert.match(managerStyles,/adminHeroPreviewDrift/);
+  assert.match(managerStyles,/#processManagerPreview \.process-preview-step b svg/);
+  assert.match(index,/adminContextRail/);
+  assert.match(index,/scrollIntoView\(\{behavior:'smooth',block:'start'\}\)/);
+  assert.match(index,/candidateHeadings/);
+  assert.match(index,/lastSignature/);
+  assert.match(index,/lockedId/);
+  assert.match(index,/admin:contexttarget/);
+  assert.match(indexStyles,/grid-template-columns:248px minmax\(0,1fr\) 210px/);
+  assert.match(dock,/siteModulePreviewCanvas/);
+  assert.match(dock,/data-preview-dock/);
+  assert.match(dock,/admin:contexttarget/);
+  assert.match(dockStyles,/\.hero-theme-layout,\.admin-page \.process-manager-layout,\.admin-page \.services-manager-layout/);
+  assert.match(dockStyles,/display:none!important/);
+  assert.match(loader,/admin-context-index\.js/);
+  assert.match(loader,/admin-preview-dock\.js/);
+  assert.match(html,/admin-page-studio\.js\?v=20261115-preview-dock-3/);
+  assert.match(capsuleStyles,/@media\(prefers-reduced-motion:reduce\)/);
+  assert.match(capsuleStyles,/transition:none!important/);
+  assert.match(capsuleStyles,/main:not\(#top\)\{padding-top:96px\}/);
+  assert.match(await read('portfolio/responsive.js'),/public-capsule-nav\.css\?v=20261122-1/);
+});
+
+test('all public shells version the shared responsive navigation runtime',async()=>{
+  const publicShells=['404.html','blog.html','creative-lab.html','creative-tool.html','hire.html','index.html','preview.html','project.html','service.html','share.html','studio.html','work.html'];
+  const shells=await Promise.all(publicShells.map(file=>read(`portfolio/${file}`)));
+  shells.forEach((shell,index)=>assert.match(shell,/responsive\.js\?v=20261122-nav-1/,`${publicShells[index]} must use the current shared navigation cache key`));
 });

@@ -35,7 +35,7 @@ test('featured case studies have an evidence-led publish gate',async()=>{
 
 test('project CMS exposes a matching flagship readiness workflow',async()=>{
   const [html,loader,js,css]=await Promise.all([read('portfolio/admin.html'),read('portfolio/admin-addendum.js'),read('portfolio/admin-case-study.js'),read('portfolio/admin-case-study.css')]);
-  assert.match(html,/admin-addendum\.js\?v=20261113-gallery-ui-1/);
+  assert.match(html,/admin-addendum\.js\?v=20261114-analytics-hero-1/);
   assert.match(loader,/admin-case-study\.js/);
   assert.match(loader,/admin-case-study\.js\?v=20261113-gallery-ui-1/);
   for(const key of ['role','context','process','deliverables','evidence','outcome'])assert.match(js,new RegExp(`key:'${key}'`));
@@ -112,5 +112,5 @@ test('project order is draggable, accessible and persisted atomically',async()=>
   assert.match(admin,/CLEAR SEARCH TO REORDER/);
   assert.match(admin,/\/admin\/projects\/reorder/);
   assert.match(styles,/\.project-sort-item\.is-drag-target/);
-  assert.match(html,/styles\.css\?v=20261113-collection-library-1/);
+  assert.match(html,/styles\.css\?v=20261114-analytics-hero-2/);
 });

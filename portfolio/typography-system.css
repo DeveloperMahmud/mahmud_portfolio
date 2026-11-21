@@ -116,4 +116,8 @@ body.admin-page #loginMsg {
   body :where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="hidden"]), select, textarea) {
     font-size: 16px !important;
   }
+
+  body.admin-page #loginForm :where(input, select, textarea) {
+    font-size: 16px !important;
+  }
 }

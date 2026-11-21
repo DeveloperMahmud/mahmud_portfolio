@@ -1122,6 +1122,14 @@
 - Performed a normal `--no-ff` merge, resolving duplicate snapshot conflicts in favor of the accepted Preview files. The resulting working tree has no content diff from Preview and preserves both histories.
 - Passed the complete Node regression set (256/256), TypeScript typecheck/build, JavaScript syntax checks and diff check.
 - `prisma validate` could not run in this local shell because `DATABASE_URL` is absent; no schema validation error beyond the missing environment variable was reported.
+## 2026-11-12 — Main promotion completed
+
+- Pushed merge commit `97419dc` to `origin/main` exactly once; no force push was used.
+- Verified the Vercel main branch alias serves `styles.css?v=20261112-image-presentation-1`, `admin-case-study.js?v=20261112-3` and `admin.js?v=20261112-image-presentation-1`.
+- The color-changing Behance board fully loaded at 780px centered, and client/scroll widths matched at 1265px with no horizontal overflow.
+- The CMS remains signed out, so authenticated save/reload is still not claimed.
+- The documented custom URL `mahmudportfolio-azure.vercel.app` continued to serve an older versionless build; this appears to be alias/project routing rather than the pushed main branch content.
+- Closed all QA tabs and fast-forwarded the local Preview branch to the main merge so future experiments begin Preview-first.
 ## 2026-11-12 — CMS project drag ordering
 
 - Added drag-and-drop ordering to the existing Projects list, with up/down buttons as keyboard/mobile fallback.
@@ -1145,6 +1153,14 @@
 - Documented the rules in `.codex/TYPOGRAPHY_GUIDELINES.md` and added regression coverage for tokens, login sizing, mobile sizing and page inclusion.
 - Passed 35/35 focused tests, TypeScript typecheck/build, JavaScript syntax and diff check; local browser QA verified admin/public/mobile computed sizes without horizontal overflow.
 
+## 2026-11-13 — Preview capsule navigation and cinematic hero
+
+- Synced the current main baseline into `codex/v2-preview-2026-11-01` without changing main.
+- Added a preview-only floating glass capsule header that preserves dynamic CMS navigation and the existing accessible mobile menu.
+- Reframed the existing CMS-controlled hero image as a full-bleed background, selected the bundled portrait as the fallback and retained live semantic copy, typewriter text and CTAs.
+- Added responsive gradients, focal positioning, mobile CTA stacking and reduced-motion behavior without introducing a dependency or schema change.
+- Passed 261/261 Node tests, typecheck/build, JS syntax and diff check; browser QA at 1280px, 1024px and 480px found no overlap or horizontal overflow.
+
 ## 2026-11-13 — Library-first Projects and Journal workspaces
 
 - Changed Projects and Journal/Content to show existing records by default instead of opening the create form immediately.
@@ -1158,3 +1174,70 @@
 - Replaced legacy fixed-width image control stacks with responsive cards, contained thumbnails, a two-column field grid and a single-column mobile fallback.
 - Preserved the existing CMS payload and public gallery behavior; no schema, API or dependency change was introduced.
 - Passed 32/32 focused tests, TypeScript typecheck/build, admin JavaScript syntax and `git diff --check`. Owner authorized direct main deployment.
+
+## 2026-11-13 — Preview CMS homepage themes and modules
+
+- Added a dark themed service accordion with one-open-at-a-time ARIA behavior and a friendly CMS manager for add, remove, reorder, visibility, tags, links and default-open state.
+- Added mutually exclusive Cinematic Dark and Profile Showcase hero themes using the existing `heroConfig`, including image upload, copy, CTAs, proof, quote, tags and ticker fields.
+- Restyled existing dynamic Skills records as compact tool cards and added an editable My Process module stored in existing `statementConfig`, avoiding a migration.
+- Focused tests pass 30/30; typecheck/build, JavaScript syntax and diff check pass. Deployed Preview visual verification remains the next gate because local file navigation is blocked by browser policy.
+
+## 2026-11-14 — Preview featured navigation scrollbar
+
+- Replaced the native white Featured Project selector scrollbar with a scoped slim dark/lime treatment, rounded thumb, hover state and hidden browser arrow buttons.
+- The rule affects only `.featured-project-nav`; global page and admin scrolling remain unchanged.
+- Focused frontend tests pass 31/31 with typecheck/build and diff check.
+
+## 2026-11-14 — Animated process journey v2
+
+- Upgraded the CMS-driven My Process section from a static row into an intersection-triggered journey with a drawn connector, traveling lime tracer, staggered step reveals, rotating orbit rings, hover lift and a restrained completion pulse.
+- Tablet retains a horizontally scrollable five-step journey; mobile becomes a vertical animated timeline. Reduced-motion visitors receive the complete static state without looping movement.
+- All content and step visibility remain controlled by the existing Process manager and `statementConfig`; no schema or API change was introduced.
+- Focused frontend tests pass 31/31 with JavaScript syntax, typecheck/build and diff check.
+
+## 2026-11-14 — Profile Showcase hero v2
+
+- Expanded the existing second hero theme to match the supplied composition: centered portrait, top badge, circular upper-right spotlight, left social/proof content, right quote/tags and a bottom ribbon.
+- Added friendly Admin controls for every content group, accent color and independent visibility without replacing the existing `heroConfig` contract.
+- Added a detailed Admin layout schematic and direct forced-style preview links; the query override changes presentation only and never mutates the saved active theme.
+- Added backward-compatible Profile tags and ribbon defaults so older published hero records show the complete composition before their first re-save.
+- Focused frontend tests pass 31/31 with JavaScript syntax, typecheck/build and diff check. Deployed desktop QA verifies all Profile zones and zero overflow; Admin controls are present. Explicit mobile emulation was unavailable in the connected browser, so that viewport remains source-tested rather than visually verified.
+
+## 2026-11-14 - Analytics detail and unified hero controls
+
+- Rebuilt Traffic over time bars as accessible buttons with animated dark/lime tooltips containing date, page views, visitors, sessions and optional inquiries.
+- Added total-view, daily-average and peak-day summaries plus sticky table headers and clearer row/view emphasis without introducing a new color system.
+- Added typewriter motion presets and a real-image schematic to Homepage Hero Manager.
+- Removed the duplicate normal Settings editing path: Settings now links to the Hero Manager and keeps legacy inputs in a collapsed fallback panel.
+- Added backward-compatible hydration and dual-save synchronization so the public live hero image/copy cannot silently diverge from the structured Hero Manager state after saving.
+- Focused tests pass 40/40; JavaScript syntax, TypeScript typecheck/build and diff validation pass.
+
+## 2026-11-14 - Process connector and icon refinement
+
+- Added a theme-consistent SVG wave with a dashed base and animated lime trace between process steps.
+- Added lightweight inline outline icons for Discover, Define, Design, Refine and Deliver without external icon dependencies.
+- Mapped legacy saved glyphs to the new icon set and preserved arbitrary custom-symbol rendering.
+- Added Admin icon-style suggestions for search, pencil, code, rocket, chart and check.
+- Preserved the mobile vertical dashed timeline and reduced-motion behavior.
+- Focused regressions pass 32/32; JavaScript syntax, TypeScript typecheck/build and diff validation pass.
+
+## 2026-11-14 - Shared capsule navigation and CMS control completion
+
+- Applied the capsule navigation contract to every public page through the shared responsive runtime and added missing toggle/menu markup where older templates had none.
+- Rebuilt the mobile navigation as a themed drawer with a real hamburger/close control and reduced homepage mobile hero whitespace.
+- Restored Project ordering that had been shadowed by a duplicate renderer, and added Journal drag/up/down ordering with an atomic validated API endpoint.
+- Removed the obstructive sticky Admin save bar, compacted the legacy hero preview, and changed Profile Hero preview/public output to a dark full-image composition.
+- Added Hero Media Library selection, editable default capability cards, and five Process SVG connector presets while retaining the vertical dashed mobile timeline.
+- JavaScript syntax, TypeScript build, frontend regressions 32/32, static smoke and diff checks pass.
+
+## 2026-11-22 — Release audit and UI consistency repair
+
+- Reconciled four uncommitted Admin preview changes: `admin-homepage-controls.js`, `admin-page-studio.js`, `admin.html`, and `frontend-regressions.test.mjs`.
+- Added resilient Site Modules preview mounting after `admin:siteconfigloaded` and on the next task, with cache-key `20261115-preview-dock-3`.
+- Added shared navigation cache versioning to 12 public HTML shells and bumped the responsive runtime/CSS keys to `20261122-nav-1` / `20261122-1`.
+- Added reduced-motion behavior to the Admin hero typewriter preview and the shared capsule drawer transitions.
+- Fixed mobile inner-page header overlap using scoped `main:not(#top)` clearance while preserving the homepage hero composition.
+- Fixed the login-specific selector so Admin email/password controls compute to 16px under 700px; bumped the Admin typography asset key to `20261122-login-mobile-1`.
+- Automated evidence: 267/267 Node tests; typecheck/build; Prisma validate; static smoke 5/5; performance budgets; JS syntax; diff check.
+- Browser evidence: 1280x800 homepage and Admin; 390x844 homepage drawer, Work, Creative Lab, Hire, Studio, and Admin sign-in. All measured `scrollWidth === clientWidth`; mobile inner-page headings clear the fixed header; Admin input is 16px.
+- Database/authenticated CMS mutation remains explicitly unverified because only a loopback static server was used.

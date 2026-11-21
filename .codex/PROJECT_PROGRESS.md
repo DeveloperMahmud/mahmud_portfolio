@@ -549,6 +549,12 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Full regression evidence: 256/256 Node tests; TypeScript typecheck/build; admin/project/case-study JavaScript syntax; clean diff check.
 - Local Prisma validation remains environment-blocked by missing `DATABASE_URL`; Preview deployment already completed migrations/build successfully for this content.
 - Next: complete the merge commit, push main once, verify the deployed main site/assets, then return the local working branch to Preview for future experiments.
+## Main promotion completed — 2026-11-12
+
+- `origin/main` now contains merge commit `97419dc`, including the Behance projects, accepted Preview refinements, gallery presets and CMS image presentation controls.
+- Main branch alias browser QA passed for assets, long-board containment and horizontal overflow. Authenticated CMS mutation and a real mobile viewport remain unverified.
+- Custom URL follow-up: `mahmudportfolio-azure.vercel.app` still returned an older versionless asset set during the same check; investigate Vercel alias/project assignment separately if that URL is intended as the canonical production domain.
+- Workflow reset: local branch is `codex/v2-preview-2026-11-01`; future new features are implemented and tested here before any later main promotion.
 ## CMS project ordering — 2026-11-12
 
 - Projects can now be reordered directly in the admin list by drag/drop or ↑/↓ controls; the visible order is persisted through canonical `sortOrder` values.
@@ -584,3 +590,63 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - The system is loaded by all 13 primary HTML pages and documented for future components; fluid display headings remain unchanged.
 - Local gate passed: focused suites 35/35, typecheck/build, JavaScript syntax, clean diff and desktop/mobile browser QA without horizontal overflow.
 - Next: commit and push directly to main, then confirm production serves `typography-system.css?v=20261113-typography-1` from admin and public pages.
+
+## Preview capsule navigation and cinematic hero — 2026-11-13
+
+- Preview homepage now uses a floating capsule navigation and full-viewport hero with the portrait integrated into the background rather than confined to a card.
+- Hero copy, typewriter, CTAs and image replacement remain connected to the current CMS selectors; mobile uses the established menu and full-width actions.
+- Local gate passed: 261/261 Node tests, typecheck/build, JavaScript syntax, clean diff and browser visual QA at desktop, intermediate and mobile widths.
+- This experiment belongs only to `codex/v2-preview-2026-11-01`; do not merge or push it to main until the owner accepts the Preview deployment.
+
+## Preview homepage theme selector, services and process — 2026-11-13
+
+- Two CMS-selectable hero themes now share managed content; only one theme can be selected and the whole hero can be hidden.
+- Services render as an accessible shaped accordion with add/remove/reorder/visibility/default-open/tag/link controls in Admin.
+- Skills keep their current CMS library but use compact themed cards. My Process adds editable section copy plus add/remove/reorder/visibility controls for every step.
+- Data stays in existing JSON columns and requires no Prisma migration. Full regressions pass 263/263; typecheck/build and source gates pass. The deployed Preview is verified on desktop/mobile with no horizontal overflow, working accordion interaction, five process steps and both admin managers loaded.
+
+## Animated process journey v2 — 2026-11-14
+
+- The dynamic process module now uses a scroll-triggered connector/tracer animation, staggered node entrances, orbit detail, hover emphasis and a completion pulse while keeping the same CMS data contract.
+- Mobile uses a dedicated vertical timeline and reduced-motion resolves immediately to a stable fully visible state.
+- Focused tests, typecheck/build, JavaScript syntax and diff check pass; Preview deployment visual QA is the remaining gate.
+
+## Profile Showcase hero v2 — 2026-11-14
+
+- The reference-inspired hero is a selectable Profile Showcase theme, separate from Cinematic Dark.
+- Badge, role, portrait, upper-right spotlight, left social labels, right quote, proof, tags, CTAs, accent and ribbon are editable; seven surrounding zones can be independently hidden.
+- Admin includes a more faithful live schematic plus direct forced-style preview links. No database or API change is required because the additive fields remain inside `heroConfig`.
+- Focused tests pass 31/31; JavaScript syntax, typecheck/build and diff check pass. Preview serves `homepage-theme-modules.*?v=20261114-profile-3`; Profile mode shows spotlight, socials, proof, quote, four tags and ribbon without desktop overflow. Admin serves `admin-homepage-theme-manager.js?v=20261114-profile-2` with Profile selection, schematic, preview link and seven toggles. Main remains untouched. Explicit mobile viewport emulation was unavailable in the connected browser.
+
+## Analytics detail and unified hero controls - 2026-11-14
+
+- Traffic bars now provide animated hover, focus and tap details for date, views, visitors, sessions and inquiries, with total views, daily average and peak-day summaries beneath the chart.
+- The implementation reuses the existing dark backgrounds, lime accent, borders, typography and spacing; no unrelated theme or color was introduced.
+- Homepage Hero Manager now adopts the currently live legacy hero image/copy/typewriter values when structured values are absent, and one save synchronizes both data paths.
+- Settings keeps legacy values as a collapsed fallback and directs normal editing to Homepage > Site Modules > Homepage Hero Themes.
+- Local validation passes 40/40 focused regressions, JavaScript syntax, TypeScript typecheck/build and `git diff --check`. Preview deployment and authenticated browser acceptance remain next.
+
+## Process connector and icon refinement - 2026-11-14
+
+- Replaced the straight process connector with a subtle responsive SVG wave, dashed base path and scroll-triggered lime trace using the existing theme tokens.
+- Replaced text glyph defaults with consistent outline search, pencil, code, rocket and chart icons; old saved symbols map automatically and custom symbols remain supported.
+- Admin Process steps now expose named icon-style suggestions through the existing editable field. Mobile keeps the vertical dashed layout.
+- Focused regressions pass 32/32 with JavaScript syntax, TypeScript typecheck/build and clean diff validation. Preview deployment and browser QA are next.
+
+## Shared navigation, ordering and homepage control completion - 2026-11-14
+
+- Unified the capsule header across public templates and replaced the mobile minus control with an accessible three-line menu / close transition and themed drawer.
+- Added working project and journal drag ordering, keyboard-friendly move buttons, and an atomic Journal reorder route.
+- Added Media Library selection for Hero images, editable starter capabilities, five Process connector presets, compact fallback UI and dark full-image Profile Hero rendering.
+- Reduced the mobile hero dead space and changed the mobile Process spine to a dashed treatment.
+- Local validation passes JavaScript syntax, TypeScript build, frontend regressions 32/32, static smoke and diff checks. Preview deployment and authenticated browser persistence checks are next; Main is untouched.
+
+## 2026-11-22 — Preview-to-main release hardening
+
+- Resumed from `codex/v2-preview-2026-11-01`; `main` is an ancestor and Preview is 23 commits ahead before this release commit.
+- Preserved the pending Admin visual-preview mount fix and completed a release audit. Full backend/security contracts remain green through the 267-test suite and Prisma schema validation; no new schema or backend mutation was required.
+- Fixed three cache/motion inconsistencies: every public shell now versions `responsive.js`, the Admin live hero preview stops its typewriter loop for reduced-motion visitors, and the capsule mobile drawer removes transitions for reduced motion.
+- Browser QA found and fixed two additional real mobile defects: inner-page headings were obscured by the fixed capsule header, and the CMS login's higher-specificity 15px rule defeated the intended 16px mobile control size.
+- Local verification passed: `node --test scripts/*.test.mjs` (267/267), `npm.cmd run typecheck`, elevated `npm.cmd run build`, static smoke 5/5, performance budget, Prisma validate with loopback dummy URL, JavaScript syntax, and diff check.
+- Local visual QA passed at `http://127.0.0.1:8799/` for homepage, Work, Creative Lab, Hire, Studio and Admin sign-in at 1280x800 and 390x844 with no horizontal overflow. Authenticated CMS/database behavior remains not verified locally.
+- Exact next action: commit this verified Preview tree, merge it normally into `main` without force, rerun the merge-tree gate, push Preview and `main`, then verify remote refs/deployment assets.

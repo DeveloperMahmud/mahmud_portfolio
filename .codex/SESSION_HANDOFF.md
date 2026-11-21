@@ -793,6 +793,13 @@ Always reconcile these notes with the actual repository before resuming.
 2. Full Node regressions pass 256/256; typecheck/build, JS syntax and diff check pass.
 3. `prisma validate` is locally blocked only by absent `DATABASE_URL`; do not invent or use production credentials for this check.
 4. Next exact action: stage these final records, create the merge commit, push `main` once, wait for deployment propagation, browser-check main assets/layout, close QA tabs and checkout Preview again.
+## Main promotion complete; Preview-first workflow restored (2026-11-12)
+
+1. `origin/main` is at merge commit `97419dc`; the main push was performed once without force.
+2. Vercel main branch alias visually serves the accepted image layout and new CMS assets; no horizontal overflow was observed.
+3. `mahmudportfolio-azure.vercel.app` still served an older build and may be attached to a different Vercel project/alias. Do not confuse that with Git main push failure.
+4. Current local branch is `codex/v2-preview-2026-11-01`, fast-forwarded to the merge. This final evidence commit belongs only on Preview so main remains a single rollback-friendly promotion commit.
+5. Remaining unverified scope: authenticated image-setting save/reload and real mobile viewport QA.
 ## Direct-main project ordering handoff (2026-11-12)
 
 1. Current branch is `main`; owner explicitly requested this small feature bypass Preview and deploy directly to production.
@@ -828,3 +835,54 @@ Always reconcile these notes with the actual repository before resuming.
 2. `typography-system.css` is linked from all 13 primary HTML pages and defines reusable caption, label, helper, body, control and button roles; guidance is recorded in `.codex/TYPOGRAPHY_GUIDELINES.md`.
 3. Validation passed: 35/35 focused tests, typecheck/build, JS syntax, diff check and browser-computed desktop/mobile typography with no horizontal overflow.
 4. Next exact action: commit once, push main once, and confirm production admin/index serve `typography-system.css?v=20261113-typography-1`.
+
+## Preview cinematic homepage handoff (2026-11-13)
+
+1. Active branch is `codex/v2-preview-2026-11-01`; main remains at `7e7b2b8` and must stay untouched for this experiment.
+2. `homepage-cinematic-preview.css` provides the floating capsule nav and full-bleed hero while the existing CMS selectors still own navigation, image, text and CTA content.
+3. Validation passed: 261/261 tests, typecheck/build, JS syntax, diff check and 1280/1024/480 browser QA without overlap or horizontal overflow.
+4. Next exact action: commit and push only the Preview branch, then verify the Preview deployment serves `homepage-cinematic-preview.css?v=20261113-1` and leaves origin/main unchanged.
+
+## Preview homepage themes/modules handoff (2026-11-13)
+
+1. Active branch remains `codex/v2-preview-2026-11-01`; main must remain untouched.
+2. New assets provide the service accordion, two-theme hero runtime/admin manager, compact Skills treatment and dynamic My Process module using existing JSON columns.
+3. The Site Modules save path includes the new `statementConfig` draft while keeping Advanced JSON fallbacks for power users.
+4. Full regressions pass 263/263 and deployed desktop/mobile QA passes. Preview commit `2d59576` is live; both admin managers load, and `origin/main` remains unchanged at `7e7b2b8`.
+
+## Preview Profile Showcase v2 handoff (2026-11-14)
+
+1. Active branch is `codex/v2-preview-2026-11-01`; Main must remain unchanged at `7e7b2b8`.
+2. Profile Showcase now has CMS fields/toggles for every reference zone, a detailed Admin schematic, accent control and `?hero-theme=PROFILE` non-persistent visual override.
+3. Local validation passes: 31/31 focused tests, both JavaScript syntax checks, typecheck/build and `git diff --check`.
+4. Preview commit `33463d6` is deployed with `20261114-profile-3`. Browser QA confirms Profile mode, spotlight, social/proof/quote zones, four tags, ribbon and no desktop overflow; Admin loads the Profile radio, forced-preview link, schematic, spotlight field and seven toggles. Main remains untouched. Explicit mobile viewport emulation was unavailable in the connected browser; responsive source checks pass.
+
+## Preview analytics/hero-control handoff (2026-11-14)
+
+1. Active branch remains `codex/v2-preview-2026-11-01`; Main stays untouched.
+2. Analytics has themed accessible bar detail, summaries and a more readable scrollable table. Homepage Hero Manager is now the single normal control surface for hero image, copy, theme and typewriter motion.
+3. Missing structured hero data hydrates from live legacy values, and Save Site Modules synchronizes both endpoints to prevent old images or phrases from overriding the selected homepage state.
+4. Local validation passes 40/40 focused tests plus JavaScript syntax, typecheck/build and diff checks. Next action: commit/push Preview, verify deployed asset versions, authenticated Analytics interaction and the live hero image shown in the manager.
+
+## Preview process connector/icon handoff (2026-11-14)
+
+1. Active branch remains `codex/v2-preview-2026-11-01`; Main stays untouched.
+2. Homepage My Process uses a responsive wavy dashed SVG path and five consistent editable outline icon styles while preserving custom symbols and legacy saved values.
+3. Public assets use `20261114-process-icons-1`; Admin manager assets use `20261114-controls-4`.
+4. Local validation passes 32/32 focused tests plus syntax, typecheck/build and diff checks. Next: commit/push Preview and visually verify desktop/mobile behavior.
+
+## Preview navigation/CMS completion handoff (2026-11-14)
+
+1. Branch remains `codex/v2-preview-2026-11-01`; do not promote to Main without a new explicit instruction.
+2. Shared capsule navigation/mobile drawer, mobile spacing, Project/Journal ordering, Hero Media Library selection, capabilities manager, Process connector presets and dark full-image Profile layout are implemented locally.
+3. Local checks pass: JavaScript syntax, TypeScript build, frontend 32/32, static smoke and clean diff validation.
+4. Next: commit and push Preview, wait for deployment, then verify public desktop/mobile navigation plus authenticated Admin reorder/media/capability controls.
+
+## 2026-11-22 release handoff checkpoint
+
+- Active branch: `codex/v2-preview-2026-11-01`; working tree contains the reconciled Admin preview fix plus release-hardening fixes and tracking updates. Do not discard them.
+- `updated portfolio` is intentionally out of scope and untouched.
+- Completed locally: all 267 Node tests, typecheck, build, Prisma validation, static smoke, performance budget, syntax, and diff check pass.
+- Visual QA: loopback-only static preview `http://127.0.0.1:8799/` (server PID 12356) passed desktop 1280x800 and mobile 390x844 checks. Homepage/mobile drawer, Work, Creative Lab, Hire, Studio, and Admin login are overflow-free; inner-page H1/header overlap is fixed; mobile login inputs compute to 16px.
+- Expected limitation: static preview cannot verify PostgreSQL content, authentication, CMS saves, publishing, or API persistence. It reports truthful empty/fallback public states.
+- Next exact action: review `git diff`, commit on Preview, switch to `main`, normal `--no-ff` merge Preview, verify tree/tests, push both authorized branches, and verify remote/deployment. Never force push.

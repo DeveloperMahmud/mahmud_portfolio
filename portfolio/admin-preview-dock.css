@@ -1,0 +1,11 @@
+/* One shared preview surface keeps long homepage editors usable beside contextual navigation. */
+.admin-page .hero-theme-layout,.admin-page .process-manager-layout,.admin-page .services-manager-layout{grid-template-columns:minmax(0,1fr)!important}
+.admin-page .hero-theme-layout>aside,.admin-page .process-manager-layout>aside,.admin-page .services-manager-layout>aside{display:none!important}
+.admin-page .site-module-preview-tabs [data-preview-dock]{border-color:rgba(198,255,76,.2)}
+.admin-page #siteModulePreviewCanvas[data-preview-mode]{min-height:360px;padding:12px;overflow:auto;background:radial-gradient(circle at 80% 10%,rgba(198,255,76,.06),transparent 38%),#050706}
+.admin-page #siteModulePreviewCanvas[data-preview-mode="hero"]{padding:0}
+.admin-page #siteModulePreviewCanvas>#heroThemePreview,.admin-page #siteModulePreviewCanvas>#processManagerPreview,.admin-page #siteModulePreviewCanvas>#serviceManagerPreview{width:100%;margin:0}
+.admin-page #siteModulePreviewCanvas>#heroThemePreview>div{min-height:358px;margin:0;border:0}
+.admin-page #siteModulePreviewCanvas>#processManagerPreview{padding:7px 3px!important}
+.admin-page #siteModulePreviewCanvas>#serviceManagerPreview{gap:8px}
+@media(max-width:1050px){.admin-page #siteModulePreviewCanvas[data-preview-mode]{min-height:300px}}
