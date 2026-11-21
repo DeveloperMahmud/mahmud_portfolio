@@ -650,3 +650,10 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Local verification passed: `node --test scripts/*.test.mjs` (267/267), `npm.cmd run typecheck`, elevated `npm.cmd run build`, static smoke 5/5, performance budget, Prisma validate with loopback dummy URL, JavaScript syntax, and diff check.
 - Local visual QA passed at `http://127.0.0.1:8799/` for homepage, Work, Creative Lab, Hire, Studio and Admin sign-in at 1280x800 and 390x844 with no horizontal overflow. Authenticated CMS/database behavior remains not verified locally.
 - Exact next action: commit this verified Preview tree, merge it normally into `main` without force, rerun the merge-tree gate, push Preview and `main`, then verify remote refs/deployment assets.
+
+### Promotion outcome
+
+- Created Preview commit `1315c11`, then normal `--no-ff` main merge `ad2f880`; pushed both branches successfully to GitHub. Remote-tracking refs match those exact commit IDs.
+- Re-ran the merge gate on `main`: 267/267 Node tests, typecheck, build, syntax, and diff checks passed; `git diff codex/v2-preview-2026-11-01..main` was empty before this tracking-only follow-up.
+- Vercel propagation remains pending. The stable Preview URL still returned `responsive.js?v=20261114-nav-2`; `mahmudportfolio-azure.vercel.app` returned the older `responsive.js?v=20261027-studio-v3`. Neither URL yet proves the pushed main build is deployed.
+- Next exact action after propagation: verify `responsive.js?v=20261122-nav-1`, `public-capsule-nav.css?v=20261122-1`, mobile inner-page header clearance, and Admin `typography-system.css?v=20261122-login-mobile-1`; authenticated CMS persistence remains a separate unverified boundary.

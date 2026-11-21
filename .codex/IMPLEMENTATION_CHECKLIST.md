@@ -248,3 +248,9 @@ Preview navigation and CMS control pass (2026-11-14): Shared public pages now re
 - Verification: 267/267 Node tests, TypeScript typecheck/build, Prisma schema validation with a loopback dummy URL, static smoke 5/5, performance budget, JavaScript syntax, and `git diff --check` passed.
 - Visual evidence: local `http://127.0.0.1:8799/` at 1280x800 and 390x844; mobile drawer opens inside the viewport with no overflow; Work/Creative Lab/Hire/Studio H1s clear the fixed header; CMS login is overflow-free at desktop/mobile and its mobile input computes to 16px.
 - Not verified: authenticated CMS mutation/persistence and DB-derived local content; the loopback preview intentionally has no PostgreSQL/session and its public API fallback warnings are expected.
+
+### Main promotion result
+
+- Preview commit `1315c11` and normal merge commit `ad2f880` were pushed successfully; `origin/main` exactly matched `ad2f880` after push and no force operation was used.
+- The merged tree is content-identical to Preview and passed 267/267 Node tests, TypeScript typecheck/build, JavaScript syntax, and diff validation again on `main`.
+- `P8-003` remains `IN_PROGRESS`, not `VERIFIED`: the stable Preview alias still served `responsive.js?v=20261114-nav-2` and the documented custom domain served older `20261027-studio-v3` after the Git push. This is deployment/alias propagation evidence, not a Git failure.

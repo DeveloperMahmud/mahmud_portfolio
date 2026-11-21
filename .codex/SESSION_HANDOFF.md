@@ -886,3 +886,10 @@ Always reconcile these notes with the actual repository before resuming.
 - Visual QA: loopback-only static preview `http://127.0.0.1:8799/` (server PID 12356) passed desktop 1280x800 and mobile 390x844 checks. Homepage/mobile drawer, Work, Creative Lab, Hire, Studio, and Admin login are overflow-free; inner-page H1/header overlap is fixed; mobile login inputs compute to 16px.
 - Expected limitation: static preview cannot verify PostgreSQL content, authentication, CMS saves, publishing, or API persistence. It reports truthful empty/fallback public states.
 - Next exact action: review `git diff`, commit on Preview, switch to `main`, normal `--no-ff` merge Preview, verify tree/tests, push both authorized branches, and verify remote/deployment. Never force push.
+
+### Post-push state
+
+- Git push succeeded: Preview `1315c11`; main merge `ad2f880`. No force push. The merged source tree was re-tested successfully on main.
+- Deployment is not yet claimed. Preview stable alias remains on `20261114-nav-2`; the documented custom domain remains on `20261027-studio-v3` and appears attached to an older build/project alias.
+- Keep P8-003 `IN_PROGRESS` until a deployed URL serves the `20261122` asset keys and passes desktop/mobile checks. Do not repeat implementation work.
+- Authenticated CMS save/reload and database-derived content are still `NOT VERIFIED` in the local environment.

@@ -1241,3 +1241,11 @@
 - Automated evidence: 267/267 Node tests; typecheck/build; Prisma validate; static smoke 5/5; performance budgets; JS syntax; diff check.
 - Browser evidence: 1280x800 homepage and Admin; 390x844 homepage drawer, Work, Creative Lab, Hire, Studio, and Admin sign-in. All measured `scrollWidth === clientWidth`; mobile inner-page headings clear the fixed header; Admin input is 16px.
 - Database/authenticated CMS mutation remains explicitly unverified because only a loopback static server was used.
+
+### Git promotion and remote observation
+
+- Committed the verified Preview tree as `1315c11` (`Harden shared previews and mobile navigation`).
+- Fetched origin, confirmed `origin/main` was an ancestor of Preview, and created normal merge commit `ad2f880` (`Merge verified portfolio preview into main`).
+- Pushed Preview `2cb9ed8..1315c11` and main `7e7b2b8..ad2f880` successfully. No force push or destructive Git operation occurred.
+- Re-ran the main merge gate: 267/267 tests, typecheck/build, JavaScript syntax and diff checks passed.
+- Remote browser observation immediately after push found Vercel propagation incomplete: Preview served `20261114-nav-2` and the documented custom domain served `20261027-studio-v3`. Deployment acceptance is therefore pending rather than fabricated.
