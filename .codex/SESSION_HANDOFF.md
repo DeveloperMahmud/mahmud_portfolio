@@ -922,4 +922,13 @@ Always reconcile these notes with the actual repository before resuming.
 6. Visual evidence: desktop localhost at 1440x900 visibly shows the dashed wave and no overflow. Mobile 390x844 geometry is one column with no overflow; authenticated local Admin/persistence is unavailable. Loopback preview is running at `http://127.0.0.1:8799/` under PID 10076.
 7. Cache key is `20261122-hero-media-2`. Production still serves the old deployment until commit/push.
 8. Next exact action: obtain explicit commit/push authorization, commit once, push `main`, wait for deployment, then verify the compact header, Hero Media controls, Project/Journal metadata/View links and TMNT presentation round trip.
+
+## Post-deployment handoff
+
+1. Release commit `bdeb9de` is on `origin/main`; push was normal and non-destructive.
+2. Both `mahmudportfolio-git-main-alpha-8307.vercel.app` and `mahmudportfolio-azure.vercel.app` serve `20261122-hero-media-2`.
+3. Authenticated production Admin desktop is accepted read-only: top header ~102px, `min-height:0`, H1 30.72px; Hero Media panel and library/upload actions are present; Project/Journal metadata and links plus Dotted are present.
+4. TMNT public acceptance: full board `ORIGINAL`, cover `ROUNDED`, two media placements total, no horizontal overflow, no console errors.
+5. No CMS record was saved, published, reordered or deleted during deployment verification. Authenticated mobile screenshot and deliberate save/reload remain optional follow-ups, not blockers for the released source fix.
+6. The working tree will contain only the post-deployment recovery-record commit until it is committed/pushed immediately after this checkpoint.
 - Final Preview recheck: the stable branch alias now serves `responsive.js?v=20261122-nav-1` without horizontal overflow. The custom domain is still stale; do not repeat the code fixes when resuming—investigate Vercel project/alias routing instead.

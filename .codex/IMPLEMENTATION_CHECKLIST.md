@@ -283,3 +283,12 @@ Preview navigation and CMS control pass (2026-11-14): Shared public pages now re
 - Verification: focused 45/45, full Node 270/270, JavaScript syntax, TypeScript typecheck/build and `git diff --check` pass.
 - Visual evidence: desktop Process at 1440x900 shows a dashed curving line, five equal steps and no overflow. Mobile 390x844 geometry is single-column and `scrollWidth === clientWidth`; exact Process viewport screenshot was not recaptured due dynamic hash timing.
 - **NOT VERIFIED:** Authenticated Hero controls, compact Admin header and save/reload require a deployed database-backed CMS. No commit, push or deployment was made; `updated portfolio` remains untouched.
+
+### Main deployment acceptance (2026-11-22)
+
+- **VERIFIED:** Commit `bdeb9de` was pushed normally to `origin/main`; both the Vercel main alias and `mahmudportfolio-azure.vercel.app` now serve `20261122-hero-media-2` assets.
+- **VISUALLY VERIFIED:** Authenticated production Admin desktop header is approximately 102px tall with `min-height: 0` and a 30.72px H1. The previous 404px blank header is gone.
+- **VISUALLY VERIFIED:** Hero Media panel displays the selected image, upload control, Media Library chooser/open actions, URL, alt and focal controls without horizontal overflow.
+- **VERIFIED READ-ONLY:** Project and Journal libraries expose Last Edited metadata and public View links; Process includes Dotted; no save/publish/delete mutation was performed during acceptance.
+- **VERIFIED:** Published TMNT renders `full-board.jpg` once with inherited `ORIGINAL` fit and its cover once with `ROUNDED` frame; `scrollWidth === clientWidth` and the deployed Project runtime uses the new key.
+- Production/main/custom-domain acceptance is complete for this batch. Mobile remains locally responsive-tested rather than authenticated production screenshot-verified.

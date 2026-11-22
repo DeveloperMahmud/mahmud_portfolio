@@ -1282,3 +1282,12 @@
 - Verification: JavaScript syntax, focused 45/45, full Node 270/270, typecheck/build and diff check pass.
 - Browser QA: localhost desktop 1440x900 visibly showed the curved dashed connector; base/trace were `7px, 12px` / `9px, 13px`, with zero overflow. Mobile 390x844 computed one column and zero overflow. No console errors.
 - No commit, push, deployment, production mutation, migration or dependency change. `updated portfolio` was not modified; authenticated post-deploy verification remains required.
+
+## 2026-11-22 — Main deployment and production acceptance
+
+- With user authorization, committed the verified batch as `bdeb9de` and pushed `main` from `a4f822c` to `bdeb9de`; no force push or merge rewrite was used.
+- Waited for Vercel propagation. The main branch alias and custom domain both switched from `20261114` assets to `20261122-hero-media-2`.
+- Deployed Process reported five equal columns, dash arrays `7px, 12px` / `9px, 13px`, and no horizontal overflow.
+- Authenticated Admin desktop visually confirmed the compact header (~102px vs prior 404px) and polished Hero Media panel. DOM checks confirmed selected media, upload, choose/open library actions, Last Edited/View feedback and Dotted.
+- Published TMNT rendered its full board once with `ORIGINAL` fit inherited into the modular block and its cover once with `ROUNDED`; page width remained contained.
+- Production verification was read-only and recorded zero console errors. No data mutation or destructive operation occurred.

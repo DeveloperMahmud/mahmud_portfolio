@@ -685,3 +685,12 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Browser evidence at 1440x900 reported dash arrays `7px, 12px` and `9px, 13px`, five equal columns and zero horizontal overflow. Mobile 390x844 reported one column and zero overflow.
 - Current gate: 45/45 focused and 270/270 full tests pass; typecheck/build/diff checks pass. The worktree remains uncommitted on `main`; production is unchanged.
 - Exact next action: obtain explicit authorization, commit/push once, wait for deployment, then repeat authenticated desktop/mobile Admin and TMNT save/reload verification.
+
+### Main release completed
+
+- User authorized release; commit `bdeb9de` (`Polish CMS hero and project presentation controls`) was created on `main` and pushed without force.
+- Vercel main alias and the custom production domain propagated to `20261122-hero-media-2`.
+- Authenticated read-only production acceptance passed: compact 102px header, Hero Media controls, selected-image card, Media Library actions, Project/Journal Last Edited and View links, and Dotted option are present.
+- Published TMNT confirms the presentation bridge: the full board renders once at `ORIGINAL`, the cover renders once with `ROUNDED`, and there is no horizontal overflow.
+- Console error counts were zero on custom homepage/Admin, main alias and TMNT project. No production content mutation was used for verification.
+- Remaining limitation: authenticated production mobile screenshots and an intentional save/reload mutation were not performed; existing persisted TMNT values plus public rendering provide read-only round-trip evidence.
