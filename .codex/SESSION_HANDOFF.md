@@ -893,4 +893,33 @@ Always reconcile these notes with the actual repository before resuming.
 - Deployment is not yet claimed. Preview stable alias remains on `20261114-nav-2`; the documented custom domain remains on `20261027-studio-v3` and appears attached to an older build/project alias.
 - Keep P8-003 `IN_PROGRESS` until a deployed URL serves the `20261122` asset keys and passes desktop/mobile checks. Do not repeat implementation work.
 - Authenticated CMS save/reload and database-derived content are still `NOT VERIFIED` in the local environment.
+
+## 2026-11-22 CMS feedback/image repair handoff
+
+1. Active branch is `main`; the worktree is intentionally dirty with the CMS feedback, Process connector, compact header, Hero shortcut and project gallery-render fixes. `updated portfolio` is out of scope and untouched.
+2. The project image problem was a frontend omission: when enabled modular blocks existed, top-level `project.gallery` was never rendered. `portfolio/project.js` now renders only gallery URLs absent from enabled blocks, so saved fit/frame data reaches the page without duplicates.
+3. Project/Journal libraries and editors now show status/last-edited feedback and publication-safe View links. The Homepage Hero shortcut targets `.hero-theme-manager`; My Process offers `DOTTED`; the desktop CMS top header is compacted.
+4. Evidence passed: JS syntax, focused 43/43, full 268/268, typecheck, build and diff check. Loopback public Process visual QA passed at 1440x900 and 390x844. The preview server on `127.0.0.1:8799` is stopped.
+5. Authenticated CMS save/reload and DB-derived public project rendering remain **NOT VERIFIED** because the local static preview has no login/database. Do not claim them as visually accepted.
+6. Exact next action: obtain/use an authenticated CMS environment, round-trip a Project gallery presentation change, inspect the published case study, timestamps/View links and Hero manager at desktop/mobile, then commit/push only after explicit user authorization for this batch.
+
+### Authenticated production evidence (2026-11-22)
+
+1. The live CMS was inspected without mutations. It loads 23 published Projects and five Journal records with database/storage configured.
+2. Live Admin is still on older assets and reproduces every reported issue: 404px desktop top header with `min-height:100%`, no last-edited/View UI, stale `OPEN HERO COPY` shortcut, and no Dotted Process preset.
+3. TMNT gallery values are persisted in the editor (`ROUNDED` cover and `ORIGINAL / NO CROP` full board), but the public project renders only its hero and modular full-board block. This runtime evidence confirms persistence works and the deployed renderer omits the top-level gallery when blocks exist.
+4. Local source already contains fixes and all prior automated gates pass, but the fixes are uncommitted and not deployed. Do not describe production as fixed yet.
+5. Next action: after explicit authorization, commit/push/deploy the local `main` batch, then verify header geometry, Project/Journal metadata/links, Hero shortcut, Dotted preset and the public project image presentation in the authenticated live environment.
+6. The duplicate image ownership is resolved locally: the modular block owns placement, AUTO inherits matching gallery presentation, explicit block values override it, and the gallery card identifies/jumps to its owner.
+
+## 2026-11-22 final local CMS feedback handoff
+
+1. Active branch is `main`; all changes remain uncommitted. Do not touch `updated portfolio` or discard unrelated dirty work.
+2. Process: `WAVE_DASHED` uses dashed base/trace layers; Dotted preview, dynamic step count and Profile focal-point variables are wired.
+3. Hero: the Hero Media panel exposes clickable selected media, Media Library selection with alt transfer, upload, URL/alt/focal fields and one atomic Site Config save. Full statement siblings are preserved.
+4. Project presentation: normalized nested block URLs prevent duplicates; AUTO block presentation inherits gallery values; the gallery editor identifies an owning block and jumps to it.
+5. Validation passes: JavaScript syntax, 45/45 focused, 270/270 full Node tests, typecheck, production build and diff check.
+6. Visual evidence: desktop localhost at 1440x900 visibly shows the dashed wave and no overflow. Mobile 390x844 geometry is one column with no overflow; authenticated local Admin/persistence is unavailable. Loopback preview is running at `http://127.0.0.1:8799/` under PID 10076.
+7. Cache key is `20261122-hero-media-2`. Production still serves the old deployment until commit/push.
+8. Next exact action: obtain explicit commit/push authorization, commit once, push `main`, wait for deployment, then verify the compact header, Hero Media controls, Project/Journal metadata/View links and TMNT presentation round trip.
 - Final Preview recheck: the stable branch alias now serves `responsive.js?v=20261122-nav-1` without horizontal overflow. The custom domain is still stale; do not repeat the code fixes when resuming—investigate Vercel project/alias routing instead.

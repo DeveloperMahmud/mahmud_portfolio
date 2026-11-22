@@ -658,3 +658,30 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Vercel propagation remains pending. The stable Preview URL still returned `responsive.js?v=20261114-nav-2`; `mahmudportfolio-azure.vercel.app` returned the older `responsive.js?v=20261027-studio-v3`. Neither URL yet proves the pushed main build is deployed.
 - Next exact action after propagation: verify `responsive.js?v=20261122-nav-1`, `public-capsule-nav.css?v=20261122-1`, mobile inner-page header clearance, and Admin `typography-system.css?v=20261122-login-mobile-1`; authenticated CMS persistence remains a separate unverified boundary.
 - Stable Preview propagation is now confirmed for `responsive.js?v=20261122-nav-1` with `scrollWidth === clientWidth === 1265`. The custom production domain still serves its older project/build and remains a separate alias-routing follow-up.
+
+## CMS feedback and image-presentation repair - 2026-11-22
+
+- Added clear saved-state feedback to Projects and Journal/Content: status, last edit time and public View links are available in both the library and editor where publication rules permit.
+- Corrected the Homepage hero shortcut to open the existing unified Hero Theme Manager, and added a selectable dotted Process connector preset.
+- Reduced the oversized desktop `Control the work.` workspace header by excluding `.admin-top`/`.tabs` from the full-height rule and applying a compact desktop header treatment.
+- Diagnosed the project image issue as a render disconnect, not a failed gallery save: when modular blocks existed, `project.gallery` was omitted. Public project rendering now appends only gallery images that are not already used by enabled blocks, preserving fit/frame metadata without duplication.
+- Validation passed: 43/43 focused tests, 268/268 full tests, JavaScript syntax, typecheck, build and diff check.
+- Static browser QA passed for the public Process section at 1440x900 and 390x844. The CMS requires an authenticated database-backed session for true save/reload and workspace visual acceptance, so those checks remain pending.
+- Exact next action: use an authenticated CMS session to round-trip one Project image fit/frame change, verify Project/Journal timestamps and View links plus Hero manager navigation on desktop/mobile, then request explicit authorization before committing or pushing the dirty `main` worktree.
+
+### Authenticated live comparison
+
+- Production CMS authentication succeeded and reported 23 projects, 23 published projects, five Journal records, healthy system status, and configured database/storage.
+- The live deployment is older than the local batch: Admin still serves `admin.js?v=20261113-project-block-layout-1` and `admin-ui-polish.css?v=20261115-preview-dock-3`; the public project surface still serves the older homepage/project asset set.
+- Live desktop measurement reproduced the oversized header (`min-height: 100%`, 404px tall, ~53px H1). Project/Journal libraries lack last-edited/View feedback, the Hero shortcut remains stale, and Dotted is absent.
+- Saved TMNT gallery metadata is visible after loading the editor, while the published route omits the top-level gallery when modular blocks render. Backend persistence is therefore present; the disconnect is in the deployed presentation path.
+- Next exact action is unchanged: obtain explicit commit/push authorization for this batch, deploy, then repeat the same authenticated checks and one controlled save/reload round trip.
+- The duplicated-media edge is resolved locally: modular blocks own placement; AUTO block presentation inherits matching gallery values, explicit block settings override them, and the gallery card identifies/jumps to its owner.
+
+### Local completion after ownership and Hero workflow repair
+
+- Hero image management is consolidated in the Homepage Hero Manager: selected media is clickable, existing Media Library images can be selected, uploads remain available, and alt text/focal point stay editable.
+- Homepage save is one atomic `/maintenance/site-config` operation; it preserves non-Process statement data and derives legacy hero compatibility fields server-side.
+- Browser evidence at 1440x900 reported dash arrays `7px, 12px` and `9px, 13px`, five equal columns and zero horizontal overflow. Mobile 390x844 reported one column and zero overflow.
+- Current gate: 45/45 focused and 270/270 full tests pass; typecheck/build/diff checks pass. The worktree remains uncommitted on `main`; production is unchanged.
+- Exact next action: obtain explicit authorization, commit/push once, wait for deployment, then repeat authenticated desktop/mobile Admin and TMNT save/reload verification.

@@ -98,7 +98,7 @@ test('CMS image presentation controls are validated and remain backward compatib
   assert.match(project,/data-media-width/);
   assert.match(styles,/data-media-width="FULL"/);
   assert.match(styles,/data-mobile-width="FULL"/);
-  assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
+  assert.match(html,/admin\.js\?v=20261122-hero-media-2/);
 });
 
 test('project order is draggable, accessible and persisted atomically',async()=>{

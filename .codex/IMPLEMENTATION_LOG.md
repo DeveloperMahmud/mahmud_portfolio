@@ -1250,3 +1250,35 @@
 - Re-ran the main merge gate: 267/267 tests, typecheck/build, JavaScript syntax and diff checks passed.
 - Remote browser observation immediately after push found Vercel propagation incomplete: Preview served `20261114-nav-2` and the documented custom domain served `20261027-studio-v3`. Deployment acceptance is therefore pending rather than fabricated.
 - A later stable-Preview recheck served `responsive.js?v=20261122-nav-1` and retained equal client/scroll widths, proving the new Preview build propagated. The documented custom domain remains on the older build and is not represented as accepted.
+
+## 2026-11-22 - CMS save feedback and project gallery presentation
+
+- Added formatted `updatedAt` feedback and publication-aware View links to Project and Journal/Content libraries and editor headers.
+- Corrected the Homepage hero control card so `CUSTOMIZE HERO` reaches the real Hero Theme Manager instead of a stale selector.
+- Added a dotted Process connector preset to the existing JSON-backed manager/public renderer and disabled its animation for reduced-motion users.
+- Fixed the oversized desktop CMS header by keeping `.admin-top` and `.tabs` out of the workspace panel min-height rule and applying compact header sizing.
+- Traced apparently ineffective Project image fit/frame changes to the public renderer: modular blocks caused the complete top-level gallery to be skipped. The renderer now collects enabled block media URLs and appends only remaining gallery images, preserving presentation settings and avoiding duplicates.
+- Updated cache keys and regression contracts. Passed 43/43 focused tests, 268/268 full tests, JavaScript syntax, TypeScript typecheck/build and `git diff --check`.
+- Browser-reviewed the Process region through `http://127.0.0.1:8799/#process` at 1440x900 and its mobile layout at 390x844. Static source confirmed the Dotted option and Hero manager; authenticated CMS persistence and DB-backed project output remain unverified.
+- No commit, push, deployment, schema migration or dependency was introduced. `updated portfolio` was not modified.
+
+### Authenticated live audit
+
+- Opened the production CMS with the owner's authenticated session and performed read-only inspection; no form was submitted and no record was mutated.
+- Confirmed backend availability: 23 projects, 23 published, five Journal items, healthy status, and configured database/storage.
+- Measured the deployed desktop Dashboard header at 404px with `min-height:100%` and an approximately 53px H1, reproducing the reported oversized empty area.
+- Confirmed deployed Project/Journal libraries and editors omit last-edited and View-link feedback; the Hero shortcut still points at the removed legacy editor; the deployed Process manager lacks Dotted.
+- Loaded the published TMNT project. The editor contains persisted gallery fit/frame values, while the public route contains only the hero and modular full-board image. This distinguishes a working save path from the deployed renderer omission fixed locally.
+- Asset inspection confirmed production is serving pre-fix cache keys. Deployment verification must follow an explicitly authorized commit/push; no production write was attempted during this audit.
+- Resolved the presentation-ownership edge locally: the block owns placement, AUTO inherits matching gallery presentation, explicit block values override it, and the gallery editor identifies the owning block.
+
+## 2026-11-22 — Hero media, dashed wave and presentation ownership completion
+
+- Made the desktop Process wave visibly dashed on both layers while preserving the curved route, tracer motion, reduced-motion behavior, dynamic step count and mobile layout.
+- Added selected-image preview, Media Library click-through/selection, alt transfer, direct upload and URL/alt/focal editing to one Hero Media group.
+- Replaced the two-request Hero save with one Site Config write; server compatibility fields share the same revision/update and all `statementConfig` siblings survive.
+- Applied hero focal point through the CSS variable used by public and Admin previews; normalized nested block media URLs and added gallery-owner editor guidance.
+- Bumped changed runtime keys to `20261122-hero-media-2` and extended regression contracts.
+- Verification: JavaScript syntax, focused 45/45, full Node 270/270, typecheck/build and diff check pass.
+- Browser QA: localhost desktop 1440x900 visibly showed the curved dashed connector; base/trace were `7px, 12px` / `9px, 13px`, with zero overflow. Mobile 390x844 computed one column and zero overflow. No console errors.
+- No commit, push, deployment, production mutation, migration or dependency change. `updated portfolio` was not modified; authenticated post-deploy verification remains required.

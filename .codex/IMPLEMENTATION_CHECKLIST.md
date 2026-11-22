@@ -255,3 +255,31 @@ Preview navigation and CMS control pass (2026-11-14): Shared public pages now re
 - The merged tree is content-identical to Preview and passed 267/267 Node tests, TypeScript typecheck/build, JavaScript syntax, and diff validation again on `main`.
 - `P8-003` remains `IN_PROGRESS`, not `VERIFIED`: the stable Preview alias still served `responsive.js?v=20261114-nav-2` and the documented custom domain served older `20261027-studio-v3` after the Git push. This is deployment/alias propagation evidence, not a Git failure.
 - Follow-up propagation check: the stable Preview alias advanced to `responsive.js?v=20261122-nav-1` with no horizontal overflow. The documented custom domain mismatch remains unresolved, so full production acceptance is still not claimed.
+
+## 2026-11-22 CMS feedback and project presentation checkpoint
+
+- **COMPLETED / TESTED:** Project and Journal libraries now show `updatedAt`-based last-edited metadata, published records expose a public View link, and both editors show status, last-edited time and the same contextual link.
+- **COMPLETED / TESTED:** Homepage Hero shortcut now targets the actual `.hero-theme-manager`, whose controls already cover image upload/library selection, crop/focal point, alt text, theme, copy and motion.
+- **COMPLETED / TESTED:** Desktop CMS header no longer inherits the full-height panel rule and uses a compact heading treatment. My Process now includes a `DOTTED` connector preset with reduced-motion-safe public styling.
+- **COMPLETED / TESTED:** Project pages retain modular blocks but also render top-level gallery images not represented by those blocks. This reconnects saved gallery fit/frame metadata to the public case study without duplicating block images.
+- Verification: JavaScript syntax checks passed; focused regressions passed 43/43; full Node suite passed 268/268; `npm.cmd run typecheck`, `npm.cmd run build`, and `git diff --check` passed.
+- Visual evidence: loopback preview `http://127.0.0.1:8799/#process` was checked at 1440x900 and the process region at 390x844; layouts remained contained and the mobile vertical connector stayed legible. Admin sign-in and hidden CMS source confirmed the manager/option assets, but authenticated CMS save/reload, timestamps, links, compact workspace header and DB-backed project rendering are **NOT VISUALLY VERIFIED**.
+- `updated portfolio` remains intentionally out of scope and untouched. No commit or push was made for this checkpoint.
+
+### Authenticated production audit (2026-11-22)
+
+- **LIVE ISSUE CONFIRMED:** At the effective 1263x546 desktop viewport, `.admin-top` still computes `min-height: 100%`, is 404px tall, and renders its H1 at about 53px. The local compact-header fix is not deployed.
+- **LIVE ISSUE CONFIRMED:** Project and Journal libraries/editors do not show last-edited metadata or public View links. The local feedback/link implementation is not deployed.
+- **LIVE ISSUE CONFIRMED:** The Hero card still says `OPEN HERO COPY` and targets an absent legacy surface; clicking it does not reach the visible `.hero-theme-manager`. The deployed Process selector contains five older presets and no `DOTTED` option.
+- **ROOT CAUSE RUNTIME-EVIDENCED:** The TMNT record retains gallery presentation data (cover `ROUNDED`; full board `ORIGINAL / NO CROP`), proving the backend save is present. Its public case study renders only the hero plus the modular full-board block, so top-level gallery presentation is bypassed while blocks exist. This matches the local renderer fix.
+- Production was inspected read-only; no record was saved, reordered, published or deleted. Reverification requires committing/pushing/deploying the local batch first.
+- **FOLLOW-UP RESOLVED LOCALLY:** TMNT's duplicated full-board media now has an explicit contract: the modular block owns placement; AUTO inherits matching gallery presentation, while an explicit block setting overrides it. The gallery editor labels the owning block and links to it.
+
+### CMS feedback completion checkpoint (2026-11-22)
+
+- **COMPLETED / TESTED:** Desktop `WAVE_DASHED` renders visible dash sequences (`7 12` base, `9 13` animated trace); `DOTTED` is also represented in the Admin preview.
+- **COMPLETED / TESTED:** Hero Manager provides a Hero Media panel with selected-image preview, clickable Media Library navigation, existing-media selection with alt-text transfer, direct upload, URL/alt/focal controls and a single atomic Site Config save.
+- **COMPLETED / TESTED:** Full `statementConfig` siblings are preserved; Process steps are reindexed; the server derives legacy hero fields inside the same Site Settings update/revision.
+- Verification: focused 45/45, full Node 270/270, JavaScript syntax, TypeScript typecheck/build and `git diff --check` pass.
+- Visual evidence: desktop Process at 1440x900 shows a dashed curving line, five equal steps and no overflow. Mobile 390x844 geometry is single-column and `scrollWidth === clientWidth`; exact Process viewport screenshot was not recaptured due dynamic hash timing.
+- **NOT VERIFIED:** Authenticated Hero controls, compact Admin header and save/reload require a deployed database-backed CMS. No commit, push or deployment was made; `updated portfolio` remains untouched.

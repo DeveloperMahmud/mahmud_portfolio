@@ -143,7 +143,7 @@ test('admin navigation remains discoverable and keyboard accessible on mobile',a
   assert.match(runtime,/id=\"adminMenuToggle\"/);
   assert.match(runtime,/aria-controls=\"adminSidebar\"/);
   assert.match(runtime,/admin-mobile-nav\.css/);
-  assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
+  assert.match(html,/admin\.js\?v=20261122-hero-media-2/);
   assert.match(runtime,/admin-mobile-nav\.css\?v=20261102-1/);
   assert.match(css,/@media\(max-width:1050px\)/);
   assert.match(css,/body\.admin-menu-open \.admin-sidebar\{transform:translateX\(0\)/);
@@ -169,8 +169,8 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/#admin-/);
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
-  assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
-  assert.match(html,/admin-page-studio\.js\?v=20261115-preview-dock-3/);
+  assert.match(html,/admin\.js\?v=20261122-hero-media-2/);
+  assert.match(html,/admin-page-studio\.js\?v=20261122-hero-media-2/);
   assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
@@ -400,8 +400,13 @@ test('case-study media adapts long Behance boards without tiny letterboxed heroe
   assert.match(styles,/data-media-fit="CONTAIN"/);
   assert.match(styles,/data-media-frame="CARD"/);
   assert.match(styles,/data-mobile-aspect="PORTRAIT"/);
-  assert.match(html,/project\.js\?v=20261112-image-presentation-1/);
-  assert.match(html,/styles\.css\?v=20261112-image-presentation-1/);
+  assert.match(html,/project\.js\?v=20261122-hero-media-2/);
+  assert.match(html,/styles\.css\?v=20261122-cms-feedback-1/);
+  assert.match(project,/blockMediaUrls/);
+  assert.match(project,/mediaUrlKey/);
+  assert.match(project,/inheritGalleryPresentation/);
+  assert.match(project,/key === 'url' \|\| \/Url\$\//);
+  assert.match(project,/renderGallery\(remainingGallery, project\.title\)/);
 });
 
 test('project and journal workspaces open on their libraries and reveal editors on demand',async()=>{
@@ -421,8 +426,58 @@ test('project and journal workspaces open on their libraries and reveal editors 
   assert.match(styles,/#projectsTab>section:first-child,#contentTab>section:first-child\{display:none\}/);
   assert.match(styles,/\.is-editor-open>section:first-child/);
   assert.match(styles,/\.is-editor-open>section:nth-child\(2\)/);
-  assert.match(html,/admin\.js\?v=20261113-project-block-layout-1/);
+  assert.match(html,/admin\.js\?v=20261122-hero-media-2/);
   assert.match(html,/styles\.css\?v=20261114-analytics-hero-2/);
+});
+
+test('CMS libraries expose save timestamps, live links, compact header and the current hero manager',async()=>{
+  const [admin,polish,homepageControls]=await Promise.all([
+    read('portfolio/admin.js'),
+    read('portfolio/admin-ui-polish.css'),
+    read('portfolio/admin-homepage-controls.js')
+  ]);
+  assert.match(admin,/formatAdminTimestamp/);
+  assert.match(admin,/LAST EDITED/);
+  assert.match(admin,/VIEW LINK APPEARS WHEN PUBLISHED/);
+  assert.match(admin,/publicRecordUrl\('project'/);
+  assert.match(admin,/publicRecordUrl\('content'/);
+  assert.match(polish,/:not\(\.admin-top\):not\(\.tabs\)/);
+  assert.match(polish,/admin-main>\.admin-top\{min-height:0/);
+  assert.match(homepageControls,/target:'\.hero-theme-manager'/);
+  assert.match(homepageControls,/action:'CUSTOMIZE HERO'/);
+});
+
+test('hero media controls support upload, library selection and selected-file navigation',async()=>{
+  const [manager,extras,admin,managerStyles]=await Promise.all([
+    read('portfolio/admin-homepage-theme-manager.js'),
+    read('portfolio/admin-homepage-extras.js'),
+    read('portfolio/admin.js'),
+    read('portfolio/admin-homepage-theme-manager.css')
+  ]);
+  assert.match(manager,/hero-media-manager/);
+  assert.match(manager,/heroSelectedMediaCard/);
+  assert.match(manager,/UPLOAD NEW IMAGE/);
+  assert.match(manager,/openAdminMediaLibrary/);
+  assert.match(extras,/CHOOSE FROM MEDIA LIBRARY/);
+  assert.match(extras,/data-media-alt/);
+  assert.match(extras,/Hero image selected/);
+  assert.match(admin,/window\.openAdminMediaLibrary/);
+  assert.match(managerStyles,/\.hero-selected-media/);
+  assert.match(managerStyles,/button\[aria-pressed=true\]/);
+});
+
+test('homepage saves preserve statement data and atomically derive legacy hero fields',async()=>{
+  const [manager,route]=await Promise.all([
+    read('portfolio/admin-homepage-theme-manager.js'),
+    read('src/routes/maintenance.ts')
+  ]);
+  assert.match(manager,/statementEnvelope/);
+  assert.match(manager,/JSON\.stringify\(\{\.\.\.statementEnvelope,process\}/);
+  assert.match(manager,/map\(\(item,sortOrder\)=>\(\{\.\.\.item,sortOrder\}\)\)/);
+  assert.equal((manager.match(/fetch\('\/api\/admin\/maintenance\/site-config'/g)||[]).length,1);
+  assert.match(route,/data\.heroImage=hero\.desktopImage/);
+  assert.match(route,/data\.heroLeadText=hero\.leadText/);
+  assert.match(route,/data\.heroTypewriterPhrases=phrases/);
 });
 
 test('modular project blocks keep full editor geometry instead of collection-row columns',async()=>{
@@ -523,8 +578,8 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
     read('portfolio/admin.js')
   ]);
   assert.match(html,/id="process"/);
-  assert.match(html,/homepage-theme-modules\.js\?v=20261114-process-icons-2/);
-  assert.match(html,/homepage-theme-modules\.css\?v=20261114-process-icons-5/);
+  assert.match(html,/homepage-theme-modules\.js\?v=20261122-hero-media-2/);
+  assert.match(html,/homepage-theme-modules\.css\?v=20261122-hero-media-2/);
   assert.match(runtime,/hero-profile-preview/);
   assert.match(runtime,/hero-cinematic-preview/);
   assert.match(runtime,/hero-theme/);
@@ -534,6 +589,8 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   assert.match(runtime,/processTrack/);
   assert.match(runtime,/IntersectionObserver/);
   assert.match(runtime,/--step-index/);
+  assert.match(runtime,/--process-count/);
+  assert.match(runtime,/--hero-focal-point/);
   assert.match(styles,/\.hero-profile-preview/);
   assert.match(styles,/\.process-track/);
   assert.match(styles,/\.process-section\.is-process-visible \.process-progress/);
@@ -541,6 +598,8 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   assert.match(styles,/\.process-icon::before/);
   assert.match(styles,/\.process-connector-base/);
   assert.match(styles,/stroke-dasharray:4 9/);
+  assert.match(styles,/data-connector-style="WAVE_DASHED"/);
+  assert.match(styles,/processWaveDashFlow/);
   assert.match(styles,/@keyframes processContentIn/);
   assert.match(styles,/\.process-step\{opacity:1\}/);
   assert.match(runtime,/class="process-connector"/);
@@ -556,15 +615,19 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   assert.match(manager,/spotlightLabel/);
   assert.match(manager,/heroTypewriterPreset/);
   assert.match(manager,/heroTypewriterPhrases/);
-  assert.match(manager,/settings\?[^\n]*heroImage/s);
+  assert.match(manager,/maintenance\/site-config/);
   assert.match(manager,/statementConfig/);
   assert.match(manager,/data-process-remove/);
   assert.match(manager,/stopImmediatePropagation/);
   assert.match(managerStyles,/\.hero-theme-options/);
   assert.match(managerStyles,/\.preview-spotlight/);
+  assert.match(managerStyles,/data-connector="DOTTED"/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.js/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.css/);
-  assert.match(pageStudio,/20261115-preview-dock-3/);
+  assert.match(pageStudio,/20261122-hero-media-2/);
+  assert.match(manager,/DOTTED JOURNEY/);
+  assert.match(runtime,/DOTTED:/);
+  assert.match(styles,/data-connector-style="DOTTED"/);
   assert.match(admin,/skillsConfig/);
 });
 
@@ -602,7 +665,7 @@ test('admin homepage previews stay live and long workspaces expose contextual na
   assert.match(dockStyles,/display:none!important/);
   assert.match(loader,/admin-context-index\.js/);
   assert.match(loader,/admin-preview-dock\.js/);
-  assert.match(html,/admin-page-studio\.js\?v=20261115-preview-dock-3/);
+  assert.match(html,/admin-page-studio\.js\?v=20261122-hero-media-2/);
   assert.match(capsuleStyles,/@media\(prefers-reduced-motion:reduce\)/);
   assert.match(capsuleStyles,/transition:none!important/);
   assert.match(capsuleStyles,/main:not\(#top\)\{padding-top:96px\}/);

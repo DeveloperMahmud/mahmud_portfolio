@@ -150,8 +150,34 @@ async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fe
     } catch { return ''; }
   }
 
-  function renderBlock(block) {
-    const data = block.data || {};
+  function mediaUrlKey(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return '';
+    try { const parsed = new URL(raw, location.origin); return `${parsed.origin === location.origin ? '' : parsed.origin}${parsed.pathname}`.replace(/\/+$/, ''); }
+    catch { return raw.split(/[?#]/)[0].replace(/\/+$/, ''); }
+  }
+
+  function galleryMediaMap(items) {
+    return new Map((Array.isArray(items) ? items : []).map(item => {
+      const media = typeof item === 'string' ? { url: item } : item || {};
+      return [mediaUrlKey(media.url), media];
+    }).filter(([key]) => key));
+  }
+
+  function inheritGalleryPresentation(data, galleryMap) {
+    const legacy = galleryMap.get(mediaUrlKey(data?.url));
+    if (!legacy) return data;
+    const inherited = legacy.presentation && typeof legacy.presentation === 'object' ? legacy.presentation : {};
+    const current = data.presentation && typeof data.presentation === 'object' ? data.presentation : {};
+    const use = (key, fallback = 'AUTO') => !current[key] || current[key] === fallback ? inherited[key] ?? current[key] : current[key];
+    const mobileInherited = inherited.mobile && typeof inherited.mobile === 'object' ? inherited.mobile : {};
+    const mobileCurrent = current.mobile && typeof current.mobile === 'object' ? current.mobile : {};
+    const shape = legacy.displayShape || legacy.shape;
+    return {...data,presentation:{...inherited,...current,fit:use('fit'),frame:use('frame'),span:use('span'),focalPoint:use('focalPoint'),aspect:(!current.aspect||current.aspect==='AUTO')&&shape&&shape!=='AUTO'?shape:current.aspect||inherited.aspect||'AUTO',mobile:{...mobileInherited,...mobileCurrent,fit:(!mobileCurrent.fit||mobileCurrent.fit==='INHERIT')?mobileInherited.fit||mobileCurrent.fit:mobileCurrent.fit,aspect:(!mobileCurrent.aspect||mobileCurrent.aspect==='INHERIT')?mobileInherited.aspect||mobileCurrent.aspect:mobileCurrent.aspect,focalPoint:(!mobileCurrent.focalPoint||mobileCurrent.focalPoint==='INHERIT')?mobileInherited.focalPoint||mobileCurrent.focalPoint:mobileCurrent.focalPoint}}};
+  }
+
+  function renderBlock(block, galleryMap = new Map()) {
+    const data = inheritGalleryPresentation(block.data || {}, galleryMap);
     const title = data.heading || data.title || '';
     switch (block.type) {
       case 'TEXT': return `<section class="case-block case-text">${title ? `<h2>${esc(title)}</h2>` : ''}<p>${esc(data.text || data.body || '')}</p></section>`;
@@ -202,13 +228,33 @@ async function applyPageExperience(){if(demoRequested){try{demoPreview=(await fe
     return `<div class="project-detail-grid">${values.map(([label, value]) => `<section><span class="kicker">${label}</span><p>${esc(value)}</p></section>`).join('')}<section><span class="kicker">TOOLS</span><p>${esc(Array.isArray(project.tools) ? project.tools.join(' · ') : project.tools || 'Available on request')}</p>${project.liveUrl ? `<a class="button button-fill" href="${esc(project.liveUrl)}" target="_blank" rel="noreferrer">OPEN LIVE PROJECT ↗</a>` : ''}</section></div>`;
   }
 
+  function blockMediaUrls(blocks) {
+    const urls = new Set();
+    const visit = value => {
+      if (!value || typeof value !== 'object') return;
+      if (Array.isArray(value)) return value.forEach(visit);
+      Object.entries(value).forEach(([key,child]) => {
+        if (typeof child === 'string' && (key === 'url' || /Url$/.test(key))) { const normalized = mediaUrlKey(child); if (normalized) urls.add(normalized); }
+        else visit(child);
+      });
+    };
+    blocks.forEach(block => visit(block?.data));
+    return urls;
+  }
+
   function render(project, nextProject) {
     setMeta(project);
     const blocks = Array.isArray(project.projectBlocks) ? project.projectBlocks.filter(block => block.enabled !== false).sort((a, b) => a.sortOrder - b.sortOrder) : [];
     const style = normalizeCaseStudyStyle(project.caseStudyStyle);
+    const galleryMap = galleryMediaMap(project.gallery);
+    const blockUrls = blockMediaUrls(blocks);
+    const remainingGallery = Array.isArray(project.gallery) ? project.gallery.filter(item => {
+      const url = typeof item === 'string' ? item : item?.url;
+      return url && !blockUrls.has(mediaUrlKey(url));
+    }) : [];
     const focal = style.heroFocalPoint === 'AUTO' ? '50% 50%' : style.heroFocalPoint;
     const presentation = `data-hero-aspect="${style.heroAspect}" data-hero-fit="${style.heroFit}" data-hero-focal="${style.heroFocalPoint === 'AUTO' ? 'AUTO' : 'CUSTOM'}" data-gallery-columns="${style.galleryColumns}" data-gallery-preset="${style.galleryPreset}" data-image-shape="${style.imageShape}" style="--case-hero-focal:${focal};--case-gallery-max:${style.galleryMaxWidth}px;--case-long-board-max:${style.longBoardMaxWidth}px;--case-gallery-gap:${style.galleryGap}px;--case-masonry-columns:${style.masonryColumns}"`;
-    root.innerHTML = `<article class="project-detail" ${presentation}><a class="article-back" href="/${demoPreview?'?demo=1#work':'#work'}">← BACK TO WORK</a><div class="project-detail-kicker">${esc(project.category || 'PROJECT')} / ${esc(project.type || 'CASE STUDY')} / ${esc(project.year || '')}</div><h1>${esc(project.title)}</h1>${project.projectSubtitle ? `<p class="project-detail-subtitle">${esc(project.projectSubtitle)}</p>` : ''}${project.client ? `<p class="project-detail-client">${esc(project.client)}${project.role ? ` · ${esc(project.role)}` : ''}</p>` : ''}<figure class="project-detail-hero-frame">${image(project.coverImage, project.title, 'project-detail-hero')}<figcaption><span>PROJECT PREVIEW</span><small>Full presentation below</small></figcaption></figure>${blocks.length ? `<div class="case-blocks">${blocks.map(renderBlock).join('')}</div>` : `${renderGallery(project.gallery, project.title)}${renderLegacy(project)}`}${nextProject ? `<a class="next-project" href="/work/${encodeURIComponent(nextProject.slug)}${demoPreview?'?demo=1':''}"><span>NEXT PROJECT</span><strong>${esc(nextProject.title)} →</strong>${image(nextProject.coverImage, '')}</a>` : ''}</article>`;
+    root.innerHTML = `<article class="project-detail" ${presentation}><a class="article-back" href="/${demoPreview?'?demo=1#work':'#work'}">← BACK TO WORK</a><div class="project-detail-kicker">${esc(project.category || 'PROJECT')} / ${esc(project.type || 'CASE STUDY')} / ${esc(project.year || '')}</div><h1>${esc(project.title)}</h1>${project.projectSubtitle ? `<p class="project-detail-subtitle">${esc(project.projectSubtitle)}</p>` : ''}${project.client ? `<p class="project-detail-client">${esc(project.client)}${project.role ? ` · ${esc(project.role)}` : ''}</p>` : ''}<figure class="project-detail-hero-frame">${image(project.coverImage, project.title, 'project-detail-hero')}<figcaption><span>PROJECT PREVIEW</span><small>Full presentation below</small></figcaption></figure>${blocks.length ? `<div class="case-blocks">${blocks.map(block=>renderBlock(block,galleryMap)).join('')}${renderGallery(remainingGallery, project.title)}</div>` : `${renderGallery(project.gallery, project.title)}${renderLegacy(project)}`}${nextProject ? `<a class="next-project" href="/work/${encodeURIComponent(nextProject.slug)}${demoPreview?'?demo=1':''}"><span>NEXT PROJECT</span><strong>${esc(nextProject.title)} →</strong>${image(nextProject.coverImage, '')}</a>` : ''}</article>`;
     classifyProjectMedia(root);
   }
 

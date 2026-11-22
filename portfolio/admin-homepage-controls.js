@@ -4,7 +4,7 @@ const homepageCreativeLabDefaults=()=>({eyebrow:'TOOLS I BUILT / CREATIVE LAB',t
 if(!defaultHomepage.some(item=>item[0]==='proof'))defaultHomepage.splice(2,0,['proof','How I Work / Proof Cards']);
 if(!defaultHomepage.some(item=>item[0]==='creative_lab'))defaultHomepage.splice(5,0,['creative_lab','Creative Lab / Tools I Built']);
 const homepageEditorRoutes={
- hero:{source:'Hero Copy',description:'Edit the homepage opening copy, rotating phrases and typewriter motion preset.',tab:'homepage',target:'.hero-copy-admin',action:'OPEN HERO COPY',live:'/#top'},
+ hero:{source:'Hero image & theme',description:'Customize the homepage hero image, crop, focal point, alt text, theme, copy and motion in one place.',tab:'homepage',target:'.hero-theme-manager',action:'CUSTOMIZE HERO',live:'/#top'},
  brands:{source:'Brands collection',description:'Manage client and brand records used by the homepage strip.',tab:'brands',action:'OPEN BRANDS',live:'/#top'},
  featured_slider:{source:'Slider Control + Projects',description:'Tune slider presentation here; each slide still comes from a published project.',tab:'maintenance',panel:'slider',target:'#maintenanceSlider',action:'OPEN SLIDER CONTROL',live:'/#special'},
  selected_work:{source:'Published Projects',description:'Homepage work cards are generated from project visibility, order and layout settings.',tab:'projects',action:'OPEN PROJECTS',live:'/#work'},
