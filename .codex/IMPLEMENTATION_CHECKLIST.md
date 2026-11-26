@@ -292,3 +292,10 @@ Preview navigation and CMS control pass (2026-11-14): Shared public pages now re
 - **VERIFIED READ-ONLY:** Project and Journal libraries expose Last Edited metadata and public View links; Process includes Dotted; no save/publish/delete mutation was performed during acceptance.
 - **VERIFIED:** Published TMNT renders `full-board.jpg` once with inherited `ORIGINAL` fit and its cover once with `ROUNDED` frame; `scrollWidth === clientWidth` and the deployed Project runtime uses the new key.
 - Production/main/custom-domain acceptance is complete for this batch. Mobile remains locally responsive-tested rather than authenticated production screenshot-verified.
+
+### Admin narrow-column responsive repair (2026-11-26)
+
+- **COMPLETED / TESTED:** Hero Media now sizes from its available Admin content width with an auto-fitting grid instead of relying only on the browser viewport breakpoint. URL, Alt Text and Focal Point inputs retain usable width and cannot force horizontal overflow.
+- **COMPLETED / TESTED:** Site Modules now reacts to its actual content width, stacking the shared preview below the editor before the Workflow form becomes cramped. Process settings are top-aligned, Intro is full-width, controls use zero-safe tracks, and narrow Process cards collapse cleanly.
+- Cache key advanced to `20261126-admin-layout-4`; frontend regressions pass 37/37 and the production TypeScript build passes.
+- **VISUAL VERIFICATION PENDING DEPLOYMENT:** the loopback QA route was blocked by browser URL policy and local authenticated CMS content is unavailable, so the populated panel must be rechecked on production after push/deploy.

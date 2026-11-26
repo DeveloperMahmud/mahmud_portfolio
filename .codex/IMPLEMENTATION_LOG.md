@@ -1291,3 +1291,12 @@
 - Authenticated Admin desktop visually confirmed the compact header (~102px vs prior 404px) and polished Hero Media panel. DOM checks confirmed selected media, upload, choose/open library actions, Last Edited/View feedback and Dotted.
 - Published TMNT rendered its full board once with `ORIGINAL` fit inherited into the modular block and its cover once with `ROUNDED`; page width remained contained.
 - Production verification was read-only and recorded zero console errors. No data mutation or destructive operation occurred.
+
+## 2026-11-26 - Admin narrow-column responsive fix
+
+- Diagnosed the clipped URL/Alt/Focal controls as a container-width mismatch: the page viewport stayed above 760px while the actual Admin content column was only about 500px.
+- Changed the Hero Media outer grid to auto-fit 360px-safe tracks based on available width and added zero-safe nested field/input constraints.
+- Extended the available-width repair to Site Modules and Workflow: the shared preview stacks below cramped editors, Process settings align at the top, Intro uses the full row, and narrow cards collapse through a named container query.
+- Bumped the Admin loader/assets to `20261126-admin-layout-4` and updated regression contracts.
+- Verification passed: `node --test scripts/frontend-regressions.test.mjs` (37/37), `npm.cmd run build`, and `git diff --check`.
+- The loopback server started as PID `19652`, but browser URL policy blocked the temporary layout QA route. Visual production verification is deferred until Vercel serves the new asset key; no CMS mutation was performed.

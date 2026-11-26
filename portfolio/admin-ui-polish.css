@@ -172,6 +172,7 @@
 .admin-page .homepage-source-actions{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap}
 .admin-page .homepage-editor-target{outline:1px solid var(--lime);outline-offset:6px;animation:homepage-editor-pulse 1.8s ease}
 @keyframes homepage-editor-pulse{0%,100%{box-shadow:none}35%{box-shadow:0 0 0 8px rgba(198,255,76,.12)}}
+.admin-page #homepageTab>.panel:has(#siteModulesWorkspace){container:site-modules / inline-size}
 .admin-page .site-modules-workspace{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,.75fr);gap:18px;align-items:start;margin-top:18px}
 .admin-page .site-modules-editor{min-width:0}
 .admin-page .site-module-preview{position:sticky;top:18px;max-height:calc(100vh - 36px);overflow:auto;overscroll-behavior:contain;border:1px solid rgba(198,255,76,.28);border-radius:12px;background:rgba(9,12,10,.96);padding:16px;scrollbar-width:thin;scrollbar-color:#46503f transparent}
@@ -192,6 +193,7 @@
 .admin-page .module-preview-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px;border-bottom:1px solid var(--line)}.admin-page .module-preview-nav>strong{font:700 20px var(--admin-display)}.admin-page .module-preview-nav nav{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}.admin-page .module-preview-nav span{font-size:7px;font-weight:800;letter-spacing:.09em}
 .admin-page .module-preview-social{align-items:flex-start;gap:8px}.admin-page .module-preview-social b{padding:9px 11px;border:1px solid var(--line);font-size:8px}.admin-page .site-module-preview-error{padding:24px;color:#ff9d9d}
 @media(max-width:1050px){.admin-page .site-modules-workspace{grid-template-columns:1fr}.admin-page .site-module-preview{position:relative;top:auto;max-height:none}.admin-page .homepage-proof-items{grid-template-columns:1fr 1fr}}
+@container site-modules (max-width:1240px){.admin-page .site-modules-workspace{grid-template-columns:1fr}.admin-page .site-module-preview{position:relative;top:auto;max-height:none}}
 @media(max-width:650px){.admin-page .homepage-section-card.is-proof-manager{grid-template-columns:52px minmax(0,1fr)}.admin-page .homepage-proof-fields,.admin-page .homepage-proof-items,.admin-page .homepage-source-card{grid-template-columns:1fr}.admin-page .homepage-section-card.is-proof-manager>.homepage-label-field,.admin-page .homepage-section-card.is-proof-manager>.homepage-section-actions{grid-column:1/-1}.admin-page .homepage-source-actions{display:grid;justify-content:stretch}.admin-page .homepage-source-actions>.admin-btn{width:100%}.admin-page .site-module-preview-canvas{min-height:300px}}
 /* Workflow QA polish: compact activity, balanced inquiry/editor layouts and normalized checks. */
 .admin-page #maintenanceTestimonials .admin-grid{align-items:start}.admin-page #maintenanceTestimonials .panel{padding-top:24px}.admin-page #testimonialForm>label:has(input[type=checkbox]){display:flex;align-items:center;gap:10px;min-height:46px;padding:11px 12px;border:1px solid var(--line);background:#0b0e0c}.admin-page #testimonialForm input[type=checkbox]{width:18px!important;height:18px!important;min-height:18px!important;margin:0!important;flex:0 0 18px}

@@ -694,3 +694,12 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Published TMNT confirms the presentation bridge: the full board renders once at `ORIGINAL`, the cover renders once with `ROUNDED`, and there is no horizontal overflow.
 - Console error counts were zero on custom homepage/Admin, main alias and TMNT project. No production content mutation was used for verification.
 - Remaining limitation: authenticated production mobile screenshots and an intentional save/reload mutation were not performed; existing persisted TMNT values plus public rendering provide read-only round-trip evidence.
+
+## Admin responsive layout follow-up - 2026-11-26
+
+- Reproduced the screenshot defect in source: the panel used a two-column layout based on viewport width even when the Admin content rail itself was narrow.
+- Replaced that contract with an available-width auto-fit grid, constrained nested labels/inputs with `min-width:0`, and kept URL full-width with Alt/Focal in balanced columns.
+- Applied the same available-width correction to Site Modules: at content widths under 1240px the shared preview moves below the editor, Process controls stop bottom-aligning, Intro spans the form, and a 720px Process container fallback collapses cards/actions without clipping.
+- Updated the Admin loader cache key to `20261126-admin-layout-4`. Frontend tests pass 37/37; `npm.cmd run build` and `git diff --check` pass.
+- Loopback server PID `19652` is bound only to `127.0.0.1:8799`; browser policy blocked the temporary QA route, so visual acceptance remains pending rather than claimed.
+- Next exact action: commit/push `main`, wait for Vercel propagation, then visually inspect the authenticated populated Hero Media and Workflow panels at desktop and narrow widths.

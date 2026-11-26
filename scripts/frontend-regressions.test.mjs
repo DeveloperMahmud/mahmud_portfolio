@@ -170,7 +170,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.match(runtime,/function openInitialAdminTab\(attempt=0\)/);
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261122-hero-media-2/);
-  assert.match(html,/admin-page-studio\.js\?v=20261122-hero-media-2/);
+  assert.match(html,/admin-page-studio\.js\?v=20261126-admin-layout-4/);
   assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
@@ -463,6 +463,10 @@ test('hero media controls support upload, library selection and selected-file na
   assert.match(extras,/Hero image selected/);
   assert.match(admin,/window\.openAdminMediaLibrary/);
   assert.match(managerStyles,/\.hero-selected-media/);
+  assert.match(managerStyles,/repeat\(auto-fit,minmax\(min\(100%,360px\),1fr\)\)/);
+  assert.match(managerStyles,/\.hero-media-manager-fields>label\{min-width:0\}/);
+  assert.match(managerStyles,/@container process-manager \(max-width:720px\)/);
+  assert.match(managerStyles,/label:has\(#processIntroAdmin\)\{grid-column:1\/-1\}/);
   assert.match(managerStyles,/button\[aria-pressed=true\]/);
 });
 
@@ -624,7 +628,7 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   assert.match(managerStyles,/data-connector="DOTTED"/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.js/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.css/);
-  assert.match(pageStudio,/20261122-hero-media-2/);
+  assert.match(pageStudio,/20261126-admin-layout-4/);
   assert.match(manager,/DOTTED JOURNEY/);
   assert.match(runtime,/DOTTED:/);
   assert.match(styles,/data-connector-style="DOTTED"/);
@@ -632,7 +636,7 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
 });
 
 test('admin homepage previews stay live and long workspaces expose contextual navigation',async()=>{
-  const [manager,managerStyles,index,indexStyles,dock,dockStyles,loader,html,capsuleStyles]=await Promise.all([
+  const [manager,managerStyles,index,indexStyles,dock,dockStyles,loader,html,capsuleStyles,adminUiStyles]=await Promise.all([
     read('portfolio/admin-homepage-theme-manager.js'),
     read('portfolio/admin-homepage-theme-manager.css'),
     read('portfolio/admin-context-index.js'),
@@ -641,7 +645,8 @@ test('admin homepage previews stay live and long workspaces expose contextual na
     read('portfolio/admin-preview-dock.css'),
     read('portfolio/admin-page-studio.js'),
     read('portfolio/admin.html'),
-    read('portfolio/public-capsule-nav.css')
+    read('portfolio/public-capsule-nav.css'),
+    read('portfolio/admin-ui-polish.css')
   ]);
   assert.match(manager,/LIVE HERO PREVIEW/);
   assert.match(manager,/animateHeroPreview/);
@@ -663,9 +668,11 @@ test('admin homepage previews stay live and long workspaces expose contextual na
   assert.match(dock,/admin:contexttarget/);
   assert.match(dockStyles,/\.hero-theme-layout,\.admin-page \.process-manager-layout,\.admin-page \.services-manager-layout/);
   assert.match(dockStyles,/display:none!important/);
+  assert.match(adminUiStyles,/container:site-modules \/ inline-size/);
+  assert.match(adminUiStyles,/@container site-modules \(max-width:1240px\)/);
   assert.match(loader,/admin-context-index\.js/);
   assert.match(loader,/admin-preview-dock\.js/);
-  assert.match(html,/admin-page-studio\.js\?v=20261122-hero-media-2/);
+  assert.match(html,/admin-page-studio\.js\?v=20261126-admin-layout-4/);
   assert.match(capsuleStyles,/@media\(prefers-reduced-motion:reduce\)/);
   assert.match(capsuleStyles,/transition:none!important/);
   assert.match(capsuleStyles,/main:not\(#top\)\{padding-top:96px\}/);
