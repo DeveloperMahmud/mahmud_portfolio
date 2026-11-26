@@ -937,6 +937,6 @@ Always reconcile these notes with the actual repository before resuming.
 1. Active branch is `main`; the dirty batch contains the pending Hero Media fix plus the Workflow/Site Modules responsive repair, cache key, regression contract and recovery records.
 2. Hero Media uses available-width auto-fit tracks. Site Modules now container-queries the actual panel width and stacks Preview below the editor under 1240px. Process Intro spans both columns; controls and cards use zero-safe/narrow fallbacks.
 3. Validation passed: frontend regressions 37/37, production build and `git diff --check`.
-4. Local static Admin is unauthenticated. The loopback server is PID `19652` on `127.0.0.1:8799`, but browser URL policy blocked the temporary QA route; no visual success is fabricated.
-5. Cache key is `20261126-admin-layout-4`. Next exact action is commit/push main, wait for Vercel, then authenticated desktop/narrow visual verification. Do not touch `updated portfolio`.
+4. Commit `b8b0ff4` is pushed to `origin/main`; custom production serves `20261126-admin-layout-4`. Authenticated 1795x900 visual QA passed for Workflow and Hero Media, with zero page/panel overflow. Mobile 390x844 geometry is single-column and overflow-free.
+5. No CMS data was saved/published during acceptance. The loopback server remains PID `19652` on `127.0.0.1:8799`. The layout batch is complete; do not touch `updated portfolio`.
 - Final Preview recheck: the stable branch alias now serves `responsive.js?v=20261122-nav-1` without horizontal overflow. The custom domain is still stale; do not repeat the code fixes when resuming—investigate Vercel project/alias routing instead.

@@ -1299,4 +1299,6 @@
 - Extended the available-width repair to Site Modules and Workflow: the shared preview stacks below cramped editors, Process settings align at the top, Intro uses the full row, and narrow cards collapse through a named container query.
 - Bumped the Admin loader/assets to `20261126-admin-layout-4` and updated regression contracts.
 - Verification passed: `node --test scripts/frontend-regressions.test.mjs` (37/37), `npm.cmd run build`, and `git diff --check`.
-- The loopback server started as PID `19652`, but browser URL policy blocked the temporary layout QA route. Visual production verification is deferred until Vercel serves the new asset key; no CMS mutation was performed.
+- Committed the batch as `b8b0ff4` and pushed main normally. Vercel custom production propagated to `20261126-admin-layout-4`.
+- Authenticated production visual QA at 1795x900 measured a 984px stacked Workflow editor, two balanced settings columns, full-width Intro and zero page overflow. Hero Media measured 947px with contained, usable URL/Alt/Focal inputs and no internal overflow.
+- Mobile 390x844 geometry produced one-column Workflow/card/Hero tracks with zero horizontal overflow. No CMS mutation was performed.

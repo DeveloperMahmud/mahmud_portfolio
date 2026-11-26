@@ -701,5 +701,7 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Replaced that contract with an available-width auto-fit grid, constrained nested labels/inputs with `min-width:0`, and kept URL full-width with Alt/Focal in balanced columns.
 - Applied the same available-width correction to Site Modules: at content widths under 1240px the shared preview moves below the editor, Process controls stop bottom-aligning, Intro spans the form, and a 720px Process container fallback collapses cards/actions without clipping.
 - Updated the Admin loader cache key to `20261126-admin-layout-4`. Frontend tests pass 37/37; `npm.cmd run build` and `git diff --check` pass.
-- Loopback server PID `19652` is bound only to `127.0.0.1:8799`; browser policy blocked the temporary QA route, so visual acceptance remains pending rather than claimed.
-- Next exact action: commit/push `main`, wait for Vercel propagation, then visually inspect the authenticated populated Hero Media and Workflow panels at desktop and narrow widths.
+- Release commit `b8b0ff4` was pushed normally to `origin/main`; Vercel custom production propagated to `20261126-admin-layout-4`.
+- Authenticated production desktop at 1795x900 visually shows the Workflow editor expanded to about 984px with Preview below it; settings are balanced, Intro is full-width and horizontal overflow is zero. Hero Media measures about 947px with 451px URL and 221px Alt/Focal inputs, no panel overflow.
+- Mobile 390x844 browser geometry reports single-column Workflow/card/Hero tracks and zero overflow. No Site Config save, publish or other CMS data mutation was performed.
+- Next exact action: no required implementation remains for these screenshots; only optional owner copy/spacing preferences would start a new batch.
