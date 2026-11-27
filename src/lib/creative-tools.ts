@@ -15,7 +15,8 @@ const actionSchema = z.object({
 
 export const publicCreativeToolSchema = z.object({
   schemaVersion: z.literal(1),
-  canonicalId: z.string().regex(/^[FM]0[1-6]$/),
+  toolId: z.string().min(1).max(191).optional(),
+  canonicalId: z.string().regex(/^[FM]0[1-6]$/).nullable(),
   publishedSlug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   kind: z.enum(['FLAGSHIP','MINI']),
   category: z.string().min(1).max(120),
@@ -96,6 +97,7 @@ export function buildCreativeToolPublicSnapshot(tool:Record<string,any>,now=new 
   const publishedAt=(tool.publishedAt instanceof Date?tool.publishedAt:new Date(tool.publishedAt||now)).toISOString();
   const candidate={
     schemaVersion:1 as const,
+    toolId:tool.id,
     canonicalId:tool.canonicalId,
     publishedSlug:tool.slug,
     kind:tool.kind,

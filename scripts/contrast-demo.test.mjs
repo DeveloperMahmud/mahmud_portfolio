@@ -7,9 +7,10 @@ const read=path=>readFile(new URL(`../${path}`,import.meta.url),'utf8');
 const loadEngine=async()=>{const context={};context.globalThis=context;vm.runInNewContext(await read('portfolio/contrast-analyzer-engine.js'),context);return context.ContrastAnalyzerEngine};
 
 test('F02 receives exact color, type and local sampling controls',async()=>{
-  const [html,js]=await Promise.all([read('portfolio/creative-tool.html'),read('portfolio/creative-tool.js')]);
+  const [html,js,registry]=await Promise.all([read('portfolio/creative-tool.html'),read('portfolio/creative-tool.js'),read('portfolio/creative-tool-module-registry.js')]);
   assert.match(js,/tool\.canonicalId==='F02'/);
-  assert.match(html,/contrast-analyzer-engine\.js/);
+  assert.match(html,/creative-tool-module-registry\.js/);
+  assert.match(registry,/F02:\{scripts:\['\/contrast-analyzer-engine\.js'\]\}/);
   assert.match(js,/data-contrast-foreground/);
   assert.match(js,/data-contrast-background/);
   assert.match(js,/data-contrast-font-size/);

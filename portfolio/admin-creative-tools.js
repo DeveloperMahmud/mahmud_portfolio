@@ -29,6 +29,7 @@
       <div class="admin-actions">
         <span id="creativeManagerAccess" class="creative-manager-access">READ ONLY</span>
         <a class="admin-btn" href="/creative-lab" target="_blank" rel="noopener">OPEN PUBLIC LAB ↗</a>
+        <button class="admin-btn primary" id="creativeManagerCreate" type="button">+ ADD CUSTOM APP</button>
         <button class="admin-btn" id="creativeManagerRefresh" type="button">REFRESH</button>
       </div>
     </section>
@@ -76,6 +77,14 @@
           <p class="notice">Save Draft never changes the live snapshot. Publish is a separate validated action; revision restore also returns content to the working draft first.</p>
           <div class="admin-actions"><button class="admin-btn" id="creativeToolRevisions" type="button">REVISIONS</button><button class="admin-btn" id="creativeToolUnpublish" type="button">UNPUBLISH</button><button class="admin-btn" id="creativeToolEditorCancel" type="button">CLOSE</button><button class="admin-btn" id="creativeToolPublish" type="button">PUBLISH</button><button class="admin-btn primary" id="creativeToolEditorSave" type="submit">SAVE DRAFT</button></div>
         </footer>
+      </form>
+    </dialog>
+    <dialog id="creativeToolCreate" class="creative-tool-create" aria-labelledby="creativeToolCreateTitle">
+      <form id="creativeToolCreateForm" method="dialog">
+        <header><div><span class="kicker">CUSTOM APP REGISTRATION</span><h2 id="creativeToolCreateTitle">Add a private draft.</h2><p class="notice">Register metadata and destinations here. Executable code stays deployment-owned and cannot be uploaded through the CMS.</p></div><button class="admin-btn" id="creativeToolCreateClose" type="button">CLOSE</button></header>
+        <div id="creativeToolCreateNotice" class="creative-manager-notice hidden" role="status"></div>
+        <div class="creative-tool-create-grid"><label><span>TITLE</span><input name="title" maxlength="180" required></label><label><span>SLUG</span><input name="slug" maxlength="160" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" required></label><label><span>KIND</span><select name="kind"><option value="FLAGSHIP">FLAGSHIP</option><option value="MINI">MINI</option></select></label><label><span>CATEGORY</span><input name="category" maxlength="120" value="CUSTOM APP" required></label></div>
+        <footer><p class="notice">The new record starts hidden, private, noindex and unpublished.</p><button class="admin-btn primary" id="creativeToolCreateSubmit" type="submit">CREATE DRAFT</button></footer>
       </form>
     </dialog>
     <dialog id="creativeToolMediaPicker" class="creative-tool-media-picker" aria-labelledby="creativeToolMediaPickerTitle">
@@ -247,6 +256,17 @@
       await refreshEditor(id);editorNotice('Draft loaded. Saving here never publishes automatically.','success');
     }catch(error){editorNotice(error?.message||'This Creative Tool could not be loaded.','error')}
   }
+  async function createCustomTool(event){
+    event.preventDefault();if(!state.permissions.canEdit)return;
+    const form=el('creativeToolCreateForm'),submit=el('creativeToolCreateSubmit'),notice=el('creativeToolCreateNotice'),data=Object.fromEntries(new FormData(form).entries());
+    submit.disabled=true;notice.className='creative-manager-notice';notice.textContent='Creating private custom app draftâ€¦';
+    try{
+      const response=await fetch('/api/admin/creative-tools',{method:'POST',credentials:'include',cache:'no-store',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}),payload=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(payload.error||'Custom app draft could not be created.');
+      el('creativeToolCreate').close();form.reset();form.elements.namedItem('category').value='CUSTOM APP';await load({resetPage:true});await openEditor(payload.tool.id);
+    }catch(error){notice.className='creative-manager-notice error';notice.textContent=error?.message||'Custom app draft could not be created.'}
+    finally{submit.disabled=false}
+  }
   async function saveEditor(event){
     event.preventDefault();if(!state.editing||!state.permissions.canEdit)return;
     const save=el('creativeToolEditorSave');save.disabled=true;editorNotice('Saving draft…');
@@ -330,6 +350,7 @@
       renderStats(data.facets);syncCategories(data.facets?.categories||[]);renderRows(data.tools||[]);
       const access=el('creativeManagerAccess');access.textContent=data.permissions?.readOnly?'VIEWER · READ ONLY':`${data.permissions?.role||role()} · DRAFT ACCESS`;
       access.classList.toggle('read-only',Boolean(data.permissions?.readOnly));
+      el('creativeManagerCreate').hidden=!state.permissions.canEdit;
       el('creativeManagerCount').textContent=`${state.total} RESULT${state.total===1?'':'S'}`;
       el('creativeManagerPage').textContent=`PAGE ${state.page} / ${state.pages}`;
       el('creativeManagerPrev').disabled=state.page<=1;el('creativeManagerNext').disabled=state.page>=state.pages;
@@ -344,6 +365,9 @@
   function schedule(){clearTimeout(state.timer);state.timer=setTimeout(()=>load({resetPage:true}),260)}
   Object.values(controls).forEach(control=>control?.addEventListener(control.type==='search'?'input':'change',schedule));
   el('creativeManagerRefresh').addEventListener('click',()=>load());
+  el('creativeManagerCreate').addEventListener('click',()=>{if(!state.permissions.canEdit)return;const dialog=el('creativeToolCreate'),notice=el('creativeToolCreateNotice');notice.className='creative-manager-notice hidden';notice.textContent='';dialog.showModal();dialog.querySelector('[name="title"]')?.focus()});
+  el('creativeToolCreateClose').addEventListener('click',()=>el('creativeToolCreate').close());
+  el('creativeToolCreateForm').addEventListener('submit',createCustomTool);
   el('creativeManagerPrev').addEventListener('click',()=>{if(state.page>1){state.page--;load()}});
   el('creativeManagerNext').addEventListener('click',()=>{if(state.page<state.pages){state.page++;load()}});
   el('creativeManagerList').addEventListener('click',event=>{const button=event.target.closest('.creative-manager-edit');if(button)openEditor(button.dataset.toolId)});

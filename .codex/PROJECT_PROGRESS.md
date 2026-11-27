@@ -705,3 +705,42 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Authenticated production desktop at 1795x900 visually shows the Workflow editor expanded to about 984px with Preview below it; settings are balanced, Intro is full-width and horizontal overflow is zero. Hero Media measures about 947px with 451px URL and 221px Alt/Focal inputs, no panel overflow.
 - Mobile 390x844 browser geometry reports single-column Workflow/card/Hero tracks and zero overflow. No Site Config save, publish or other CMS data mutation was performed.
 - Next exact action: no required implementation remains for these screenshots; only optional owner copy/spacing preferences would start a new batch.
+
+## 2026-11-26 homepage proof visibility repair
+
+- Diagnosed the apparent blank region as an auto-mounted fallback proof section whose non-positioned content was painted behind the fixed neural background.
+- Added a shared stacking context for `.homepage-studio-runtime-group`, versioned the stylesheet as `20261126-layering-1`, and added a regression contract.
+- Verification: frontend regressions 37/37, production TypeScript build, and `git diff --check` pass. Local browser checks at 1795x900 and 390x844 show the proof heading/cards visibly rendered with zero overflow.
+- Exact next action: review/commit/push only if explicitly authorized; then verify the new cache key and proof section on production.
+
+## 2026-11-26 Motion & CTA interactive preview repair
+
+- Added animated built-in fallback frames for arrow, send, download, check and inbox icons, with automatic preview demonstration plus hover/click replay.
+- Added a `MotionIcons.refresh` path so per-card fields and global switches update preview output immediately without rebuilding the form or saving.
+- Preserved reduced-motion/data-saving behavior and kept Lottie loading lazy; broken/absent Lottie sources continue through animated SVG fallback.
+- Verification: JavaScript syntax, frontend regressions 37/37, build and diff checks pass. Headless Edge mounted the real Admin component: 5 cards, 5 icons and 5 active animations; hover/click and 42px check-icon refresh passed.
+- Exact next action: commit/push only if explicitly authorized, then verify the versioned assets and authenticated production Motion tab.
+
+## 2026-11-27 CMS layout and navigation consistency
+
+- Empty contextual-navigation rails now collapse completely, so Analytics, SEO and other pages without a meaningful page index use the full central workspace.
+- Project and Journal destinations independently refetch on open, preserving `#admin-projects` / `#admin-content` while recovering from partial initial API failures.
+- The Motion save panel no longer sticks over settings; Maintenance summary cards use an adaptive readable grid; Global Appearance now lives in the Site settings panel instead of Account.
+- Loader versions advanced internally to `20261127-admin-layout-5` and `20261127-settings-appearance-1`. Frontend regressions pass **38/38**; JavaScript syntax, production build and diff validation pass.
+- Browser visual verification is **NOT VERIFIED** because the connected in-app browser's failed localhost navigation became policy-blocked. The loopback health endpoint returns 200 on PID `4712`; authentication/database persistence is also outside the static preview boundary.
+- Dirty `main` still contains the earlier Homepage proof and Motion preview repairs plus this batch. Nothing has been committed or pushed, and `updated portfolio` was not touched.
+
+## 2026-11-27 Outcomes mode + Creative Lab expansion checkpoint
+
+- Hardened Homepage Studio `OUTCOMES` rendering so proof cards cannot disappear through an inherited hidden state or invalid display-mode value. Cache keys are now `20261127-proof-mode-1`; frontend regressions pass 39/39.
+- Reconciled the public ChatGPT planning discussion and supplied Creative Lab demo bundle with the repository. The existing 12 tools and engines are the implementation base; they must be refined, not rebuilt.
+- Architecture audit found three expansion gaps: all flagship engines are eagerly loaded, public snapshots/Page Studio assume only F01–F06/M01–M06, and Admin cannot create the custom records that the database model anticipates.
+- Next exact action: implement a deployment-owned lazy module registry and safe error boundary, then add a backward-compatible custom app key/config and create/publish workflow without allowing CMS-supplied executable code.
+
+## 2026-11-27 release-ready modular Creative Lab checkpoint
+
+- The Homepage Outcomes visibility regression is source-tested and desktop browser-verified: three proof cards render visibly at 1280x720 with no overflow. Mobile browser verification remains pending.
+- Creative Tool runtimes are isolated behind `creative-tool-module-registry.js`; tool-specific scripts load lazily from a fixed code allowlist and failures receive a bounded workspace error.
+- Custom apps can be created through the authenticated manager as secure private drafts. Public snapshots use an optional stable `toolId`; Page Studio supports canonical or custom references without introducing CMS-provided executable code.
+- Portable backup/restore and media-reference deletion protection now include Creative Tools. Media replacement propagation is not yet implemented.
+- Release gate passed: Creative **105/105**, Page Studio **52/52**, frontend **39/39**, operations **9/9**, syntax, typecheck and production build. Git promotion is the next exact action; after promotion continue published-snapshot discovery safety and media replacement coverage.

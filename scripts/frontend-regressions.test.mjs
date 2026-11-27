@@ -47,15 +47,25 @@ test('public social profiles have a local fallback when the icon CDN is unavaila
   assert.match(styles,/\.public-socials \.social-inline-icon/);
 });
 
-test('public motion respects data-saving visitors and pauses the background off-screen',async()=>{
-  const [background,motion]=await Promise.all([
+test('public motion respects data-saving visitors and admin previews stay live',async()=>{
+  const [background,motion,adminMotion,adminSeo,adminHtml]=await Promise.all([
     read('portfolio/neural-bg.js'),
-    read('portfolio/motion-icons.js')
+    read('portfolio/motion-icons.js'),
+    read('portfolio/admin-motion.js'),
+    read('portfolio/admin-seo.js'),
+    read('portfolio/admin.html')
   ]);
   assert.match(background,/navigator\.connection\?\.saveData/);
   assert.match(background,/visibilitychange/);
   assert.match(motion,/const saveData=/);
   assert.match(motion,/reduced\(\)\|\|saveData\(\)/);
+  assert.match(motion,/function schedulePreview/);
+  assert.match(motion,/function bindInteractions/);
+  assert.match(motion,/window\.MotionIcons=\{init,apply,play,refresh,defaults\}/);
+  assert.match(adminMotion,/runtime\.refresh\(config,card\)/);
+  assert.match(adminMotion,/motion-icons\.js\?v=20261126-live-preview-1/);
+  assert.match(adminSeo,/admin-motion\.js\?v=20261126-live-preview-1/);
+  assert.match(adminHtml,/admin-seo\.js\?v=20261126-motion-preview-1/);
 });
 
 test('admin background remains branded without running the public particle render loop',async()=>{
@@ -171,7 +181,7 @@ test('admin destinations use delegated navigation and versioned shell assets',as
   assert.doesNotMatch(runtime,/\$\$\('\.tab'\)\.forEach\(t=>t\.onclick/);
   assert.match(html,/admin\.js\?v=20261122-hero-media-2/);
   assert.match(html,/admin-page-studio\.js\?v=20261126-admin-layout-4/);
-  assert.match(await read('portfolio/admin-page-studio.js'),/20261102-account-v1/);
+  assert.match(await read('portfolio/admin-page-studio.js'),/20261127-settings-appearance-1/);
   assert.match(html,/admin-navigation-runtime\.js\?v=20261027-4/);
   assert.match(navigation,/dataset\.adminNavBound/);
   assert.match(navigation,/MutationObserver/);
@@ -234,7 +244,9 @@ test('homepage proof-to-work transition stays compact on wide displays',async()=
     read('portfolio/index.html'),
     read('portfolio/homepage-studio-runtime.css')
   ]);
-  assert.match(html,/homepage-studio-runtime\.css\?v=20261028-1/);
+  assert.match(html,/homepage-studio-runtime\.css\?v=20261127-proof-mode-1/);
+  assert.match(runtimeCss,/\.homepage-studio-runtime-group\{position:relative;z-index:1\}/);
+  assert.match(runtimeCss,/\.homepage-studio-proof\[data-proof-mode="OUTCOMES"\]\{display:block;visibility:visible/);
   assert.match(runtimeCss,/\.homepage-studio-proof-fallback\+\.featured-slider-section/);
   assert.match(runtimeCss,/padding-block:clamp\(42px,4\.5vw,68px\)!important/);
 });
@@ -428,6 +440,18 @@ test('project and journal workspaces open on their libraries and reveal editors 
   assert.match(styles,/\.is-editor-open>section:nth-child\(2\)/);
   assert.match(html,/admin\.js\?v=20261122-hero-media-2/);
   assert.match(html,/styles\.css\?v=20261114-analytics-hero-2/);
+});
+
+test('homepage OUTCOMES proof mode always renders proof cards and never inherits a hidden state',async()=>{
+  const [html,runtime]=await Promise.all([
+    read('portfolio/index.html'),
+    read('portfolio/homepage-studio-runtime.js')
+  ]);
+  assert.match(html,/homepage-studio-runtime\.js\?v=20261127-proof-mode-1/);
+  assert.match(runtime,/\['OUTCOMES','BRANDS','HYBRID'\]\.includes\(requestedMode\)\?requestedMode:'OUTCOMES'/);
+  assert.match(runtime,/wrap\.dataset\.proofMode=mode;wrap\.hidden=false/);
+  assert.match(runtime,/mode==='OUTCOMES'\|\|mode==='HYBRID'/);
+  assert.match(runtime,/data\.items\.length\?data\.items:proofFallback/);
 });
 
 test('CMS libraries expose save timestamps, live links, compact header and the current hero manager',async()=>{
@@ -628,7 +652,7 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   assert.match(managerStyles,/data-connector="DOTTED"/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.js/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.css/);
-  assert.match(pageStudio,/20261126-admin-layout-4/);
+  assert.match(pageStudio,/20261127-admin-layout-5/);
   assert.match(manager,/DOTTED JOURNEY/);
   assert.match(runtime,/DOTTED:/);
   assert.match(styles,/data-connector-style="DOTTED"/);
@@ -662,7 +686,9 @@ test('admin homepage previews stay live and long workspaces expose contextual na
   assert.match(index,/lastSignature/);
   assert.match(index,/lockedId/);
   assert.match(index,/admin:contexttarget/);
-  assert.match(indexStyles,/grid-template-columns:248px minmax\(0,1fr\) 210px/);
+  assert.match(indexStyles,/has-context-rail\.context-rail-active\{grid-template-columns:248px minmax\(0,1fr\) 210px/);
+  assert.match(index,/classList\.toggle\('context-rail-active',useful\)/);
+  assert.match(indexStyles,/\.admin-context-rail\.is-empty\{display:none/);
   assert.match(dock,/siteModulePreviewCanvas/);
   assert.match(dock,/data-preview-dock/);
   assert.match(dock,/admin:contexttarget/);
@@ -677,6 +703,26 @@ test('admin homepage previews stay live and long workspaces expose contextual na
   assert.match(capsuleStyles,/transition:none!important/);
   assert.match(capsuleStyles,/main:not\(#top\)\{padding-top:96px\}/);
   assert.match(await read('portfolio/responsive.js'),/public-capsule-nav\.css\?v=20261122-1/);
+});
+
+test('admin CMS layout, collection refresh and settings ownership stay consistent',async()=>{
+  const [admin,account,accountStyles,uiStyles,styles]=await Promise.all([
+    read('portfolio/admin.js'),
+    read('portfolio/admin-account-upgrade.js'),
+    read('portfolio/admin-account-upgrade.css'),
+    read('portfolio/admin-ui-polish.css'),
+    read('portfolio/styles.css')
+  ]);
+  assert.match(admin,/async function refreshAdminCollection\(kind\)/);
+  assert.match(admin,/if\(name==='projects'\)refreshAdminCollection\('projects'\)/);
+  assert.match(admin,/if\(name==='content'\)refreshAdminCollection\('content'\)/);
+  assert.match(account,/function relocateGlobalAppearance\(\)/);
+  assert.match(account,/#maintenanceSite/);
+  assert.match(account,/globalAppearanceSettings/);
+  assert.match(accountStyles,/\.global-appearance-panel/);
+  assert.match(uiStyles,/#maintenanceOverview \.status-grid\{grid-template-columns:repeat\(auto-fit,minmax\(132px,1fr\)\)/);
+  assert.match(styles,/\.motion-savebar\{position:relative;z-index:1/);
+  assert.doesNotMatch(styles,/\.motion-savebar\{position:sticky/);
 });
 
 test('all public shells version the shared responsive navigation runtime',async()=>{

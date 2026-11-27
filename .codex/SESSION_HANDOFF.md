@@ -939,4 +939,48 @@ Always reconcile these notes with the actual repository before resuming.
 3. Validation passed: frontend regressions 37/37, production build and `git diff --check`.
 4. Commit `b8b0ff4` is pushed to `origin/main`; custom production serves `20261126-admin-layout-4`. Authenticated 1795x900 visual QA passed for Workflow and Hero Media, with zero page/panel overflow. Mobile 390x844 geometry is single-column and overflow-free.
 5. No CMS data was saved/published during acceptance. The loopback server remains PID `19652` on `127.0.0.1:8799`. The layout batch is complete; do not touch `updated portfolio`.
+
+## Homepage proof layering handoff
+
+1. Active branch is `main`; the worktree contains only the new homepage proof-layering batch plus its recovery records. `updated portfolio` remains untouched.
+2. `.homepage-studio-runtime-group` now uses `position:relative; z-index:1`; this reveals the fallback “How I Work” content that previously occupied space behind the neural background.
+3. `homepage-studio-runtime.css` is versioned `20261126-layering-1`; frontend tests pass 37/37, build and diff checks pass.
+4. Local browser evidence at 1795x900 and 390x844 shows one visible heading, three proof cards and zero horizontal overflow. Loopback preview remains on `127.0.0.1:8799` PID `19652`.
+5. No commit, push, deployment or CMS mutation has been performed. Next action requires explicit release authorization.
+
+## Motion preview handoff
+
+1. The same dirty `main` batch now also includes Motion & CTA live preview repairs; preserve the earlier homepage proof fix and keep `updated portfolio` untouched.
+2. `motion-icons.js` animates SVG fallbacks, periodically demonstrates every Admin preview, honors hover/click/autoplay and exposes `refresh` for live control changes.
+3. `admin-motion.js` refreshes individual cards/global state immediately; Admin loader keys are `20261126-motion-preview-1` and `20261126-live-preview-1`.
+4. Syntax, frontend regressions 37/37, build and diff checks pass. Real-component browser integration found 5 cards, 5 icons, 5 active animations, working hover/click replay and live size/fallback refresh.
+5. Evidence screenshot: `D:/local_AI/config/codex/visualizations/2026/11/21/01a1fdbb-f440-7ef2-9f23-26e62153416e/motion-admin-live-preview.png`. No commit/push/deployment or CMS mutation has occurred.
+
+## CMS workspace consistency handoff (2026-11-27)
+
+1. Active branch remains `main`; preserve the earlier Homepage proof layering and Motion live-preview edits. The current dirty batch additionally changes Admin context layout, collection refresh, Maintenance typography, save-panel positioning and settings ownership. `updated portfolio` remains untouched.
+2. Empty `#adminContextRail` instances now remove `context-rail-active`, so no unused third grid column remains. Rails with two or more targets still work normally.
+3. `openAdminTab('projects'|'content')` now runs `refreshAdminCollection`, independently refetching the selected library and reporting a scoped failure instead of relying only on boot-time `Promise.all`.
+4. `.motion-savebar` is in normal document flow. Maintenance status cards use `auto-fit/minmax(132px,1fr)` and no mid-word breaks. `relocateGlobalAppearance()` moves Theme & Grain to `#maintenanceSite`; Account keeps Private Entry and Team Access.
+5. Evidence passed: three JavaScript syntax checks, frontend regressions **38/38**, `npm.cmd run build`, and `git diff --check`.
+6. Visual status is **NOT VERIFIED** for this batch. Loopback preview is healthy at `http://127.0.0.1:8799/` under PID `4712`, but the connected in-app browser is policy-blocked on a prior localhost error page. Do not claim desktop/mobile or authenticated persistence acceptance.
+7. No commit/push/deploy or CMS mutation was performed. Next exact action: run authenticated desktop/mobile visual QA for Analytics/SEO width, Project/Journal switching, Maintenance cards, Motion scrolling and Settings/Site Global Appearance; then confirm release authorization before committing and pushing this combined dirty batch.
+
+## Outcomes + Creative Lab handoff (2026-11-27)
+
+1. Preserve every earlier dirty Admin/Motion/Homepage change and do not touch `updated portfolio`.
+2. The newest Homepage change normalizes `OUTCOMES | BRANDS | HYBRID`, clears `hidden` on the generated proof section, adds `data-proof-mode`, and versions public assets as `20261127-proof-mode-1`. Syntax and frontend tests pass 39/39; visual QA is pending.
+3. Creative Lab sources, public shared discussion and `mahmud_creative_lab_demo_bundle.zip` were reviewed. Existing routes, CMS records and twelve browser-local engines are the source base.
+4. Expansion gaps: `creative-tool.html` eagerly loads all flagship engines; `creative-tool.js` is a hardcoded dispatcher; public snapshot v1 rejects null/custom canonical IDs; Page Studio and seed tests assume exactly 12; Admin exposes no create route.
+5. Safe direction: code-owned allowlisted lazy app registry + mount/error boundary first, then additive dual-read custom `toolKey/appKey/appConfig` publishing. Never accept executable JavaScript from CMS fields.
+6. No commit, push, deployment, migration or CMS mutation has been made. Next action is the modular loader/registry implementation and focused Creative Lab test matrix.
+
+## Creative Lab modular release handoff (2026-11-27)
+
+1. Active branch is `main`; the combined pending CMS/Homepage/Motion/Creative Lab batch is release-ready. `updated portfolio` remains untouched.
+2. Homepage Outcomes mode is desktop visually verified at `http://127.0.0.1:8799/` (1280x720, three cards, no overflow). Mobile browser evidence is still pending.
+3. Tool engines now lazy-load through `portfolio/creative-tool-module-registry.js`; the registry is deployment-owned and custom CMS records cannot inject executable code. Module errors are isolated per tool.
+4. Admin supports secure custom-app draft creation. Public snapshots optionally expose stable `toolId`; Page Studio accepts canonical/custom references (maximum 100) and resolves both. Backup/restore and media usage protection include Creative Tools.
+5. Verification passed: Creative 105/105, Page Studio 52/52, frontend 39/39, operations 9/9, JavaScript syntax, typecheck and production build.
+6. User authorized a normal commit/push to `main`. After promotion, the next dependency-ready work is published-snapshot discovery hardening, Creative Tool media replacement propagation, and old demo-slug redirect coverage.
 - Final Preview recheck: the stable branch alias now serves `responsive.js?v=20261122-nav-1` without horizontal overflow. The custom domain is still stale; do not repeat the code fixes when resuming—investigate Vercel project/alias routing instead.

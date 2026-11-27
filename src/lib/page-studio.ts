@@ -13,11 +13,11 @@ const widgetDescriptions:Partial<Record<PageStudioWidgetType,string>>={SECTION:'
 export const PAGE_STUDIO_WIDGET_REGISTRY=PAGE_STUDIO_WIDGETS.map(type=>({type,version:PAGE_STUDIO_WIDGET_VERSION,group:Object.entries(widgetGroups).find(([,types])=>types.includes(type))?.[0]||'CONTENT',label:widgetLabels[type]||type.toLowerCase().split('_').map(word=>word[0].toUpperCase()+word.slice(1)).join(' '),description:widgetDescriptions[type]||'Reusable responsive portfolio component.'}));
 
 const jsonRecord=z.record(z.string(),z.unknown()).default({});
-const creativeToolCanonicalId=z.enum(['F01','F02','F03','F04','F05','F06','M01','M02','M03','M04','M05','M06']);
+const creativeToolReference=z.string().trim().min(1).max(191);
 const creativeToolBlockData:Partial<Record<PageStudioWidgetType,z.ZodTypeAny>>={
-  CREATIVE_TOOL_CATALOG:z.object({canonicalIds:z.array(creativeToolCanonicalId).max(12).refine(ids=>new Set(ids).size===ids.length,'Tool IDs must be unique.'),kind:z.enum(['ALL','FLAGSHIP','MINI']),productStatus:z.enum(['ALL','PLANNED','PREVIEW','BETA','LIVE']),category:z.string().trim().max(120),limit:z.number().int().min(1).max(12),layout:z.enum(['GRID','COMPACT']),showStatus:z.boolean()}).strict(),
-  CREATIVE_TOOL_CARD:z.object({canonicalId:creativeToolCanonicalId,layout:z.enum(['CARD','COMPACT','FEATURED']),showDescription:z.boolean(),showStatus:z.boolean()}).strict(),
-  CREATIVE_TOOL_CTA:z.object({canonicalId:creativeToolCanonicalId,action:z.enum(['PRIMARY','SECONDARY','DETAILS']),layout:z.enum(['INLINE','PANEL']),showStatus:z.boolean()}).strict()
+  CREATIVE_TOOL_CATALOG:z.object({canonicalIds:z.array(creativeToolReference).max(100).refine(ids=>new Set(ids).size===ids.length,'Tool references must be unique.'),kind:z.enum(['ALL','FLAGSHIP','MINI']),productStatus:z.enum(['ALL','PLANNED','PREVIEW','BETA','LIVE']),category:z.string().trim().max(120),limit:z.number().int().min(1).max(100),layout:z.enum(['GRID','COMPACT']),showStatus:z.boolean()}).strict(),
+  CREATIVE_TOOL_CARD:z.object({canonicalId:creativeToolReference,layout:z.enum(['CARD','COMPACT','FEATURED']),showDescription:z.boolean(),showStatus:z.boolean()}).strict(),
+  CREATIVE_TOOL_CTA:z.object({canonicalId:creativeToolReference,action:z.enum(['PRIMARY','SECONDARY','DETAILS']),layout:z.enum(['INLINE','PANEL']),showStatus:z.boolean()}).strict()
 };
 export type StudioBlock={id:string;type:PageStudioWidgetType;widgetVersion:number;enabled:boolean;data:Record<string,unknown>;style:Record<string,unknown>;responsive:Record<string,unknown>;motion:Record<string,unknown>;children:StudioBlock[];globalBlockId?:string|null;globalVersion?:number|null};
 

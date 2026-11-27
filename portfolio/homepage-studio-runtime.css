@@ -35,3 +35,5 @@ html[data-theme-tokens=ready] :is(.homepage-studio-module-head h2,.homepage-stud
 .homepage-studio-proof-fallback+.featured-slider-section{padding-top:clamp(56px,4vw,72px)}
 @media(max-width:760px){.homepage-studio-proof-fallback{padding-block:48px!important}.homepage-studio-proof-fallback+.featured-slider-section{padding-top:56px}}
 .homepage-studio-focus{outline:2px solid var(--lime);outline-offset:-2px;animation:homepage-studio-focus 1.4s ease}@keyframes homepage-studio-focus{0%,100%{box-shadow:none}35%{box-shadow:inset 0 0 0 8px rgba(198,255,76,.12)}}
+.homepage-studio-runtime-group{position:relative;z-index:1}
+.homepage-studio-proof[data-proof-mode="OUTCOMES"]{display:block;visibility:visible;min-height:1px}

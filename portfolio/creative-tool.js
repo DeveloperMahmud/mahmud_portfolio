@@ -3,7 +3,7 @@
 
   const root=document.querySelector('#toolRoot');
   const ui=window.CreativeLabUI;
-  const mini=window.CreativeToolMiniDemos;
+  const mini=()=>window.CreativeToolMiniDemos;
   if(!root||!ui)return;
 
   const parts=location.pathname.split('/').filter(Boolean);
@@ -124,13 +124,13 @@
     if(tool.canonicalId==='F04')return briefDemo(tool);
     if(tool.canonicalId==='F05')return auditDemo(tool);
     if(tool.canonicalId==='F06')return reviewDemo(tool);
-    if(mini?.has(tool))return`${demoHead(tool)}${mini.render(tool)}<section class="tool-section tool-limitations"><div><span class="kicker">DEMO BOUNDARY</span><h2>Review the limitations before using this concept.</h2></div>${list(tool.limitations)}</section>`;
+    if(mini()?.has(tool))return`${demoHead(tool)}${mini().render(tool)}<section class="tool-section tool-limitations"><div><span class="kicker">DEMO BOUNDARY</span><h2>Review the limitations before using this concept.</h2></div>${list(tool.limitations)}</section>`;
     return genericDemo(tool);
   }
 
   function wireDemo(tool){
-    if(mini?.has(tool)){
-      mini.wire(root,tool);
+    if(mini()?.has(tool)){
+      mini().wire(root,tool);
       return;
     }
     if(tool.canonicalId==='F06'){
@@ -210,10 +210,12 @@
 
   fetch(`/api/public/creative-lab/${encodeURIComponent(slug)}`,{headers:{accept:'application/json'}})
     .then(async response=>{const data=await response.json();if(!response.ok)throw new Error(data.error||'Tool unavailable');return data.tool;})
-    .then(tool=>{
+    .then(async tool=>{
       document.title=`${tool.title}${demo?' Concept Demo':''} — Creative Lab`;
-      root.innerHTML=demo?demoView(tool):detail(tool);
-      if(demo)wireDemo(tool);
+      let moduleError=null;
+      if(demo)try{await window.CreativeToolModules?.load(tool)}catch(error){moduleError=error}
+      root.innerHTML=demo?(moduleError?`${demoHead(tool)}<section class="tool-module-error" role="alert"><span>MODULE UNAVAILABLE</span><h2>This tool could not start.</h2><p>${esc(moduleError.message)}</p><a class="tool-button" href="/creative-lab/${encodeURIComponent(tool.publishedSlug)}">VIEW TOOL DETAILS</a></section>`:demoView(tool)):detail(tool);
+      if(demo&&!moduleError)try{wireDemo(tool)}catch(error){const stage=root.querySelector('.tool-demo-stage,.thumbnail-demo,.contrast-demo,.planner-demo,.brief-demo,.audit-demo,.review-demo,.mini-demo');if(stage)stage.insertAdjacentHTML('beforebegin',`<section class="tool-module-error" role="alert"><span>INTERACTION PAUSED</span><h2>This tool hit an isolated runtime error.</h2><p>${esc(error instanceof Error?error.message:'Reload this tool to try again.')}</p></section>`);console.error('Creative Tool module failed safely.',error)}
       root.setAttribute('aria-busy','false');
     })
     .catch(error=>{

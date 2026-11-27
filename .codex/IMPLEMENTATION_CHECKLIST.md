@@ -299,3 +299,43 @@ Preview navigation and CMS control pass (2026-11-14): Shared public pages now re
 - **COMPLETED / TESTED:** Site Modules now reacts to its actual content width, stacking the shared preview below the editor before the Workflow form becomes cramped. Process settings are top-aligned, Intro is full-width, controls use zero-safe tracks, and narrow Process cards collapse cleanly.
 - Cache key advanced to `20261126-admin-layout-4`; frontend regressions pass 37/37 and the production TypeScript build passes.
 - **VISUALLY VERIFIED:** authenticated production on `20261126-admin-layout-4` shows a 984px Workflow editor at the reported 1795px desktop viewport, stacked Preview, balanced settings, full-width Intro and zero page overflow. Hero Media is 947px wide with usable URL/Alt/Focal fields and zero panel overflow. Mobile 390x844 geometry is single-column with zero overflow.
+
+### Homepage fallback proof layering repair (2026-11-26)
+
+- **VERIFIED LOCALLY:** Runtime-generated Homepage Studio groups now establish `position: relative; z-index: 1`, so the legacy “How I Work” fallback no longer sits behind the fixed neural background while still occupying layout space.
+- Cache key advanced to `20261126-layering-1`; regression tests pass 37/37, the TypeScript build passes, and desktop 1795x900 plus mobile 390x844 browser checks show the heading and three cards with zero horizontal overflow.
+- Production remains unchanged until the user separately authorizes commit/push for this batch.
+
+### Motion & CTA live previews (2026-11-26)
+
+- **VERIFIED LOCALLY:** All five Motion & CTA cards now continuously demonstrate their configured motion in the preview stage and replay through hover/click interaction. Built-in SVG fallbacks animate without requiring a Lottie URL.
+- **VERIFIED LOCALLY:** Trigger, tone, fallback, size, speed, loop and enable/global control changes refresh the affected preview without saving or reloading. Reduced-motion and data-saving preferences still receive static fallbacks.
+- Cache keys advanced to `20261126-motion-preview-1` / `20261126-live-preview-1`; JavaScript syntax, frontend regressions 37/37, TypeScript build and diff validation pass.
+- Browser integration mounted the real Admin component with five cards, five icons and five active animations; hover, click and live size/fallback refresh passed. Production remains unchanged pending explicit commit/push authorization.
+
+### CMS workspace consistency repair (2026-11-27)
+
+- **COMPLETED / TESTED:** Context navigation now reserves the third desktop column only when at least two useful section targets exist. Empty Analytics/SEO/other rails are removed from layout instead of leaving a blank right-side strip.
+- **COMPLETED / TESTED:** Projects and Journal/Content refresh their own API collection whenever their destination opens. A temporary failure in another boot collection can no longer leave either library permanently blank; failures surface in the relevant list/toast.
+- **COMPLETED / TESTED:** Motion & CTA's lower save action is now an in-flow action panel, not a sticky overlay over unfinished settings.
+- **COMPLETED / TESTED:** Site Maintenance status cards use adaptive minimum-width tracks and protected status typography, preventing words such as `CONFIGURED` from splitting mid-word.
+- **COMPLETED / TESTED:** Global Appearance is relocated from Account to `Settings / Site -> Site`; Account retains private-entry/team/security ownership and expands to the released width.
+- Verification: `node --check` passed for `admin.js`, `admin-context-index.js`, and `admin-account-upgrade.js`; focused frontend regressions passed **38/38**; `npm.cmd run build` and `git diff --check` passed.
+- **NOT VISUALLY VERIFIED:** Loopback server `http://127.0.0.1:8799/` is healthy under PID `4712`, but the in-app browser entered a failed-navigation data page before server restart and its URL policy blocked re-navigation. No screenshot or authenticated CMS persistence claim is made for this batch.
+- No commit, push, deployment, schema change or CMS mutation was performed. `updated portfolio` remains untouched.
+
+### Homepage Outcomes mode hardening + Creative Lab modular expansion (2026-11-27)
+
+- **VERIFIED / TESTED:** `PROOF_STRIP` now normalizes its display mode, explicitly clears inherited `hidden`, identifies the rendered mode, and always renders fallback proof cards for `OUTCOMES`. The public runtime/cache keys and regression contract were updated.
+- Verification: `node --check portfolio/homepage-studio-runtime.js` and focused frontend regressions **39/39** pass.
+- **IN PROGRESS:** Creative Lab expansion is being reconciled against the shared planning discussion, the supplied demo bundle and the existing twelve-tool implementation. Current blockers identified: eager loading of every engine, hardcoded twelve-tool snapshot/Page Studio contracts, and an incomplete custom-tool workflow (nullable model ID but no create endpoint and v1 publish schema rejection).
+- **NOT VISUALLY VERIFIED:** Current Outcomes fix still requires desktop/mobile browser evidence. No commit, push, deployment or database mutation has occurred; `updated portfolio` remains untouched.
+
+### Creative Lab modular foundation release gate (2026-11-27)
+
+- **VERIFIED / TESTED:** Creative Tool demo engines now load through a deployment-owned allowlist only after the selected tool is known. A module failure is contained inside that tool workspace and does not break details, navigation or other apps.
+- **COMPLETED / TESTED:** Admin can create a custom app as a private, hidden, noindex draft. CMS fields cannot supply executable JavaScript; implementation remains code-owned. Published snapshots carry an optional stable `toolId` while retaining all legacy F/M canonical IDs.
+- **COMPLETED / TESTED:** Page Studio accepts up to 100 stable published-tool references and resolves either canonical IDs or custom tool IDs. The editor no longer truncates the catalog back to the original twelve.
+- **COMPLETED / TESTED:** Creative Tools participate in portable backup/restore and Media Library usage protection. Asset replacement propagation remains a separate follow-up.
+- **VISUALLY VERIFIED (desktop):** Homepage `OUTCOMES` mode at `http://127.0.0.1:8799/` rendered three visible proof cards at 1280x720, with `hidden=false`, `display:block` and zero horizontal overflow. Mobile visual evidence is still pending.
+- Verification: Creative/engine suite **105/105**, Page Studio suite **52/52**, frontend regressions **39/39**, operations **9/9**, JavaScript syntax, TypeScript typecheck and production build passed. No migration, dependency, production data mutation or `updated portfolio` edit was introduced.

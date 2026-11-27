@@ -70,6 +70,12 @@
 }
 @media(prefers-reduced-motion:reduce){.admin-page .admin-main>div:not(.hidden){animation:none}.admin-page .side-btn,.admin-page .admin-btn,.admin-page .dash-card{transition:none}}
 
+/* Operational summaries stay readable at narrow workspace widths. */
+.admin-page #maintenanceOverview .status-grid{grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px}
+.admin-page #maintenanceOverview .status-grid>div{display:grid;align-content:space-between;min-width:0;min-height:104px;padding:16px}
+.admin-page #maintenanceOverview .status-grid strong{font-size:clamp(20px,2vw,30px);line-height:1;word-break:normal;overflow-wrap:normal;hyphens:none}
+.admin-page #maintenanceOverview .status-grid span{line-height:1.3;word-break:normal;overflow-wrap:normal}
+
 /* 2026-10 coherence pass: one visual system across static and injected workspaces. */
 .admin-page .admin-main{container-type:inline-size}
 .admin-page .admin-top{align-items:center;margin-bottom:20px;padding:18px 20px;border:1px solid #293029;border-radius:var(--admin-radius);background:linear-gradient(110deg,rgba(198,255,76,.045),rgba(13,16,13,.88) 38%,rgba(13,16,13,.7));box-shadow:0 16px 45px rgba(0,0,0,.1)}

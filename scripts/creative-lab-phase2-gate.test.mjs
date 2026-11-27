@@ -35,7 +35,8 @@ test('catalog, detail and demo routes are explicit and draft-safe',async()=>{
   for(const rule of [/deletedAt:null/,/status:'PUBLISHED'/,/visible:true/,/visibility:'PUBLIC'/,/publishedSnapshot:\{not:Prisma\.JsonNull\}/,/scheduledAt:\{lte:new Date\(\)\}/])assert.match(publicRoute,rule);
   assert.match(helper,/item\.productStatus === 'ARCHIVED'/);
   for(const id of expectedIds.slice(0,6))assert.match(detail,new RegExp(`canonicalId==='${id}'`));
-  assert.match(detail,/mini\?\.has\(tool\)/);
+  assert.match(detail,/mini\(\)\?\.has\(tool\)/);
+  assert.match(detail,/CreativeToolModules\?\.load\(tool\)/);
 });
 
 test('action resolver never invents a live destination',async()=>{
@@ -60,7 +61,8 @@ test('catalog and demos expose keyboard, live-status and responsive contracts',a
   assert.match(html,/aria-live="polite"/);
   assert.match(catalogJs,/aria-pressed/);
   assert.match(catalogJs,/setTimeout\(load,220\)/);
-  assert.match(toolHtml,/creative-tool-mini-demos\.js/);
+  assert.match(toolHtml,/creative-tool-module-registry\.js/);
+  assert.doesNotMatch(toolHtml,/src="\/creative-tool-mini-demos\.js/);
   assert.match(detailJs,/aria-live="polite"/);
   for(const id of expectedIds.slice(6))assert.match(miniJs,new RegExp(`${id}:`));
   assert.match(css,/:focus-visible/);

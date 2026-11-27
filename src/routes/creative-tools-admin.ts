@@ -20,6 +20,12 @@ import { CreativeToolRedirectError, preserveCreativeToolSlugRedirect } from '../
 const router = Router();
 const versionSchema=z.object({expectedUpdatedAt:z.string().datetime()}).strict();
 const verifyLiveUrlSchema=z.object({expectedUpdatedAt:z.string().datetime(),liveUrl:publicHttpsUrlSchema}).strict();
+const createCustomToolSchema=z.object({
+  title:z.string().trim().min(2).max(180),
+  slug:z.string().trim().min(1).max(160).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  kind:z.enum(['FLAGSHIP','MINI']),
+  category:z.string().trim().min(1).max(120).default('CUSTOM APP')
+}).strict();
 const actor=(res:any)=>res.locals.currentUser?.id||res.locals.user?.sub;
 
 const listQuerySchema = z.object({
@@ -152,6 +158,27 @@ router.get('/', async (req, res, next) => {
       }
     });
   } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/',async(req,res,next)=>{
+  const parsed=createCustomToolSchema.safeParse(req.body);
+  if(!parsed.success)return res.status(400).json({error:'Invalid custom app draft.',issues:parsed.error.flatten()});
+  try{
+    const created=await db.$transaction(async tx=>{
+      const tool=await tx.creativeTool.create({data:{
+        canonicalId:null,systemSeeded:false,title:parsed.data.title,slug:parsed.data.slug,kind:parsed.data.kind,category:parsed.data.category,
+        shortDescription:'Configure this custom app draft before publishing.',overview:'Connect a separately built internal route or verified public HTTPS app without adding executable code to the CMS.',
+        productStatus:'PLANNED',demoMode:'CONCEPT',demoNotice:'This custom app is still a private draft.',visibility:'PRIVATE',visible:false,featured:false,
+        demoUrl:`/creative-lab/${parsed.data.slug}/demo`,primaryLabel:'VIEW CONCEPT DEMO',primaryBehavior:'DEMO',primaryTarget:'SAME_TAB',status:'DRAFT',noIndex:true,includeSitemap:false
+      },select:creativeToolDetailSelect});
+      await tx.activityLog.create({data:{action:'CUSTOM_TOOL_CREATED',entity:'CREATIVE_TOOL',entityId:tool.id,actorId:actor(res),label:tool.title,result:tool.slug}});
+      return tool;
+    });
+    res.status(201).set('Cache-Control','private, no-store').json({tool:creativeToolAdminDto(created)});
+  }catch(error){
+    if(error instanceof Prisma.PrismaClientKnownRequestError&&error.code==='P2002')return res.status(409).json({error:'That Creative Lab slug is already in use.',code:'SLUG_CONFLICT'});
     next(error);
   }
 });

@@ -7,9 +7,10 @@ const read=path=>readFile(new URL(`../${path}`,import.meta.url),'utf8');
 const loadEngine=async()=>{const context={};context.globalThis=context;vm.runInNewContext(await read('portfolio/creative-planner-engine.js'),context);return context.CreativePlannerEngine};
 
 test('F03 receives a bounded structured planning and export workflow',async()=>{
-  const [html,js]=await Promise.all([read('portfolio/creative-tool.html'),read('portfolio/creative-tool.js')]);
+  const [html,js,registry]=await Promise.all([read('portfolio/creative-tool.html'),read('portfolio/creative-tool.js'),read('portfolio/creative-tool-module-registry.js')]);
   assert.match(js,/if\(tool\.canonicalId==='F03'\)return plannerDemo\(tool\)/);
-  assert.match(html,/creative-planner-engine\.js/);
+  assert.match(html,/creative-tool-module-registry\.js/);
+  assert.match(registry,/F03:\{scripts:\['\/creative-planner-engine\.js'\]\}/);
   assert.match(js,/Listing image sequence/);
   assert.match(js,/A\+ module map/);
   assert.match(js,/data-plan-form/);

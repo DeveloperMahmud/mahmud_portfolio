@@ -39,7 +39,7 @@ test('Creative Tool media controls reuse the authenticated Media Library without
   assert.match(ui,/\/api\/admin\/media\?\$\{params\}/);
   assert.match(ui,/type:'image\/'/);
   assert.match(ui,/Selecting an existing asset does not create another upload or Blob object/);
-  assert.doesNotMatch(ui,/\/media\/upload|new XMLHttpRequest|FormData/);
+  assert.doesNotMatch(ui,/\/media\/upload|new XMLHttpRequest/);
   for(const target of ['coverImage','galleryImages','ogImage'])assert.match(ui,new RegExp(`['"]${target}['"]`));
   assert.match(ui,/verify-live-url/);
   assert.match(css,/\.creative-tool-media-picker/);

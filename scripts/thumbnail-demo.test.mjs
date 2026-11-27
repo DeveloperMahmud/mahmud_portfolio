@@ -17,7 +17,8 @@ test('F01 receives a bounded browser-local thumbnail engine',async()=>{
   assert.match(js,/if\(tool\.canonicalId==='F01'\)return thumbnailEngineDemo\(tool\)/);
   assert.match(js,/\[80,120,160\]/);
   assert.match(js,/accept="image\/png,image\/jpeg,image\/webp" data-thumbnail-file/);
-  assert.match(html,/thumbnail-readability-engine\.js/);
+  assert.match(html,/creative-tool-module-registry\.js/);
+  assert.match(await read('portfolio/creative-tool-module-registry.js'),/F01:\{scripts:\['\/thumbnail-readability-engine\.js'\]\}/);
   assert.match(engine,/MAX_BYTES=12\*1024\*1024/);
   assert.match(engine,/MAX_DIMENSION=12000/);
   assert.match(engine,/MAX_PIXELS=40_000_000/);

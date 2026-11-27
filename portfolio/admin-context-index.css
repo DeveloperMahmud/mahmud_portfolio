@@ -1,8 +1,9 @@
 .admin-context-rail{display:none;min-width:0}
 @media(min-width:1281px){
-  .admin-page .admin-shell.has-context-rail{grid-template-columns:248px minmax(0,1fr) 210px;gap:16px}
-  .admin-context-rail{display:block;height:100%;min-height:0}
-  .admin-context-rail.is-empty{visibility:hidden;pointer-events:none}
+  .admin-page .admin-shell.has-context-rail.context-rail-active{grid-template-columns:248px minmax(0,1fr) 210px;gap:16px}
+  .admin-context-rail{height:100%;min-height:0}
+  .admin-shell.context-rail-active>.admin-context-rail{display:block}
+  .admin-context-rail.is-empty{display:none;pointer-events:none}
   .admin-context-card{display:flex;height:100%;min-height:0;flex-direction:column;padding:16px 12px;border:1px solid #303630;border-radius:var(--admin-radius,12px);background:linear-gradient(180deg,rgba(17,20,17,.98),rgba(9,11,9,.97));box-shadow:0 24px 70px rgba(0,0,0,.2)}
   .admin-context-card header{padding:3px 5px 14px;border-bottom:1px solid var(--line)}
   .admin-context-card header span{color:var(--lime);font-size:7px;font-weight:800;letter-spacing:.16em}
@@ -21,6 +22,6 @@
   .admin-context-anchor{scroll-margin-top:22px}
 }
 @media(min-width:1281px) and (max-width:1530px){
-  .admin-page .admin-shell.has-context-rail{grid-template-columns:220px minmax(0,1fr) 176px;gap:12px}
+  .admin-page .admin-shell.has-context-rail.context-rail-active{grid-template-columns:220px minmax(0,1fr) 176px;gap:12px}
   .admin-context-card{padding-inline:9px}
 }

@@ -21,12 +21,15 @@ test('mini demos remain local, bounded and free of fake production operations',a
   assert.match(js,/No project name, task or completion state is sent to the server/);
 });
 
-test('mini module loads before the controller and integrates by canonical ID',async()=>{
-  const [html,controller]=await Promise.all([read('portfolio/creative-tool.html'),read('portfolio/creative-tool.js')]);
-  assert.ok(html.indexOf('/creative-tool-mini-demos.js')<html.indexOf('/creative-tool.js'));
+test('mini modules load lazily through the isolated registry and integrate by canonical ID',async()=>{
+  const [html,controller,registry]=await Promise.all([read('portfolio/creative-tool.html'),read('portfolio/creative-tool.js'),read('portfolio/creative-tool-module-registry.js')]);
+  assert.ok(html.indexOf('/creative-tool-module-registry.js')<html.indexOf('/creative-tool.js'));
+  assert.doesNotMatch(html,/src="\/creative-tool-mini-demos\.js/);
+  assert.match(registry,/M01:\{scripts:\['\/creative-tool-mini-demos\.js'\]\}/);
+  assert.match(controller,/CreativeToolModules\?\.load\(tool\)/);
   assert.match(controller,/window\.CreativeToolMiniDemos/);
-  assert.match(controller,/if\(mini\?\.has\(tool\)\)/);
-  assert.match(controller,/mini\.wire\(root,tool\)/);
+  assert.match(controller,/if\(mini\(\)\?\.has\(tool\)\)/);
+  assert.match(controller,/mini\(\)\.wire\(root,tool\)/);
 });
 
 test('mini controls expose native focus, live status, mobile and reduced-motion behavior',async()=>{

@@ -78,7 +78,10 @@
       document.dispatchEvent(new CustomEvent('admin:contexttarget',{detail:{target}}));
       target.scrollIntoView({behavior:'smooth',block:'start'});
     }));
-    rail.classList.toggle('is-empty',targets.length<2);updateActive();
+    const useful=targets.length>=2;
+    rail.classList.toggle('is-empty',!useful);
+    $('.admin-shell')?.classList.toggle('context-rail-active',useful);
+    updateActive();
   }
 
   function schedule(delay=60){clearTimeout(refreshTimer);refreshTimer=setTimeout(build,delay)}

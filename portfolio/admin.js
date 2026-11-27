@@ -28,6 +28,21 @@ async function uploadSheet(file,kind){if(!file)throw new Error('Choose a CSV/XLS
 async function importGoogleSheet(url,kind){const d=await api('/admin/import/'+kind,{method:'POST',body:JSON.stringify({googleSheetUrl:url})});return d}
 async function boot(){try{const session=await api('/auth/me');currentCmsRole=String(session.user?.role||'VIEWER').toUpperCase();$('#loginPanel').classList.add('hidden');$('#cms').classList.remove('hidden');document.body.classList.add('cms-workspace-active');applyRoleAccess();if(!window.__roleAccessObserver&&$('#cms')){window.__roleAccessObserver=new MutationObserver(applyRoleAccess);window.__roleAccessObserver.observe($('#cms'),{childList:true,subtree:true})}await load();applyRoleAccess();return true}catch(e){document.body.classList.remove('cms-workspace-active');return false}}
 async function load(){try{const [p,b,c]=await Promise.all([api('/admin/projects'),api('/admin/brands'),api('/admin/content')]);projects=p.projects;brands=b.brands;contentItems=c.content;renderProjects();renderBrands();renderContent();renderImportStats();applyRoleAccess();loadDashboard().catch(()=>{})}catch(e){$('#cms').insertAdjacentHTML('afterbegin',`<div class="panel error" style="margin-bottom:20px">CMS data could not be loaded: ${esc(e.message)}</div>`);throw e}}
+async function refreshAdminCollection(kind){
+  const config=kind==='projects'
+    ?{path:'/admin/projects',key:'projects',apply:value=>{projects=value;renderProjects()}}
+    :{path:'/admin/content',key:'content',apply:value=>{contentItems=value;renderContent()}};
+  try{
+    const data=await api(config.path);
+    config.apply(Array.isArray(data[config.key])?data[config.key]:[]);
+    renderImportStats();
+    applyRoleAccess();
+  }catch(error){
+    const root=$(kind==='projects'?'#projectList':'#contentList');
+    if(root&&!root.children.length)root.innerHTML=`<p class="error">${esc(error.message)}</p>`;
+    showToast(`${kind==='projects'?'Projects':'Journal / Content'} could not refresh. ${error.message}`,false);
+  }
+}
 function showToast(text,ok=true){const t=$('#toast');if(!t)return;t.textContent=text;t.className='toast '+(ok?'success':'error')+' show';if(ok)setTimeout(()=>document.dispatchEvent(new CustomEvent('motion:success',{detail:{slot:'uploadSuccess'}})),140);clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>t.classList.remove('show'),3200)}
 function setLoading(on,text='WORKING…'){const el=$('#adminLoading');if(!el)return;$('#adminLoadingText').textContent=text;el.classList.toggle('show',!!on)}
 function statusPill(v){const x=String(v||'').toUpperCase();const cls=x==='PUBLISHED'||x==='PUBLIC'?'live':(x==='PRIVATE'||x==='ARCHIVED'?'private':'draft');return `<span class="status-pill ${cls}">${esc(x||'—')}</span>`}
@@ -186,6 +201,8 @@ function openAdminTab(name,{syncUrl=true}={}){
   if(name==='leads')window.loadLeadCenter?.();
   if(name==='motion')window.loadMotionControls?.();
   if(name==='creative-tools')window.loadCreativeToolManager?.();
+  if(name==='projects')refreshAdminCollection('projects');
+  if(name==='content')refreshAdminCollection('content');
   return true;
 }
 window.openAdminTab=openAdminTab;

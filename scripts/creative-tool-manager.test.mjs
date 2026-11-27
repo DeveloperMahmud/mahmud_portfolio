@@ -15,6 +15,8 @@ test('Creative Lab manager is authenticated and role bounded',async()=>{
   assert.doesNotMatch(admin,/WRITER:new Set\(\[[^\]]*'creative-tools'/);
   assert.doesNotMatch(admin,/MODERATOR:new Set\(\[[^\]]*'creative-tools'/);
   assert.match(route,/router\.get\('\/'/);
+  assert.match(route,/router\.post\('\/'/);
+  assert.match(route,/CUSTOM_TOOL_CREATED/);
   assert.doesNotMatch(route,/router\.(?:put|delete)\(/,'manager must not expose unplanned replace or delete routes');
   for(const endpoint of ['publish','unpublish','revisions/:revisionId/restore'])assert.match(route,new RegExp(`router\\.post\\('[^']*${endpoint}`));
   assert.match(route,/canPublish: \['ADMIN', 'EDITOR'\]\.includes\(role\)/,'publishing must remain role bounded');
@@ -43,6 +45,7 @@ test('admin workspace provides search, filters, pagination and read-only state',
   assert.match(admin,/ADMIN_TAB_NAMES=\[[^\]]*'creative-tools'/);
   assert.match(admin,/window\.loadCreativeToolManager/);
   for(const id of ['creativeManagerSearch','creativeManagerKind','creativeManagerProductStatus','creativeManagerStatus','creativeManagerVisibility','creativeManagerDisplay','creativeManagerCategory','creativeManagerSort','creativeManagerPrev','creativeManagerNext'])assert.match(ui,new RegExp(id));
+  for(const id of ['creativeManagerCreate','creativeToolCreate','creativeToolCreateForm'])assert.match(ui,new RegExp(id));
   assert.match(ui,/AbortController/);
   assert.match(ui,/setTimeout\(\(\)=>load\(\{resetPage:true\}\),260\)/);
   assert.match(ui,/VIEWER · READ ONLY/);
@@ -52,4 +55,17 @@ test('admin workspace provides search, filters, pagination and read-only state',
   assert.match(ui,/method:'PATCH'/,'editor roles should receive the guarded draft-save control');
   assert.match(css,/@container\(max-width:620px\)/);
   assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
+});
+
+test('custom apps start as private non-executable drafts and are included in recovery/media protection',async()=>{
+  const [route,publicContract,operations,ui]=await Promise.all([read('src/routes/creative-tools-admin.ts'),read('src/lib/creative-tools.ts'),read('src/routes/operations.ts'),read('portfolio/admin-creative-tools.js')]);
+  assert.match(route,/canonicalId:null,systemSeeded:false/);
+  assert.match(route,/visibility:'PRIVATE',visible:false/);
+  assert.match(route,/noIndex:true,includeSitemap:false/);
+  assert.match(publicContract,/canonicalId: z\.string\(\)\.regex\(\/\^\[FM\]0\[1-6\]\$\/\)\.nullable\(\)/);
+  assert.match(publicContract,/toolId:tool\.id/);
+  assert.match(operations,/creativeTools=await Promise\.all|creativeTools\]=await Promise\.all/);
+  assert.match(operations,/restore\('creativeTools'/);
+  assert.match(operations,/creativeTool:creativeTools/);
+  assert.match(ui,/Executable code stays deployment-owned/);
 });

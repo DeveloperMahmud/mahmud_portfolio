@@ -1302,3 +1302,49 @@
 - Committed the batch as `b8b0ff4` and pushed main normally. Vercel custom production propagated to `20261126-admin-layout-4`.
 - Authenticated production visual QA at 1795x900 measured a 984px stacked Workflow editor, two balanced settings columns, full-width Intro and zero page overflow. Hero Media measured 947px with contained, usable URL/Alt/Focal inputs and no internal overflow.
 - Mobile 390x844 geometry produced one-column Workflow/card/Hero tracks with zero horizontal overflow. No CMS mutation was performed.
+
+## 2026-11-26 - Homepage fallback proof layering
+
+- Traced the large blank gap after the brand strip to the legacy proof fallback: it had real height/content but lacked a positioned stacking layer, allowing the fixed neural background to paint above it.
+- Added `.homepage-studio-runtime-group{position:relative;z-index:1}`, bumped the homepage runtime stylesheet key to `20261126-layering-1`, and added a regression assertion.
+- Passed `node --test scripts/frontend-regressions.test.mjs` (37/37), elevated `npm.cmd run build`, and `git diff --check`.
+- Headless Edge opened the loopback preview at 1795x900 and 390x844. The fallback exists, its heading is visible, all three cards render, computed position/z-index are `relative/1`, and horizontal overflow is zero at both sizes.
+- Screenshots: `D:/local_AI/config/codex/visualizations/2026/11/21/01a1fdbb-f440-7ef2-9f23-26e62153416e/homepage-proof-desktop.png` and `homepage-proof-mobile.png`.
+
+## 2026-11-26 - Motion & CTA live preview
+
+- Diagnosed static previews as two missing runtime contracts: SVG fallbacks had no trigger bindings, and Admin field changes never refreshed decorated icons.
+- Added distinct fallback keyframes for arrow/send/download/check/inbox, scheduled preview demonstrations, hover/click playback and live runtime refresh with player/timer cleanup.
+- Lottie remains lazy; reduced-motion and Save-Data visitors stay static; failed Lottie data falls back safely to SVG.
+- Versioned the Admin loader chain (`admin-seo.js?v=20261126-motion-preview-1`, `admin-motion.js?v=20261126-live-preview-1`, `motion-icons.js?v=20261126-live-preview-1`) and extended regression contracts.
+- Passed JS syntax, frontend 37/37, elevated production build and diff checks. Headless Edge verified all five real Admin preview cards were mounted and animated; hover/click replay and immediate 42px/check fallback refresh passed.
+- Screenshot: `D:/local_AI/config/codex/visualizations/2026/11/21/01a1fdbb-f440-7ef2-9f23-26e62153416e/motion-admin-live-preview.png`.
+
+## 2026-11-27 - CMS workspace consistency repair
+
+- Traced the desktop blank strip to `admin-context-index.css`: `.has-context-rail` always reserved a third column while `.is-empty` only hid the rail visually. Added a `context-rail-active` layout state driven by actual target count and removed empty rails from display.
+- Traced intermittent empty Project/Journal screens to the one-time boot `Promise.all`. Added independent destination refreshes on tab open, retaining current hash routing and role enforcement while giving each library its own recovery/error surface.
+- Replaced the desktop Motion save bar's sticky overlay with a normal in-flow action panel.
+- Polished Site Maintenance status cards with adaptive tracks, minimum geometry and protected no-mid-word typography.
+- Moved the existing Global Appearance panel into `#maintenanceSite`, retained existing control IDs/save behavior, expanded the remaining Account grid, and versioned dynamic loaders (`20261127-admin-layout-5`, `20261127-settings-appearance-1`).
+- Added regression contracts for rail activation, independent collection refresh, settings ownership, Maintenance grid geometry and the non-sticky Motion panel.
+- Validation: `node --check portfolio/admin.js`, `node --check portfolio/admin-context-index.js`, `node --check portfolio/admin-account-upgrade.js`, `node --test scripts/frontend-regressions.test.mjs` (**38/38**), `npm.cmd run build`, and `git diff --check` all passed.
+- Started the loopback static preview on PID `4712`; `/api/health` returned 200. Browser visual QA could not proceed after an initial connection-refused page because the in-app browser URL policy blocked the data-error-page to localhost transition. Marked visual and authenticated persistence evidence **NOT VERIFIED** rather than substituting another browser surface.
+- No commit, push, deployment, database operation or CMS mutation occurred; `updated portfolio` was not modified.
+
+## 2026-11-27 - Outcomes proof hardening and Creative Lab architecture reconciliation
+
+- Reproduced the risky runtime path around `PROOF_STRIP` display modes and made the contract explicit: only `OUTCOMES`, `BRANDS` and `HYBRID` are accepted; invalid values fall back to Outcomes; the generated section clears `hidden`; Outcomes always mounts proof cards with saved items or safe defaults.
+- Added `data-proof-mode`, an explicit Outcomes visibility rule, public asset cache keys `20261127-proof-mode-1`, and a regression test. `node --check portfolio/homepage-studio-runtime.js` plus frontend **39/39** passed.
+- Read the public Creative Lab planning conversation and inspected/rendered the supplied HTML/PDF/PNG bundle. Confirmed the requested catalog, 12 tool specifications, honest concept boundaries, three-panel workspaces, responsive behavior and CMS ownership match the repository's existing implementation.
+- Audited current implementation: model permits nullable canonical IDs, but snapshot validation and Page Studio are fixed to 12 IDs; Admin has no create endpoint; the tool page eagerly loads all engines. Chosen direction is an allowlisted deployment-owned lazy module registry plus backward-compatible custom app publishing—no CMS-uploaded executable code.
+- No commit/push/deploy or data mutation occurred. Visual verification remains pending.
+
+## 2026-11-27 - Creative Lab modular foundation and custom-app workflow
+
+- Added a code-owned lazy module registry and removed eager loading of every flagship/mini engine from the shared tool shell. The selected tool loads only its declared scripts; load/wire failures stay inside a usable tool-level error boundary.
+- Added authenticated custom-app draft creation with private, hidden, noindex, unpublished defaults. No endpoint accepts executable app code. Public snapshot v1 remains backward-compatible and now optionally identifies custom records by immutable `toolId`.
+- Extended Page Studio Creative Tool schemas, editor normalization and renderer lookup to support up to 100 stable canonical/custom references. Fixed a discovered client mismatch that had still uppercased and truncated catalog references to the original 12.
+- Added Creative Tools to portable backup/restore and Media Library usage checks. Replacement propagation remains intentionally pending.
+- Desktop browser QA confirmed Outcomes at 1280x720 with `data-proof-mode=OUTCOMES`, `hidden=false`, three cards and zero overflow. Mobile remains not visually verified.
+- Validation: Creative suite 105/105; Page Studio 52/52; frontend 39/39; operations 9/9; all affected JavaScript syntax checks; `npm.cmd run typecheck`; `npm.cmd run build`. No schema migration, dependency, CMS mutation or edit under `updated portfolio` occurred.
