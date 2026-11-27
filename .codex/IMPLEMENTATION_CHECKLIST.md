@@ -353,3 +353,8 @@ Preview navigation and CMS control pass (2026-11-14): Shared public pages now re
 - **VERIFIED / TESTED:** Global Appearance relocation is idempotent and identifies the theme panel through `#themePreset`; repeated initialization can no longer move Private Entry into Site Settings.
 - Verification: full Node matrix **273/273**, frontend **39/39**, TypeScript typecheck/build, static smoke **5/5**, performance budget, JavaScript syntax and `git diff --check` passed. Production desktop was inspected read-only; mobile authenticated browser evidence and live database mutation remain **NOT VERIFIED**.
 - **DEPLOYED / VISUALLY VERIFIED (desktop):** commit `5279bf6` propagated to the custom domain. Authenticated Admin at 1280x720 shows Global Appearance inside Site Settings and Private Entry still inside Account, with `scrollWidth === clientWidth === 1280`. The in-app browser could not resize, so authenticated mobile remains **NOT VISUALLY VERIFIED**.
+
+### Homepage Manager card containment repair (2026-11-27)
+
+- **COMPLETED / TESTED:** Wide Admin Homepage section cards now use a 180px identity track and a zero-safe flexible label track, keeping visibility and reorder controls inside the card border at the measured 758px content width.
+- Verification: frontend regressions **39/39**, TypeScript typecheck/build and `git diff --check` passed. The deployed site still serves the previous CSS until commit/push authorization; post-deploy desktop visual verification is pending.

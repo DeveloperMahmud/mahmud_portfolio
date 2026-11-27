@@ -726,6 +726,7 @@ test('admin CMS layout, collection refresh and settings ownership stay consisten
   assert.match(uiStyles,/#maintenanceOverview \.status-grid\{grid-template-columns:repeat\(auto-fit,minmax\(132px,1fr\)\)/);
   assert.match(styles,/\.motion-savebar\{position:relative;z-index:1/);
   assert.doesNotMatch(styles,/\.motion-savebar\{position:sticky/);
+  assert.match(styles,/@media\(min-width:921px\)\{\.admin-page \.homepage-section-card\{grid-template-columns:minmax\(180px,\.75fr\) minmax\(0,1\.45fr\) auto/);
 });
 
 test('all public shells version the shared responsive navigation runtime',async()=>{

@@ -1364,3 +1364,9 @@
 - Browser evidence exposed a repeated-initialization bug in Global Appearance ownership. Replaced the unstable first-child selector with the theme control's owning panel and made relocation parent-aware/idempotent; added regression assertions.
 - Validation: full Node **273/273**, frontend **39/39**, `npm.cmd run typecheck`, `npm.cmd run build`, static smoke **5/5**, performance safeguards/budgets, JavaScript syntax and `git diff --check` passed.
 - Promoted commit `5279bf6` to `origin/main` without force. After Vercel propagation, authenticated production DOM verification confirmed the Global Appearance panel begins with `GLOBAL APPEARANCE`, belongs to `#maintenanceSite`, Private Entry remains within `#accountUpgrade`, and document width is contained at 1280px. No CMS write was performed.
+
+## 2026-11-27 - Homepage Manager section-card containment
+
+- Measured the authenticated production DOM at 1280x720: section card width 757.6px, scroll width 779px and action edge 1170px versus card edge 1147.6px. This confirmed grid-track overflow rather than a missing border.
+- Added a wide-Admin layout override with a smaller identity minimum and shrinkable label track; mobile/tablet stacking rules are unchanged.
+- Added a regression contract and passed frontend **39/39**, TypeScript typecheck/build and `git diff --check`. No production data mutation, commit or push occurred.

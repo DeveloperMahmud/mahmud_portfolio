@@ -760,3 +760,9 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - The audit found and fixed an idempotency bug that could move Private Entry instead of Global Appearance after repeated initialization.
 - Gate: **273/273** Node tests, frontend **39/39**, typecheck/build, static smoke **5/5**, performance budget and diff validation. Next action: commit/push this verified batch and confirm deployment propagation; authenticated mobile and controlled production save/reload remain honest follow-up evidence.
 - Commit `5279bf6` was pushed normally to `origin/main` and propagated to `mahmudportfolio-azure.vercel.app`. Authenticated desktop recheck confirmed the corrected settings ownership and zero horizontal overflow. No production record was mutated; authenticated mobile remains unavailable in the fixed-size in-app viewport.
+
+## 2026-11-27 Homepage Manager border containment
+
+- Production measurement reproduced the report: normal section cards were 757.6px wide but their rigid tracks forced 779px of content, putting actions about 22px beyond the right border. The Proof card already used the correct flexible geometry.
+- Added a desktop Admin override matching the proven 180px/flexible/auto track pattern while preserving existing <=920px responsive stacking.
+- Frontend **39/39**, typecheck, build and diff validation pass. This local batch is intentionally uncommitted/unpushed until current-work authorization is explicit.
