@@ -375,3 +375,4 @@ Preview navigation and CMS control pass (2026-11-14): Shared public pages now re
 - **RESPONSIVE IMPLEMENTED:** The lineup collapses to one column on narrower desktop/tablet and becomes a horizontal snap rail on mobile; the content order remains intro → image → progress → active detail → lineup.
 - Verification: slider tests **6/6**, frontend regressions **39/39**, JavaScript syntax, static HTTP asset checks, production TypeScript build and `git diff --check` passed.
 - **NOT VISUALLY VERIFIED:** Browser automation was unavailable, so desktop/mobile screenshots and interaction observation are pending at `http://127.0.0.1:8799/#special`. No commit, push, deployment or CMS mutation occurred.
+- **PUSHED:** Commit `168cc1e` was pushed normally to `origin/main`; remote branch parity is confirmed. Live deployment propagation and production visual acceptance remain pending.

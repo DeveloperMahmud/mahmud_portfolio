@@ -782,3 +782,4 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Wide view uses a three-zone editorial composition with a two-column lineup. Tablet reduces lineup density; mobile uses a horizontally scrollable snap rail and preserves large touch targets.
 - Cache key advanced to `20261127-editorial-slider-2`. Slider tests pass 6/6, frontend regressions 39/39, JavaScript syntax, static HTTP checks, build and diff checks pass.
 - Exact next action: visually inspect `http://127.0.0.1:8799/#special` at desktop and mobile widths, tune only measured spacing issues, then request explicit commit/push authorization for the combined Creative Lab + slider batch.
+- User authorized promotion. Commit `168cc1e` (`Polish Creative Lab links and featured slider`) is now on `origin/main`; next exact action is to wait for Vercel propagation and confirm the production homepage serves `20261127-editorial-slider-2` before claiming live acceptance.

@@ -1026,3 +1026,4 @@ Always reconcile these notes with the actual repository before resuming.
 3. Tests pass: editorial slider 6/6, frontend 39/39, JavaScript syntax, static HTTP source check, TypeScript build and diff validation.
 4. Review URL is `http://127.0.0.1:8799/#special` on loopback PID `11784`. Desktop/mobile visual QA is NOT VERIFIED because this session had no browser-control binding.
 5. The earlier Creative Lab external URL flow and blueprint remain part of the same uncommitted working tree. Do not commit/push/deploy without current authorization; do not touch `updated portfolio`.
+6. User authorized release; commit `168cc1e` is pushed to `origin/main`. Source is clean before this tracking checkpoint. Verify Vercel propagation and production desktop/mobile slider visuals next; do not repeat implementation.
