@@ -744,3 +744,10 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Custom apps can be created through the authenticated manager as secure private drafts. Public snapshots use an optional stable `toolId`; Page Studio supports canonical or custom references without introducing CMS-provided executable code.
 - Portable backup/restore and media-reference deletion protection now include Creative Tools. Media replacement propagation is not yet implemented.
 - Release gate passed: Creative **105/105**, Page Studio **52/52**, frontend **39/39**, operations **9/9**, syntax, typecheck and production build. Git promotion is the next exact action; after promotion continue published-snapshot discovery safety and media replacement coverage.
+
+## 2026-11-27 published-snapshot isolation checkpoint
+
+- Release commit `e58f848` was pushed normally to `origin/main` before this follow-up batch.
+- Creative Tool publication presentation is now snapshot-owned across the public catalog/detail, recruiter/presentation evidence, Page Studio, sitemap and `llms.txt`. Draft changes to visibility, scheduling, featured/order or SEO cannot silently alter the live representation before the next publish.
+- Optional snapshot fields retain compatibility with previously published v1 records through explicit row fallbacks; private/hidden/future/archived records remain excluded.
+- Full Node matrix, focused 19/19 contracts, typecheck, production build and diff validation passed. Next exact task after this checkpoint is Creative Tool media replacement propagation, followed by old detail/demo slug redirect coverage.

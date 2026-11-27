@@ -41,6 +41,11 @@ export const publicCreativeToolSchema = z.object({
   actions: z.object({primary:actionSchema,secondary:actionSchema.nullable().optional()}),
   demoUrl: publicPathOrHttps,
   documentationUrl: publicPathOrHttps.nullable().optional(),
+  visibility: z.enum(['PUBLIC','UNLISTED','PRIVATE']).optional(),
+  visible: z.boolean().optional(),
+  featured: z.boolean().optional(),
+  sortOrder: z.number().int().optional(),
+  scheduledAt: z.string().datetime().nullable().optional(),
   seo: z.object({
     title: z.string().max(180).nullable().optional(),
     description: z.string().max(500).nullable().optional(),
@@ -60,6 +65,15 @@ export type CreativeToolPublishIssue = {field:string;code:string;severity:'ERROR
 export function publicCreativeTool(value: unknown): PublicCreativeTool | null {
   const parsed = publicCreativeToolSchema.safeParse(value);
   return parsed.success ? parsed.data : null;
+}
+
+type CreativeToolPublicationFallback={visibility?:'PUBLIC'|'UNLISTED'|'PRIVATE'|null;visible?:boolean|null;scheduledAt?:Date|string|null};
+export function publishedCreativeTool(value:unknown,fallback:CreativeToolPublicationFallback={},now=new Date()){
+  const tool=publicCreativeTool(value);if(!tool)return null;
+  const visibility=tool.visibility||fallback.visibility||'PUBLIC',visible=tool.visible??fallback.visible??true;
+  const scheduledValue=tool.scheduledAt===undefined?fallback.scheduledAt:tool.scheduledAt,scheduledAt=scheduledValue?new Date(scheduledValue):null;
+  const eligible=visible&&visibility!=='PRIVATE'&&tool.productStatus!=='ARCHIVED'&&(!scheduledAt||Number.isFinite(scheduledAt.getTime())&&scheduledAt<=now);
+  return {tool,visibility,visible,scheduledAt,eligible};
 }
 
 export function filterPublicCreativeTools(items: PublicCreativeTool[], input: {q?:string;kind?:string;status?:string;category?:string}) {
@@ -126,6 +140,11 @@ export function buildCreativeToolPublicSnapshot(tool:Record<string,any>,now=new 
     },
     demoUrl:tool.demoUrl||`/creative-lab/${tool.slug}/demo`,
     documentationUrl:tool.documentationUrl,
+    visibility:tool.visibility,
+    visible:Boolean(tool.visible),
+    featured:Boolean(tool.featured),
+    sortOrder:Number.isInteger(tool.sortOrder)?tool.sortOrder:0,
+    scheduledAt:tool.scheduledAt?(tool.scheduledAt instanceof Date?tool.scheduledAt:new Date(tool.scheduledAt)).toISOString():null,
     seo:{title:tool.seoTitle,description:tool.seoDescription,ogImage:tool.ogImage,canonicalUrl:tool.canonicalUrl,noIndex:Boolean(tool.noIndex),noFollow:Boolean(tool.noFollow),includeSitemap:tool.includeSitemap!==false},
     publishedAt,
     publicModifiedAt:now.toISOString()

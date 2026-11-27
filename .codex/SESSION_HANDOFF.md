@@ -983,4 +983,12 @@ Always reconcile these notes with the actual repository before resuming.
 4. Admin supports secure custom-app draft creation. Public snapshots optionally expose stable `toolId`; Page Studio accepts canonical/custom references (maximum 100) and resolves both. Backup/restore and media usage protection include Creative Tools.
 5. Verification passed: Creative 105/105, Page Studio 52/52, frontend 39/39, operations 9/9, JavaScript syntax, typecheck and production build.
 6. User authorized a normal commit/push to `main`. After promotion, the next dependency-ready work is published-snapshot discovery hardening, Creative Tool media replacement propagation, and old demo-slug redirect coverage.
+
+## Published-snapshot isolation handoff (2026-11-27)
+
+1. Modular/CMS release commit `e58f848` is already pushed to `origin/main`.
+2. The new dirty follow-up batch freezes `visibility`, `visible`, `featured`, `sortOrder` and `scheduledAt` in the existing public snapshot schema as optional backward-compatible fields.
+3. `publishedCreativeTool()` centralizes old-snapshot fallback and live eligibility. Catalog/detail HTML/API, recruiter/presentation tools, Page Studio, sitemap and `llms.txt` now use it.
+4. Full Node matrix passed; focused affected contracts passed 19/19; typecheck, elevated production build and diff check passed. No visual QA is required for this server-side publication boundary and no CMS/DB mutation occurred.
+5. User authorized pushing proper completed states. Commit/push this checkpoint normally; then implement Creative Tool replacement propagation in Media Library without altering immutable IDs.
 - Final Preview recheck: the stable branch alias now serves `responsive.js?v=20261122-nav-1` without horizontal overflow. The custom domain is still stale; do not repeat the code fixes when resuming—investigate Vercel project/alias routing instead.

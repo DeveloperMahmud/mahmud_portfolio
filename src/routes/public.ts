@@ -7,7 +7,7 @@ import { sendInquiryNotification } from '../lib/email.js';
 import { captureIncident } from '../lib/monitoring.js';
 import path from 'node:path';
 import { featureEnabled } from '../lib/feature-flags.js';
-import { filterPublicCreativeTools, publicCreativeTool } from '../lib/creative-tools.js';
+import { filterPublicCreativeTools, publishedCreativeTool, type PublicCreativeTool } from '../lib/creative-tools.js';
 import { parseRecruiterConfig } from '../lib/recruiter.js';
 import { parseStudioConfig, projectMatchesStudioService, studioServiceRoute } from '../lib/studio.js';
 import { publicProjectDto } from '../lib/public-project.js';
@@ -15,11 +15,16 @@ import { parsePresentationConfig } from '../lib/presentation.js';
 
 const router = Router();
 const creativeLabQuery=z.object({q:z.string().max(120).optional(),kind:z.enum(['FLAGSHIP','MINI']).optional(),status:z.enum(['PLANNED','PREVIEW','BETA','LIVE']).optional(),category:z.string().max(120).optional()});
+const creativeToolPublicationSelect={publishedSnapshot:true,visibility:true,visible:true,scheduledAt:true} as const;
+function eligibleCreativeTools(rows:Array<{publishedSnapshot:unknown;visibility:'PUBLIC'|'UNLISTED'|'PRIVATE';visible:boolean;scheduledAt:Date|null}>,now:Date,allowed:Array<'PUBLIC'|'UNLISTED'>){
+  return rows.flatMap(row=>{const published=publishedCreativeTool(row.publishedSnapshot,row,now);return published?.eligible&&allowed.includes(published.visibility as 'PUBLIC'|'UNLISTED')?[published.tool]:[]});
+}
+function creativeToolOrder(a:PublicCreativeTool,b:PublicCreativeTool){return Number(Boolean(b.featured))-Number(Boolean(a.featured))+(Number(a.sortOrder||0)-Number(b.sortOrder||0))||a.title.localeCompare(b.title)}
 
 router.get('/creative-lab',async(req,res)=>{
   const parsed=creativeLabQuery.safeParse(req.query);if(!parsed.success)return res.status(400).json({error:'Invalid Creative Lab filters.'});
-  const rows=await db.creativeTool.findMany({where:{deletedAt:null,status:'PUBLISHED',visible:true,visibility:'PUBLIC',publishedSlug:{not:null},publishedSnapshot:{not:Prisma.JsonNull},OR:[{scheduledAt:null},{scheduledAt:{lte:new Date()}}]},orderBy:[{featured:'desc'},{sortOrder:'asc'},{title:'asc'}],select:{publishedSnapshot:true}});
-  const eligible=rows.map(row=>publicCreativeTool(row.publishedSnapshot)).filter((item):item is NonNullable<ReturnType<typeof publicCreativeTool>>=>Boolean(item));
+  const now=new Date(),rows=await db.creativeTool.findMany({where:{deletedAt:null,status:'PUBLISHED',publishedSlug:{not:null},publishedSnapshot:{not:Prisma.JsonNull}},select:creativeToolPublicationSelect});
+  const eligible=eligibleCreativeTools(rows,now,['PUBLIC']).sort(creativeToolOrder);
   const tools=filterPublicCreativeTools(eligible,parsed.data),categories=[...new Set(eligible.map(item=>item.category))].sort((a,b)=>a.localeCompare(b));
   res.set('Cache-Control','public, max-age=60, s-maxage=300, stale-while-revalidate=600');
   res.json({tools,counts:{total:eligible.length,flagship:eligible.filter(item=>item.kind==='FLAGSHIP').length,mini:eligible.filter(item=>item.kind==='MINI').length},categories});
@@ -27,10 +32,10 @@ router.get('/creative-lab',async(req,res)=>{
 
 router.get('/creative-lab/:slug',async(req,res)=>{
   const slug=z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).safeParse(req.params.slug);if(!slug.success)return res.status(404).json({error:'Creative tool not found.'});
-  const row=await db.creativeTool.findFirst({where:{deletedAt:null,status:'PUBLISHED',visible:true,visibility:{in:['PUBLIC','UNLISTED']},publishedSlug:slug.data,publishedSnapshot:{not:Prisma.JsonNull},OR:[{scheduledAt:null},{scheduledAt:{lte:new Date()}}]},select:{publishedSnapshot:true,visibility:true}});
-  const tool=publicCreativeTool(row?.publishedSnapshot);if(!tool||tool.productStatus==='ARCHIVED')return res.status(404).json({error:'Creative tool not found.'});
+  const now=new Date(),row=await db.creativeTool.findFirst({where:{deletedAt:null,status:'PUBLISHED',publishedSlug:slug.data,publishedSnapshot:{not:Prisma.JsonNull}},select:creativeToolPublicationSelect});
+  const published=row?publishedCreativeTool(row.publishedSnapshot,row,now):null,tool=published?.tool;if(!published?.eligible||!['PUBLIC','UNLISTED'].includes(published.visibility)||!tool)return res.status(404).json({error:'Creative tool not found.'});
   res.set('Cache-Control','public, max-age=60, s-maxage=300, stale-while-revalidate=600');
-  if(row?.visibility==='UNLISTED'||tool.seo.noIndex)res.set('X-Robots-Tag','noindex,follow');
+  if(published.visibility==='UNLISTED'||tool.seo.noIndex)res.set('X-Robots-Tag','noindex,follow');
   res.json({tool});
 });
 router.get('/recruiter',async(_req,res)=>{
@@ -39,8 +44,8 @@ router.get('/recruiter',async(_req,res)=>{
   const projects=await db.project.findMany({where:{...projectWhere,...(config.featuredProjectSlugs.length?{slug:{in:config.featuredProjectSlugs}}:{featured:true})},orderBy:[{sortOrder:'asc'},{createdAt:'desc'}],take:6,select:{id:true,title:true,slug:true,category:true,service:true,client:true,year:true,role:true,description:true,challenge:true,approach:true,process:true,results:true,deliverables:true,tools:true,coverImage:true,homepageImage:true,projectSubtitle:true}});
   if(config.featuredProjectSlugs.length)projects.sort((a,b)=>config.featuredProjectSlugs.indexOf(a.slug)-config.featuredProjectSlugs.indexOf(b.slug));
   const toolIds=[...new Set(config.evidencePillars.flatMap(item=>item.toolIds))];
-  const toolRows=toolIds.length?await db.creativeTool.findMany({where:{canonicalId:{in:toolIds},deletedAt:null,status:'PUBLISHED',visible:true,visibility:{in:['PUBLIC','UNLISTED']},publishedSnapshot:{not:Prisma.JsonNull},OR:[{scheduledAt:null},{scheduledAt:{lte:now}}]},select:{publishedSnapshot:true}}):[];
-  const tools=toolRows.map(row=>publicCreativeTool(row.publishedSnapshot)).filter((item):item is NonNullable<ReturnType<typeof publicCreativeTool>>=>Boolean(item&&item.productStatus!=='ARCHIVED'));
+  const toolRows=toolIds.length?await db.creativeTool.findMany({where:{canonicalId:{in:toolIds},deletedAt:null,status:'PUBLISHED',publishedSnapshot:{not:Prisma.JsonNull}},select:creativeToolPublicationSelect}):[];
+  const tools=eligibleCreativeTools(toolRows,now,['PUBLIC','UNLISTED']);
   const projectBySlug=new Map(projects.map(item=>[item.slug,item])),toolById=new Map(tools.map(item=>[item.canonicalId,item]));
   const pillars=config.evidencePillars.filter(item=>item.isPublished).sort((a,b)=>a.sortOrder-b.sortOrder).map(item=>({...item,projects:item.evidenceProjectSlugs.map(slug=>projectBySlug.get(slug)).filter(Boolean),tools:item.toolIds.map(id=>toolById.get(id)).filter(Boolean)})).filter(item=>item.projects.length||item.tools.length);
   const derivedSkills=[...new Set(projects.flatMap(item=>item.tools).filter(Boolean))].slice(0,24);
@@ -79,8 +84,8 @@ router.get('/presentation/:mode',async(req,res)=>{
   if(!config.enabled)return res.status(404).json({error:'Presentation is not published.'});
   const projects=config.projectSlugs.length?await db.project.findMany({where:{deletedAt:null,status:'PUBLISHED',visibility:'PUBLIC',clientOnly:false,slug:{in:config.projectSlugs},OR:[{scheduledAt:null},{scheduledAt:{lte:now}}]},select:{id:true,title:true,slug:true,category:true,service:true,type:true,client:true,year:true,role:true,description:true,challenge:true,approach:true,process:true,results:true,deliverables:true,tools:true,coverImage:true,homepageImage:true,projectSubtitle:true}}):[];
   projects.sort((a,b)=>config.projectSlugs.indexOf(a.slug)-config.projectSlugs.indexOf(b.slug));
-  const toolRows=await db.creativeTool.findMany({where:{deletedAt:null,status:'PUBLISHED',visible:true,visibility:{in:['PUBLIC','UNLISTED']},featured:true,publishedSnapshot:{not:Prisma.JsonNull},OR:[{scheduledAt:null},{scheduledAt:{lte:now}}]},orderBy:[{sortOrder:'asc'},{title:'asc'}],take:4,select:{publishedSnapshot:true}});
-  const tools=toolRows.map(row=>publicCreativeTool(row.publishedSnapshot)).filter((item):item is NonNullable<ReturnType<typeof publicCreativeTool>>=>Boolean(item&&item.productStatus!=='ARCHIVED'));
+  const toolRows=await db.creativeTool.findMany({where:{deletedAt:null,status:'PUBLISHED',publishedSnapshot:{not:Prisma.JsonNull}},select:creativeToolPublicationSelect});
+  const tools=eligibleCreativeTools(toolRows,now,['PUBLIC','UNLISTED']).filter(item=>item.featured).sort(creativeToolOrder).slice(0,4);
   const about=settings?.aboutConfig&&typeof settings.aboutConfig==='object'&&!Array.isArray(settings.aboutConfig)?settings.aboutConfig as Record<string,unknown>:{};
   let profile:Record<string,unknown>,proof:unknown[]=[];
   if(mode.data==='recruiter'){

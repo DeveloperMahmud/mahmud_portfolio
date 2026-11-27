@@ -23,7 +23,7 @@ test('public recruiter endpoint returns only eligible published evidence',async(
   for(const contract of ["status:'PUBLISHED'","visibility:'PUBLIC'","clientOnly:false","deletedAt:null",'scheduledAt:{lte:now}'])assert.match(section,new RegExp(contract.replace(/[{}]/g,'\\$&')));
   assert.match(section,/config\.experience\.filter\(item=>item\.verified\)/);
   assert.match(section,/config\.evidencePillars\.filter\(item=>item\.isPublished\)/);
-  assert.match(section,/publicCreativeTool\(row\.publishedSnapshot\)/);
+  assert.match(section,/eligibleCreativeTools\(toolRows,now,\['PUBLIC','UNLISTED'\]\)/);
   assert.match(section,/cvAvailable:Boolean\(about\.cvUrl\)/);
 });
 

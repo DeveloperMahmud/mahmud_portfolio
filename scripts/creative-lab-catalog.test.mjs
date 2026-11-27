@@ -13,11 +13,12 @@ test('Creative Lab catalog route is explicit before the Page Studio catch-all', 
 test('public API reads eligible published snapshots and never serializes draft rows', async () => {
   const [routes,helper]=await Promise.all([read('src/routes/public.ts'),read('src/lib/creative-tools.ts')]);
   assert.match(routes,/router\.get\('\/creative-lab'/);
-  for(const rule of [/deletedAt:null/,/status:'PUBLISHED'/,/visible:true/,/visibility:'PUBLIC'/,/scheduledAt:\{lte:new Date\(\)\}/,/publishedSnapshot:\{not:Prisma\.JsonNull\}/])assert.match(routes,rule);
-  assert.match(routes,/select:\{publishedSnapshot:true\}/);
-  assert.match(routes,/publicCreativeTool\(row\.publishedSnapshot\)/);
+  for(const rule of [/deletedAt:null/,/status:'PUBLISHED'/,/publishedSnapshot:\{not:Prisma\.JsonNull\}/])assert.match(routes,rule);
+  assert.match(routes,/creativeToolPublicationSelect/);
+  assert.match(routes,/publishedCreativeTool\(row\.publishedSnapshot,row,now\)/);
+  assert.match(routes,/published\?\.eligible/);
   assert.match(helper,/publicCreativeToolSchema/);
-  assert.match(helper,/productStatus === 'ARCHIVED'/);
+  assert.match(helper,/tool\.productStatus!=='ARCHIVED'/);
 });
 
 test('catalog exposes accessible search, filters, loading, empty and error states', async () => {

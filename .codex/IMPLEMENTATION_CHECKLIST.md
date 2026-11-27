@@ -339,3 +339,9 @@ Preview navigation and CMS control pass (2026-11-14): Shared public pages now re
 - **COMPLETED / TESTED:** Creative Tools participate in portable backup/restore and Media Library usage protection. Asset replacement propagation remains a separate follow-up.
 - **VISUALLY VERIFIED (desktop):** Homepage `OUTCOMES` mode at `http://127.0.0.1:8799/` rendered three visible proof cards at 1280x720, with `hidden=false`, `display:block` and zero horizontal overflow. Mobile visual evidence is still pending.
 - Verification: Creative/engine suite **105/105**, Page Studio suite **52/52**, frontend regressions **39/39**, operations **9/9**, JavaScript syntax, TypeScript typecheck and production build passed. No migration, dependency, production data mutation or `updated portfolio` edit was introduced.
+
+### Creative Tool published-snapshot isolation (2026-11-27)
+
+- **VERIFIED / TESTED:** Published Creative Tool snapshots now freeze visibility, schedule, featured state and ordering alongside SEO. Public catalog/detail HTML and APIs, recruiter/presentation evidence, Page Studio, sitemap and `llms.txt` all evaluate the published snapshot rather than mutable draft fields.
+- **VERIFIED / COMPATIBLE:** Existing v1 snapshots without the new optional fields continue through row-field fallbacks; invalid, private, hidden, future-scheduled and archived snapshots fail closed.
+- Verification: complete Node test matrix passed with the dot reporter; focused discovery/detail/recruiter contracts **19/19**, TypeScript typecheck, elevated production build and `git diff --check` passed. No database migration or production mutation was required.

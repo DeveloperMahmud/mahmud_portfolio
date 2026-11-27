@@ -21,10 +21,11 @@ test('public detail, next-project and discovery routes respect publication sched
   assert.match(htmlRoute,/scheduledAt:null/);
   assert.match(htmlRoute,/scheduledAt:\{lte:now\}/);
   const llmsStart=app.indexOf("app.get('/llms.txt'");
-  const llms=app.slice(llmsStart,app.indexOf('\n',llmsStart));
+  const llms=app.slice(llmsStart,app.indexOf('app.use(express.static',llmsStart));
   assert.match(llms,/deletedAt:null/);
   assert.match(llms,/includeSitemap:true/);
   assert.match(llms,/scheduledAt:\{lte:now\}/);
+  assert.match(llms,/publishedCreativeTool\(row\.publishedSnapshot,row,now\)/);
 });
 
 test('featured case studies have an evidence-led publish gate',async()=>{

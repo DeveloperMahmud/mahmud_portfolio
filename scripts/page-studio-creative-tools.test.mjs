@@ -26,11 +26,13 @@ test('Page Studio dynamic data resolves only eligible published snapshots',async
     read('src/routes/page-studio-public.ts')
   ]);
   assert.match(resolver,/status: 'PUBLISHED'/);
-  assert.match(resolver,/visible: true/);
-  assert.match(resolver,/visibility: \{ in: \['PUBLIC', 'UNLISTED'\] \}/);
+  assert.match(resolver,/select: \{ visibility: true, visible: true, scheduledAt: true, publishedSnapshot: true \}/);
+  assert.match(resolver,/publishedCreativeTool\(row\.publishedSnapshot,row,now\)/);
+  assert.match(resolver,/!published\?\.eligible/);
+  assert.match(resolver,/\['PUBLIC','UNLISTED'\]\.includes\(published\.visibility\)/);
   assert.match(resolver,/publishedSnapshot: \{ not: Prisma\.JsonNull \}/);
-  assert.match(resolver,/scheduledAt: \{ lte: now \}/);
-  assert.match(resolver,/publicCreativeTool\(row\.publishedSnapshot\)/);
+  assert.match(resolver,/references\.sort/);
+  assert.match(resolver,/published\.tool/);
   assert.match(resolver,/tool\.visibility === 'PUBLIC'/);
   assert.doesNotMatch(resolver,/draftSnapshot|liveUrlVerifiedAt|select: \{[^}]*title:/s);
   assert.match(adminRoute,/pageStudioCreativeTools\(\)/);

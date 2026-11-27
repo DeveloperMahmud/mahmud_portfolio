@@ -1348,3 +1348,10 @@
 - Added Creative Tools to portable backup/restore and Media Library usage checks. Replacement propagation remains intentionally pending.
 - Desktop browser QA confirmed Outcomes at 1280x720 with `data-proof-mode=OUTCOMES`, `hidden=false`, three cards and zero overflow. Mobile remains not visually verified.
 - Validation: Creative suite 105/105; Page Studio 52/52; frontend 39/39; operations 9/9; all affected JavaScript syntax checks; `npm.cmd run typecheck`; `npm.cmd run build`. No schema migration, dependency, CMS mutation or edit under `updated portfolio` occurred.
+
+## 2026-11-27 - Published Creative Tool snapshot isolation
+
+- Added optional publication fields (`visibility`, `visible`, `featured`, `sortOrder`, `scheduledAt`) to the backward-compatible v1 public snapshot and populated them only during explicit publish.
+- Added `publishedCreativeTool()` as the shared parser/eligibility boundary. Older snapshots fall back to their persisted row values; new snapshots remain independent from later draft edits.
+- Reworked Creative Lab catalog/detail HTML and API routes, recruiter/presentation tool evidence, Page Studio resolution, sitemap and `llms.txt` to source presentation and eligibility from the published snapshot. Snapshot ordering now replaces draft-row ordering.
+- Updated source contracts to assert snapshot authority rather than obsolete draft-row query predicates. The complete Node test matrix passed; focused affected tests passed 19/19; typecheck, elevated production build and diff check passed.
