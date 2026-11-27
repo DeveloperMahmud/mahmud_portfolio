@@ -1391,3 +1391,4 @@
 - Passed `node --check portfolio/app.js`, editorial slider **6/6**, frontend **39/39**, static HTTP source checks, `npm.cmd run build` and `git diff --check`.
 - Browser visual verification remains pending at `http://127.0.0.1:8799/#special`; no commit, push, deployment or CMS mutation was performed.
 - After user authorization, committed the combined Creative Lab + slider batch as `168cc1e` and pushed `main` normally to `origin/main`. No force push or CMS mutation occurred; production propagation is not yet claimed.
+- The production domain changed from the old asset key to `20261127-editorial-slider-2` on polling attempt three. Direct deployed asset checks confirmed the v2 markup/style contracts; browser visual QA is still pending rather than inferred from source.
