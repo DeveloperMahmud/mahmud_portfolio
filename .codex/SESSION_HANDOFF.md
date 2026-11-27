@@ -1007,4 +1007,5 @@ Always reconcile these notes with the actual repository before resuming.
 2. Root cause is measured: 757.6px cards had 779px scroll width because `210px + 320px + auto + gaps/padding` could not shrink; the action controls overflowed the border.
 3. A desktop-only Admin override uses `minmax(180px,.75fr) minmax(0,1.45fr) auto`; existing <=920px responsive rules remain authoritative.
 4. Frontend **39/39**, typecheck/build and diff validation pass. Do not claim deployed visual acceptance until this batch is authorized, committed and pushed.
+5. User authorized and commit `c1d93d3` is pushed/deployed. Production source contains the new grid rule; authenticated visual remeasurement remains pending because the available browser session is signed out.
 - Final Preview recheck: the stable branch alias now serves `responsive.js?v=20261122-nav-1` without horizontal overflow. The custom domain is still stale; do not repeat the code fixes when resuming—investigate Vercel project/alias routing instead.

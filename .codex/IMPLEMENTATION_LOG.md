@@ -1370,3 +1370,4 @@
 - Measured the authenticated production DOM at 1280x720: section card width 757.6px, scroll width 779px and action edge 1170px versus card edge 1147.6px. This confirmed grid-track overflow rather than a missing border.
 - Added a wide-Admin layout override with a smaller identity minimum and shrinkable label track; mobile/tablet stacking rules are unchanged.
 - Added a regression contract and passed frontend **39/39**, TypeScript typecheck/build and `git diff --check`. No production data mutation, commit or push occurred.
+- After user authorization, committed as `c1d93d3`, pushed `main`, and confirmed the custom production domain serves the new CSS. The post-deploy browser opened at the Admin sign-in screen, so no authenticated visual claim or CMS mutation was made.

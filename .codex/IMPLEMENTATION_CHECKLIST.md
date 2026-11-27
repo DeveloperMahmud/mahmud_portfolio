@@ -358,3 +358,4 @@ Preview navigation and CMS control pass (2026-11-14): Shared public pages now re
 
 - **COMPLETED / TESTED:** Wide Admin Homepage section cards now use a 180px identity track and a zero-safe flexible label track, keeping visibility and reorder controls inside the card border at the measured 758px content width.
 - Verification: frontend regressions **39/39**, TypeScript typecheck/build and `git diff --check` passed. The deployed site still serves the previous CSS until commit/push authorization; post-deploy desktop visual verification is pending.
+- **DEPLOYED / SOURCE VERIFIED:** commit `c1d93d3` is on `origin/main` and the custom domain serves the new fit-safe grid rule. The available browser session returned to sign-in, so authenticated post-deploy visual verification remains pending rather than claimed.

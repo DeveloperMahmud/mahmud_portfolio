@@ -766,3 +766,4 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Production measurement reproduced the report: normal section cards were 757.6px wide but their rigid tracks forced 779px of content, putting actions about 22px beyond the right border. The Proof card already used the correct flexible geometry.
 - Added a desktop Admin override matching the proven 180px/flexible/auto track pattern while preserving existing <=920px responsive stacking.
 - Frontend **39/39**, typecheck, build and diff validation pass. This local batch is intentionally uncommitted/unpushed until current-work authorization is explicit.
+- User authorized promotion. Commit `c1d93d3` was pushed normally to `origin/main`; Vercel propagation was confirmed from the production stylesheet. Authenticated DOM remeasurement could not run because the browser session returned to sign-in.
