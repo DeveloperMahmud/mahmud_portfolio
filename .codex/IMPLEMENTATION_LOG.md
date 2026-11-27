@@ -1355,3 +1355,11 @@
 - Added `publishedCreativeTool()` as the shared parser/eligibility boundary. Older snapshots fall back to their persisted row values; new snapshots remain independent from later draft edits.
 - Reworked Creative Lab catalog/detail HTML and API routes, recruiter/presentation tool evidence, Page Studio resolution, sitemap and `llms.txt` to source presentation and eligibility from the published snapshot. Snapshot ordering now replaces draft-row ordering.
 - Updated source contracts to assert snapshot authority rather than obsolete draft-row query predicates. The complete Node test matrix passed; focused affected tests passed 19/19; typecheck, elevated production build and diff check passed.
+
+## 2026-11-27 - Creative Tool media propagation, route continuity and CMS ownership
+
+- Extended `/media/:id/replace` so Creative Tool cover/gallery/block/OG/published-snapshot references are rewritten atomically with the existing CMS consumers while preserving record identity.
+- Extended explicit slug publication redirects to cover both `/creative-lab/:slug` and `/creative-lab/:slug/demo`; historical aliases flatten directly to each new canonical path.
+- Ran authenticated production read-only desktop QA across the public Homepage/Creative Lab and the main Admin workspaces. Confirmed the custom-app draft dialog and lazy single-engine demo loading without mutating production records.
+- Browser evidence exposed a repeated-initialization bug in Global Appearance ownership. Replaced the unstable first-child selector with the theme control's owning panel and made relocation parent-aware/idempotent; added regression assertions.
+- Validation: full Node **273/273**, frontend **39/39**, `npm.cmd run typecheck`, `npm.cmd run build`, static smoke **5/5**, performance safeguards/budgets, JavaScript syntax and `git diff --check` passed.

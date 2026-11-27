@@ -28,20 +28,23 @@ test('redirect helper fails closed on claims, loops and chain conflicts',async()
   assert.match(source,/REDIRECT_SOURCE_CONFLICT/);
   assert.match(source,/REDIRECT_CHAIN_CONFLICT/);
   assert.match(source,/sourcePath === destination|previous === next/);
-  assert.match(source,/rule\.sourcePath === destination/,'new canonical destination must be checked as a redirect source');
+  assert.match(source,/rule=>rule\.sourcePath===pair\.destination/,'each canonical detail/demo destination must be checked as a redirect source');
   assert.match(source,/sourcePath\.startsWith\('\/creative-lab\/'\)/,'only Creative Lab aliases may be flattened');
   assert.match(source,/non-Creative-Lab redirect targets the previous public path/);
 });
 
 test('repeated slug changes flatten historical aliases to one canonical hop',async()=>{
   const source=await read('src/lib/creative-tool-redirect.ts');
-  assert.match(source,/const aliases = new Set<string>/);
-  assert.match(source,/pending = \[sourcePath\]/);
-  assert.match(source,/candidate => candidate\.destination === target/);
+  assert.match(source,/\/creative-lab\/\$\{previous\}\/demo/);
+  assert.match(source,/\/creative-lab\/\$\{next\}\/demo/);
+  assert.match(source,/aliases=new Set<string>\(\)/);
+  assert.match(source,/pending=\[sourcePath\]/);
+  assert.match(source,/candidate=>candidate\.destination===target/);
   assert.match(source,/redirectRule\.updateMany/);
-  assert.match(source,/data: \{ destination \}/);
+  assert.match(source,/data:\{destination\}/);
   assert.match(source,/flattenedCount/);
-  assert.match(source,/statusCode: 301/);
+  assert.match(source,/rules:results/);
+  assert.match(source,/statusCode:301/);
 });
 
 test('public redirect middleware runs before Creative Lab canonical routes',async()=>{

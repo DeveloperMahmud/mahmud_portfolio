@@ -991,4 +991,12 @@ Always reconcile these notes with the actual repository before resuming.
 3. `publishedCreativeTool()` centralizes old-snapshot fallback and live eligibility. Catalog/detail HTML/API, recruiter/presentation tools, Page Studio, sitemap and `llms.txt` now use it.
 4. Full Node matrix passed; focused affected contracts passed 19/19; typecheck, elevated production build and diff check passed. No visual QA is required for this server-side publication boundary and no CMS/DB mutation occurred.
 5. User authorized pushing proper completed states. Commit/push this checkpoint normally; then implement Creative Tool replacement propagation in Media Library without altering immutable IDs.
+
+## Creative Tool media/redirect completion handoff (2026-11-27)
+
+1. Active branch is `main`; the dirty batch adds transactional Creative Tool media replacement, dual detail/demo slug redirects, and an idempotent Global Appearance relocation fix.
+2. Full verification passes: Node **273/273**, frontend **39/39**, typecheck, production build, static smoke **5/5**, performance budget, JavaScript syntax and diff validation.
+3. Production desktop QA was read-only and covered the Homepage, Creative Lab catalog/demo, Creative Tools manager/custom-app dialog and major Admin destinations. No CMS record was created, saved, published or deleted.
+4. The browser audit caught repeated relocation moving Private Entry into Site Settings; source now locates the theme panel via `#themePreset` and moves it only when necessary.
+5. User authorized commit/push of proper finished states. Commit/push this batch, wait for production propagation, then verify the deployed Global Appearance ownership fix. Mobile authenticated QA and a sacrificial database save/reload were not performed.
 - Final Preview recheck: the stable branch alias now serves `responsive.js?v=20261122-nav-1` without horizontal overflow. The custom domain is still stale; do not repeat the code fixes when resuming—investigate Vercel project/alias routing instead.

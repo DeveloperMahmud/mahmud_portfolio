@@ -67,5 +67,8 @@ test('custom apps start as private non-executable drafts and are included in rec
   assert.match(operations,/creativeTools=await Promise\.all|creativeTools\]=await Promise\.all/);
   assert.match(operations,/restore\('creativeTools'/);
   assert.match(operations,/creativeTool:creativeTools/);
+  assert.match(operations,/const creativeTools=await tx\.creativeTool\.findMany\(\)/);
+  assert.match(operations,/tx\.creativeTool\.update/);
+  for(const field of ['coverImage','galleryImages','pageBlocks','ogImage','publishedSnapshot'])assert.match(operations,new RegExp(`${field}:row\\.${field}`));
   assert.match(ui,/Executable code stays deployment-owned/);
 });

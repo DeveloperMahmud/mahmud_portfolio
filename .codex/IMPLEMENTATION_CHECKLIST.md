@@ -345,3 +345,10 @@ Preview navigation and CMS control pass (2026-11-14): Shared public pages now re
 - **VERIFIED / TESTED:** Published Creative Tool snapshots now freeze visibility, schedule, featured state and ordering alongside SEO. Public catalog/detail HTML and APIs, recruiter/presentation evidence, Page Studio, sitemap and `llms.txt` all evaluate the published snapshot rather than mutable draft fields.
 - **VERIFIED / COMPATIBLE:** Existing v1 snapshots without the new optional fields continue through row-field fallbacks; invalid, private, hidden, future-scheduled and archived snapshots fail closed.
 - Verification: complete Node test matrix passed with the dot reporter; focused discovery/detail/recruiter contracts **19/19**, TypeScript typecheck, elevated production build and `git diff --check` passed. No database migration or production mutation was required.
+
+### Creative Tool media/redirect completion and CMS ownership regression (2026-11-27)
+
+- **VERIFIED / TESTED:** Media replacement now rewrites Creative Tool draft and published media references (`coverImage`, `galleryImages`, `pageBlocks`, `ogImage`, `publishedSnapshot`) within the existing transaction without changing tool identity.
+- **VERIFIED / TESTED:** Explicit Creative Tool slug publication now preserves both old detail and old `/demo` routes, and flattens historical aliases for each route to one canonical hop.
+- **VERIFIED / TESTED:** Global Appearance relocation is idempotent and identifies the theme panel through `#themePreset`; repeated initialization can no longer move Private Entry into Site Settings.
+- Verification: full Node matrix **273/273**, frontend **39/39**, TypeScript typecheck/build, static smoke **5/5**, performance budget, JavaScript syntax and `git diff --check` passed. Production desktop was inspected read-only; mobile authenticated browser evidence and live database mutation remain **NOT VERIFIED**.

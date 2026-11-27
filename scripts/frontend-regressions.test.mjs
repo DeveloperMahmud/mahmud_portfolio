@@ -719,6 +719,9 @@ test('admin CMS layout, collection refresh and settings ownership stay consisten
   assert.match(account,/function relocateGlobalAppearance\(\)/);
   assert.match(account,/#maintenanceSite/);
   assert.match(account,/globalAppearanceSettings/);
+  assert.match(account,/appearance=\$\('#themePreset'\)\?\.closest\('\.panel'\)/);
+  assert.match(account,/appearance\.parentElement!==destination/);
+  assert.doesNotMatch(account,/account-upgrade-grid > \.panel:first-child/);
   assert.match(accountStyles,/\.global-appearance-panel/);
   assert.match(uiStyles,/#maintenanceOverview \.status-grid\{grid-template-columns:repeat\(auto-fit,minmax\(132px,1fr\)\)/);
   assert.match(styles,/\.motion-savebar\{position:relative;z-index:1/);

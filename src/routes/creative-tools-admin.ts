@@ -330,7 +330,7 @@ router.post('/:id/publish', async (req, res, next) => {
       if(result.count!==1)throw new Error('EDIT_CONFLICT');
       await createRevisionInTransaction(tx,'CREATIVE_TOOL',existing.id,revision,{actorId:actor(res),summary:`Published ${existing.title}`,sourceAction:'PUBLISH'});
       await tx.activityLog.create({data:{action:'TOOL_PUBLISHED',entity:'CREATIVE_TOOL',entityId:existing.id,actorId:actor(res),label:existing.title}});
-      if(redirect)await tx.activityLog.create({data:{action:'TOOL_SLUG_REDIRECT_CREATED',entity:'CREATIVE_TOOL',entityId:existing.id,actorId:actor(res),label:`${redirect.rule.sourcePath} → ${redirect.rule.destination}${redirect.flattenedCount?` · ${redirect.flattenedCount} older alias${redirect.flattenedCount===1?'':'es'} flattened`:''}`}});
+      if(redirect)await tx.activityLog.create({data:{action:'TOOL_SLUG_REDIRECT_CREATED',entity:'CREATIVE_TOOL',entityId:existing.id,actorId:actor(res),label:`${redirect.rule.sourcePath} → ${redirect.rule.destination} · detail + demo routes${redirect.flattenedCount?` · ${redirect.flattenedCount} older alias${redirect.flattenedCount===1?'':'es'} flattened`:''}`}});
       return tx.creativeTool.findUniqueOrThrow({where:{id:existing.id},select:creativeToolDetailSelect});
     },{isolationLevel:Prisma.TransactionIsolationLevel.Serializable});
     if(updated.visibility==='PUBLIC'&&updated.visible&&!updated.noIndex)notifyIndexNow(`/creative-lab/${updated.publishedSlug}`);

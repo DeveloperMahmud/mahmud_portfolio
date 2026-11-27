@@ -751,3 +751,11 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Creative Tool publication presentation is now snapshot-owned across the public catalog/detail, recruiter/presentation evidence, Page Studio, sitemap and `llms.txt`. Draft changes to visibility, scheduling, featured/order or SEO cannot silently alter the live representation before the next publish.
 - Optional snapshot fields retain compatibility with previously published v1 records through explicit row fallbacks; private/hidden/future/archived records remain excluded.
 - Full Node matrix, focused 19/19 contracts, typecheck, production build and diff validation passed. Next exact task after this checkpoint is Creative Tool media replacement propagation, followed by old detail/demo slug redirect coverage.
+
+## 2026-11-27 Creative Tool follow-up completion
+
+- Creative Tools now participate in transactional Media Library replacement propagation, including their published snapshot, without replacing immutable IDs.
+- Published slug changes now preserve both the detail and demo URLs and flatten prior aliases independently.
+- Authenticated production desktop QA covered Homepage Outcomes, Creative Lab catalog/demo modular loading, Admin Creative Tools/custom-app dialog, Analytics, SEO, Projects, Content, Operations, Motion and Maintenance with zero horizontal overflow. No production data was changed.
+- The audit found and fixed an idempotency bug that could move Private Entry instead of Global Appearance after repeated initialization.
+- Gate: **273/273** Node tests, frontend **39/39**, typecheck/build, static smoke **5/5**, performance budget and diff validation. Next action: commit/push this verified batch and confirm deployment propagation; authenticated mobile and controlled production save/reload remain honest follow-up evidence.
