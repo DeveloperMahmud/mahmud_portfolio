@@ -767,3 +767,18 @@ Specification SHA-256: `C14540F0234C91EB7D4210AD4862CD88526FBBC3100DF8EAA76615B3
 - Added a desktop Admin override matching the proven 180px/flexible/auto track pattern while preserving existing <=920px responsive stacking.
 - Frontend **39/39**, typecheck, build and diff validation pass. This local batch is intentionally uncommitted/unpushed until current-work authorization is explicit.
 - User authorized promotion. Commit `c1d93d3` was pushed normally to `origin/main`; Vercel propagation was confirmed from the production stylesheet. Authenticated DOM remeasurement could not run because the browser session returned to sign-in.
+
+## 2026-11-27 standalone Creative Lab app blueprint
+
+- Confirmed the intended architecture: the portfolio is the single discovery/access hub, while every real app is a separate repository, deployment and failure boundary.
+- Polished the existing canonical/custom CMS capability into an explicit External App URL workflow. The helper selects `LIVE` behavior and `NEW_TAB`, while draft save, server-side HTTPS verification and explicit publish remain separate safety gates.
+- Created `deliverables/creative-lab-standalone-app-blueprint/` with master plan, shared UI system, integration contract, twelve-app roadmap, starter manifest, build checklist, static UI reference and generated PNG mockup.
+- Verification passed: focused Creative Tool tests 15/15, frontend 39/39, JavaScript syntax, JSON parsing, production build and diff validation.
+- Exact next action: visually inspect `http://127.0.0.1:8799/admin.html#creativeManagerTab` with an authenticated/local-capable browser and test one sacrificial draft flow without publishing; then seek explicit commit/push authorization. Slider work starts as a separate batch after this handoff.
+
+## 2026-11-27 Featured Project Slider editorial UI v2
+
+- Kept the current color system and slider engine, but changed the presentation toward the supplied reference: integrated intro/counter, image caption, numbered lineup cards, active state, project detail and direct CTA.
+- Wide view uses a three-zone editorial composition with a two-column lineup. Tablet reduces lineup density; mobile uses a horizontally scrollable snap rail and preserves large touch targets.
+- Cache key advanced to `20261127-editorial-slider-2`. Slider tests pass 6/6, frontend regressions 39/39, JavaScript syntax, static HTTP checks, build and diff checks pass.
+- Exact next action: visually inspect `http://127.0.0.1:8799/#special` at desktop and mobile widths, tune only measured spacing issues, then request explicit commit/push authorization for the combined Creative Lab + slider batch.

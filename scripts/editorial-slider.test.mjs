@@ -4,9 +4,17 @@ import { readFile } from 'node:fs/promises';
 const app=await readFile(new URL('../portfolio/app.js',import.meta.url),'utf8');
 const css=await readFile(new URL('../portfolio/styles.css',import.meta.url),'utf8');
 const admin=await readFile(new URL('../portfolio/admin.js',import.meta.url),'utf8');
+const index=await readFile(new URL('../portfolio/index.html',import.meta.url),'utf8');
 const migration=await readFile(new URL('../prisma/migrations/0020_editorial_featured_slider/migration.sql',import.meta.url),'utf8');
 test('all existing primary transitions remain available',()=>{for(const mode of ['MASK','DIAGONAL','SPLIT','CURTAIN','ZOOM','SLIDE'])assert.match(app,new RegExp(`${mode}:'t-`))});
 test('reflection is one-shot, clipped, and reduced-motion safe',()=>{assert.match(css,/overflow:hidden/);assert.match(css,/featuredReflection[^}]*\{/);assert.match(css,/1 both/);assert.match(css,/prefers-reduced-motion:reduce[^]*is-reflecting:after/)});
 test('editorial slider retains accessibility and interaction contracts',()=>{for(const token of ['aria-roledescription','aria-live="polite"','aria-pressed','ArrowLeft','ArrowRight',"'swipe'"])assert.ok(app.includes(token),token)});
+test('editorial slider exposes the reference-inspired lineup and active-project hierarchy',()=>{
+  for(const token of ['featured-lineup-label','featured-stage-caption','featured-nav-number','featured-nav-copy','featured-editorial-current','PROJECT ${current}'])assert.ok(app.includes(token),token);
+  assert.match(css,/\.featured-project-nav\{[^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(css,/\.featured-stage-caption/);
+  assert.match(css,/\.featured-editorial-current/);
+  assert.match(index,/20261127-editorial-slider-2/);
+});
 test('CMS exposes global and per-slide editorial controls',()=>{for(const token of ['sliderReflectionEnabled','sliderMobileReflection','sliderThumbnail','sliderImageAlt','sliderReflectionIntensity'])assert.ok(admin.includes(token),token)});
 test('migration is additive only',()=>{assert.match(migration,/ALTER TABLE/);assert.doesNotMatch(migration,/\b(DROP|DELETE|TRUNCATE)\b/i)});

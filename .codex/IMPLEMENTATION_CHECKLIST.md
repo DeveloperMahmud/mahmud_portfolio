@@ -359,3 +359,19 @@ Preview navigation and CMS control pass (2026-11-14): Shared public pages now re
 - **COMPLETED / TESTED:** Wide Admin Homepage section cards now use a 180px identity track and a zero-safe flexible label track, keeping visibility and reorder controls inside the card border at the measured 758px content width.
 - Verification: frontend regressions **39/39**, TypeScript typecheck/build and `git diff --check` passed. The deployed site still serves the previous CSS until commit/push authorization; post-deploy desktop visual verification is pending.
 - **DEPLOYED / SOURCE VERIFIED:** commit `c1d93d3` is on `origin/main` and the custom domain serves the new fit-safe grid rule. The available browser session returned to sign-in, so authenticated post-deploy visual verification remains pending rather than claimed.
+
+### Standalone Creative Lab app handoff and external-link workflow (2026-11-27)
+
+- **COMPLETED / TESTED:** All canonical and custom Creative Tool records now expose a clear External App URL workflow in Admin: paste HTTPS URL, select it as the primary app, save draft, verify the saved destination, then publish. The shortcut sets `LIVE` + `NEW_TAB`; existing server verification and published-snapshot fallback rules remain authoritative.
+- **COMPLETED:** A standalone-app blueprint package documents isolated repositories/deployments, shared UI rules, portfolio integration, security boundaries, phased delivery, all 12 app MVPs, a manifest and per-app release checklist. It contains a static access-hub reference and generated visual mockup.
+- Verification: Creative Tool focused tests **15/15**, frontend regressions **39/39**, JavaScript syntax, manifest JSON parse, production TypeScript build and `git diff --check` passed.
+- **NOT VISUALLY VERIFIED:** Loopback static preview is healthy at `http://127.0.0.1:8799/` (PID `11784`), but this session had no browser-control binding. Authenticated save/verify/publish and desktop/mobile screenshots were not performed.
+- No commit, push, deployment or CMS mutation was made. Next exact action: review the Admin flow locally/authenticated, then commit/push only with current user authorization; the user's slider request is the next separate feature batch.
+
+### Reference-inspired Featured Project Slider UI (2026-11-27)
+
+- **IMPLEMENTED / TESTED:** The existing slider engine now renders a reference-inspired editorial shell without changing the portfolio's black/lime tokens: integrated intro, large numbered progress, portrait project stage with caption, two-column numbered lineup on wide screens, active project summary and CTA.
+- **PRESERVED / TESTED:** CMS project data, image/focal/overlay controls, per-project transitions, reflection, autoplay, arrows, swipe/drag, keyboard navigation, reduced-motion behavior, analytics and case-study links remain in the existing runtime.
+- **RESPONSIVE IMPLEMENTED:** The lineup collapses to one column on narrower desktop/tablet and becomes a horizontal snap rail on mobile; the content order remains intro → image → progress → active detail → lineup.
+- Verification: slider tests **6/6**, frontend regressions **39/39**, JavaScript syntax, static HTTP asset checks, production TypeScript build and `git diff --check` passed.
+- **NOT VISUALLY VERIFIED:** Browser automation was unavailable, so desktop/mobile screenshots and interaction observation are pending at `http://127.0.0.1:8799/#special`. No commit, push, deployment or CMS mutation occurred.

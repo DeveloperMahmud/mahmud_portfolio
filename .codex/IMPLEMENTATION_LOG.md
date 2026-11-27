@@ -1371,3 +1371,22 @@
 - Added a wide-Admin layout override with a smaller identity minimum and shrinkable label track; mobile/tablet stacking rules are unchanged.
 - Added a regression contract and passed frontend **39/39**, TypeScript typecheck/build and `git diff --check`. No production data mutation, commit or push occurred.
 - After user authorization, committed as `c1d93d3`, pushed `main`, and confirmed the custom production domain serves the new CSS. The post-deploy browser opened at the Admin sign-in screen, so no authenticated visual claim or CMS mutation was made.
+
+## 2026-11-27 - Standalone Creative Lab planning package and external app workflow
+
+- Reconciled the supplied Creative Lab reference bundle with the deployed architecture. Kept the portfolio as one access/CMS hub and specified independent repositories, deployments, storage and release cycles for real apps.
+- Renamed the ambiguous Future Live URL UI to External App URL, added an explicit Use as Primary App shortcut, preserved separate save/verify/publish gates and clarified the safe internal-demo fallback.
+- Added regression contracts for the new shortcut, `LIVE`/`NEW_TAB` assignment, publication guidance, styling and cache version.
+- Authored a build-ready standalone-app package covering architecture, UI tokens/layout, integration and failure behavior, all twelve scoped MVPs, manifest, checklist and static access-hub HTML.
+- Used the approved image-generation workflow to create `assets/creative-lab-access-hub-mockup.png`; the roadmap/manifest remain the factual registry because the image is a visual concept.
+- Passed `node --check portfolio/admin-creative-tools.js`; focused Creative tests 15/15; frontend tests 39/39; manifest JSON parse; `npm.cmd run build`; and `git diff --check`.
+- Started loopback preview PID `11784`, health 200. Browser visual QA and authenticated CMS mutations were not available and are explicitly unverified. No commit, push or deployment occurred.
+
+## 2026-11-27 - Featured Project Slider editorial UI v2
+
+- Reused the existing slider/CMS engine and current black/lime visual system rather than replacing project data or interaction logic.
+- Added a reference-inspired hierarchy: numbered progress, media caption, two-column selectable lineup, active card treatment, detail summary and case-study CTA.
+- Added responsive density rules for wide desktop, one-column tablet lineup and horizontal mobile snap navigation. Preserved autoplay, transition modes, reflection, arrows, keyboard, swipe/drag, reduced motion, analytics and native project links.
+- Versioned homepage slider assets as `20261127-editorial-slider-2` and added structural/cache regression coverage.
+- Passed `node --check portfolio/app.js`, editorial slider **6/6**, frontend **39/39**, static HTTP source checks, `npm.cmd run build` and `git diff --check`.
+- Browser visual verification remains pending at `http://127.0.0.1:8799/#special`; no commit, push, deployment or CMS mutation was performed.

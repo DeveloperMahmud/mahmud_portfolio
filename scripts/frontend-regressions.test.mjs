@@ -255,7 +255,7 @@ test('homepage uses the native cursor without a perpetual cursor animation loop'
   const [source,index]=await Promise.all([read('portfolio/app.js'),read('portfolio/index.html')]);
   assert.doesNotMatch(source,/classList\.add\('home-custom-cursor'\)/);
   assert.doesNotMatch(index,/<div class="cursor"/);
-  assert.match(index,/app\.js\?v=20261112-project-links-1/);
+  assert.match(index,/app\.js\?v=20261127-editorial-slider-2/);
 });
 
 test('homepage proof content is manageable and reusable across both studios',async()=>{
@@ -367,7 +367,7 @@ test('public loading frames remain intentional and multiline conversion headings
   const [styles,index]=await Promise.all([read('portfolio/styles.css'),read('portfolio/index.html')]);
   assert.match(styles,/\.project-media-wrap\{[^}]*radial-gradient\(circle at 78% 18%/);
   assert.match(styles,/\.contact-inner h2\{line-height:\.88\}/);
-  assert.match(index,/styles\.css\?v=20261112-project-links-1/);
+  assert.match(index,/styles\.css\?v=20261127-editorial-slider-2/);
 });
 
 test('homepage project thumbnails are native case-study links, not lightbox targets',async()=>{
@@ -381,9 +381,9 @@ test('homepage project thumbnails are native case-study links, not lightbox targ
   assert.doesNotMatch(app,/<article class="project-card"/);
   assert.match(viewer,/closest\?\.\('\.project-card,\.featured-slide'\)/);
   assert.match(styles,/\.project-card \.project-image\{cursor:pointer\}/);
-  assert.match(index,/app\.js\?v=20261112-project-links-1/);
+  assert.match(index,/app\.js\?v=20261127-editorial-slider-2/);
   assert.match(index,/image-viewer\.js\?v=20261112-project-links-1/);
-  assert.match(index,/styles\.css\?v=20261112-project-links-1/);
+  assert.match(index,/styles\.css\?v=20261127-editorial-slider-2/);
 });
 
 test('case-study media adapts long Behance boards without tiny letterboxed heroes',async()=>{
@@ -652,7 +652,7 @@ test('preview homepage exposes two CMS hero themes plus dynamic skills and proce
   assert.match(managerStyles,/data-connector="DOTTED"/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.js/);
   assert.match(pageStudio,/admin-homepage-theme-manager\.css/);
-  assert.match(pageStudio,/20261127-admin-layout-5/);
+  assert.match(pageStudio,/20261127-creative-app-link-1/);
   assert.match(manager,/DOTTED JOURNEY/);
   assert.match(runtime,/DOTTED:/);
   assert.match(styles,/data-connector-style="DOTTED"/);

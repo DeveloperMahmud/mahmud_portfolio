@@ -133,8 +133,8 @@
     {title:'Structured content',hint:'One item per line.',fields:[
       ['tags','TAGS','lines'],['audience','AUDIENCE','lines'],['featureBullets','FEATURE BULLETS','lines'],['proposedInputs','PROPOSED INPUTS','lines'],['proposedOutputs','PROPOSED OUTPUTS','lines'],['limitations','LIMITATIONS','lines']
     ]},
-    {title:'Media & destinations',hint:'Use an internal /path or HTTPS URL. Live URL must be HTTPS.',fields:[
-      ['coverImage','COVER IMAGE','text',1000],['galleryImages','GALLERY (URL | ALT, ONE PER LINE)','gallery'],['demoUrl','DEMO URL','text',1000],['liveUrl','FUTURE LIVE URL','url',1000],['documentationUrl','DOCUMENTATION URL','text',1000]
+    {title:'Media & destinations',hint:'Use an internal /path for the demo. Paste the deployed standalone app HTTPS URL below, then save, verify and publish.',fields:[
+      ['coverImage','COVER IMAGE','text',1000],['galleryImages','GALLERY (URL | ALT, ONE PER LINE)','gallery'],['demoUrl','INTERNAL DEMO URL','text',1000],['liveUrl','EXTERNAL APP URL (HTTPS)','url',1000],['documentationUrl','DOCUMENTATION URL','text',1000]
     ]},
     {title:'Presentation & status',fields:[
       ['productStatus','TOOL STATUS','select',['PLANNED','PREVIEW','BETA','LIVE','ARCHIVED']],['demoMode','DEMO MODE','select',['CONCEPT','SAMPLE_INTERACTIVE','ACTUAL']],['visibility','VISIBILITY','select',['PUBLIC','UNLISTED','PRIVATE']],['sortOrder','DISPLAY ORDER','number'],
@@ -165,7 +165,13 @@
       input.insertAdjacentElement('afterend',button);
     });
     const liveUrl=el('creativeToolEditorForm').elements.namedItem('liveUrl');
-    if(liveUrl){const button=document.createElement('button');button.type='button';button.id='creativeToolVerifyLiveUrl';button.className='admin-btn creative-tool-url-verify';button.textContent='VERIFY SAVED LIVE URL';liveUrl.insertAdjacentElement('afterend',button)}
+    if(liveUrl){
+      const actions=document.createElement('span');actions.className='creative-tool-url-actions';
+      const primary=document.createElement('button');primary.type='button';primary.id='creativeToolUseExternalApp';primary.className='admin-btn';primary.textContent='USE AS PRIMARY APP';
+      const verify=document.createElement('button');verify.type='button';verify.id='creativeToolVerifyLiveUrl';verify.className='admin-btn creative-tool-url-verify';verify.textContent='VERIFY SAVED APP URL';
+      const guide=document.createElement('small');guide.className='creative-tool-url-guide';guide.textContent='Workflow: paste URL → Use as Primary App → Save Draft → Verify → Publish. Until publishing succeeds, visitors keep the safe internal demo.';
+      actions.append(primary,verify);liveUrl.insertAdjacentElement('afterend',actions);actions.insertAdjacentElement('afterend',guide)
+    }
   }
   function galleryToText(value=[]){return value.map(item=>`${item.url}${item.alt?` | ${item.alt}`:''}`).join('\n')}
   function populateEditor(tool){
@@ -228,7 +234,15 @@
     el('creativeToolPublish').disabled=!state.permissions.canPublish;
     el('creativeToolUnpublish').hidden=!state.permissions.canPublish||tool?.status!=='PUBLISHED';
     el('creativeToolRevisions').hidden=!state.permissions.canInspect;
-    const verify=el('creativeToolVerifyLiveUrl');if(verify){verify.hidden=!state.permissions.canEdit;verify.disabled=!state.permissions.canEdit||!tool?.liveUrl;verify.textContent=tool?.liveUrlVerifiedAt?'REVERIFY SAVED LIVE URL':'VERIFY SAVED LIVE URL'}
+    const primary=el('creativeToolUseExternalApp');if(primary){primary.hidden=!state.permissions.canEdit;primary.disabled=!state.permissions.canEdit;primary.textContent=tool?.primaryBehavior==='LIVE'?'EXTERNAL APP IS PRIMARY':'USE AS PRIMARY APP'}
+    const verify=el('creativeToolVerifyLiveUrl');if(verify){verify.hidden=!state.permissions.canEdit;verify.disabled=!state.permissions.canEdit||!tool?.liveUrl;verify.textContent=tool?.liveUrlVerifiedAt?'REVERIFY SAVED APP URL':'VERIFY SAVED APP URL'}
+  }
+  function prepareExternalApp(){
+    const form=el('creativeToolEditorForm'),url=String(form.elements.namedItem('liveUrl')?.value||'').trim();
+    if(!/^https:\/\//i.test(url)){editorNotice('Paste the deployed app HTTPS URL first. Only public HTTPS destinations can become the primary app.','error');form.elements.namedItem('liveUrl')?.focus();return}
+    form.elements.namedItem('primaryBehavior').value='LIVE';form.elements.namedItem('primaryTarget').value='NEW_TAB';
+    const label=form.elements.namedItem('primaryLabel');if(label&&!String(label.value||'').trim())label.value='OPEN APP';
+    el('creativeToolUseExternalApp').textContent='EXTERNAL APP IS PRIMARY';editorNotice('External app selected as the primary action. Save Draft, verify the saved URL, then publish to activate it.','success')
   }
   async function verifyLiveUrl(){
     if(!state.editing||!state.permissions.canEdit||!state.editing.liveUrl)return;
@@ -236,7 +250,7 @@
     try{
       const response=await fetch(`/api/admin/creative-tools/${encodeURIComponent(state.editing.id)}/verify-live-url`,{method:'POST',credentials:'include',cache:'no-store',headers:{'Content-Type':'application/json'},body:JSON.stringify({expectedUpdatedAt:state.editing.updatedAt,liveUrl:state.editing.liveUrl})});
       const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'The saved live URL could not be verified.');
-      state.editing=data.tool;populateEditor(data.tool);renderPublishing(data.tool);editorNotice(`Live URL verified (HTTP ${data.verification?.status||'OK'}). Save Draft is still independent.`, 'success');await load();
+      state.editing=data.tool;populateEditor(data.tool);renderPublishing(data.tool);editorNotice(`External app URL verified (HTTP ${data.verification?.status||'OK'}). Publish this draft to activate the public Open App button.`, 'success');await load();
     }catch(error){editorNotice(error?.message||'The saved live URL could not be verified.','error');button.disabled=false}
   }
   async function refreshEditor(id=state.editing?.id){
@@ -378,7 +392,7 @@
   el('creativeToolRevisionRefresh').addEventListener('click',loadRevisions);
   el('creativeToolRevisionList').addEventListener('click',event=>{const button=event.target.closest('.creative-tool-restore');if(button)restoreRevision(button.dataset.revisionId)});
   el('creativeToolEditorFields').addEventListener('click',event=>{const button=event.target.closest('.creative-tool-media-open');if(button)openMediaPicker(button.dataset.mediaTarget)});
-  el('creativeToolEditorFields').addEventListener('click',event=>{if(event.target.closest('#creativeToolVerifyLiveUrl'))verifyLiveUrl()});
+  el('creativeToolEditorFields').addEventListener('click',event=>{if(event.target.closest('#creativeToolUseExternalApp'))prepareExternalApp();if(event.target.closest('#creativeToolVerifyLiveUrl'))verifyLiveUrl()});
   el('creativeToolMediaPickerClose').addEventListener('click',()=>{el('creativeToolMediaPicker').close();state.mediaTarget=null});
   el('creativeToolMediaGrid').addEventListener('click',event=>{const button=event.target.closest('.creative-tool-media-item');if(button)chooseMedia(button.dataset.mediaUrl,button.dataset.mediaAlt)});
   el('creativeToolMediaSearch').addEventListener('input',()=>{clearTimeout(state.mediaTimer);state.mediaTimer=setTimeout(loadMediaPicker,240)});

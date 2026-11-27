@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "appId": "replace-with-stable-app-id",
+  "canonicalId": "F01",
+  "name": "Replace with app name",
+  "slug": "replace-with-app-slug",
+  "version": "0.1.0",
+  "status": "preview",
+  "publicUrl": "https://replace-after-deployment.example",
+  "privacyMode": "local-first",
+  "capabilities": [],
+  "inputTypes": [],
+  "exportTypes": [],
+  "portfolioReturnUrl": "https://mahmudportfolio-azure.vercel.app/creative-lab",
+  "supportUrl": "https://mahmudportfolio-azure.vercel.app/#contact",
+  "limitationsUrl": "/limitations",
+  "telemetry": {
+    "enabledByDefault": false,
+    "capturesUploadedContent": false
+  }
+}

@@ -1009,3 +1009,20 @@ Always reconcile these notes with the actual repository before resuming.
 4. Frontend **39/39**, typecheck/build and diff validation pass. Do not claim deployed visual acceptance until this batch is authorized, committed and pushed.
 5. User authorized and commit `c1d93d3` is pushed/deployed. Production source contains the new grid rule; authenticated visual remeasurement remains pending because the available browser session is signed out.
 - Final Preview recheck: the stable branch alias now serves `responsive.js?v=20261122-nav-1` without horizontal overflow. The custom domain is still stale; do not repeat the code fixes when resuming—investigate Vercel project/alias routing instead.
+
+## Standalone app blueprint handoff (2026-11-27)
+
+1. Active branch is `main`; do not touch `updated portfolio`. Current dirty source adds the external-app shortcut/wording/tests, and `deliverables/creative-lab-standalone-app-blueprint/` contains the requested planning package.
+2. Canonical F01–F06/M01–M06 and custom records use the same safe flow: paste External App HTTPS URL → Use as Primary App → Save Draft → Verify Saved App URL → Publish. Until publish succeeds, the previous published/internal demo action remains public.
+3. Focused Creative Tool tests pass 15/15; frontend regressions pass 39/39; syntax, manifest parsing, build and diff checks pass.
+4. Loopback preview PID is `11784`; health URL is `http://127.0.0.1:8799/api/health`; Admin review URL is `http://127.0.0.1:8799/admin.html#creativeManagerTab`. Visual and authenticated mutation evidence are NOT VERIFIED because no browser-control binding was available.
+5. Create/refresh `deliverables/mahmud-creative-lab-standalone-app-blueprint.zip` after any blueprint edit. Remove only the known extraction temp `tmp/pdfs/creative-lab-reference` after packaging.
+6. No commit/push/deploy is authorized for this batch yet. Next work after owner handoff is the separately requested slider batch.
+
+## Featured slider UI handoff (2026-11-27)
+
+1. Slider v2 dirty files are `portfolio/app.js`, `portfolio/styles.css`, `portfolio/index.html`, `scripts/editorial-slider.test.mjs` and updated frontend cache-key assertions.
+2. New structure adds `featured-stage-caption`, `featured-lineup-label`, numbered/copy lineup wrappers and split current/total progress. Existing transitions, reflection, accessibility and links remain intact.
+3. Tests pass: editorial slider 6/6, frontend 39/39, JavaScript syntax, static HTTP source check, TypeScript build and diff validation.
+4. Review URL is `http://127.0.0.1:8799/#special` on loopback PID `11784`. Desktop/mobile visual QA is NOT VERIFIED because this session had no browser-control binding.
+5. The earlier Creative Lab external URL flow and blueprint remain part of the same uncommitted working tree. Do not commit/push/deploy without current authorization; do not touch `updated portfolio`.

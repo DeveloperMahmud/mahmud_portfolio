@@ -35,14 +35,20 @@ test('URL verifier pins public DNS answers and bounds network work',async()=>{
 
 test('Creative Tool media controls reuse the authenticated Media Library without uploading',async()=>{
   const [ui,css]=await Promise.all([read('portfolio/admin-creative-tools.js'),read('portfolio/admin-creative-tools.css')]);
-  for(const id of ['creativeToolMediaPicker','creativeToolMediaSearch','creativeToolMediaGrid','creativeToolVerifyLiveUrl'])assert.match(ui,new RegExp(id));
+  for(const id of ['creativeToolMediaPicker','creativeToolMediaSearch','creativeToolMediaGrid','creativeToolUseExternalApp','creativeToolVerifyLiveUrl'])assert.match(ui,new RegExp(id));
   assert.match(ui,/\/api\/admin\/media\?\$\{params\}/);
   assert.match(ui,/type:'image\/'/);
   assert.match(ui,/Selecting an existing asset does not create another upload or Blob object/);
   assert.doesNotMatch(ui,/\/media\/upload|new XMLHttpRequest/);
   for(const target of ['coverImage','galleryImages','ogImage'])assert.match(ui,new RegExp(`['"]${target}['"]`));
   assert.match(ui,/verify-live-url/);
+  assert.match(ui,/EXTERNAL APP URL \(HTTPS\)/);
+  assert.match(ui,/Workflow: paste URL/);
+  assert.match(ui,/elements\.namedItem\('primaryBehavior'\)\.value='LIVE'/);
+  assert.match(ui,/elements\.namedItem\('primaryTarget'\)\.value='NEW_TAB'/);
+  assert.match(ui,/Publish this draft to activate the public Open App button/);
   assert.match(css,/\.creative-tool-media-picker/);
   assert.match(css,/\.creative-tool-media-grid/);
+  assert.match(css,/\.creative-tool-url-actions/);
   assert.match(css,/@media\(max-width:700px\)/);
 });
